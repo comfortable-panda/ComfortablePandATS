@@ -5,7 +5,7 @@ module.exports = {
     mode: process.env.NODE_ENV || "development",
     devtool: "inline-source-map",
     entry: {
-        // popup: `${__dirname}/src/popup.ts`,
+        background: `${__dirname}/src/background.ts`,
         content_script: `${__dirname}/src/content_script.ts`,
     },
     module: {
