@@ -39,12 +39,13 @@ class Kadai {
   }
 
   get closestDueDateTimestamp(): number {
-    let max = 0;
+    if (this.kadaiEntries.length == 0) return -1;
+    let min = this.kadaiEntries[0];
     for (const entry of this.kadaiEntries) {
-      if (max < entry.dueDateTimestamp) {
-        max = entry.dueDateTimestamp;
+      if (min > entry.dueDateTimestamp) {
+        min = entry.dueDateTimestamp;
       }
     }
-    return max;
+    return min;
   }
 }
