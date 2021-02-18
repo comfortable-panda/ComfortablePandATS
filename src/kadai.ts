@@ -1,4 +1,4 @@
-class KadaiEntry {
+export class KadaiEntry {
   kadaiID: string;
   assignmentTitle: string;
   assignmentDetail?: string;
@@ -20,7 +20,7 @@ class KadaiEntry {
   }
 }
 
-class Kadai {
+export class Kadai {
   lectureID: string;
   lectureName: string;
   kadaiEntries: Array<KadaiEntry>;
