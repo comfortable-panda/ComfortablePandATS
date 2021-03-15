@@ -45,8 +45,7 @@ function convJsonToKadaiEntries(data: Record<string, any>): Array<KadaiEntry> {
     const kadaiTitle = json.title;
     const kadaiDetail = json.instructions;
     const kadaiDueEpoch = json.dueTime.epochSecond;
-    // new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, kadaiDetail);
-    new KadaiEntry("kadaiID", "kadaiTitle", 12, false, "kadaiDetail");
+    new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, kadaiDetail);
   });
 }
 
