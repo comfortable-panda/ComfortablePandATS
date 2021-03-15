@@ -7,7 +7,7 @@ function fetchLectureIDs(): [string, Array<string>] {
   let domain = null;
   for (const elem of elements) {
     const m = elem.href.match("(https?:\/\/[^/]+)\/portal\/site\/([^/]+)");
-    if (m) {
+    if (m && m[2].charAt(0) !=='~') {
       result.push(m[2]);
       if (!domain) {
         domain = m[1];
@@ -48,3 +48,5 @@ function convJsonToKadaiEntries(data: Record<string, any>): Array<KadaiEntry> {
     new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, kadaiDetail);
   });
 }
+
+export {fetchLectureIDs, getKadaiOfLectureID}
