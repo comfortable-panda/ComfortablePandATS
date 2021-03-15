@@ -4,15 +4,15 @@
   "version": "1.0.0",
   "manifest_version": 2,
   "icons": {
-    "16": "img/icon16.png",
-    "48": "img/icon48.png",
-    "128": "img/icon128.png"
+//    "16": "img/icon16.png",
+//    "48": "img/icon48.png",
+//    "128": "img/icon128.png"
   },
   "browser_action": {
     "default_icon": {
-      "16": "img/icon16.png",
-      "24": "img/icon24.png",
-      "32": "img/icon32.png"
+//      "16": "img/icon16.png",
+//      "24": "img/icon24.png",
+//      "32": "img/icon32.png"
     },
     "default_title": "Comfortable PandA",
     "default_popup": "popup.html"
@@ -23,11 +23,9 @@
         "content_script.js"
       ],
       "css": [
-        "css/custom-panda.css"
+//        "css/custom-panda.css"
       ],
-      "matches": [
-        "https://panda.ecs.kyoto-u.ac.jp/*"
-      ]
+      "matches": ["http://35.227.163.2/*"]
     }
   ],
   "background": {
@@ -38,10 +36,10 @@
   },
   "permissions": [
     "storage"
-  ],
-  "web_accessible_resources": [
-    "css/custom-panda.css",
-    "img/logo.png",
-    "img/relaxPanda.png"
-  ]
+  ]//,
+//  "web_accessible_resources": [
+//    "css/custom-panda.css",
+//    "img/logo.png",
+//    "img/relaxPanda.png"
+//  ]
 }
