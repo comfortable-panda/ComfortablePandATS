@@ -1,4 +1,4 @@
-class KadaiEntry {
+export class KadaiEntry {
   kadaiID: string;
   assignmentTitle: string;
   assignmentDetail?: string;
@@ -20,7 +20,7 @@ class KadaiEntry {
   }
 }
 
-class Kadai {
+export class Kadai {
   lectureID: string;
   lectureName: string;
   kadaiEntries: Array<KadaiEntry>;
@@ -40,7 +40,7 @@ class Kadai {
 
   get closestDueDateTimestamp(): number {
     if (this.kadaiEntries.length == 0) return -1;
-    let min = this.kadaiEntries[0];
+    let min = this.kadaiEntries[0].dueDateTimestamp;
     for (const entry of this.kadaiEntries) {
       if (min > entry.dueDateTimestamp) {
         min = entry.dueDateTimestamp;
