@@ -1,7 +1,7 @@
 import { Kadai, KadaiEntry } from "./kadai";
 
 function fetchLectureIDs(): [string, Array<string>] {
-  const elementCollection = document.getElementsByClassName("list-container");
+  const elementCollection = document.getElementsByClassName("link-container");
   const elements = Array.prototype.slice.call(elementCollection);
   const result = [];
   let domain = null;
