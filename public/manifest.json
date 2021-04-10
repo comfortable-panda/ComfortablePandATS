@@ -25,7 +25,7 @@
       "css": [
         "css/custom-panda.css"
       ],
-      "matches": ["http://35.227.163.2/*"]
+      "matches": ["http://35.227.163.2/*", "https://panda.ecs.kyoto-u.ac.jp/*"]
     }
   ],
   "background": {
