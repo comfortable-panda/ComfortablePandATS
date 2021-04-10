@@ -51,11 +51,13 @@ function getSiteIdAndHrefLectureNameMap(): Map<string, {href: string, title: str
 
 const MAX_FAVORITES = 10;
 
+// お気に入り上限を超えた講義を topbar に追加する
+// ネットワーク通信を行うので注意
 function addMissingBookmarkedLectures() {
     const topnav = document.querySelector("#topnav");
     if (topnav == null) return;
     const request = new XMLHttpRequest();
-    request.open("GET", "https://panda.ecs.kyoto-u.ac.jp/portal/favorites/list");
+    request.open("GET", "https://panda.ecs.kyoto-u.ac.jp/portal/favorites/list"); // お気に入り講義のサイトID一覧を取得
     request.responseType = "json";
     request.addEventListener("load", (e) => {
         const res = request.response;
@@ -65,13 +67,14 @@ function addMissingBookmarkedLectures() {
         }
         const favorites = res.favoriteSiteIds as [string];
         const sitesInfo = getSiteIdAndHrefLectureNameMap();
-        if (favorites.length > MAX_FAVORITES) {
+        if (favorites.length > MAX_FAVORITES) { // お気に入り上限を超えているならば...
             for (const missingFavoriteId of favorites.slice(MAX_FAVORITES)) {
                 const siteInfo = sitesInfo.get(missingFavoriteId);
                 if (siteInfo == undefined) continue;
-                const href = siteInfo.href;
-                const title = siteInfo.title;
+                const href = siteInfo.href; // 講義のサイト
+                const title = siteInfo.title; // 講義のタイトル
 
+                // topbar に講義ボタンを追加
                 const li = document.createElement("li");
                 li.classList.add("Mrphs-sitesNav__menuitem");
                 const anchor = document.createElement("a");
@@ -90,3 +93,4 @@ function addMissingBookmarkedLectures() {
 }
 
 main()
+addMissingBookmarkedLectures();

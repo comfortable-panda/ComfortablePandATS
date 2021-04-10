@@ -1,5 +1,8 @@
 import { Kadai, KadaiEntry } from "./kadai";
 
+// Lecture ID をすべて取得する
+// ネットワーク通信は行わない
+// returns [domain, {tabType, lectureID, lectureName}]
 function fetchLectureIDs(): [string, Array<{ tabType: string; lectureID: string; lectureName: string; }>] {
   const elementCollection = document.getElementsByClassName("fav-sites-entry");
   const elements = Array.prototype.slice.call(elementCollection);
