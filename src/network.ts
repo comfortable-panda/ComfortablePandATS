@@ -11,14 +11,12 @@ function fetchLectureIDs(): [string, Array<{ tabType: string; lectureID: string;
       .getElementsByTagName("div")[0]
       .getElementsByTagName("a")[0];
     const m = lecture.href.match("(https?://[^/]+)/portal/site/([^/]+)");
-    if (m && m[2].slice(0, 2) === "20") {
       lectureInfo.lectureID = m[2];
       lectureInfo.lectureName = lecture.title;
       result.push(lectureInfo);
       if (!domain) {
         domain = m[1];
       }
-    }
   }
   return [domain, result];
 }
@@ -31,6 +29,7 @@ function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai>
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
       const res = request.response;
+      if (res == null) reject("404 kadai data not found");
       const kadaiEntries = convJsonToKadaiEntries(res);
       resolve(
         new Kadai(
@@ -51,7 +50,7 @@ function convJsonToKadaiEntries(data: Record<string, any>): Array<KadaiEntry> {
     const kadaiTitle = json.title;
     const kadaiDetail = json.instructions;
     const kadaiDueEpoch = json.dueTime.epochSecond;
-    new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, kadaiDetail);
+    return new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, kadaiDetail);
   });
 }
 

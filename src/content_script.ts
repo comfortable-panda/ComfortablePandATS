@@ -15,9 +15,9 @@ function main(){
     for (let i of lectureIDList[1]){
         kadaiList.push(getKadaiOfLectureID(baseURL, i.lectureID));
     }
-    Promise.all(kadaiList)
-        .then((kadai)=>{
-            console.log("kadai", kadai);
+    (Promise as any).allSettled(kadaiList)
+        .then((result: any)=>{
+            console.log("kadai", result);
         })
 
 }
