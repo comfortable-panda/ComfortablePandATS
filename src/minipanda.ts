@@ -27,7 +27,7 @@ miniPandA.classList.add("cp_tab");
 
 function toggleSideNav() {
   if (toggle) {
-    miniPandA.style.width = "0";
+    miniPandA.style.width = "0px";
     // @ts-ignore
     document.getElementById("cover").remove();
   } else {
@@ -41,7 +41,15 @@ function toggleSideNav() {
 }
 
 function createMiniPandA(fetchedTime: number) {
-  createButton()
+  const hamburger = createButton();
+  const topbar = document.getElementById("mastLogin");
+  hamburger.addEventListener("click", toggleSideNav);
+  try {
+    // @ts-ignore
+    topbar.appendChild(hamburger);
+  } catch (e) {
+    console.log("could not launch miniPandA.");
+  }
 
   const miniPandALogo = createElem("img", {className: "logo", alt: "logo", src: chrome.extension.getURL("img/logo.png")});
 
@@ -80,5 +88,9 @@ function createMiniPandA(fetchedTime: number) {
   // @ts-ignore
   parent.insertBefore(miniPandA, ref);
 }
+
+
+
+
 
 export { createMiniPandA };
