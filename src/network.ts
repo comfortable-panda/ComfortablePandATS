@@ -1,14 +1,20 @@
 import { Kadai, KadaiEntry } from "./kadai";
 
-function fetchLectureIDs(): [string, Array<string>] {
-  const elementCollection = document.getElementsByClassName("link-container");
+function fetchLectureIDs(): [string, Array<{ tabType: string; lectureID: string; lectureName: string; }>] {
+  const elementCollection = document.getElementsByClassName("fav-sites-entry");
   const elements = Array.prototype.slice.call(elementCollection);
   const result = [];
   let domain = null;
   for (const elem of elements) {
-    const m = elem.href.match("(https?:\/\/[^/]+)\/portal\/site\/([^/]+)");
-    if (m && m[2].charAt(0) !=='~') {
-      result.push(m[2]);
+    let lectureInfo = { tabType: "default", lectureID: "", lectureName: "" }; // tabTypeはPandAのトップバーに存在するかしないか
+    const lecture = elem
+      .getElementsByTagName("div")[0]
+      .getElementsByTagName("a")[0];
+    const m = lecture.href.match("(https?://[^/]+)/portal/site/([^/]+)");
+    if (m && m[2].slice(0, 2) === "20") {
+      lectureInfo.lectureID = m[2];
+      lectureInfo.lectureName = lecture.title;
+      result.push(lectureInfo);
       if (!domain) {
         domain = m[1];
       }

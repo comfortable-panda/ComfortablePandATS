@@ -13,7 +13,7 @@ function main(){
     console.log("lecture ID", lectureIDList)
     let kadaiList = []
     for (let i of lectureIDList[1]){
-        kadaiList.push(getKadaiOfLectureID(baseURL, i));
+        kadaiList.push(getKadaiOfLectureID(baseURL, i.lectureID));
     }
     Promise.all(kadaiList)
         .then((kadai)=>{
