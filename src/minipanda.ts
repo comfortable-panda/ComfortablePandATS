@@ -184,14 +184,11 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
           cnt++;
         }
-
       }
       if (cnt > 0) {
         dueGroupContainer.appendChild(dueGroupBody);
         entryCount++;
       }
-
-
     }
     if (entryCount > 0) {
       dueGroupHeader.style.display = "";
