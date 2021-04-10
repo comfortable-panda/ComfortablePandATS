@@ -11,12 +11,14 @@ function fetchLectureIDs(): [string, Array<{ tabType: string; lectureID: string;
       .getElementsByTagName("div")[0]
       .getElementsByTagName("a")[0];
     const m = lecture.href.match("(https?://[^/]+)/portal/site/([^/]+)");
+    if (m) {
       lectureInfo.lectureID = m[2];
       lectureInfo.lectureName = lecture.title;
       result.push(lectureInfo);
       if (!domain) {
         domain = m[1];
       }
+    }
   }
   return [domain, result];
 }
