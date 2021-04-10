@@ -92,5 +92,4 @@ function createMiniPandA(fetchedTime: number) {
 
 
 
-
 export { createMiniPandA };
