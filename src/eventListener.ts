@@ -1,7 +1,7 @@
 import { miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
-import { convertArrayToKadai } from "./utils";
+import { convertArrayToKadai, genUniqueStr } from "./utils";
 
 let toggle = false;
 
@@ -51,14 +51,13 @@ function toggleExamTab() {
 }
 
 function toggleMemoBox() {
-  const addMemoBox = document.querySelector('.addMemoBox');
+  const addMemoBox = document.querySelector(".addMemoBox");
   // @ts-ignore
   const toggleStatus = addMemoBox.style.display;
   if (toggleStatus === "") {
     // @ts-ignore
     addMemoBox.style.display = "none";
-  }
-  else { // @ts-ignore
+  } else { // @ts-ignore
     addMemoBox.style.display = "";
   }
 }
@@ -68,9 +67,9 @@ async function toggleKadaiFinishedFlag(event: any) {
   const kadaiList: Array<Kadai> = convertArrayToKadai(await loadFromStorage("kadaiList"));
   const kadaiID = event.target.id;
   const updatedKadaiList = [];
-  for (const kadai of kadaiList){
+  for (const kadai of kadaiList) {
     const updatedKadaiEntries = [];
-    for (const kadaiEntry of kadai.kadaiEntries){
+    for (const kadaiEntry of kadai.kadaiEntries) {
       if (kadaiEntry.kadaiID === kadaiID) {
         const isFinished = kadaiEntry.isFinished;
         updatedKadaiEntries.push(
@@ -84,13 +83,46 @@ async function toggleKadaiFinishedFlag(event: any) {
           )
         );
       } else {
-        updatedKadaiEntries.push(kadaiEntry)
+        updatedKadaiEntries.push(kadaiEntry);
       }
     }
     updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
   }
-  console.log("見つけた", updatedKadaiList)
+  console.log("見つけた", updatedKadaiList);
   saveToStorage("kadaiList", updatedKadaiList);
 }
 
-export { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag };
+async function addMemo() {
+  // @ts-ignore
+  const selectedIdx = document.querySelector(".todoLecName").selectedIndex;
+  // @ts-ignore
+  const todoLecID = document.querySelector(".todoLecName").options[selectedIdx].id;
+  // @ts-ignore
+  const todoContent = document.querySelector(".todoContent").value;
+  // @ts-ignore
+  const todoDue = document.querySelector(".todoDue").value;
+  const todoTimestamp = new Date(`${todoDue}`).getTime();
+
+
+  let kadaiMemoList = await loadFromStorage("kadaiMemoList");
+  if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0){
+    kadaiMemoList = convertArrayToKadai(kadaiMemoList);
+    const idx = kadaiMemoList.findIndex((oldKadaiMemo: Kadai) => {
+      return (oldKadaiMemo.lectureID === todoLecID);
+    });
+    const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, "");
+    if (idx !== -1){
+      kadaiMemoList[idx].kadaiEntries.push(kadaiMemoEntry);
+    } else {
+      kadaiMemoList.push(new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true))
+    }
+  } else {
+    const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, "");
+    kadaiMemoList = [new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true)];
+  }
+  saveToStorage("kadaiMemoList", kadaiMemoList);
+  console.log("メモ保存した", kadaiMemoList);
+  return kadaiMemoList;
+}
+
+export { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag, addMemo };

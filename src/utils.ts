@@ -91,15 +91,15 @@ function miniPandAReady(): void {
 }
 
 function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
-  const kadaiList = []
-  for (const i of arr){
+  const kadaiList = [];
+  for (const i of arr) {
     const kadaiEntries = [];
     for (const e of i.kadaiEntries){
       kadaiEntries.push(new KadaiEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.assignmentDetail));
     }
     kadaiList.push(new Kadai(i.lectureID, i.lectureName, kadaiEntries, i.isRead))
   }
-  return kadaiList
+  return kadaiList;
 }
 
 function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Array<Kadai>): Array<Kadai>{
@@ -154,6 +154,10 @@ function useCache(fetchedTime: number): boolean{
   return (nowTime - fetchedTime) / 1000 > cacheInterval;
 }
 
+function genUniqueStr() {
+  return "m" + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
+}
+
 
 export {
   getDaysUntil,
@@ -167,4 +171,5 @@ export {
   compareAndMergeKadaiList,
   updateIsReadFlag,
   useCache,
+  genUniqueStr,
 };

@@ -2,6 +2,7 @@ import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, LectureInfo } from "./kadai";
 import { fetchLectureIDs, getKadaiOfLectureID } from "./network";
 import {
+  appendMemoBox,
   createHanburgerButton,
   createMiniPandA,
   createNavBarNotification,
@@ -54,8 +55,10 @@ async function main() {
     const fetchedTime = await loadFromStorage("fetchedTime");
     console.log("fetchedTime", fetchedTime);
     createHanburgerButton();
-    createMiniPandA(useCache(fetchedTime) ? nowTime : fetchedTime);
     const lectureIDList = fetchLectureIDs()[1];
+    createMiniPandA(useCache(fetchedTime) ? nowTime : fetchedTime);
+    appendMemoBox(lectureIDList);
+
     const mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
     saveToStorage("kadaiList", mergedKadaiList);
     updateIsReadFlag(mergedKadaiList);

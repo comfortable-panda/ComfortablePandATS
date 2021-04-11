@@ -1,7 +1,23 @@
 import { Kadai, LectureInfo } from "./kadai";
 import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap } from "./utils";
-import { miniPandA, hamburger, KadaiEntryDom, DueGroupDom, defaultTabCount, defaultTab } from "./dom";
-import { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag } from "./eventListener";
+import {
+  miniPandA,
+  hamburger,
+  KadaiEntryDom,
+  DueGroupDom,
+  defaultTabCount,
+  defaultTab,
+  kadaiDiv,
+  examDiv
+} from "./dom";
+import {
+  toggleSideNav,
+  toggleKadaiTab,
+  toggleExamTab,
+  toggleMemoBox,
+  toggleKadaiFinishedFlag,
+  addMemo,
+} from "./eventListener";
 
 
 function createHanburgerButton(): void {
@@ -14,7 +30,11 @@ function createHanburgerButton(): void {
 }
 
 function createMiniPandA(fetchedTime: number): void {
-  const miniPandALogo = createElem("img", { className: "logo", alt: "logo", src: chrome.extension.getURL("img/logo.png")});
+  const miniPandALogo = createElem("img", {
+    className: "logo",
+    alt: "logo",
+    src: chrome.extension.getURL("img/logo.png")
+  });
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
   miniPandACloseBtn.classList.add("closebtn", "q");
@@ -50,12 +70,49 @@ function createMiniPandA(fetchedTime: number): void {
   parent?.insertBefore(miniPandA, ref);
 }
 
+function appendMemoBox(lectureIDList: Array<LectureInfo>) {
+  const memoEditBox = createElem("div");
+  memoEditBox.classList.add("examBox", "addMemoBox");
+  memoEditBox.style.display = "none";
+  const memoLabel = createElem("label");
+  memoLabel.style.display = "block";
+
+  const todoLecLabel = memoLabel.cloneNode(true);
+  todoLecLabel.innerText = "講義名";
+  const todoLecSelect = createElem("select", { className: "todoLecName" });
+  const todoLecOption = createElem("option");
+
+  for (const lecture of lectureIDList) {
+    const c_todoLecOption = todoLecOption.cloneNode(true);
+    c_todoLecOption.text = lecture.lectureName;
+    c_todoLecOption.id = lecture.lectureID;
+    todoLecSelect.appendChild(c_todoLecOption);
+  }
+
+  todoLecLabel.appendChild(todoLecSelect);
+
+  const todoContentLabel = memoLabel.cloneNode(true);
+  todoContentLabel.innerText = "メモ";
+  const todoContentInput = createElem("input", { type: "text", className: "todoContent" });
+  todoContentLabel.appendChild(todoContentInput);
+
+  const todoDueLabel = memoLabel.cloneNode(true);
+  todoDueLabel.innerText = "期限";
+  const todoDueInput = createElem("input", { type: "datetime-local", className: "todoDue" });
+  todoDueInput.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
+  todoDueLabel.appendChild(todoDueInput);
+
+  const todoSubmitButton = createElem("button", { type: "submit", id: "todo-add", innerText: "追加" });
+  todoSubmitButton.addEventListener("click", addMemo, true);
+
+  appendChildAll(memoEditBox, [todoLecLabel, todoContentLabel, todoDueLabel, todoSubmitButton]);
+  kadaiDiv.appendChild(memoEditBox);
+}
+
 function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>) {
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
   const dueGroupColor = ["danger", "warning", "success", "other"];
   const initLetter = ["a", "b", "c", "d"];
-  const kadaiDiv = createElem("div", { className: "kadai-tab" });
-  const examDiv = createElem("div", { className: "exam-tab" });
   const lectureIDMap = createLectureIDMap(lectureIDList);
 
   // 0: <24h, 1: <5d, 2: <14d, 3: >14d
@@ -104,7 +161,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
           if (kadai.isFinished) kadaiCheckbox.checked = true;
           kadaiCheckbox.id = kadai.kadaiID;
           kadaiCheckbox.lectureID = item.lectureID;
-          kadaiCheckbox.addEventListener('change', toggleKadaiFinishedFlag, false);
+          kadaiCheckbox.addEventListener("change", toggleKadaiFinishedFlag, false);
           kadaiLabel.htmlFor = kadai.kadaiID;
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
           cnt++;
@@ -129,7 +186,11 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
     const kadaiTab = kadaiDiv;
     const relaxDiv = createElem("div", { className: "relaxpanda" });
     const relaxPandaP = createElem("p", { className: "relaxpanda-p", innerText: "現在表示できる課題はありません" });
-    const relaxPandaImg = createElem("img", { className: "relaxpanda-img", alt: "logo", src: chrome.extension.getURL("img/relaxPanda.png")});
+    const relaxPandaImg = createElem("img", {
+      className: "relaxpanda-img",
+      alt: "logo",
+      src: chrome.extension.getURL("img/relaxPanda.png")
+    });
     appendChildAll(relaxDiv, [relaxPandaP, relaxPandaImg]);
     kadaiTab.appendChild(relaxDiv);
   }
@@ -138,10 +199,10 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
 
 
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>) {
-  for (const lecture of lectureIDList){
+  for (const lecture of lectureIDList) {
     for (let j = 2; j < defaultTabCount; j++) {
-      let lectureID = defaultTab[j].getElementsByTagName('a')[1].getAttribute('data-site-id');
-      if (lectureID === null) lectureID = defaultTab[j].getElementsByTagName('a')[0].getAttribute('data-site-id');
+      let lectureID = defaultTab[j].getElementsByTagName("a")[1].getAttribute("data-site-id");
+      if (lectureID === null) lectureID = defaultTab[j].getElementsByTagName("a")[0].getAttribute("data-site-id");
       const q = kadaiList.findIndex((kadai) => {
         return (kadai.lectureID === lectureID);
       });
@@ -152,16 +213,16 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
         const daysUntilDue = getDaysUntil(nowTime, kadaiList[q].closestDueDateTimestamp * 1000);
         if (daysUntilDue <= 1) {
           defaultTab[j].classList.add("nav-danger");
-          defaultTab[j].getElementsByTagName('a')[0].classList.add('nav-danger');
-          defaultTab[j].getElementsByTagName('a')[1].classList.add('nav-danger');
+          defaultTab[j].getElementsByTagName("a")[0].classList.add("nav-danger");
+          defaultTab[j].getElementsByTagName("a")[1].classList.add("nav-danger");
         } else if (daysUntilDue <= 5) {
           defaultTab[j].classList.add("nav-warning");
-          defaultTab[j].getElementsByTagName('a')[0].classList.add('nav-warning');
-          defaultTab[j].getElementsByTagName('a')[1].classList.add('nav-warning');
+          defaultTab[j].getElementsByTagName("a")[0].classList.add("nav-warning");
+          defaultTab[j].getElementsByTagName("a")[1].classList.add("nav-warning");
         } else if (daysUntilDue <= 14) {
           defaultTab[j].classList.add("nav-safe");
-          defaultTab[j].getElementsByTagName('a')[0].classList.add('nav-safe');
-          defaultTab[j].getElementsByTagName('a')[1].classList.add('nav-safe');
+          defaultTab[j].getElementsByTagName("a")[0].classList.add("nav-safe");
+          defaultTab[j].getElementsByTagName("a")[1].classList.add("nav-safe");
         }
       }
     }
@@ -169,4 +230,4 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
 }
 
 
-export { createHanburgerButton, createMiniPandA, updateMiniPandA, createNavBarNotification };
+export { createHanburgerButton, createMiniPandA,appendMemoBox ,updateMiniPandA, createNavBarNotification };
