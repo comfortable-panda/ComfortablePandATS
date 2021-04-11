@@ -3,8 +3,8 @@ import { KadaiEntry, LectureInfo } from "./kadai";
 import { fetchLectureIDs, getKadaiOfLectureID } from "./network";
 import {
   createHanburgerButton,
-  createMiniPandA,
-  updateMiniPandA,
+  createMiniPandA, createNavBarNotification,
+  updateMiniPandA
 } from "./minipanda";
 import { addMissingBookmarkedLectures } from "./bookmark";
 import {
@@ -61,6 +61,7 @@ function loadAndDisplayKadai(lectureIDList: Array<LectureInfo>){
     updateIsReadFlag(merge);
     updateMiniPandA(kadaiList, lectureIDList);
     miniPandAReady();
+    createNavBarNotification(lectureIDList, merge);
   });
 }
 

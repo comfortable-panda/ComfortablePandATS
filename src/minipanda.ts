@@ -1,6 +1,6 @@
 import { Kadai, LectureInfo } from "./kadai";
 import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap } from "./utils";
-import { miniPandA, hamburger, KadaiEntryDom, DueGroupDom } from "./dom";
+import { miniPandA, hamburger, KadaiEntryDom, DueGroupDom, defaultTabCount, defaultTab } from "./dom";
 import { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox } from "./eventListener";
 
 
@@ -137,4 +137,37 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
 }
 
 
-export { createHanburgerButton, createMiniPandA, updateMiniPandA };
+function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>) {
+  for (const lecture of lectureIDList){
+    for (let j = 2; j < defaultTabCount; j++) {
+      let lectureID = defaultTab[j].getElementsByTagName('a')[1].getAttribute('data-site-id');
+      if (lectureID === null) lectureID = defaultTab[j].getElementsByTagName('a')[0].getAttribute('data-site-id');
+      const q = kadaiList.findIndex((kadai) => {
+        return (kadai.lectureID === lectureID);
+      });
+      if (q !== -1) {
+        if (!kadaiList[q].isRead) {
+          defaultTab[j].classList.add("badge");
+        }
+        const daysUntilDue = getDaysUntil(nowTime, kadaiList[q].closestDueDateTimestamp * 1000);
+        console.log("days until", daysUntilDue);
+        if (daysUntilDue <= 1) {
+          defaultTab[j].classList.add("nav-danger");
+          defaultTab[j].getElementsByTagName('a')[0].classList.add('nav-danger');
+          defaultTab[j].getElementsByTagName('a')[1].classList.add('nav-danger');
+        } else if (daysUntilDue <= 5) {
+          defaultTab[j].classList.add("nav-warning");
+          defaultTab[j].getElementsByTagName('a')[0].classList.add('nav-warning');
+          defaultTab[j].getElementsByTagName('a')[1].classList.add('nav-warning');
+        } else if (daysUntilDue <= 14) {
+          defaultTab[j].classList.add("nav-safe");
+          defaultTab[j].getElementsByTagName('a')[0].classList.add('nav-safe');
+          defaultTab[j].getElementsByTagName('a')[1].classList.add('nav-safe');
+        }
+      }
+    }
+  }
+}
+
+
+export { createHanburgerButton, createMiniPandA, updateMiniPandA, createNavBarNotification };
