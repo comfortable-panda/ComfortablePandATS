@@ -7,6 +7,7 @@ import {
   updateMiniPandA,
 } from "./minipanda";
 import { addMissingBookmarkedLectures } from "./bookmark";
+import { createLectureIDMap } from "./utils";
 
 const baseURL = "http://35.227.163.2/";
 

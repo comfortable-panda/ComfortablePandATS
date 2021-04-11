@@ -1,5 +1,5 @@
 import { Kadai, LectureInfo } from "./kadai";
-import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll } from "./utils";
+import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap } from "./utils";
 import { miniPandA, KadaiEntryDom, DueGroupDom } from "./dom";
 import { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox } from "./eventListener";
 
@@ -59,6 +59,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
   const initLetter = ["a", "b", "c", "d"];
   const kadaiDiv = createElem("div", { className: "kadai-tab" });
   const examDiv = createElem("div", { className: "exam-tab" });
+  const lectureIDMap = createLectureIDMap(lectureIDList);
 
   // 0: <24h, 1: <5d, 2: <14d, 3: >14d
   for (let i = 0; i < 4; i++) {
@@ -82,7 +83,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
       dueGroupBody.id = initLetter[i] + item.lectureID;
       const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true);
       dueGroupLectureName.className = `lecture-${dueGroupColor[i]}`;
-      dueGroupLectureName.textContent = "" + item.lectureName;
+      dueGroupLectureName.textContent = "" + lectureIDMap.get(item.lectureID);
       dueGroupBody.appendChild(dueGroupLectureName);
 
       // 各講義の課題一覧についてループ
