@@ -1,5 +1,9 @@
 import { createElem } from "./utils";
 
+export const miniPandA = createElem("div", { id: "miniPandA" });
+miniPandA.classList.add("sidenav");
+miniPandA.classList.add("cp_tab");
+
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace KadaiEntryDom {
   export const checkbox = createElem("input", { type: "checkbox", className: "todo-check" });

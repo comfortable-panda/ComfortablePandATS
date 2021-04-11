@@ -1,31 +1,13 @@
 import { Kadai } from "./kadai";
 import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll } from "./utils";
-import { KadaiEntryDom, DueGroupDom } from "./dom";
+import { miniPandA, KadaiEntryDom, DueGroupDom } from "./dom";
+import { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox } from "./eventListener";
 
-
-let toggle = false;
-const miniPandA = createElem("div", { id: "miniPandA" });
-miniPandA.classList.add("sidenav");
-miniPandA.classList.add("cp_tab");
 
 function createHanburgerButton(): HTMLDivElement {
   const hamburger = document.createElement("div");
   hamburger.className = "loader";
   return hamburger;
-}
-
-function toggleSideNav() {
-  if (toggle) {
-    miniPandA.style.width = "0px";
-    document.getElementById("cover")?.remove();
-  } else {
-    miniPandA.style.width = "300px";
-    const cover = document.createElement("div");
-    cover.id = "cover";
-    document.getElementsByTagName("body")[0].appendChild(cover);
-    cover.onclick = toggleSideNav;
-  }
-  toggle = !toggle;
 }
 
 function createMiniPandA(fetchedTime: number) {
@@ -50,13 +32,13 @@ function createMiniPandA(fetchedTime: number) {
   miniPandACloseBtn.addEventListener("click", toggleSideNav);
 
   const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true });
-  // kadaiTab.addEventListener('click', toggleKadaiTab);
+  kadaiTab.addEventListener("click", toggleKadaiTab);
   const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: "課題一覧" });
   const examTab = createElem("input", { type: "radio", id: "examTab", name: "cp_tab", checked: false });
-  // examTab.addEventListener('click', toggleExamTab);
+  examTab.addEventListener("click", toggleExamTab);
   const examTabLabel = createElem("label", { htmlFor: "examTab", innerText: "テスト・クイズ一覧" });
   const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" });
-  // addMemoButton.addEventListener('click', toggleMemoBox, true);
+  addMemoButton.addEventListener("click", toggleMemoBox, true);
 
   const fetchedTimestamp = new Date(fetchedTime);
   const fetchedTimeString = createElem("p", { className: "kadai-time" });
