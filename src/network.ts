@@ -1,4 +1,4 @@
-import { Kadai, KadaiEntry } from "./kadai";
+import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
 
 // Lecture ID をすべて取得する
 // ネットワーク通信は行わない
