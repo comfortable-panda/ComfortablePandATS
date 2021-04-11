@@ -1,4 +1,4 @@
-import { LectureInfo } from "./kadai";
+import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
 import { DueGroupDom } from "./dom";
 import lectureName = DueGroupDom.lectureName;
 
@@ -60,5 +60,19 @@ function miniPandAReady(): void {
   hamburger.textContent = "☰";
 }
 
+function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
+  const kadaiList = []
+  for (const i of arr){
+    const kadaiEntries = [];
+    for (const e of i.kadaiEntries){
+      kadaiEntries.push(new KadaiEntry(e.kadaiID, e.assignmentTitle, e.assignmentDetail, e.dueDateTimestamp, e.isMemo, e.isFinished));
+    }
+    kadaiList.push(new Kadai(i.lectureID, i.lectureName, kadaiEntries, i.isRead))
+  }
+  return kadaiList
+}
+
+function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Array<Kadai>): Array<Kadai>{
+  const mergedKadaiList = [];
 
 export { getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap, isLoggedIn, miniPandAReady }
