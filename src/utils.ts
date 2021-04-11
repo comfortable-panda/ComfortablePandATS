@@ -1,6 +1,7 @@
 import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
 import { DueGroupDom } from "./dom";
 import lectureName = DueGroupDom.lectureName;
+import { saveToStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
 
@@ -50,6 +51,33 @@ function isLoggedIn(): boolean{
     if (script.text.match('"loggedIn": true')) loggedIn = true;
   }
   return loggedIn;
+}
+
+function getCurrentLectureID() {
+  const url = location.href;
+  let lectureID = "";
+  const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
+  if (url.match(reg)){
+    // @ts-ignore
+    lectureID = url.match(reg)[2];
+  }
+  return lectureID;
+}
+
+function updateIsReadFlag(kadaiList: Array<Kadai>): void {
+  const lectureID = getCurrentLectureID();
+  const updatedKadaiList = [];
+  if (lectureID && lectureID.length >= 17) {
+    for (const kadai of kadaiList){
+      if (kadai.lectureID === lectureID){
+        updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, kadai.kadaiEntries, true));
+      }else{
+        updatedKadaiList.push(kadai);
+      }
+    }
+    console.log("フラグをへし折りました！")
+    saveToStorage("kadaiList", updatedKadaiList);
+  }
 }
 
 function miniPandAReady(): void {
@@ -119,4 +147,5 @@ export {
   miniPandAReady,
   convertArrayToKadai,
   compareAndMergeKadaiList,
+  updateIsReadFlag,
 };
