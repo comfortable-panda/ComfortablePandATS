@@ -1,14 +1,11 @@
 import { Kadai, LectureInfo } from "./kadai";
 import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap } from "./utils";
-import { miniPandA, KadaiEntryDom, DueGroupDom } from "./dom";
+import { miniPandA, hamburger, KadaiEntryDom, DueGroupDom } from "./dom";
 import { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox } from "./eventListener";
 
 
 function createHanburgerButton(): void {
-  const hamburger = document.createElement("div");
-  hamburger.className = "loader";
   const topbar = document.getElementById("mastLogin");
-  hamburger.addEventListener("click", toggleSideNav);
   try {
     topbar?.appendChild(hamburger);
   } catch (e) {

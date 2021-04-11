@@ -42,5 +42,23 @@ function createLectureIDMap(lectureIDList: Array<LectureInfo>): Map<string, stri
   return lectureIDMap;
 }
 
+function isLoggedIn(): boolean{
+  const scripts = document.getElementsByTagName("script");
+  let loggedIn = false;
+  // @ts-ignore
+  for (const script of scripts) {
+    if (script.text.match('"loggedIn": true')) loggedIn = true;
+  }
+  return loggedIn;
+}
 
-export { getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap }
+function miniPandAReady(): void {
+  // ロード表示を切り替えて3本線表示にする
+  const hamburger = document.getElementsByClassName("loader")[0];
+  hamburger.className = "";
+  hamburger.id = "hamburger";
+  hamburger.textContent = "☰";
+}
+
+
+export { getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap, isLoggedIn, miniPandAReady }

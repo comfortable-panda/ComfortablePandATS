@@ -1,8 +1,13 @@
 import { createElem } from "./utils";
+import { toggleSideNav } from "./eventListener";
 
 export const miniPandA = createElem("div", { id: "miniPandA" });
 miniPandA.classList.add("sidenav");
 miniPandA.classList.add("cp_tab");
+
+export const hamburger = createElem("div");
+hamburger.className = "loader";
+hamburger.addEventListener("click", toggleSideNav);
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace KadaiEntryDom {
