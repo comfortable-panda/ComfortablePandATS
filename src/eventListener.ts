@@ -1,4 +1,7 @@
 import { miniPandA } from "./dom";
+import { loadFromStorage, saveToStorage } from "./storage";
+import { Kadai, KadaiEntry } from "./kadai";
+import { convertArrayToKadai } from "./utils";
 
 let toggle = false;
 
@@ -60,4 +63,34 @@ function toggleMemoBox() {
   }
 }
 
-export { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox };
+async function toggleKadaiFinishedFlag(event: any) {
+  // TODO: 済　にしてもいいかも
+  const kadaiList: Array<Kadai> = convertArrayToKadai(await loadFromStorage("kadaiList"));
+  const kadaiID = event.target.id;
+  const updatedKadaiList = [];
+  for (const kadai of kadaiList){
+    const updatedKadaiEntries = [];
+    for (const kadaiEntry of kadai.kadaiEntries){
+      if (kadaiEntry.kadaiID === kadaiID) {
+        const isFinished = kadaiEntry.isFinished;
+        updatedKadaiEntries.push(
+          new KadaiEntry(
+            kadaiEntry.kadaiID,
+            kadaiEntry.assignmentTitle,
+            kadaiEntry.dueDateTimestamp,
+            kadaiEntry.isMemo,
+            !isFinished,
+            kadaiEntry.assignmentDetail
+          )
+        );
+      } else {
+        updatedKadaiEntries.push(kadaiEntry)
+      }
+    }
+    updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
+  }
+  console.log("見つけた", updatedKadaiList)
+  saveToStorage("kadaiList", updatedKadaiList);
+}
+
+export { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag };

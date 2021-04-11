@@ -1,7 +1,7 @@
 import { Kadai, LectureInfo } from "./kadai";
 import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap } from "./utils";
 import { miniPandA, hamburger, KadaiEntryDom, DueGroupDom, defaultTabCount, defaultTab } from "./dom";
-import { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox } from "./eventListener";
+import { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag } from "./eventListener";
 
 
 function createHanburgerButton(): void {
@@ -101,10 +101,10 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
           kadaiDueDate.textContent = "" + dispDue;
           kadaiRemainTime.textContent = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
           kadaiTitle.textContent = "" + kadai.assignmentTitle;
-          if (kadai.isFinished) kadaiCheckbox = true;
+          if (kadai.isFinished) kadaiCheckbox.checked = true;
           kadaiCheckbox.id = kadai.kadaiID;
           kadaiCheckbox.lectureID = item.lectureID;
-          // kadaiCheckbox.addEventListener('change', updateKadaiTodo, false);
+          kadaiCheckbox.addEventListener('change', toggleKadaiFinishedFlag, false);
           kadaiLabel.htmlFor = kadai.kadaiID;
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
           cnt++;

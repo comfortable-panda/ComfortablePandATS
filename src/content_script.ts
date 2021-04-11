@@ -55,13 +55,13 @@ function loadAndDisplayKadai(lectureIDList: Array<LectureInfo>){
     console.log("kadaiListNEW", kadaiList);
     const old = await loadFromStorage("kadaiList");
     console.log("kadaiListOLD", convertArrayToKadai(old));
-    const merge = compareAndMergeKadaiList(old, kadaiList);
-    console.log("kadaiListMERGED", merge);
-    saveToStorage("kadaiList", merge);
-    updateIsReadFlag(merge);
-    updateMiniPandA(kadaiList, lectureIDList);
+    const mergedKadaiList = compareAndMergeKadaiList(old, kadaiList);
+    console.log("kadaiListMERGED", mergedKadaiList);
+    saveToStorage("kadaiList", mergedKadaiList);
+    updateIsReadFlag(mergedKadaiList);
+    updateMiniPandA(mergedKadaiList, lectureIDList);
     miniPandAReady();
-    createNavBarNotification(lectureIDList, merge);
+    createNavBarNotification(lectureIDList, mergedKadaiList);
   });
 }
 

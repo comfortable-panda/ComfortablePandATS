@@ -2,6 +2,7 @@ import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
 import { DueGroupDom } from "./dom";
 import lectureName = DueGroupDom.lectureName;
 import { saveToStorage } from "./storage";
+import id = chrome.runtime.id;
 
 export const nowTime = new Date().getTime();
 
@@ -93,7 +94,7 @@ function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
   for (const i of arr){
     const kadaiEntries = [];
     for (const e of i.kadaiEntries){
-      kadaiEntries.push(new KadaiEntry(e.kadaiID, e.assignmentTitle, e.assignmentDetail, e.dueDateTimestamp, e.isMemo, e.isFinished));
+      kadaiEntries.push(new KadaiEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.assignmentDetail));
     }
     kadaiList.push(new Kadai(i.lectureID, i.lectureName, kadaiEntries, i.isRead))
   }
@@ -118,6 +119,7 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
     else {
       // 未読フラグを引き継ぐ
       let isRead = oldKadaiList[idx].isRead;
+      let mergedKadaiEntries = [];
       for (const newKadaiEntry of newKadai.kadaiEntries){
         // 新しく取得した課題が保存された課題一覧の中にあるか探す
         const q = oldKadaiList[idx].kadaiEntries.findIndex((oldKadaiEntry) => {
@@ -126,11 +128,22 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
         // もしなければ新規課題なので未読フラグを立てる
         if (q === -1) {
           isRead = false;
-          console.log("cannnot find")
-        }
+          console.log("cannnot find");
+          mergedKadaiEntries.push(newKadaiEntry);
+        } else {
+          mergedKadaiEntries.push(
+            new KadaiEntry(
+              newKadaiEntry.kadaiID,
+              newKadaiEntry.assignmentTitle,
+              newKadaiEntry.dueDateTimestamp,
+              newKadaiEntry.isMemo,
+              oldKadaiList[idx].kadaiEntries[q].isFinished,
+              newKadaiEntry.assignmentDetail
+            )
+          )};
       }
       // 未読フラグ部分を変更してマージ
-      mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, newKadai.kadaiEntries, isRead));
+      mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, mergedKadaiEntries, isRead));
     }
   }
   return mergedKadaiList;
