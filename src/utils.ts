@@ -75,4 +75,44 @@ function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
 function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Array<Kadai>): Array<Kadai>{
   const mergedKadaiList = [];
 
-export { getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap, isLoggedIn, miniPandAReady }
+  // 最新の課題リストをもとにマージする
+  for (const newKadai of newKadaiList){
+    const idx = oldKadaiList.findIndex((oldKadai) => {
+      return (oldKadai.lectureID === newKadai.lectureID)
+    });
+
+    // もし過去に保存した課題リストの中に講義IDが存在しない時
+    if (idx === -1) {
+      // 未読フラグを立ててマージ
+      mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, newKadai.kadaiEntries, false));
+    }
+    // 過去に保存した課題リストの中に講義IDが存在する時
+    else {
+      // 未読フラグを下げる
+      let isRead = true;
+      for (const newKadaiEntry of newKadai.kadaiEntries){
+        // 新しく取得した課題が保存された課題一覧の中にあるか探す
+        const q = oldKadaiList[idx].kadaiEntries.findIndex((oldKadaiEntry) => {
+          return (oldKadaiEntry.kadaiID === newKadaiEntry.kadaiID)
+        });
+        // もしなければ新規課題なので未読フラグを立てる
+        if (q === -1) isRead = false;
+      }
+      // 未読フラグ部分を変更してマージ
+      mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, newKadai.kadaiEntries, isRead));
+    }
+  }
+  return mergedKadaiList;
+}
+
+
+export {
+  getDaysUntil,
+  getTimeRemain,
+  createElem,
+  appendChildAll,
+  createLectureIDMap,
+  isLoggedIn,
+  miniPandAReady,
+  convertArrayToKadai,
+};
