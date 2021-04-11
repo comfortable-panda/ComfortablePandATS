@@ -9,7 +9,7 @@ function fetchLectureIDs(): [string, Array<LectureInfo>] {
   const result = [];
   let domain = null;
   for (const elem of elements) {
-    let lectureInfo = { tabType: "default", lectureID: "", lectureName: "" }; // tabTypeはPandAのトップバーに存在するかしないか
+    const lectureInfo = { tabType: "default", lectureID: "", lectureName: "" }; // tabTypeはPandAのトップバーに存在するかしないか
     const lecture = elem
       .getElementsByTagName("div")[0]
       .getElementsByTagName("a")[0];
@@ -30,6 +30,10 @@ function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai>
   const queryURL = baseURL + "/direct/assignment/site/" + lectureID + ".json";
   const request = new XMLHttpRequest();
   request.open("GET", queryURL);
+  // キャッシュ対策
+  request.setRequestHeader("Pragma", "no-cache");
+  request.setRequestHeader("Cache-Control", "no-cache");
+  request.setRequestHeader("If-Modified-Since","Thu, 01 Jun 1970 00:00:00 GMT");
   request.responseType = "json";
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
