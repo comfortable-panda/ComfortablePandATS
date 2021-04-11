@@ -20,6 +20,9 @@ import {
 } from "./utils";
 
 const baseURL = "http://35.227.163.2/";
+export let fetchedTime: number;
+export let lectureIDList: Array<LectureInfo>;
+export let mergedKadaiList: Array<Kadai>;
 
 async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache: boolean): Promise<Array<Kadai>> {
   const oldKadaiList = await loadFromStorage("kadaiList");
@@ -50,20 +53,23 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
   return mergedKadaiList;
 }
 
+export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>, fetchedTime: number){
+  createMiniPandA(useCache(fetchedTime) ? nowTime : fetchedTime);
+  appendMemoBox(lectureIDList);
+  updateMiniPandA(mergedKadaiList, lectureIDList);
+}
+
 async function main() {
   if (isLoggedIn()) {
-    const fetchedTime = await loadFromStorage("fetchedTime");
-    console.log("fetchedTime", fetchedTime);
-    createHanburgerButton();
-    const lectureIDList = fetchLectureIDs()[1];
-    createMiniPandA(useCache(fetchedTime) ? nowTime : fetchedTime);
-    appendMemoBox(lectureIDList);
-
-    const mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
+    fetchedTime = await loadFromStorage("fetchedTime");
+    lectureIDList = fetchLectureIDs()[1];
+    mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
     saveToStorage("kadaiList", mergedKadaiList);
-    updateIsReadFlag(mergedKadaiList);
-    updateMiniPandA(mergedKadaiList, lectureIDList);
+    createHanburgerButton();
+    await displayMiniPandA(mergedKadaiList, lectureIDList, fetchedTime);
+
     miniPandAReady();
+    updateIsReadFlag(mergedKadaiList);
     createNavBarNotification(lectureIDList, mergedKadaiList);
   }
 }

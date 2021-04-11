@@ -1,7 +1,8 @@
-import { miniPandA } from "./dom";
+import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr } from "./utils";
+import { displayMiniPandA, fetchedTime, lectureIDList, mergedKadaiList } from "./content_script";
 
 let toggle = false;
 
@@ -122,7 +123,8 @@ async function addMemo() {
   }
   saveToStorage("kadaiMemoList", kadaiMemoList);
   console.log("メモ保存した", kadaiMemoList);
-  return kadaiMemoList;
+  miniPandA.remove();
+  await displayMiniPandA(mergedKadaiList, lectureIDList, fetchedTime);
 }
 
 export { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag, addMemo };
