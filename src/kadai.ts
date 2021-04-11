@@ -49,3 +49,18 @@ export class Kadai {
     return min;
   }
 }
+
+export class LectureInfo {
+  tabType: string;
+  lectureID: string;
+  lectureName: string;
+  constructor(
+    tabType: string,
+    lectureID: string,
+    lectureName: string
+  ) {
+    this.tabType = tabType;
+    this.lectureID = lectureID;
+    this.lectureName = lectureName;
+  }
+}

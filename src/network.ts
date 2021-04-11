@@ -1,6 +1,6 @@
-import { Kadai, KadaiEntry } from "./kadai";
+import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
 
-function fetchLectureIDs(): [string, Array<{ tabType: string; lectureID: string; lectureName: string; }>] {
+function fetchLectureIDs(): [string, Array<LectureInfo>] {
   const elementCollection = document.getElementsByClassName("fav-sites-entry");
   const elements = Array.prototype.slice.call(elementCollection);
   const result = [];
