@@ -1,7 +1,8 @@
 export function loadFromStorage(key: string): Promise<any> {
   return new Promise(function (resolve, reject) {
     chrome.storage.local.get(key, function (items: any) {
-      resolve(items[key]);
+      if (typeof items[key] === "undefined") resolve([])
+      else resolve(items[key]);
     });
   });
 }

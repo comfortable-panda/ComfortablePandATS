@@ -1,7 +1,7 @@
 import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
-import { convertArrayToKadai, genUniqueStr } from "./utils";
+import { convertArrayToKadai, genUniqueStr, mergeMemoIntoKadaiList } from "./utils";
 import { displayMiniPandA, fetchedTime, lectureIDList, mergedKadaiList } from "./content_script";
 
 let toggle = false;
@@ -102,7 +102,7 @@ async function addMemo() {
   const todoContent = document.querySelector(".todoContent").value;
   // @ts-ignore
   const todoDue = document.querySelector(".todoDue").value;
-  const todoTimestamp = new Date(`${todoDue}`).getTime();
+  const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
 
 
   let kadaiMemoList = await loadFromStorage("kadaiMemoList");
@@ -123,8 +123,17 @@ async function addMemo() {
   }
   saveToStorage("kadaiMemoList", kadaiMemoList);
   console.log("メモ保存した", kadaiMemoList);
+  while (miniPandA.firstChild) {
+    miniPandA.removeChild(miniPandA.firstChild);
+  }
+  while (kadaiDiv.firstChild) {
+    kadaiDiv.removeChild(kadaiDiv.firstChild);
+  }
   miniPandA.remove();
-  await displayMiniPandA(mergedKadaiList, lectureIDList, fetchedTime);
+  kadaiDiv.remove();
+  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList), lectureIDList, fetchedTime);
+
+  console.log("merged memo", mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList));
 }
 
 export { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag, addMemo };
