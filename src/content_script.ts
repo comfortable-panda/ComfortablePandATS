@@ -14,7 +14,7 @@ const baseURL = "http://35.227.163.2/";
 function main() {
   createHanburgerButton();
   createMiniPandA(100101010);
-  const kadai = new KadaiEntry("abc012", "", 12, false, "sa");
+  const kadai = new KadaiEntry("abc012", "", 12, false, false, "sa");
   saveToStorage("kadais", [kadai, kadai]);
   console.log("ok panda");
 

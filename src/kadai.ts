@@ -3,12 +3,14 @@ export class KadaiEntry {
   assignmentTitle: string;
   assignmentDetail?: string;
   dueDateTimestamp: number; // POSIX time
+  isMemo: boolean;
   isFinished: boolean;
 
   constructor(
     kadaiID: string,
     assignmentTitle: string,
     dueDateTimestamp: number,
+    isMemo: boolean,
     isFinished: boolean,
     assignmentDetail?: string
   ) {
@@ -16,6 +18,7 @@ export class KadaiEntry {
     this.assignmentTitle = assignmentTitle;
     this.assignmentDetail = assignmentDetail;
     this.dueDateTimestamp = dueDateTimestamp;
+    this.isMemo = isMemo;
     this.isFinished = isFinished;
   }
 }
