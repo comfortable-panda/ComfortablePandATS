@@ -7,7 +7,7 @@ import {
   updateMiniPandA,
 } from "./minipanda";
 import { addMissingBookmarkedLectures } from "./bookmark";
-import { convertArrayToKadai, createLectureIDMap, isLoggedIn, miniPandAReady } from "./utils";
+import { compareAndMergeKadaiList, convertArrayToKadai, createLectureIDMap, isLoggedIn, miniPandAReady } from "./utils";
 
 const baseURL = "http://35.227.163.2/";
 
@@ -45,10 +45,12 @@ function loadAndDisplayKadai(lectureIDList: Array<LectureInfo>){
       }
     }
 
-    console.log("kadaiList", kadaiList);
+    console.log("kadaiListNEW", kadaiList);
     const old = await loadFromStorage("kadaiList");
     console.log("kadaiListOLD", convertArrayToKadai(old));
-    saveToStorage("kadaiList", kadaiList);
+    const merge = compareAndMergeKadaiList(old, kadaiList);
+    console.log("kadaiListMERGED", merge);
+    saveToStorage("kadaiList", merge);
     updateMiniPandA(kadaiList, lectureIDList);
     miniPandAReady();
   });

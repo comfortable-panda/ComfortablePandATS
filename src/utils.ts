@@ -88,15 +88,18 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
     }
     // 過去に保存した課題リストの中に講義IDが存在する時
     else {
-      // 未読フラグを下げる
-      let isRead = true;
+      // 未読フラグを引き継ぐ
+      let isRead = oldKadaiList[idx].isRead;
       for (const newKadaiEntry of newKadai.kadaiEntries){
         // 新しく取得した課題が保存された課題一覧の中にあるか探す
         const q = oldKadaiList[idx].kadaiEntries.findIndex((oldKadaiEntry) => {
           return (oldKadaiEntry.kadaiID === newKadaiEntry.kadaiID)
         });
         // もしなければ新規課題なので未読フラグを立てる
-        if (q === -1) isRead = false;
+        if (q === -1) {
+          isRead = false;
+          console.log("cannnot find")
+        }
       }
       // 未読フラグ部分を変更してマージ
       mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, newKadai.kadaiEntries, isRead));
@@ -115,4 +118,5 @@ export {
   isLoggedIn,
   miniPandAReady,
   convertArrayToKadai,
+  compareAndMergeKadaiList,
 };
