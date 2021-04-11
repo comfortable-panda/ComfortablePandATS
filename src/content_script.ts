@@ -1,9 +1,10 @@
 import { loadFromStorage, saveToStorage } from "./storage";
-import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
+import { Kadai, LectureInfo } from "./kadai";
 import { fetchLectureIDs, getKadaiOfLectureID } from "./network";
 import {
   createHanburgerButton,
-  createMiniPandA, createNavBarNotification,
+  createMiniPandA,
+  createNavBarNotification,
   updateMiniPandA
 } from "./minipanda";
 import { addMissingBookmarkedLectures } from "./bookmark";
@@ -12,41 +13,50 @@ import {
   convertArrayToKadai,
   isLoggedIn,
   miniPandAReady,
+  nowTime,
   updateIsReadFlag
 } from "./utils";
 
 const baseURL = "http://35.227.163.2/";
+const cacheInterval = 120;
 
+async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, fetchedTime: number): Promise<Array<Kadai>> {
+  const oldKadaiList = await loadFromStorage("kadaiList");
+  console.log("kadaiListOLD", convertArrayToKadai(oldKadaiList));
+  const newKadaiList = [];
+  let mergedKadaiList = [];
 
-async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>): Promise<Array<Kadai>> {
-  const pendingList = [];
-  for (const i of lectureIDList) {
-    pendingList.push(getKadaiOfLectureID(baseURL, i.lectureID));
-  }
-
-  const result = await (Promise as any).allSettled(pendingList);
-  const kadaiList = [];
-  for (const k of result) {
-    if (k.status === "fulfilled") {
-      kadaiList.push(k.value);
+  if ((nowTime - fetchedTime) / 1000 > cacheInterval) {
+    console.log("キャッシュなし");
+    const pendingList = [];
+    for (const i of lectureIDList) {
+      pendingList.push(getKadaiOfLectureID(baseURL, i.lectureID));
     }
-  }
 
-  console.log("kadaiListNEW", kadaiList);
-  const old = await loadFromStorage("kadaiList");
-  console.log("kadaiListOLD", convertArrayToKadai(old));
-  const mergedKadaiList = compareAndMergeKadaiList(old, kadaiList);
+    const result = await (Promise as any).allSettled(pendingList);
+    for (const k of result) {
+      if (k.status === "fulfilled") newKadaiList.push(k.value);
+    }
+    await saveToStorage("fetchedTime", nowTime);
+    console.log("kadaiListNEW", newKadaiList);
+    mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
+  } else {
+    console.log("キャッシュあり");
+    mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
+  }
   console.log("kadaiListMERGED", mergedKadaiList);
+
   return mergedKadaiList;
 }
 
 async function main() {
   if (isLoggedIn()) {
+    const fetchedTime = await loadFromStorage("fetchedTime");
+    console.log("fetchedTime", fetchedTime);
     createHanburgerButton();
-    createMiniPandA(100101010);
+    createMiniPandA(fetchedTime);
     const lectureIDList = fetchLectureIDs()[1];
-    console.log("lecture ID", lectureIDList);
-    const mergedKadaiList = await loadAndMergeKadaiList(lectureIDList);
+    const mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, fetchedTime);
     saveToStorage("kadaiList", mergedKadaiList);
     updateIsReadFlag(mergedKadaiList);
     updateMiniPandA(mergedKadaiList, lectureIDList);
