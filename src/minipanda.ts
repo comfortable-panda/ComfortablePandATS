@@ -1,17 +1,12 @@
-import { Kadai } from "./kadai";
+import { Kadai, LectureInfo } from "./kadai";
 import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll } from "./utils";
 import { miniPandA, KadaiEntryDom, DueGroupDom } from "./dom";
 import { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox } from "./eventListener";
 
 
-function createHanburgerButton(): HTMLDivElement {
+function createHanburgerButton(): void {
   const hamburger = document.createElement("div");
   hamburger.className = "loader";
-  return hamburger;
-}
-
-function createMiniPandA(fetchedTime: number) {
-  const hamburger = createHanburgerButton();
   const topbar = document.getElementById("mastLogin");
   hamburger.addEventListener("click", toggleSideNav);
   try {
@@ -19,16 +14,13 @@ function createMiniPandA(fetchedTime: number) {
   } catch (e) {
     console.log("could not launch miniPandA.");
   }
+}
 
-  const miniPandALogo = createElem("img", {
-    className: "logo",
-    alt: "logo",
-    src: chrome.extension.getURL("img/logo.png"),
-  });
+function createMiniPandA(fetchedTime: number): void {
+  const miniPandALogo = createElem("img", { className: "logo", alt: "logo", src: chrome.extension.getURL("img/logo.png")});
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
-  miniPandACloseBtn.classList.add("closebtn");
-  miniPandACloseBtn.classList.add("q");
+  miniPandACloseBtn.classList.add("closebtn", "q");
   miniPandACloseBtn.addEventListener("click", toggleSideNav);
 
   const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true });
@@ -61,7 +53,7 @@ function createMiniPandA(fetchedTime: number) {
   parent?.insertBefore(miniPandA, ref);
 }
 
-function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType: string; lectureID: string; lectureName: string; }>) {
+function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>) {
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
   const dueGroupColor = ["danger", "warning", "success", "other"];
   const initLetter = ["a", "b", "c", "d"];
@@ -84,22 +76,18 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
 
     // 各講義についてループ
     for (const item of kadaiList) {
-      const kadaiEntries = item.kadaiEntries;
-      const lectureID = item.lectureID;
-      const lectureName = item.lectureName;
-
       // 課題アイテムを入れるやつを作成
       const dueGroupBody = DueGroupDom.body.cloneNode(true);
       dueGroupBody.className = `kadai-${dueGroupColor[i]}`;
-      dueGroupBody.id = initLetter[i] + lectureID;
+      dueGroupBody.id = initLetter[i] + item.lectureID;
       const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true);
       dueGroupLectureName.className = `lecture-${dueGroupColor[i]}`;
-      dueGroupLectureName.textContent = "" + lectureName;
+      dueGroupLectureName.textContent = "" + item.lectureName;
       dueGroupBody.appendChild(dueGroupLectureName);
 
       // 各講義の課題一覧についてループ
       let cnt = 0;
-      for (const kadai of kadaiEntries) {
+      for (const kadai of item.kadaiEntries) {
         let kadaiCheckbox = KadaiEntryDom.checkbox.cloneNode(true);
         const kadaiLabel = KadaiEntryDom.label.cloneNode(true);
         const kadaiDueDate = KadaiEntryDom.dueDate.cloneNode(true);
@@ -117,7 +105,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
           kadaiTitle.textContent = "" + kadai.assignmentTitle;
           if (kadai.isFinished) kadaiCheckbox = true;
           kadaiCheckbox.id = kadai.kadaiID;
-          kadaiCheckbox.lectureID = lectureID;
+          kadaiCheckbox.lectureID = item.lectureID;
           // kadaiCheckbox.addEventListener('change', updateKadaiTodo, false);
           kadaiLabel.htmlFor = kadai.kadaiID;
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
@@ -141,9 +129,9 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
   // 何もない時はRelaxPandAを表示する
   if (kadaiList.length === 0) {
     const kadaiTab = kadaiDiv;
-    const relaxDiv = createElem("div", {className: "relaxpanda"});
-    const relaxPandaP = createElem("p", {className: "relaxpanda-p", innerText: "現在表示できる課題はありません"});
-    const relaxPandaImg = createElem("img", {className: "relaxpanda-img", alt: "logo", src: chrome.extension.getURL("img/relaxPanda.png")});
+    const relaxDiv = createElem("div", { className: "relaxpanda" });
+    const relaxPandaP = createElem("p", { className: "relaxpanda-p", innerText: "現在表示できる課題はありません" });
+    const relaxPandaImg = createElem("img", { className: "relaxpanda-img", alt: "logo", src: chrome.extension.getURL("img/relaxPanda.png")});
     appendChildAll(relaxDiv, [relaxPandaP, relaxPandaImg]);
     kadaiTab.appendChild(relaxDiv);
   }
@@ -151,4 +139,4 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
 }
 
 
-export { createMiniPandA, updateMiniPandA };
+export { createHanburgerButton, createMiniPandA, updateMiniPandA };
