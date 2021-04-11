@@ -1,37 +1,7 @@
 import { Kadai } from "./kadai";
+import { getDaysUntil, getTimeRemain, createElem, appendChildAll } from "./utils";
 
 const nowTime = new Date().getTime();
-
-function getDaysUntil(dt1: number, dt2: number) {
-  let diff = (dt2 - dt1) / 1000;
-  diff /= 3600 * 24;
-  if (diff < 0) diff = 9999;
-  return diff;
-}
-
-function getTimeRemain(_remainTime: number) {
-  let day = Math.floor(_remainTime / (3600 * 24));
-  let hours = Math.floor((_remainTime - (day * 3600 * 24)) / 3600);
-  let minutes = Math.floor((_remainTime - (day * 3600 * 24 + hours * 3600)) / 60);
-  return [day, hours, minutes];
-}
-
-
-function createElem(tag: any, dict?: { [key: string]: any }) {
-  const elem = document.createElement(tag);
-  for (const key in dict) {
-    // @ts-ignore
-    elem[key] = dict[key];
-  }
-  return elem;
-}
-
-function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
-  for (const obj in arr) {
-    to.appendChild(arr[obj]);
-  }
-  return to;
-}
 
 function createButton(): HTMLDivElement {
   const hamburger = document.createElement("div");
@@ -64,8 +34,7 @@ function createMiniPandA(fetchedTime: number) {
   const topbar = document.getElementById("mastLogin");
   hamburger.addEventListener("click", toggleSideNav);
   try {
-    // @ts-ignore
-    topbar.appendChild(hamburger);
+    topbar?.appendChild(hamburger);
   } catch (e) {
     console.log("could not launch miniPandA.");
   }
@@ -108,8 +77,7 @@ function createMiniPandA(fetchedTime: number) {
   const parent = document.getElementById("pageBody");
   const ref = document.getElementById("toolMenuWrap");
 
-  // @ts-ignore
-  parent.insertBefore(miniPandA, ref);
+  parent?.insertBefore(miniPandA, ref);
 }
 
 function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType: string; lectureID: string; lectureName: string; }>) {
@@ -121,57 +89,57 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
   const _dueGroupContainer = createElem("div", { className: "sidenav-list" });
   const _dueGroupBody = createElem("div");
   const _lectureNameHeader = createElem("h2");
-  const _kadaiCheckbox = createElem("input", {type: "checkbox", className: "todo-check"});
+  const _kadaiCheckbox = createElem("input", { type: "checkbox", className: "todo-check" });
   const _kadaiLabel = createElem("label");
-  const _kadaiDueDate = createElem("p", {className: "kadai-date"});
-  const _kadaiRemainTime = createElem("span", {className: "time-remain"});
-  const _kadaiTitle = createElem("p", {className: "kadai-title"});
-  let kadaiDiv = createElem("div", {className: "kadai-tab"});
-  let examDiv = createElem("div", {className: "exam-tab"});
+  const _kadaiDueDate = createElem("p", { className: "kadai-date" });
+  const _kadaiRemainTime = createElem("span", { className: "time-remain" });
+  const _kadaiTitle = createElem("p", { className: "kadai-title" });
+  const kadaiDiv = createElem("div", { className: "kadai-tab" });
+  const examDiv = createElem("div", { className: "exam-tab" });
 
+  // 0: <24h, 1: <5d, 2: <14d, 3: >14d
   for (let i = 0; i < 4; i++) {
     let entryCount = 0;
+    // 色別のグループを作成する
     const dueGroupHeader = _dueGroupHeader.cloneNode(true);
     const dueGroupHeaderTitle = _dueGroupHeaderTitle.cloneNode(true);
     dueGroupHeader.className = `sidenav-${dueGroupColor[i]}`;
     dueGroupHeader.style.display = "none";
     dueGroupHeaderTitle.textContent = `${dueGroupHeaderName[i]}`;
     dueGroupHeader.appendChild(dueGroupHeaderTitle);
-
-    // list begin //
     const dueGroupContainer = _dueGroupContainer.cloneNode(true);
     dueGroupContainer.classList.add(`sidenav-list-${dueGroupColor[i]}`);
     dueGroupContainer.style.display = "none";
 
-    for (const item of kadaiList){
+    // 各講義についてループ
+    for (const item of kadaiList) {
       const kadaiEntries = item.kadaiEntries;
       const lectureID = item.lectureID;
       const lectureName = item.lectureName;
 
+      // 課題アイテムを入れるやつを作成
       const dueGroupBody = _dueGroupBody.cloneNode(true);
       dueGroupBody.className = `kadai-${dueGroupColor[i]}`;
       dueGroupBody.id = initLetter[i] + lectureID;
-
-      var lectureNameHeader = _lectureNameHeader.cloneNode(true);
+      const lectureNameHeader = _lectureNameHeader.cloneNode(true);
       lectureNameHeader.className = `lecture-${dueGroupColor[i]}`;
       lectureNameHeader.textContent = "" + lectureName;
       dueGroupBody.appendChild(lectureNameHeader);
 
+      // 各講義の課題一覧についてループ
       let cnt = 0;
-      for (const kadai of kadaiEntries){
+      for (const kadai of kadaiEntries) {
         let kadaiCheckbox = _kadaiCheckbox.cloneNode(true);
-        let kadaiLabel = _kadaiLabel.cloneNode(true);
-        let kadaiDueDate = _kadaiDueDate.cloneNode(true);
-        let kadaiRemainTime = _kadaiRemainTime.cloneNode(true);
-        let kadaiTitle = _kadaiTitle.cloneNode(true);
+        const kadaiLabel = _kadaiLabel.cloneNode(true);
+        const kadaiDueDate = _kadaiDueDate.cloneNode(true);
+        const kadaiRemainTime = _kadaiRemainTime.cloneNode(true);
+        const kadaiTitle = _kadaiTitle.cloneNode(true);
 
+        const _date = new Date(kadai.dueDateTimestamp * 1000);
+        const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
+        const timeRemain = getTimeRemain((kadai.dueDateTimestamp * 1000 - nowTime) / 1000);
 
-        let _date = new Date(kadai.dueDateTimestamp*1000);
-        let dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ('00' + _date.getMinutes()).slice(-2);
-        let timeRemain = getTimeRemain((kadai.dueDateTimestamp*1000 - nowTime) / 1000);
-
-
-        let daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp*1000);
+        const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp * 1000);
         if ((daysUntilDue <= 1 && i === 0) || (daysUntilDue > 1 && daysUntilDue <= 5 && i === 1) || (daysUntilDue > 5 && daysUntilDue <= 14 && i === 2) || (daysUntilDue > 14 && i === 3)) {
           kadaiDueDate.textContent = "" + dispDue;
           kadaiRemainTime.textContent = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
@@ -185,6 +153,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
           cnt++;
         }
       }
+      // 各講義の課題で該当するものがある場合はグループに追加
       if (cnt > 0) {
         dueGroupContainer.appendChild(dueGroupBody);
         entryCount++;
@@ -196,10 +165,20 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
     }
     appendChildAll(miniPandA, [kadaiDiv, examDiv]);
     appendChildAll(kadaiDiv, [dueGroupHeader, dueGroupContainer]);
+  }
 
+  // 何もない時はRelaxPandAを表示する
+  if (kadaiList.length === 0) {
+    const kadaiTab = kadaiDiv;
+    const img_relaxPanda = chrome.extension.getURL("img/relaxPanda.png");
+    const relaxDiv = createElem("div", {className: "relaxpanda"});
+    const relaxPandaP = createElem("p", {className: "relaxpanda-p", innerText: "現在表示できる課題はありません"});
+    const relaxPandaImg = createElem("img", {className: "relaxpanda-img", alt: "logo", src: img_relaxPanda});
+    appendChildAll(relaxDiv, [relaxPandaP, relaxPandaImg]);
+    kadaiTab.appendChild(relaxDiv);
   }
 
 }
 
 
-export { createMiniPandA, updateMiniPandA};
+export { createMiniPandA, updateMiniPandA };
