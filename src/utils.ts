@@ -150,6 +150,23 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
   return mergedKadaiList;
 }
 
+function mergeMemoIntoKadaiList(kadaiList: Array<Kadai>, kadaiMemoList: Array<Kadai>): Array<Kadai>{
+  let mergedKadaiList = kadaiList;
+  for (const kadaiMemo of kadaiMemoList){
+    const idx = kadaiList.findIndex((kadai) => {
+      return (kadaiMemo.lectureID === kadai.lectureID)
+    });
+    if (idx !== -1) {
+      mergedKadaiList[idx].kadaiEntries.concat(kadaiMemo.kadaiEntries);
+    } else {
+      mergedKadaiList.push(new Kadai(kadaiMemo.lectureID, kadaiMemo.lectureName, kadaiMemo.kadaiEntries, true));
+    }
+  }
+
+
+  return mergedKadaiList;
+}
+
 function useCache(fetchedTime: number): boolean{
   return (nowTime - fetchedTime) / 1000 > cacheInterval;
 }
@@ -172,4 +189,5 @@ export {
   updateIsReadFlag,
   useCache,
   genUniqueStr,
+  mergeMemoIntoKadaiList,
 };
