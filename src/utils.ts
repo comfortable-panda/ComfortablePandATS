@@ -1,3 +1,5 @@
+export const nowTime = new Date().getTime();
+
 function getDaysUntil(dt1: number, dt2: number) {
   let diff = (dt2 - dt1) / 1000;
   diff /= 3600 * 24;
@@ -27,5 +29,6 @@ function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
   }
   return to;
 }
+
 
 export { getDaysUntil, getTimeRemain, createElem, appendChildAll}

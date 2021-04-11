@@ -1,24 +1,23 @@
 import { Kadai } from "./kadai";
-import { getDaysUntil, getTimeRemain, createElem, appendChildAll } from "./utils";
+import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll } from "./utils";
+import { KadaiEntryDom, DueGroupDom } from "./dom";
 
-const nowTime = new Date().getTime();
-
-function createButton(): HTMLDivElement {
-  const hamburger = document.createElement("div");
-  hamburger.className = "loader";
-  return hamburger;
-}
 
 let toggle = false;
 const miniPandA = createElem("div", { id: "miniPandA" });
 miniPandA.classList.add("sidenav");
 miniPandA.classList.add("cp_tab");
 
+function createHanburgerButton(): HTMLDivElement {
+  const hamburger = document.createElement("div");
+  hamburger.className = "loader";
+  return hamburger;
+}
+
 function toggleSideNav() {
   if (toggle) {
     miniPandA.style.width = "0px";
-    // @ts-ignore
-    document.getElementById("cover").remove();
+    document.getElementById("cover")?.remove();
   } else {
     miniPandA.style.width = "300px";
     const cover = document.createElement("div");
@@ -30,7 +29,7 @@ function toggleSideNav() {
 }
 
 function createMiniPandA(fetchedTime: number) {
-  const hamburger = createButton();
+  const hamburger = createHanburgerButton();
   const topbar = document.getElementById("mastLogin");
   hamburger.addEventListener("click", toggleSideNav);
   try {
@@ -42,7 +41,7 @@ function createMiniPandA(fetchedTime: number) {
   const miniPandALogo = createElem("img", {
     className: "logo",
     alt: "logo",
-    src: chrome.extension.getURL("img/logo.png")
+    src: chrome.extension.getURL("img/logo.png"),
   });
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
@@ -84,16 +83,6 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
   const dueGroupColor = ["danger", "warning", "success", "other"];
   const initLetter = ["a", "b", "c", "d"];
-  const _dueGroupHeader = createElem("div");
-  const _dueGroupHeaderTitle = createElem("span", { className: "q" });
-  const _dueGroupContainer = createElem("div", { className: "sidenav-list" });
-  const _dueGroupBody = createElem("div");
-  const _lectureNameHeader = createElem("h2");
-  const _kadaiCheckbox = createElem("input", { type: "checkbox", className: "todo-check" });
-  const _kadaiLabel = createElem("label");
-  const _kadaiDueDate = createElem("p", { className: "kadai-date" });
-  const _kadaiRemainTime = createElem("span", { className: "time-remain" });
-  const _kadaiTitle = createElem("p", { className: "kadai-title" });
   const kadaiDiv = createElem("div", { className: "kadai-tab" });
   const examDiv = createElem("div", { className: "exam-tab" });
 
@@ -101,13 +90,13 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
   for (let i = 0; i < 4; i++) {
     let entryCount = 0;
     // 色別のグループを作成する
-    const dueGroupHeader = _dueGroupHeader.cloneNode(true);
-    const dueGroupHeaderTitle = _dueGroupHeaderTitle.cloneNode(true);
+    const dueGroupHeader = DueGroupDom.header.cloneNode(true);
+    const dueGroupHeaderTitle = DueGroupDom.headerTitle.cloneNode(true);
     dueGroupHeader.className = `sidenav-${dueGroupColor[i]}`;
     dueGroupHeader.style.display = "none";
     dueGroupHeaderTitle.textContent = `${dueGroupHeaderName[i]}`;
     dueGroupHeader.appendChild(dueGroupHeaderTitle);
-    const dueGroupContainer = _dueGroupContainer.cloneNode(true);
+    const dueGroupContainer = DueGroupDom.container.cloneNode(true);
     dueGroupContainer.classList.add(`sidenav-list-${dueGroupColor[i]}`);
     dueGroupContainer.style.display = "none";
 
@@ -118,22 +107,22 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
       const lectureName = item.lectureName;
 
       // 課題アイテムを入れるやつを作成
-      const dueGroupBody = _dueGroupBody.cloneNode(true);
+      const dueGroupBody = DueGroupDom.body.cloneNode(true);
       dueGroupBody.className = `kadai-${dueGroupColor[i]}`;
       dueGroupBody.id = initLetter[i] + lectureID;
-      const lectureNameHeader = _lectureNameHeader.cloneNode(true);
-      lectureNameHeader.className = `lecture-${dueGroupColor[i]}`;
-      lectureNameHeader.textContent = "" + lectureName;
-      dueGroupBody.appendChild(lectureNameHeader);
+      const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true);
+      dueGroupLectureName.className = `lecture-${dueGroupColor[i]}`;
+      dueGroupLectureName.textContent = "" + lectureName;
+      dueGroupBody.appendChild(dueGroupLectureName);
 
       // 各講義の課題一覧についてループ
       let cnt = 0;
       for (const kadai of kadaiEntries) {
-        let kadaiCheckbox = _kadaiCheckbox.cloneNode(true);
-        const kadaiLabel = _kadaiLabel.cloneNode(true);
-        const kadaiDueDate = _kadaiDueDate.cloneNode(true);
-        const kadaiRemainTime = _kadaiRemainTime.cloneNode(true);
-        const kadaiTitle = _kadaiTitle.cloneNode(true);
+        let kadaiCheckbox = KadaiEntryDom.checkbox.cloneNode(true);
+        const kadaiLabel = KadaiEntryDom.label.cloneNode(true);
+        const kadaiDueDate = KadaiEntryDom.dueDate.cloneNode(true);
+        const kadaiRemainTime = KadaiEntryDom.remainTime.cloneNode(true);
+        const kadaiTitle = KadaiEntryDom.title.cloneNode(true);
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
@@ -170,10 +159,9 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<{ tabType
   // 何もない時はRelaxPandAを表示する
   if (kadaiList.length === 0) {
     const kadaiTab = kadaiDiv;
-    const img_relaxPanda = chrome.extension.getURL("img/relaxPanda.png");
     const relaxDiv = createElem("div", {className: "relaxpanda"});
     const relaxPandaP = createElem("p", {className: "relaxpanda-p", innerText: "現在表示できる課題はありません"});
-    const relaxPandaImg = createElem("img", {className: "relaxpanda-img", alt: "logo", src: img_relaxPanda});
+    const relaxPandaImg = createElem("img", {className: "relaxpanda-img", alt: "logo", src: chrome.extension.getURL("img/relaxPanda.png")});
     appendChildAll(relaxDiv, [relaxPandaP, relaxPandaImg]);
     kadaiTab.appendChild(relaxDiv);
   }
