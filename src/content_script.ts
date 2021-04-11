@@ -14,19 +14,19 @@ import {
   isLoggedIn,
   miniPandAReady,
   nowTime,
-  updateIsReadFlag
+  updateIsReadFlag,
+  useCache,
 } from "./utils";
 
 const baseURL = "http://35.227.163.2/";
-const cacheInterval = 120;
 
-async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, fetchedTime: number): Promise<Array<Kadai>> {
+async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache: boolean): Promise<Array<Kadai>> {
   const oldKadaiList = await loadFromStorage("kadaiList");
   console.log("kadaiListOLD", convertArrayToKadai(oldKadaiList));
   const newKadaiList = [];
   let mergedKadaiList = [];
 
-  if ((nowTime - fetchedTime) / 1000 > cacheInterval) {
+  if (useCache) {
     console.log("キャッシュなし");
     const pendingList = [];
     for (const i of lectureIDList) {
@@ -54,9 +54,9 @@ async function main() {
     const fetchedTime = await loadFromStorage("fetchedTime");
     console.log("fetchedTime", fetchedTime);
     createHanburgerButton();
-    createMiniPandA(fetchedTime);
+    createMiniPandA(useCache(fetchedTime) ? nowTime : fetchedTime);
     const lectureIDList = fetchLectureIDs()[1];
-    const mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, fetchedTime);
+    const mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
     saveToStorage("kadaiList", mergedKadaiList);
     updateIsReadFlag(mergedKadaiList);
     updateMiniPandA(mergedKadaiList, lectureIDList);

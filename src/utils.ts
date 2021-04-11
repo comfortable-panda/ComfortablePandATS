@@ -5,6 +5,7 @@ import { saveToStorage } from "./storage";
 import id = chrome.runtime.id;
 
 export const nowTime = new Date().getTime();
+const cacheInterval = 120;
 
 function getDaysUntil(dt1: number, dt2: number): number {
   let diff = (dt2 - dt1) / 1000;
@@ -149,6 +150,10 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
   return mergedKadaiList;
 }
 
+function useCache(fetchedTime: number): boolean{
+  return (nowTime - fetchedTime) / 1000 > cacheInterval;
+}
+
 
 export {
   getDaysUntil,
@@ -161,4 +166,5 @@ export {
   convertArrayToKadai,
   compareAndMergeKadaiList,
   updateIsReadFlag,
+  useCache,
 };

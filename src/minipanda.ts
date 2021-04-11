@@ -150,7 +150,6 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
           defaultTab[j].classList.add("badge");
         }
         const daysUntilDue = getDaysUntil(nowTime, kadaiList[q].closestDueDateTimestamp * 1000);
-        console.log("days until", daysUntilDue);
         if (daysUntilDue <= 1) {
           defaultTab[j].classList.add("nav-danger");
           defaultTab[j].getElementsByTagName('a')[0].classList.add('nav-danger');
