@@ -135,9 +135,13 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
       const dueGroupBody = DueGroupDom.body.cloneNode(true);
       dueGroupBody.className = `kadai-${dueGroupColor[i]}`;
       dueGroupBody.id = initLetter[i] + item.lectureID;
-      const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true);
-      dueGroupLectureName.className = `lecture-${dueGroupColor[i]}`;
+      const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true) as HTMLAnchorElement;
+      dueGroupLectureName.classList.add(`lecture-${dueGroupColor[i]}`, "lecture-name")
       dueGroupLectureName.textContent = "" + lectureIDMap.get(item.lectureID);
+      const topSite = item.getTopSite();
+      if (topSite != null) {
+        dueGroupLectureName.href = topSite;
+      }
       dueGroupBody.appendChild(dueGroupLectureName);
 
       // 各講義の課題一覧についてループ
@@ -147,9 +151,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const kadaiLabel = KadaiEntryDom.label.cloneNode(true);
         const kadaiDueDate = KadaiEntryDom.dueDate.cloneNode(true);
         const kadaiRemainTime = KadaiEntryDom.remainTime.cloneNode(true);
-        const kadaiTitle = KadaiEntryDom.title.cloneNode(true) as HTMLAnchorElement;
-        if (kadai.kadaiPage != null)
-          kadaiTitle.href = kadai.kadaiPage;
+        const kadaiTitle = KadaiEntryDom.title.cloneNode(true);
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);

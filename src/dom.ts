@@ -19,7 +19,7 @@ export const defaultTabCount = Object.keys(defaultTab).length;
 namespace KadaiEntryDom {
   export const checkbox = createElem("input", { type: "checkbox", className: "todo-check" });
   export const label = createElem("label");
-  export const title = createElem("a", { className: "kadai-title" });
+  export const title = createElem("p", { className: "kadai-title" });
   export const dueDate = createElem("p", { className: "kadai-date" });
   export const remainTime = createElem("span", { className: "time-remain" });
 }
@@ -30,7 +30,7 @@ namespace DueGroupDom {
   export const headerTitle = createElem("span", { className: "q" });
   export const container = createElem("div", { className: "sidenav-list" });
   export const body = createElem("div");
-  export const lectureName = createElem("h2");
+  export const lectureName = createElem("a");
 }
 
 export { KadaiEntryDom, DueGroupDom };

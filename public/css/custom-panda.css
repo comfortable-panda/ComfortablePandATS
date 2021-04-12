@@ -106,6 +106,13 @@
     display: block;
 }
 
+.sidenav-list .lecture-name {
+    display: block;
+}
+
+.sidenav-list .lecture-name:hover {
+    text-decoration: none;
+}
 
 .sidenav-list .lecture-danger {
     font-size: 12px;

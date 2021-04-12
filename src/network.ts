@@ -60,7 +60,7 @@ function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, site
     const kadaiDetail = json.instructions;
     const kadaiDueEpoch = json.dueTime.epochSecond;
     const entry = new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, false, kadaiDetail);
-    entry.kadaiPage = baseURL + "/portal/site/" + siteID + "/tool/" + kadaiID;
+    entry.kadaiPage = baseURL + "/portal/site/" + siteID;
     return entry;
   });
 }
