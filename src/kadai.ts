@@ -5,6 +5,7 @@ export class KadaiEntry {
   dueDateTimestamp: number; // POSIX time
   isMemo: boolean;
   isFinished: boolean;
+  kadaiPage?: string;
 
   constructor(
     kadaiID: string,

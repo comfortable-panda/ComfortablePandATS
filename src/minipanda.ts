@@ -147,7 +147,9 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const kadaiLabel = KadaiEntryDom.label.cloneNode(true);
         const kadaiDueDate = KadaiEntryDom.dueDate.cloneNode(true);
         const kadaiRemainTime = KadaiEntryDom.remainTime.cloneNode(true);
-        const kadaiTitle = KadaiEntryDom.title.cloneNode(true);
+        const kadaiTitle = KadaiEntryDom.title.cloneNode(true) as HTMLAnchorElement;
+        if (kadai.kadaiPage != null)
+          kadaiTitle.href = kadai.kadaiPage;
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
