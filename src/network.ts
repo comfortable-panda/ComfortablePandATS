@@ -14,7 +14,7 @@ function fetchLectureIDs(): [string, Array<LectureInfo>] {
     const lecture = elem
       .getElementsByTagName("div")[0]
       .getElementsByTagName("a")[0];
-    const m = lecture.href.match("(https?://[^/]+)/portal/site/([^/]+)");
+    const m = lecture.href.match("(https?://[^/]+)/portal/site-reset/([^/]+)");
     if (m) {
       lectureInfo.lectureID = m[2];
       lectureInfo.lectureName = lecture.title;

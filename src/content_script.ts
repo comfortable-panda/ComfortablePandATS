@@ -19,7 +19,7 @@ import {
   useCache
 } from "./utils";
 
-const baseURL = "http://35.227.163.2";
+const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
 export let fetchedTime: number;
 export let lectureIDList: Array<LectureInfo>;
 export let mergedKadaiList: Array<Kadai>;
