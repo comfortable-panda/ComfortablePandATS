@@ -99,7 +99,9 @@ function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
   for (const i of arr) {
     const kadaiEntries = [];
     for (const e of i.kadaiEntries){
-      kadaiEntries.push(new KadaiEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.assignmentDetail));
+      const entry = new KadaiEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.assignmentDetail);
+      entry.kadaiPage = e.kadaiPage;
+      kadaiEntries.push(entry);
     }
     kadaiList.push(new Kadai(i.lectureID, i.lectureName, kadaiEntries, i.isRead))
   }
@@ -138,17 +140,17 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
           console.log("cannnot find");
           mergedKadaiEntries.push(newKadaiEntry);
         } else {
-          mergedKadaiEntries.push(
-            new KadaiEntry(
-              newKadaiEntry.kadaiID,
-              newKadaiEntry.assignmentTitle,
-              newKadaiEntry.dueDateTimestamp,
-              newKadaiEntry.isMemo,
-              oldKadaiList[idx].kadaiEntries[q].isFinished,
-              newKadaiEntry.assignmentDetail
-            )
+          const entry = new KadaiEntry(
+            newKadaiEntry.kadaiID,
+            newKadaiEntry.assignmentTitle,
+            newKadaiEntry.dueDateTimestamp,
+            newKadaiEntry.isMemo,
+            oldKadaiList[idx].kadaiEntries[q].isFinished,
+            newKadaiEntry.assignmentDetail
           );
-        }
+          entry.kadaiPage = newKadaiEntry.kadaiPage;
+          mergedKadaiEntries.push(entry)
+        };
       }
       // 未読フラグ部分を変更してマージ
       mergedKadaiEntries.sort((a, b)=>{return a.dueDateTimestamp - b.dueDateTimestamp});

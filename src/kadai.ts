@@ -5,6 +5,7 @@ export class KadaiEntry {
   dueDateTimestamp: number; // POSIX time
   isMemo: boolean;
   isFinished: boolean;
+  kadaiPage?: string;
 
   constructor(
     kadaiID: string,
@@ -50,6 +51,13 @@ export class Kadai {
       }
     }
     return min;
+  }
+
+  getTopSite(): string | null {
+    for (const entry of this.kadaiEntries) {
+      if (entry.kadaiPage != null) return entry.kadaiPage;
+    }
+    return null;
   }
 }
 

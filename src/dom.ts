@@ -30,7 +30,7 @@ namespace DueGroupDom {
   export const headerTitle = createElem("span", { className: "q" });
   export const container = createElem("div", { className: "sidenav-list" });
   export const body = createElem("div");
-  export const lectureName = createElem("h2");
+  export const lectureName = createElem("a");
 }
 
 export { KadaiEntryDom, DueGroupDom };
