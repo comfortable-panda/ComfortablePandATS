@@ -161,13 +161,11 @@ function mergeMemoIntoKadaiList(kadaiList: Array<Kadai>, kadaiMemoList: Array<Ka
       return (kadaiMemo.lectureID === kadai.lectureID)
     });
     if (idx !== -1) {
-      mergedKadaiList[idx].kadaiEntries.concat(kadaiMemo.kadaiEntries);
+      mergedKadaiList[idx].kadaiEntries = mergedKadaiList[idx].kadaiEntries.concat(kadaiMemo.kadaiEntries);
     } else {
       mergedKadaiList.push(new Kadai(kadaiMemo.lectureID, kadaiMemo.lectureName, kadaiMemo.kadaiEntries, true));
     }
   }
-
-
   return mergedKadaiList;
 }
 

@@ -109,20 +109,21 @@ async function addMemo(): Promise<void> {
   const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
 
   let kadaiMemoList = await loadFromStorage("kadaiMemoList");
+  const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, "");
+  const kadaiMemo = new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true);
+
   if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0){
     kadaiMemoList = convertArrayToKadai(kadaiMemoList);
     const idx = kadaiMemoList.findIndex((oldKadaiMemo: Kadai) => {
       return (oldKadaiMemo.lectureID === todoLecID);
     });
-    const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, "");
     if (idx !== -1){
       kadaiMemoList[idx].kadaiEntries.push(kadaiMemoEntry);
     } else {
-      kadaiMemoList.push(new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true))
+      kadaiMemoList.push(kadaiMemo)
     }
   } else {
-    const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, "");
-    kadaiMemoList = [new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true)];
+    kadaiMemoList = [kadaiMemo];
   }
   saveToStorage("kadaiMemoList", kadaiMemoList);
   console.log("メモ保存した", kadaiMemoList);
@@ -134,9 +135,7 @@ async function addMemo(): Promise<void> {
   }
   miniPandA.remove();
   kadaiDiv.remove();
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList), lectureIDList, fetchedTime);
-
-  console.log("merged memo", mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList));
+  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiList, [kadaiMemo]), lectureIDList, fetchedTime);
 }
 
 export { toggleMiniPandA, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag, addMemo };
