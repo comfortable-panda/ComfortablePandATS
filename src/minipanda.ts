@@ -223,15 +223,11 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
   console.log(defaultTabCount)
   for (const lecture of lectureIDList) {
-    for (let j = 2; j < defaultTabCount; j++) {
-      let lectureID = "";
+    for (let j = 3; j < defaultTabCount; j++) {
       // @ts-ignore
-      const m = defaultTab[j].getElementsByTagName("a")[0].href.match("(https?://[^/]+)/portal/site-reset/([^/]+)");
-      if (m) lectureID = m[2];
-      else {
-        // @ts-ignore
-        lectureID = defaultTab[j].getElementsByTagName("a")[1].href.match("(https?://[^/]+)/portal/site-reset/([^/]+)")[2];
-      }
+      const lectureID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site/([^/]+)")[2];
+
+      console.log(lectureID)
       const q = kadaiList.findIndex((kadai) => {
         return (kadai.lectureID === lectureID);
       });
@@ -240,6 +236,7 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
           defaultTab[j].classList.add("badge");
         }
         const daysUntilDue = getDaysUntil(nowTime, kadaiList[q].closestDueDateTimestamp * 1000);
+
         if (daysUntilDue > 0 && daysUntilDue <= 1) {
           defaultTab[j].classList.add("nav-danger");
           defaultTab[j].getElementsByTagName("a")[0].classList.add("nav-danger");
