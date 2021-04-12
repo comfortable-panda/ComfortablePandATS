@@ -13,6 +13,12 @@ function getSiteIdAndHrefLectureNameMap(): Map<string, {href: string, title: str
   return map;
 }
 
+function isCurrentSite(siteId: string): boolean {
+  const currentSiteIdM = window.location.href.match(/https?:\/\/panda\.ecs\.kyoto-u\.ac\.jp\/portal\/site\/([^\/]+)/);
+  if (currentSiteIdM == null) return false;
+  return currentSiteIdM[1] == siteId;
+}
+
 // お気に入り上限を超えた講義を topbar に追加する
 // ネットワーク通信を行うので注意
 function addMissingBookmarkedLectures(): Promise<void> {
@@ -32,6 +38,7 @@ function addMissingBookmarkedLectures(): Promise<void> {
       const sitesInfo = getSiteIdAndHrefLectureNameMap();
       if (favorites.length > MAX_FAVORITES) {
         for (const missingFavoriteId of favorites.slice(MAX_FAVORITES)) {
+          if (isCurrentSite(missingFavoriteId)) continue;
           const siteInfo = sitesInfo.get(missingFavoriteId);
           if (siteInfo == undefined) continue;
           const href = siteInfo.href;
