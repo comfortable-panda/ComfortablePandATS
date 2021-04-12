@@ -148,6 +148,15 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const kadaiDueDate = KadaiEntryDom.dueDate.cloneNode(true);
         const kadaiRemainTime = KadaiEntryDom.remainTime.cloneNode(true);
         const kadaiTitle = KadaiEntryDom.title.cloneNode(true);
+        let memoBadge = document.createElement('span');
+        memoBadge.classList.add("add-badge");
+        memoBadge.classList.add("add-badge-success");
+        memoBadge.innerText = "メモ";
+        let deleteBadge = document.createElement('span');
+        deleteBadge.className = "del-button";
+        deleteBadge.id = kadai.kadaiID;
+        // deleteBadge.addEventListener('click', deleteKadaiMemo, true);
+        deleteBadge.innerText = "×";
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
@@ -163,6 +172,14 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
           kadaiCheckbox.lectureID = item.lectureID;
           kadaiCheckbox.addEventListener("change", toggleKadaiFinishedFlag, false);
           kadaiLabel.htmlFor = kadai.kadaiID;
+
+          if (kadai.isMemo) {
+            kadaiTitle.textContent = "";
+            kadaiTitle.appendChild(memoBadge);
+            kadaiTitle.append(kadai.assignmentTitle);
+            kadaiTitle.appendChild(deleteBadge);
+          }
+
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
           cnt++;
         }
