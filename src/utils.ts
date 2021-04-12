@@ -10,7 +10,7 @@ function getDaysUntil(dt1: number, dt2: number): number {
   // 締め切りまでの日数を計算します
   let diff = (dt2 - dt1) / 1000;
   diff /= 3600 * 24;
-  if (diff < 0) diff = 9999;
+  // if (diff < 0) diff = 9999;
   return diff;
 }
 
@@ -158,7 +158,10 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
 }
 
 function mergeMemoIntoKadaiList(kadaiList: Array<Kadai>, kadaiMemoList: Array<Kadai>): Array<Kadai>{
-  let mergedKadaiList = kadaiList;
+  const mergedKadaiList = [];
+  for (const kadai of kadaiList){
+    mergedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, kadai.kadaiEntries, kadai.isRead));
+  }
   for (const kadaiMemo of kadaiMemoList){
     const idx = kadaiList.findIndex((kadai) => {
       return (kadaiMemo.lectureID === kadai.lectureID)

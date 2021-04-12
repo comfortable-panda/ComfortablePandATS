@@ -16,19 +16,20 @@ import {
   miniPandAReady,
   nowTime,
   updateIsReadFlag,
-  useCache,
+  useCache
 } from "./utils";
 
 const baseURL = "http://35.227.163.2";
 export let fetchedTime: number;
 export let lectureIDList: Array<LectureInfo>;
 export let mergedKadaiList: Array<Kadai>;
+export let mergedKadaiListNoMemo: Array<Kadai>;
 
 async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache: boolean): Promise<Array<Kadai>> {
   const oldKadaiList = await loadFromStorage("kadaiList");
   console.log("kadaiListOLD", convertArrayToKadai(oldKadaiList));
   const newKadaiList = [];
-  let mergedKadaiList = [];
+  let tmpKadaiList = [];
 
   if (useCache) {
     console.log("キャッシュなし");
@@ -43,17 +44,23 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
     }
     await saveToStorage("fetchedTime", nowTime);
     console.log("kadaiListNEW", newKadaiList);
+
+    mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
     mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
   } else {
     console.log("キャッシュあり");
+    mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
     mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
   }
-  saveToStorage("kadaiList", mergedKadaiList);
-  console.log("kadaiListMERGED", mergedKadaiList);
+
+  await saveToStorage("kadaiList", mergedKadaiListNoMemo);// TODO
+
+
 
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
   console.log("kadaiMemoList", kadaiMemoList);
   mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList);
+  console.log("kadaiListMERGED", mergedKadaiList);
 
   return mergedKadaiList;
 }
@@ -66,15 +73,16 @@ export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDL
 
 async function main() {
   if (isLoggedIn()) {
+    createHanburgerButton();
     fetchedTime = await loadFromStorage("fetchedTime");
     lectureIDList = fetchLectureIDs()[1];
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
 
-    createHanburgerButton();
     await displayMiniPandA(mergedKadaiList, lectureIDList, fetchedTime);
 
     miniPandAReady();
-    updateIsReadFlag(mergedKadaiList);
+    updateIsReadFlag(mergedKadaiListNoMemo);
+
     createNavBarNotification(lectureIDList, mergedKadaiList);
   }
 }

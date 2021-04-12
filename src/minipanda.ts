@@ -16,7 +16,7 @@ import {
   toggleExamTab,
   toggleMemoBox,
   toggleKadaiFinishedFlag,
-  addMemo,
+  addKadaiMemo, deleteKadaiMemo,
 } from "./eventListener";
 
 
@@ -103,7 +103,7 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   todoDueLabel.appendChild(todoDueInput);
 
   const todoSubmitButton = createElem("button", { type: "submit", id: "todo-add", innerText: "追加" });
-  todoSubmitButton.addEventListener("click", addMemo, true);
+  todoSubmitButton.addEventListener("click", addKadaiMemo, true);
 
   appendChildAll(memoEditBox, [todoLecLabel, todoContentLabel, todoDueLabel, todoSubmitButton]);
   kadaiDiv.appendChild(memoEditBox);
@@ -152,13 +152,23 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const kadaiDueDate = KadaiEntryDom.dueDate.cloneNode(true);
         const kadaiRemainTime = KadaiEntryDom.remainTime.cloneNode(true);
         const kadaiTitle = KadaiEntryDom.title.cloneNode(true);
+        let memoBadge = document.createElement('span');
+        memoBadge.classList.add("add-badge");
+        memoBadge.classList.add("add-badge-success");
+        memoBadge.innerText = "メモ";
+        let deleteBadge = document.createElement('span');
+        deleteBadge.className = "del-button";
+        deleteBadge.id = kadai.kadaiID;
+        deleteBadge.addEventListener('click', deleteKadaiMemo, true);
+        deleteBadge.innerText = "×";
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
         const timeRemain = getTimeRemain((kadai.dueDateTimestamp * 1000 - nowTime) / 1000);
 
         const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp * 1000);
-        if ((daysUntilDue <= 1 && i === 0) || (daysUntilDue > 1 && daysUntilDue <= 5 && i === 1) || (daysUntilDue > 5 && daysUntilDue <= 14 && i === 2) || (daysUntilDue > 14 && i === 3)) {
+        // console.log(daysUntilDue, kadai.assignmentTitle);
+        if ((daysUntilDue > 0 && daysUntilDue <= 1 && i === 0) || (daysUntilDue > 1 && daysUntilDue <= 5 && i === 1) || (daysUntilDue > 5 && daysUntilDue <= 14 && i === 2) || (daysUntilDue > 14 && i === 3)) {
           kadaiDueDate.textContent = "" + dispDue;
           kadaiRemainTime.textContent = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
           kadaiTitle.textContent = "" + kadai.assignmentTitle;
@@ -167,6 +177,14 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
           kadaiCheckbox.lectureID = item.lectureID;
           kadaiCheckbox.addEventListener("change", toggleKadaiFinishedFlag, false);
           kadaiLabel.htmlFor = kadai.kadaiID;
+
+          if (kadai.isMemo) {
+            kadaiTitle.textContent = "";
+            kadaiTitle.appendChild(memoBadge);
+            kadaiTitle.append(kadai.assignmentTitle);
+            kadaiTitle.appendChild(deleteBadge);
+          }
+
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
           cnt++;
         }
@@ -215,6 +233,7 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
           defaultTab[j].classList.add("badge");
         }
         const daysUntilDue = getDaysUntil(nowTime, kadaiList[q].closestDueDateTimestamp * 1000);
+        console.log(kadaiList[q],daysUntilDue, kadaiList[q].lectureID)
         if (daysUntilDue <= 1) {
           defaultTab[j].classList.add("nav-danger");
           defaultTab[j].getElementsByTagName("a")[0].classList.add("nav-danger");
