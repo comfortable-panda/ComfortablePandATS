@@ -12,7 +12,7 @@ import { addMissingBookmarkedLectures } from "./bookmark";
 import {
   compareAndMergeKadaiList,
   convertArrayToKadai,
-  isLoggedIn,
+  isLoggedIn, mergeMemoIntoKadaiList,
   miniPandAReady,
   nowTime,
   updateIsReadFlag,
@@ -48,7 +48,12 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
     console.log("キャッシュあり");
     mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
   }
+  saveToStorage("kadaiList", mergedKadaiList);
   console.log("kadaiListMERGED", mergedKadaiList);
+
+  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
+  console.log("kadaiMemoList", kadaiMemoList);
+  mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList);
 
   return mergedKadaiList;
 }
@@ -64,7 +69,7 @@ async function main() {
     fetchedTime = await loadFromStorage("fetchedTime");
     lectureIDList = fetchLectureIDs()[1];
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
-    saveToStorage("kadaiList", mergedKadaiList);
+
     createHanburgerButton();
     await displayMiniPandA(mergedKadaiList, lectureIDList, fetchedTime);
 
