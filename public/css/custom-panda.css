@@ -125,6 +125,17 @@
     border-radius: 20px 20px 20px 20px;
 }
 
+.sidenav-list .lecture-danger:hover {
+    font-size: 12px;
+    font-weight: 400 !important;
+    color: #f7f7f7;
+    width: max-content;
+    padding: 3px 10px;
+    margin: -12px 0 0 -5px;
+    background: #e85555;
+    border-radius: 20px 20px 20px 20px;
+}
+
 .sidenav-list .lecture-warning {
     font-size: 12px;
     font-weight: 400 !important;
@@ -136,7 +147,29 @@
     border-radius: 20px 20px 20px 20px;
 }
 
+.sidenav-list .lecture-warning:hover {
+    font-size: 12px;
+    font-weight: 400 !important;
+    color: #f7f7f7;
+    width: max-content;
+    padding: 3px 10px;
+    margin: -12px 0 0 -5px;
+    background: #d7aa57;
+    border-radius: 20px 20px 20px 20px;
+}
+
 .sidenav-list .lecture-success {
+    font-size: 12px;
+    font-weight: 400 !important;
+    color: #f7f7f7;
+    width: max-content;
+    padding: 3px 10px;
+    margin: -12px 0 0 -5px;
+    background: #62b665;
+    border-radius: 20px 20px 20px 20px;
+}
+
+.sidenav-list .lecture-success:hover {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
