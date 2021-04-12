@@ -217,10 +217,17 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
 
 
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
+  console.log(defaultTabCount)
   for (const lecture of lectureIDList) {
     for (let j = 2; j < defaultTabCount; j++) {
-      let lectureID = defaultTab[j].getElementsByTagName("a")[1].getAttribute("data-site-id");
-      if (lectureID === null) lectureID = defaultTab[j].getElementsByTagName("a")[0].getAttribute("data-site-id");
+      let lectureID = "";
+      // @ts-ignore
+      const m = defaultTab[j].getElementsByTagName("a")[0].href.match("(https?://[^/]+)/portal/site-reset/([^/]+)");
+      if (m) lectureID = m[2];
+      else {
+        // @ts-ignore
+        lectureID = defaultTab[j].getElementsByTagName("a")[1].href.match("(https?://[^/]+)/portal/site-reset/([^/]+)")[2];
+      }
       const q = kadaiList.findIndex((kadai) => {
         return (kadai.lectureID === lectureID);
       });
