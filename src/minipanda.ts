@@ -135,9 +135,13 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
       const dueGroupBody = DueGroupDom.body.cloneNode(true);
       dueGroupBody.className = `kadai-${dueGroupColor[i]}`;
       dueGroupBody.id = initLetter[i] + item.lectureID;
-      const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true);
-      dueGroupLectureName.className = `lecture-${dueGroupColor[i]}`;
+      const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true) as HTMLAnchorElement;
+      dueGroupLectureName.classList.add(`lecture-${dueGroupColor[i]}`, "lecture-name")
       dueGroupLectureName.textContent = "" + lectureIDMap.get(item.lectureID);
+      const topSite = item.getTopSite();
+      if (topSite != null) {
+        dueGroupLectureName.href = topSite;
+      }
       dueGroupBody.appendChild(dueGroupLectureName);
 
       // 各講義の課題一覧についてループ
