@@ -118,7 +118,9 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
     // もし過去に保存した課題リストの中に講義IDが存在しない時
     if (idx === -1) {
       // 未読フラグを立ててマージ
-      mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, newKadai.kadaiEntries, false));
+      const isRead = newKadai.kadaiEntries.length === 0;
+      newKadai.kadaiEntries.sort((a, b)=>{return a.dueDateTimestamp - b.dueDateTimestamp});
+      mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, newKadai.kadaiEntries, isRead));
     }
     // 過去に保存した課題リストの中に講義IDが存在する時
     else {
@@ -145,9 +147,11 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
               oldKadaiList[idx].kadaiEntries[q].isFinished,
               newKadaiEntry.assignmentDetail
             )
-          )};
+          );
+        }
       }
       // 未読フラグ部分を変更してマージ
+      mergedKadaiEntries.sort((a, b)=>{return a.dueDateTimestamp - b.dueDateTimestamp});
       mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, mergedKadaiEntries, isRead));
     }
   }
