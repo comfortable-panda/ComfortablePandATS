@@ -5,8 +5,6 @@ import {
   hamburger,
   KadaiEntryDom,
   DueGroupDom,
-  defaultTabCount,
-  defaultTab,
   kadaiDiv,
   examDiv
 } from "./dom";
@@ -221,6 +219,8 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
 
 
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
+  const defaultTab = document.querySelectorAll('.Mrphs-sitesNav__menuitem');
+  const defaultTabCount = Object.keys(defaultTab).length;
   console.log(defaultTabCount)
   for (const lecture of lectureIDList) {
     for (let j = 3; j < defaultTabCount; j++) {
@@ -236,19 +236,23 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
           defaultTab[j].classList.add("badge");
         }
         const daysUntilDue = getDaysUntil(nowTime, kadaiList[q].closestDueDateTimestamp * 1000);
+        const aTagCount = defaultTab[j].getElementsByTagName("a").length;
 
         if (daysUntilDue > 0 && daysUntilDue <= 1) {
           defaultTab[j].classList.add("nav-danger");
-          defaultTab[j].getElementsByTagName("a")[0].classList.add("nav-danger");
-          defaultTab[j].getElementsByTagName("a")[1].classList.add("nav-danger");
+          for (let i = 0; i< aTagCount; i++){
+            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-danger");
+          }
         } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
           defaultTab[j].classList.add("nav-warning");
-          defaultTab[j].getElementsByTagName("a")[0].classList.add("nav-warning");
-          defaultTab[j].getElementsByTagName("a")[1].classList.add("nav-warning");
+          for (let i = 0; i< aTagCount; i++){
+            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
+          }
         } else if (daysUntilDue > 6 && daysUntilDue <= 14) {
           defaultTab[j].classList.add("nav-safe");
-          defaultTab[j].getElementsByTagName("a")[0].classList.add("nav-safe");
-          defaultTab[j].getElementsByTagName("a")[1].classList.add("nav-safe");
+          for (let i = 0; i< aTagCount; i++){
+            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
+          }
         }
       }
     }

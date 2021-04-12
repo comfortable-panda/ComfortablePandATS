@@ -12,9 +12,6 @@ export const hamburger = createElem("div");
 hamburger.className = "loader";
 hamburger.addEventListener("click", toggleMiniPandA);
 
-export const defaultTab = document.querySelectorAll('.Mrphs-sitesNav__menuitem');
-export const defaultTabCount = Object.keys(defaultTab).length;
-
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace KadaiEntryDom {
   export const checkbox = createElem("input", { type: "checkbox", className: "todo-check" });

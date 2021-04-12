@@ -82,10 +82,9 @@ async function main() {
 
     miniPandAReady();
     updateIsReadFlag(mergedKadaiListNoMemo);
-
+    await addMissingBookmarkedLectures();
     createNavBarNotification(lectureIDList, mergedKadaiList);
   }
 }
 
 main();
-addMissingBookmarkedLectures();
