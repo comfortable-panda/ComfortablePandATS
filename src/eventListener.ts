@@ -69,8 +69,11 @@ function toggleMemoBox(): void {
 }
 
 async function toggleKadaiFinishedFlag(event: any): Promise<void> {
-  const kadaiList: Array<Kadai> = convertArrayToKadai(await loadFromStorage("kadaiList"));
   const kadaiID = event.target.id;
+  let kadaiList: Array<Kadai>;
+  if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
+  else kadaiList = convertArrayToKadai(await loadFromStorage("kadaiList"));
+
   const updatedKadaiList = [];
   for (const kadai of kadaiList) {
     const updatedKadaiEntries = [];
@@ -94,7 +97,8 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
   }
   console.log("見つけた", updatedKadaiList);
-  saveToStorage("kadaiList", updatedKadaiList);
+  if (kadaiID[0] === "m") saveToStorage("kadaiMemoList", updatedKadaiList);
+  else saveToStorage("kadaiList", updatedKadaiList);
 }
 
 async function addKadaiMemo(): Promise<void> {
