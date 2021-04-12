@@ -18,17 +18,19 @@ import {
   updateIsReadFlag,
   useCache,
 } from "./utils";
+import {deleteKadaiMemo} from "./eventListener";
 
 const baseURL = "http://35.227.163.2/";
 export let fetchedTime: number;
 export let lectureIDList: Array<LectureInfo>;
 export let mergedKadaiList: Array<Kadai>;
+export let mergedKadaiListNoMemo: Array<Kadai>;
 
 async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache: boolean): Promise<Array<Kadai>> {
   const oldKadaiList = await loadFromStorage("kadaiList");
   console.log("kadaiListOLD", convertArrayToKadai(oldKadaiList));
   const newKadaiList = [];
-  let mergedKadaiList = [];
+  let tmpKadaiList = [];
 
   if (useCache) {
     console.log("キャッシュなし");
@@ -43,13 +45,16 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
     }
     await saveToStorage("fetchedTime", nowTime);
     console.log("kadaiListNEW", newKadaiList);
-    mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
+    tmpKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
   } else {
     console.log("キャッシュあり");
-    mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
+    tmpKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
   }
-  saveToStorage("kadaiList", mergedKadaiList);
-  console.log("kadaiListMERGED", mergedKadaiList);
+  mergedKadaiListNoMemo = JSON.parse(JSON.stringify(tmpKadaiList));
+  mergedKadaiList = JSON.parse(JSON.stringify(tmpKadaiList));
+  await saveToStorage("kadaiList", mergedKadaiListNoMemo);// TODO
+  console.log("kadaiListMERGED", mergedKadaiListNoMemo);
+
 
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
   console.log("kadaiMemoList", kadaiMemoList);
@@ -75,7 +80,7 @@ async function main() {
     await displayMiniPandA(mergedKadaiList, lectureIDList, fetchedTime);
 
     miniPandAReady();
-    updateIsReadFlag(mergedKadaiList);
+    updateIsReadFlag(mergedKadaiListNoMemo);
     createNavBarNotification(lectureIDList, mergedKadaiList);
   }
 }

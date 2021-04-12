@@ -16,7 +16,7 @@ import {
   toggleExamTab,
   toggleMemoBox,
   toggleKadaiFinishedFlag,
-  addMemo,
+  addKadaiMemo, deleteKadaiMemo,
 } from "./eventListener";
 
 
@@ -103,7 +103,7 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   todoDueLabel.appendChild(todoDueInput);
 
   const todoSubmitButton = createElem("button", { type: "submit", id: "todo-add", innerText: "追加" });
-  todoSubmitButton.addEventListener("click", addMemo, true);
+  todoSubmitButton.addEventListener("click", addKadaiMemo, true);
 
   appendChildAll(memoEditBox, [todoLecLabel, todoContentLabel, todoDueLabel, todoSubmitButton]);
   kadaiDiv.appendChild(memoEditBox);
@@ -155,7 +155,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         let deleteBadge = document.createElement('span');
         deleteBadge.className = "del-button";
         deleteBadge.id = kadai.kadaiID;
-        // deleteBadge.addEventListener('click', deleteKadaiMemo, true);
+        deleteBadge.addEventListener('click', deleteKadaiMemo, true);
         deleteBadge.innerText = "×";
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
@@ -163,7 +163,8 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const timeRemain = getTimeRemain((kadai.dueDateTimestamp * 1000 - nowTime) / 1000);
 
         const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp * 1000);
-        if ((daysUntilDue <= 1 && i === 0) || (daysUntilDue > 1 && daysUntilDue <= 5 && i === 1) || (daysUntilDue > 5 && daysUntilDue <= 14 && i === 2) || (daysUntilDue > 14 && i === 3)) {
+        // console.log(daysUntilDue, kadai.assignmentTitle);
+        if ((daysUntilDue > 0 && daysUntilDue <= 1 && i === 0) || (daysUntilDue > 1 && daysUntilDue <= 5 && i === 1) || (daysUntilDue > 5 && daysUntilDue <= 14 && i === 2) || (daysUntilDue > 14 && i === 3)) {
           kadaiDueDate.textContent = "" + dispDue;
           kadaiRemainTime.textContent = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
           kadaiTitle.textContent = "" + kadai.assignmentTitle;
