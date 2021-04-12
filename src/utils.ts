@@ -2,12 +2,12 @@ import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
 import { DueGroupDom } from "./dom";
 import lectureName = DueGroupDom.lectureName;
 import { saveToStorage } from "./storage";
-import id = chrome.runtime.id;
 
 export const nowTime = new Date().getTime();
 const cacheInterval = 120;
 
 function getDaysUntil(dt1: number, dt2: number): number {
+  // 締め切りまでの日数を計算します
   let diff = (dt2 - dt1) / 1000;
   diff /= 3600 * 24;
   if (diff < 0) diff = 9999;
@@ -21,6 +21,7 @@ function getTimeRemain(_remainTime: number): [number, number, number] {
   return [day, hours, minutes];
 }
 
+// TODO: dom.tsに移動したい
 function createElem(tag: any, dict?: { [key: string]: any }): any {
   const elem = document.createElement(tag);
   for (const key in dict) {
@@ -37,7 +38,8 @@ function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
   return to;
 }
 
-function createLectureIDMap(lectureIDList: Array<LectureInfo>): Map<string, string>{
+function createLectureIDMap(lectureIDList: Array<LectureInfo>): Map<string, string> {
+  // 講義IDと講義名のMapを作る
   const lectureIDMap = new Map<string, string>();
   for (const lec of lectureIDList) {
     lectureIDMap.set(lec.lectureID, lec.lectureName);
@@ -45,7 +47,8 @@ function createLectureIDMap(lectureIDList: Array<LectureInfo>): Map<string, stri
   return lectureIDMap;
 }
 
-function isLoggedIn(): boolean{
+function isLoggedIn(): boolean {
+  // ログインしているかどうかを返す
   const scripts = document.getElementsByTagName("script");
   let loggedIn = false;
   // @ts-ignore
@@ -56,6 +59,7 @@ function isLoggedIn(): boolean{
 }
 
 function getCurrentLectureID() {
+  // 現在のページの講義IDを返す
   const url = location.href;
   let lectureID = "";
   const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
