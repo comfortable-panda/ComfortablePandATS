@@ -1,4 +1,5 @@
 import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
+import { nowTime } from "./utils";
 
 // Lecture ID をすべて取得する
 // ネットワーク通信は行わない
@@ -54,15 +55,17 @@ function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai>
 }
 
 function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<KadaiEntry> {
-  return data.assignment_collection.map((json: any) => {
-    const kadaiID = json.id;
-    const kadaiTitle = json.title;
-    const kadaiDetail = json.instructions;
-    const kadaiDueEpoch = json.dueTime.epochSecond;
-    const entry = new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, false, kadaiDetail);
-    entry.kadaiPage = baseURL + "/portal/site/" + siteID;
-    return entry;
-  });
+  return data.assignment_collection
+    .filter((json: any) => json.dueTime.epochSecond * 1000 >= nowTime)
+    .map((json: any) => {
+      const kadaiID = json.id;
+      const kadaiTitle = json.title;
+      const kadaiDetail = json.instructions;
+      const kadaiDueEpoch = json.dueTime.epochSecond;
+      const entry = new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, false, kadaiDetail);
+      entry.kadaiPage = baseURL + "/portal/site/" + siteID;
+      return entry;
+    });
 }
 
 export { fetchLectureIDs, getKadaiOfLectureID };
