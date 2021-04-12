@@ -2,7 +2,7 @@ import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeMemoIntoKadaiList } from "./utils";
-import { displayMiniPandA, fetchedTime, lectureIDList, mergedKadaiList } from "./content_script";
+import {displayMiniPandA, fetchedTime, lectureIDList, mergedKadaiList, mergedKadaiListNoMemo} from "./content_script";
 
 let toggle = false;
 
@@ -69,8 +69,11 @@ function toggleMemoBox(): void {
 }
 
 async function toggleKadaiFinishedFlag(event: any): Promise<void> {
-  const kadaiList: Array<Kadai> = convertArrayToKadai(await loadFromStorage("kadaiList"));
   const kadaiID = event.target.id;
+  let kadaiList: Array<Kadai>;
+  if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
+  else kadaiList = convertArrayToKadai(await loadFromStorage("kadaiList"));
+
   const updatedKadaiList = [];
   for (const kadai of kadaiList) {
     const updatedKadaiEntries = [];
@@ -94,10 +97,11 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
   }
   console.log("見つけた", updatedKadaiList);
-  saveToStorage("kadaiList", updatedKadaiList);
+  if (kadaiID[0] === "m") saveToStorage("kadaiMemoList", updatedKadaiList);
+  else saveToStorage("kadaiList", updatedKadaiList);
 }
 
-async function addMemo(): Promise<void> {
+async function addKadaiMemo(): Promise<void> {
   // @ts-ignore
   const selectedIdx = document.querySelector(".todoLecName").selectedIndex;
   // @ts-ignore
@@ -135,7 +139,42 @@ async function addMemo(): Promise<void> {
   }
   miniPandA.remove();
   kadaiDiv.remove();
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiList, [kadaiMemo]), lectureIDList, fetchedTime);
+  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList, fetchedTime);
 }
 
-export { toggleMiniPandA, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag, addMemo };
+async function deleteKadaiMemo(event: any) {
+  const kadaiID = event.target.id;
+  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
+  const deletedKadaiMemoList = [];
+  for (const kadaiMemo of kadaiMemoList) {
+    const kadaiMemoEntries = [];
+    for (const _kadaiMemoEntry of kadaiMemo.kadaiEntries) {
+      if (_kadaiMemoEntry.kadaiID !== kadaiID) kadaiMemoEntries.push(_kadaiMemoEntry);
+    }
+    deletedKadaiMemoList.push(new Kadai(kadaiMemo.lectureID, kadaiMemo.lectureName, kadaiMemoEntries, kadaiMemo.isRead));
+  }
+  while (miniPandA.firstChild) {
+    miniPandA.removeChild(miniPandA.firstChild);
+  }
+  while (kadaiDiv.firstChild) {
+    kadaiDiv.removeChild(kadaiDiv.firstChild);
+  }
+  miniPandA.remove();
+  kadaiDiv.remove();
+
+  console.log("deleted memo", deletedKadaiMemoList);
+  console.log("origial memo", mergedKadaiListNoMemo);
+  console.log("merged memo", mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList));
+  saveToStorage("kadaiMemoList", deletedKadaiMemoList);
+  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList, fetchedTime);
+}
+
+export {
+  toggleMiniPandA,
+  toggleKadaiTab,
+  toggleExamTab,
+  toggleMemoBox,
+  toggleKadaiFinishedFlag,
+  addKadaiMemo,
+  deleteKadaiMemo,
+};
