@@ -16,9 +16,8 @@ import {
   miniPandAReady,
   nowTime,
   updateIsReadFlag,
-  useCache,
+  useCache
 } from "./utils";
-import {deleteKadaiMemo} from "./eventListener";
 
 const baseURL = "http://35.227.163.2/";
 export let fetchedTime: number;
@@ -45,20 +44,23 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
     }
     await saveToStorage("fetchedTime", nowTime);
     console.log("kadaiListNEW", newKadaiList);
-    tmpKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
+
+    mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
+    mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
   } else {
     console.log("キャッシュあり");
-    tmpKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
+    mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
+    mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
   }
-  mergedKadaiListNoMemo = JSON.parse(JSON.stringify(tmpKadaiList));
-  mergedKadaiList = JSON.parse(JSON.stringify(tmpKadaiList));
+
   await saveToStorage("kadaiList", mergedKadaiListNoMemo);// TODO
-  console.log("kadaiListMERGED", mergedKadaiListNoMemo);
+
 
 
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
   console.log("kadaiMemoList", kadaiMemoList);
   mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList);
+  console.log("kadaiListMERGED", mergedKadaiList);
 
   return mergedKadaiList;
 }
@@ -76,11 +78,11 @@ async function main() {
     lectureIDList = fetchLectureIDs()[1];
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
 
-
     await displayMiniPandA(mergedKadaiList, lectureIDList, fetchedTime);
 
     miniPandAReady();
     updateIsReadFlag(mergedKadaiListNoMemo);
+
     createNavBarNotification(lectureIDList, mergedKadaiList);
   }
 }
