@@ -1,5 +1,5 @@
 import { createElem } from "./utils";
-import { toggleSideNav } from "./eventListener";
+import { toggleMiniPandA } from "./eventListener";
 
 export const miniPandA = createElem("div", { id: "miniPandA" });
 miniPandA.classList.add("sidenav");
@@ -10,7 +10,7 @@ export const examDiv = createElem("div", { className: "exam-tab" });
 
 export const hamburger = createElem("div");
 hamburger.className = "loader";
-hamburger.addEventListener("click", toggleSideNav);
+hamburger.addEventListener("click", toggleMiniPandA);
 
 export const defaultTab = document.querySelectorAll('.Mrphs-sitesNav__menuitem');
 export const defaultTabCount = Object.keys(defaultTab).length;

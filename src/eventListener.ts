@@ -6,7 +6,8 @@ import { displayMiniPandA, fetchedTime, lectureIDList, mergedKadaiList } from ".
 
 let toggle = false;
 
-function toggleSideNav() {
+function toggleMiniPandA(): void {
+  // miniPandAを表示・非表示にします
   if (toggle) {
     miniPandA.style.width = "0px";
     document.getElementById("cover")?.remove();
@@ -15,12 +16,13 @@ function toggleSideNav() {
     const cover = document.createElement("div");
     cover.id = "cover";
     document.getElementsByTagName("body")[0].appendChild(cover);
-    cover.onclick = toggleSideNav;
+    cover.onclick = toggleMiniPandA;
   }
   toggle = !toggle;
 }
 
-function toggleKadaiTab() {
+function toggleKadaiTab(): void {
+  // 課題一覧タブの表示・非表示をします
   const kadaiTab = document.querySelector(".kadai-tab");
   // @ts-ignore
   kadaiTab.style.display = "";
@@ -35,7 +37,8 @@ function toggleKadaiTab() {
   lastKadaiGetTime.style.display = "";
 }
 
-function toggleExamTab() {
+function toggleExamTab(): void {
+  // クイズ・小テスト・試験一覧タブを表示・非表示にします
   const kadaiTab = document.querySelector(".kadai-tab");
   // @ts-ignore
   kadaiTab.style.display = "none";
@@ -51,20 +54,21 @@ function toggleExamTab() {
   // loadExamfromStorage();
 }
 
-function toggleMemoBox() {
+function toggleMemoBox(): void {
+  // メモ追加のボックスを表示・非表示にします
   const addMemoBox = document.querySelector(".addMemoBox");
   // @ts-ignore
   const toggleStatus = addMemoBox.style.display;
   if (toggleStatus === "") {
     // @ts-ignore
     addMemoBox.style.display = "none";
-  } else { // @ts-ignore
+  } else {
+    // @ts-ignore
     addMemoBox.style.display = "";
   }
 }
 
-async function toggleKadaiFinishedFlag(event: any) {
-  // TODO: 済　にしてもいいかも
+async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiList: Array<Kadai> = convertArrayToKadai(await loadFromStorage("kadaiList"));
   const kadaiID = event.target.id;
   const updatedKadaiList = [];
@@ -93,7 +97,7 @@ async function toggleKadaiFinishedFlag(event: any) {
   saveToStorage("kadaiList", updatedKadaiList);
 }
 
-async function addMemo() {
+async function addMemo(): Promise<void> {
   // @ts-ignore
   const selectedIdx = document.querySelector(".todoLecName").selectedIndex;
   // @ts-ignore
@@ -103,7 +107,6 @@ async function addMemo() {
   // @ts-ignore
   const todoDue = document.querySelector(".todoDue").value;
   const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
-
 
   let kadaiMemoList = await loadFromStorage("kadaiMemoList");
   if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0){
@@ -136,4 +139,4 @@ async function addMemo() {
   console.log("merged memo", mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList));
 }
 
-export { toggleSideNav, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag, addMemo };
+export { toggleMiniPandA, toggleKadaiTab, toggleExamTab, toggleMemoBox, toggleKadaiFinishedFlag, addMemo };

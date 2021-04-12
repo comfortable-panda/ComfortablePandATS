@@ -11,7 +11,7 @@ import {
   examDiv
 } from "./dom";
 import {
-  toggleSideNav,
+  toggleMiniPandA,
   toggleKadaiTab,
   toggleExamTab,
   toggleMemoBox,
@@ -38,7 +38,7 @@ function createMiniPandA(fetchedTime: number): void {
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
   miniPandACloseBtn.classList.add("closebtn", "q");
-  miniPandACloseBtn.addEventListener("click", toggleSideNav);
+  miniPandACloseBtn.addEventListener("click", toggleMiniPandA);
 
   const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true });
   kadaiTab.addEventListener("click", toggleKadaiTab);
@@ -70,7 +70,7 @@ function createMiniPandA(fetchedTime: number): void {
   parent?.insertBefore(miniPandA, ref);
 }
 
-function appendMemoBox(lectureIDList: Array<LectureInfo>) {
+function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   const memoEditBox = createElem("div");
   memoEditBox.classList.add("examBox", "addMemoBox");
   memoEditBox.style.display = "none";
@@ -109,7 +109,7 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>) {
   kadaiDiv.appendChild(memoEditBox);
 }
 
-function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>) {
+function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
   const dueGroupColor = ["danger", "warning", "success", "other"];
   const initLetter = ["a", "b", "c", "d"];
@@ -198,7 +198,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
 }
 
 
-function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>) {
+function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
   for (const lecture of lectureIDList) {
     for (let j = 2; j < defaultTabCount; j++) {
       let lectureID = defaultTab[j].getElementsByTagName("a")[1].getAttribute("data-site-id");
