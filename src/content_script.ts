@@ -1,7 +1,6 @@
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, LectureInfo } from "./kadai";
 import { fetchLectureIDs, getKadaiOfLectureID } from "./network";
-import { addMissingBookmarkedLectures } from "./bookmark";
 import {
   appendMemoBox,
   createHanburgerButton,
@@ -9,6 +8,7 @@ import {
   createNavBarNotification,
   updateMiniPandA,
 } from "./minipanda";
+import { addMissingBookmarkedLectures } from "./bookmark";
 import {
   compareAndMergeKadaiList,
   convertArrayToKadai,
