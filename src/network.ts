@@ -39,16 +39,18 @@ function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai>
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
       const res = request.response;
-      if (res === null || res.assignment_collection === null) reject("404 kadai data not found");
-      const kadaiEntries = convJsonToKadaiEntries(res, baseURL, lectureID);
-      resolve(
-        new Kadai(
-          lectureID,
-          lectureID, // TODO: lectureName
-          kadaiEntries,
-          false
-        )
-      );
+      if (!res || !res.assignment_collection) reject("404 kadai data not found");
+      else {
+        const kadaiEntries = convJsonToKadaiEntries(res, baseURL, lectureID);
+        resolve(
+          new Kadai(
+            lectureID,
+            lectureID, // TODO: lectureName
+            kadaiEntries,
+            false
+          )
+        );
+      }
     });
     request.send();
   });
