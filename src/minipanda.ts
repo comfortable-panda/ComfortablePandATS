@@ -1,12 +1,19 @@
 import { Kadai, LectureInfo } from "./kadai";
-import { nowTime, getDaysUntil, getTimeRemain, createElem, appendChildAll, createLectureIDMap } from "./utils";
+import {
+  nowTime,
+  getDaysUntil,
+  getTimeRemain,
+  createLectureIDMap,
+} from "./utils";
 import {
   miniPandA,
   hamburger,
   KadaiEntryDom,
   DueGroupDom,
   kadaiDiv,
-  examDiv
+  examDiv,
+  createElem,
+  appendChildAll,
 } from "./dom";
 import {
   toggleMiniPandA,
@@ -165,7 +172,6 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const timeRemain = getTimeRemain((kadai.dueDateTimestamp * 1000 - nowTime) / 1000);
 
         const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp * 1000);
-        // console.log(daysUntilDue, kadai.assignmentTitle);
         if ((daysUntilDue > 0 && daysUntilDue <= 1 && i === 0) || (daysUntilDue > 1 && daysUntilDue <= 5 && i === 1) || (daysUntilDue > 5 && daysUntilDue <= 14 && i === 2) || (daysUntilDue > 14 && i === 3)) {
           kadaiDueDate.textContent = "" + dispDue;
           kadaiRemainTime.textContent = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
@@ -221,7 +227,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
   const defaultTab = document.querySelectorAll('.Mrphs-sitesNav__menuitem');
   const defaultTabCount = Object.keys(defaultTab).length;
-  console.log(defaultTabCount)
+
   for (const lecture of lectureIDList) {
     for (let j = 3; j < defaultTabCount; j++) {
       // @ts-ignore

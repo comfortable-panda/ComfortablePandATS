@@ -96,7 +96,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     }
     updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
   }
-  console.log("見つけた", updatedKadaiList);
+
   if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
   else saveToStorage("TSkadaiList", updatedKadaiList);
 }
@@ -130,7 +130,7 @@ async function addKadaiMemo(): Promise<void> {
     kadaiMemoList = [kadaiMemo];
   }
   saveToStorage("TSkadaiMemoList", kadaiMemoList);
-  console.log("メモ保存した", kadaiMemoList);
+
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
   }
@@ -162,22 +162,19 @@ async function deleteKadaiMemo(event: any) {
   miniPandA.remove();
   kadaiDiv.remove();
 
-  console.log("deleted memo", deletedKadaiMemoList);
-  console.log("origial memo", mergedKadaiListNoMemo);
-  console.log("merged memo", mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList));
   saveToStorage("TSkadaiMemoList", deletedKadaiMemoList);
   await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList, fetchedTime);
 }
 
-async function editFavTabMessage(){
+async function editFavTabMessage(): Promise<void>{
   await new Promise((r) => setTimeout(r, 200));
   try {
     const message = document.getElementsByClassName("favorites-max-marker")[0];
     message.innerHTML =
-      '<i class="fa fa-bell warning-icon"></i>ComfortablePandAによってお気に入り登録した<br>サイトが全てバーに表示されました。';
+      '<i class="fa fa-bell warning-icon"></i>ComfortablePandAによってお気に入り登録した<br>サイトが全てバーに追加されました。';
     const lectureTabs = document.getElementsByClassName("fav-sites-entry");
     const lectureTabsCount = lectureTabs.length;
-    for (let i = 0; i<lectureTabsCount;i++) {
+    for (let i = 0; i < lectureTabsCount; i++) {
       lectureTabs[i].classList.remove("site-favorite-is-past-max");
     }
   } catch (e) {

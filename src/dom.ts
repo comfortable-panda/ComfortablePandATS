@@ -1,5 +1,20 @@
-import { createElem } from "./utils";
 import { toggleMiniPandA } from "./eventListener";
+
+function createElem(tag: string, dict?: { [key: string]: any }): any {
+  const elem = document.createElement(tag);
+  for (const key in dict) {
+    // @ts-ignore
+    elem[key] = dict[key];
+  }
+  return elem;
+}
+
+function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
+  for (const obj in arr) {
+    to.appendChild(arr[obj]);
+  }
+  return to;
+}
 
 export const miniPandA = createElem("div", { id: "miniPandA" });
 miniPandA.classList.add("sidenav");
@@ -30,4 +45,4 @@ namespace DueGroupDom {
   export const lectureName = createElem("a");
 }
 
-export { KadaiEntryDom, DueGroupDom };
+export { KadaiEntryDom, DueGroupDom, createElem, appendChildAll };
