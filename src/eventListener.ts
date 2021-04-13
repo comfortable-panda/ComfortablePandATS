@@ -71,8 +71,8 @@ function toggleMemoBox(): void {
 async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiID = event.target.id;
   let kadaiList: Array<Kadai>;
-  if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
-  else kadaiList = convertArrayToKadai(await loadFromStorage("kadaiList"));
+  if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
+  else kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiList"));
 
   const updatedKadaiList = [];
   for (const kadai of kadaiList) {
@@ -97,8 +97,8 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
   }
   console.log("見つけた", updatedKadaiList);
-  if (kadaiID[0] === "m") saveToStorage("kadaiMemoList", updatedKadaiList);
-  else saveToStorage("kadaiList", updatedKadaiList);
+  if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
+  else saveToStorage("TSkadaiList", updatedKadaiList);
 }
 
 async function addKadaiMemo(): Promise<void> {
@@ -112,7 +112,7 @@ async function addKadaiMemo(): Promise<void> {
   const todoDue = document.querySelector(".todoDue").value;
   const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
 
-  let kadaiMemoList = await loadFromStorage("kadaiMemoList");
+  let kadaiMemoList = await loadFromStorage("TSkadaiMemoList");
   const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, "");
   const kadaiMemo = new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true);
 
@@ -129,7 +129,7 @@ async function addKadaiMemo(): Promise<void> {
   } else {
     kadaiMemoList = [kadaiMemo];
   }
-  saveToStorage("kadaiMemoList", kadaiMemoList);
+  saveToStorage("TSkadaiMemoList", kadaiMemoList);
   console.log("メモ保存した", kadaiMemoList);
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
@@ -144,7 +144,7 @@ async function addKadaiMemo(): Promise<void> {
 
 async function deleteKadaiMemo(event: any) {
   const kadaiID = event.target.id;
-  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
+  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
   const deletedKadaiMemoList = [];
   for (const kadaiMemo of kadaiMemoList) {
     const kadaiMemoEntries = [];
@@ -165,7 +165,7 @@ async function deleteKadaiMemo(event: any) {
   console.log("deleted memo", deletedKadaiMemoList);
   console.log("origial memo", mergedKadaiListNoMemo);
   console.log("merged memo", mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList));
-  saveToStorage("kadaiMemoList", deletedKadaiMemoList);
+  saveToStorage("TSkadaiMemoList", deletedKadaiMemoList);
   await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList, fetchedTime);
 }
 

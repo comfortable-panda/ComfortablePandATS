@@ -82,7 +82,7 @@ function updateIsReadFlag(kadaiList: Array<Kadai>): void {
       }
     }
     console.log("フラグをへし折りました！")
-    saveToStorage("kadaiList", updatedKadaiList);
+    saveToStorage("TSkadaiList", updatedKadaiList);
   }
 }
 

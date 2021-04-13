@@ -26,7 +26,7 @@ export let mergedKadaiList: Array<Kadai>;
 export let mergedKadaiListNoMemo: Array<Kadai>;
 
 async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache: boolean): Promise<Array<Kadai>> {
-  const oldKadaiList = await loadFromStorage("kadaiList");
+  const oldKadaiList = await loadFromStorage("TSkadaiList");
   console.log("kadaiListOLD", convertArrayToKadai(oldKadaiList));
   const newKadaiList = [];
   let tmpKadaiList = [];
@@ -42,7 +42,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
     for (const k of result) {
       if (k.status === "fulfilled") newKadaiList.push(k.value);
     }
-    await saveToStorage("fetchedTime", nowTime);
+    await saveToStorage("TSfetchedTime", nowTime);
     console.log("kadaiListNEW", newKadaiList);
 
     mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
@@ -53,11 +53,11 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
     mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
   }
 
-  await saveToStorage("kadaiList", mergedKadaiListNoMemo);// TODO
+  await saveToStorage("TSkadaiList", mergedKadaiListNoMemo);// TODO
 
 
 
-  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("kadaiMemoList"));
+  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
   console.log("kadaiMemoList", kadaiMemoList);
   mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList);
   console.log("kadaiListMERGED", mergedKadaiList);
@@ -74,7 +74,7 @@ export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDL
 async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
-    fetchedTime = await loadFromStorage("fetchedTime");
+    fetchedTime = await loadFromStorage("TSfetchedTime");
     lectureIDList = fetchLectureIDs()[1];
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
 
