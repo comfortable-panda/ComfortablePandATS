@@ -227,7 +227,6 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
       // @ts-ignore
       const lectureID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-reset/([^/]+)")[2];
 
-      console.log(lectureID)
       const q = kadaiList.findIndex((kadai) => {
         return (kadai.lectureID === lectureID);
       });

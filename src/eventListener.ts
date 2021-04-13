@@ -169,6 +169,22 @@ async function deleteKadaiMemo(event: any) {
   await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList, fetchedTime);
 }
 
+async function editFavTabMessage(){
+  await new Promise((r) => setTimeout(r, 200));
+  try {
+    const message = document.getElementsByClassName("favorites-max-marker")[0];
+    message.innerHTML =
+      '<i class="fa fa-bell warning-icon"></i>ComfortablePandAによってお気に入り登録した<br>サイトが全てバーに表示されました。';
+    const lectureTabs = document.getElementsByClassName("fav-sites-entry");
+    const lectureTabsCount = lectureTabs.length;
+    for (let i = 0; i<lectureTabsCount;i++) {
+      lectureTabs[i].classList.remove("site-favorite-is-past-max");
+    }
+  } catch (e) {
+    console.log("could not edit message");
+  }
+}
+
 export {
   toggleMiniPandA,
   toggleKadaiTab,
@@ -177,4 +193,5 @@ export {
   toggleKadaiFinishedFlag,
   addKadaiMemo,
   deleteKadaiMemo,
+  editFavTabMessage,
 };

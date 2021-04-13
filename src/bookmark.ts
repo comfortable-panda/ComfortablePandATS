@@ -1,3 +1,5 @@
+import { editFavTabMessage } from "./eventListener";
+
 const MAX_FAVORITES = 10;
 
 function getSiteIdAndHrefLectureNameMap(): Map<string, {href: string, title: string}> {
@@ -27,6 +29,8 @@ function addMissingBookmarkedLectures(): Promise<void> {
   const request = new XMLHttpRequest();
   request.open("GET", "https://panda.ecs.kyoto-u.ac.jp/portal/favorites/list");
   request.responseType = "json";
+  // @ts-ignore
+  document.querySelector(".organizeFavorites").addEventListener("click", editFavTabMessage);
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
       const res = request.response;
