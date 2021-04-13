@@ -1,18 +1,18 @@
 {
-  "name": "Comfortable PandA-TS",
+  "name": "Comfortable PandA",
   "description": "Makes our PandA life more comfortable!",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "manifest_version": 2,
   "icons": {
-//    "16": "img/icon16.png",
-//    "48": "img/icon48.png",
-//    "128": "img/icon128.png"
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
   },
   "browser_action": {
     "default_icon": {
-//      "16": "img/icon16.png",
-//      "24": "img/icon24.png",
-//      "32": "img/icon32.png"
+      "16": "img/icon16.png",
+      "24": "img/icon24.png",
+      "32": "img/icon32.png"
     },
     "default_title": "Comfortable PandA",
     "default_popup": "popup.html"
@@ -25,7 +25,7 @@
       "css": [
         "css/custom-panda.css"
       ],
-      "matches": ["http://35.227.163.2/*", "https://panda.ecs.kyoto-u.ac.jp/*"]
+      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*"]
     }
   ],
   "background": {
