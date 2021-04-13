@@ -51,7 +51,6 @@ function toggleExamTab(): void {
   const lastKadaiGetTime = document.querySelector(".kadai-time");
   // @ts-ignore
   lastKadaiGetTime.style.display = "none";
-  // loadExamfromStorage();
 }
 
 function toggleMemoBox(): void {
@@ -142,7 +141,7 @@ async function addKadaiMemo(): Promise<void> {
   await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList, fetchedTime);
 }
 
-async function deleteKadaiMemo(event: any) {
+async function deleteKadaiMemo(event: any): Promise<void> {
   const kadaiID = event.target.id;
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
   const deletedKadaiMemoList = [];

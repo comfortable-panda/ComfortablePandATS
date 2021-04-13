@@ -21,7 +21,8 @@ import {
   toggleExamTab,
   toggleMemoBox,
   toggleKadaiFinishedFlag,
-  addKadaiMemo, deleteKadaiMemo,
+  addKadaiMemo,
+  deleteKadaiMemo,
 } from "./eventListener";
 
 
@@ -38,7 +39,7 @@ function createMiniPandA(fetchedTime: number): void {
   const miniPandALogo = createElem("img", {
     className: "logo",
     alt: "logo",
-    src: chrome.extension.getURL("img/logo.png")
+    src: chrome.extension.getURL("img/logo.png"),
   });
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
@@ -157,14 +158,13 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const kadaiDueDate = KadaiEntryDom.dueDate.cloneNode(true);
         const kadaiRemainTime = KadaiEntryDom.remainTime.cloneNode(true);
         const kadaiTitle = KadaiEntryDom.title.cloneNode(true);
-        let memoBadge = document.createElement('span');
-        memoBadge.classList.add("add-badge");
-        memoBadge.classList.add("add-badge-success");
+        const memoBadge = document.createElement("span");
+        memoBadge.classList.add("add-badge", "add-badge-success");
         memoBadge.innerText = "メモ";
-        let deleteBadge = document.createElement('span');
+        const deleteBadge = document.createElement("span");
         deleteBadge.className = "del-button";
         deleteBadge.id = kadai.kadaiID;
-        deleteBadge.addEventListener('click', deleteKadaiMemo, true);
+        deleteBadge.addEventListener("click", deleteKadaiMemo, true);
         deleteBadge.innerText = "×";
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
@@ -215,17 +215,16 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
     const relaxPandaImg = createElem("img", {
       className: "relaxpanda-img",
       alt: "logo",
-      src: chrome.extension.getURL("img/relaxPanda.png")
+      src: chrome.extension.getURL("img/relaxPanda.png"),
     });
     appendChildAll(relaxDiv, [relaxPandaP, relaxPandaImg]);
     kadaiTab.appendChild(relaxDiv);
   }
-
 }
 
 
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
-  const defaultTab = document.querySelectorAll('.Mrphs-sitesNav__menuitem');
+  const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
 
   for (const lecture of lectureIDList) {
@@ -234,7 +233,7 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
       const lectureID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-reset/([^/]+)")[2];
 
       const q = kadaiList.findIndex((kadai) => {
-        return (kadai.lectureID === lectureID);
+        return kadai.lectureID === lectureID;
       });
       if (q !== -1) {
         if (!kadaiList[q].isRead) {
@@ -245,17 +244,17 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
 
         if (daysUntilDue > 0 && daysUntilDue <= 1) {
           defaultTab[j].classList.add("nav-danger");
-          for (let i = 0; i< aTagCount; i++){
+          for (let i = 0; i < aTagCount; i++) {
             defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-danger");
           }
         } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
           defaultTab[j].classList.add("nav-warning");
-          for (let i = 0; i< aTagCount; i++){
+          for (let i = 0; i < aTagCount; i++) {
             defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
           }
         } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
           defaultTab[j].classList.add("nav-safe");
-          for (let i = 0; i< aTagCount; i++){
+          for (let i = 0; i < aTagCount; i++) {
             defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
           }
         }
@@ -264,5 +263,10 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
   }
 }
 
-
-export { createHanburgerButton, createMiniPandA,appendMemoBox ,updateMiniPandA, createNavBarNotification };
+export {
+  createHanburgerButton,
+  createMiniPandA,
+  appendMemoBox,
+  updateMiniPandA,
+  createNavBarNotification,
+};

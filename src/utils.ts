@@ -166,7 +166,6 @@ function genUniqueStr(): string {
   return "m" + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
 }
 
-
 export {
   getDaysUntil,
   getTimeRemain,

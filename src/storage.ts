@@ -1,4 +1,4 @@
-export function loadFromStorage(key: string): Promise<any> {
+function loadFromStorage(key: string): Promise<any> {
   return new Promise(function (resolve, reject) {
     chrome.storage.local.get(key, function (items: any) {
       if (typeof items[key] === "undefined") resolve([])
@@ -7,7 +7,7 @@ export function loadFromStorage(key: string): Promise<any> {
   });
 }
 
-export function saveToStorage(key: string, value: any): Promise<any> {
+function saveToStorage(key: string, value: any): Promise<any> {
   const entity: { [key: string]: [value: any] } = {};
   entity[key] = value;
   return new Promise(function (resolve, reject) {
@@ -16,3 +16,5 @@ export function saveToStorage(key: string, value: any): Promise<any> {
     });
   });
 }
+
+export { loadFromStorage, saveToStorage };
