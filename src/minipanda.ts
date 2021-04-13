@@ -248,7 +248,7 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
           for (let i = 0; i< aTagCount; i++){
             defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
           }
-        } else if (daysUntilDue > 6 && daysUntilDue <= 14) {
+        } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
           defaultTab[j].classList.add("nav-safe");
           for (let i = 0; i< aTagCount; i++){
             defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
