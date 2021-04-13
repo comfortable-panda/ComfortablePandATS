@@ -41,5 +41,11 @@
     "css/custom-panda.css",
     "img/logo.png",
     "img/relaxPanda.png"
-  ]
+  ],
+  "applications": {
+    "gecko": {
+      "id": "comfortable.panda@das08",
+      "update_url":"https://das82.com/downloads/updates.json"
+    }
+  }
 }
