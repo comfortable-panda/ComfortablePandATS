@@ -233,7 +233,7 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
       });
       if (q !== -1) {
         if (!kadaiList[q].isRead) {
-          defaultTab[j].classList.add("badge");
+          defaultTab[j].classList.add("red-badge");
         }
         const daysUntilDue = getDaysUntil(nowTime, kadaiList[q].closestDueDateTimestamp * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
