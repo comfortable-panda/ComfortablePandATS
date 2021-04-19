@@ -1,4 +1,4 @@
-import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
+import { Kadai, KadaiEntry, LectureInfo, Quiz, QuizEntry } from "./kadai";
 import { nowTime } from "./utils";
 
 // Lecture ID をすべて取得する
@@ -71,4 +71,41 @@ function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, site
     });
 }
 
-export { fetchLectureIDs, getKadaiOfLectureID };
+function convJsonToQuizEntries(data: Record<string, any>): Array<QuizEntry> {
+  return (data.sam_pub_collection as Array<Record<string, any>>)
+    .map((json: Record<string, any>) => {
+      return new QuizEntry(json.publishedAssessmentId, json.title, json.startDate, json.dueDate, json.ownerSite, json.ownerSiteId);
+    });
+}
+
+function fetchQuiz(baseURL: string, siteID: string) {
+  const queryURL = baseURL + "/direct/sam_pub/context/" + siteID + ".json";
+  const request = new XMLHttpRequest();
+  request.open("GET", queryURL);
+  // キャッシュ対策
+  request.setRequestHeader("Pragma", "no-cache");
+  request.setRequestHeader("Cache-Control", "no-cache");
+  request.setRequestHeader("If-Modified-Since","Thu, 01 Jun 1970 00:00:00 GMT");
+  request.responseType = "json";
+  
+  return new Promise((resolve, reject) => {
+    request.addEventListener("load", (e) => {
+      const res = request.response;
+      if (!res || !res.sam_pub_collection) reject("404 quiz data not found");
+      else {
+        const quizEntries = convJsonToQuizEntries(res);
+        resolve(
+          new Quiz(
+            siteID,
+            siteID, // TODO: lectureName
+            quizEntries,
+            false
+          )
+        );
+      }
+    });
+    request.send();
+  });
+}
+
+export { fetchLectureIDs, getKadaiOfLectureID, fetchQuiz };
