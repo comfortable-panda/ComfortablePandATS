@@ -64,7 +64,7 @@ Also check box is available for you to distinguish completed assignments from wo
 - 2021/03/28 v2.0.0 Support for Sakai21.
 - 2021/04/10 v2.1.0 Fixed errors.
 - 2021/04/13 v3.0.0 Re-wrote everything using Typescript.
-- 2021/04/13 v3.0.4 BUx fix.
+- 2021/04/13 v3.0.4 Bug fix.
 
 # License
 MIT

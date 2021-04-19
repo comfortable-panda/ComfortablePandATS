@@ -44,7 +44,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
       if (k.status === "fulfilled") newKadaiList.push(k.value);
     }
     // 取得した時間を保存
-    await saveToStorage("TSfetchedTime", nowTime);
+    await saveToStorage("TSkadaiFetchedTime", nowTime);
 
     // 保存してあったものとマージする
     mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
@@ -75,7 +75,7 @@ export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDL
 async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
-    fetchedTime = await loadFromStorage("TSfetchedTime");
+    fetchedTime = await loadFromStorage("TSkadaiFetchedTime");
     lectureIDList = fetchLectureIDs()[1];
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
 
