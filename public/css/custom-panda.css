@@ -108,6 +108,7 @@
 
 .sidenav-list .lecture-name {
     display: block;
+    text-decoration: none;
 }
 
 .sidenav-list .lecture-name:hover {
