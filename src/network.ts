@@ -59,6 +59,7 @@ function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai>
 function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<KadaiEntry> {
   return data.assignment_collection
     .filter((json: any) => json.dueTime.epochSecond * 1000 >= nowTime)
+    .filter((json: any) => json.openTime.epochSecond * 1000 < nowTime)
     .map((json: any) => {
       const kadaiID = json.id;
       const kadaiTitle = json.title;
