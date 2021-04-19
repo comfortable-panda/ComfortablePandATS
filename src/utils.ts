@@ -109,6 +109,9 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
     else {
       // 未読フラグを引き継ぐ
       let isRead = oldKadaiList[idx].isRead;
+      // 何も課題がない時は既読フラグをつける
+      if (newKadai.kadaiEntries.length === 0) isRead = true;
+
       let mergedKadaiEntries = [];
       for (const newKadaiEntry of newKadai.kadaiEntries){
         // 新しく取得した課題が保存された課題一覧の中にあるか探す
