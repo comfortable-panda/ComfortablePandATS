@@ -2,7 +2,7 @@ import { editFavTabMessage } from "./eventListener";
 
 const MAX_FAVORITES = 10;
 
-function getSiteIdAndHrefLectureNameMap(): Map<string, {href: string, title: string}> {
+function getSiteIdAndHrefLectureNameMap(): Map<string, { href: string, title: string }> {
   const sites = document.querySelectorAll(".fav-sites-entry");
   const map = new Map<string, { href: string; title: string }>();
   sites.forEach(site => {
@@ -19,6 +19,16 @@ function isCurrentSite(siteId: string): boolean {
   const currentSiteIdM = window.location.href.match(/https?:\/\/panda\.ecs\.kyoto-u\.ac\.jp\/portal\/site\/([^\/]+)/);
   if (currentSiteIdM == null) return false;
   return currentSiteIdM[1] == siteId;
+}
+
+function getCurrentShownSiteHrefs(): Array<string> {
+  const topnav = document.querySelector("#topnav");
+  if (topnav == null) return new Array<string>();
+  const sites = topnav.querySelectorAll(".Mrphs-sitesNav__menuitem");
+  const hrefs: Array<string> = [];
+  sites.forEach(site => hrefs.push((site.childNodes[1] as HTMLAnchorElement).href)) // TODO: gabagaba
+  if (hrefs.length < 2) return hrefs;
+  return hrefs.slice(1); // omit "Home"
 }
 
 // お気に入り上限を超えた講義を topbar に追加する
@@ -40,26 +50,30 @@ function addMissingBookmarkedLectures(): Promise<void> {
       }
       const favorites = res.favoriteSiteIds as [string];
       const sitesInfo = getSiteIdAndHrefLectureNameMap();
-      if (favorites.length > MAX_FAVORITES) {
-        for (const missingFavoriteId of favorites.slice(MAX_FAVORITES)) {
-          if (isCurrentSite(missingFavoriteId)) continue;
-          const siteInfo = sitesInfo.get(missingFavoriteId);
-          if (siteInfo == undefined) continue;
-          const href = siteInfo.href;
-          const title = siteInfo.title;
+      const currentlyShownSites = getCurrentShownSiteHrefs();
+      for (const favorite of favorites) {
+        // skip if favorite is the current site
+        if (isCurrentSite(favorite)) continue;
 
-          const li = document.createElement("li");
-          li.classList.add("Mrphs-sitesNav__menuitem");
-          const anchor = document.createElement("a");
-          anchor.classList.add("link-container");
-          anchor.href = href;
-          anchor.title = title;
-          const span = document.createElement("span");
-          span.innerText = title;
-          anchor.appendChild(span);
-          li.appendChild(anchor);
-          topnav.appendChild(li);
-        }
+        const siteInfo = sitesInfo.get(favorite);
+        if (siteInfo == undefined) continue;
+        const href = siteInfo.href;
+        const title = siteInfo.title;
+
+        // skip if the site is already shown
+        if (currentlyShownSites.find(c => c == href) != null) continue;
+
+        const li = document.createElement("li");
+        li.classList.add("Mrphs-sitesNav__menuitem");
+        const anchor = document.createElement("a");
+        anchor.classList.add("link-container");
+        anchor.href = href;
+        anchor.title = title;
+        const span = document.createElement("span");
+        span.innerText = title;
+        anchor.appendChild(span);
+        li.appendChild(anchor);
+        topnav.appendChild(li);
       }
       resolve();
     });
