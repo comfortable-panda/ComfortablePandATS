@@ -78,7 +78,7 @@ function convJsonToQuizEntries(data: Record<string, any>): Array<QuizEntry> {
     });
 }
 
-function fetchQuiz(baseURL: string, siteID: string) {
+function getQuizOfLectureID(baseURL: string, siteID: string) {
   const queryURL = baseURL + "/direct/sam_pub/context/" + siteID + ".json";
   const request = new XMLHttpRequest();
   request.open("GET", queryURL);
@@ -108,4 +108,4 @@ function fetchQuiz(baseURL: string, siteID: string) {
   });
 }
 
-export { fetchLectureIDs, getKadaiOfLectureID, fetchQuiz };
+export { fetchLectureIDs, getKadaiOfLectureID, getQuizOfLectureID };
