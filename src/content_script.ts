@@ -16,8 +16,9 @@ import {
   mergeMemoIntoKadaiList,
   miniPandAReady,
   nowTime,
+  sortKadaiList,
   updateIsReadFlag,
-  useCache,
+  useCache
 } from "./utils";
 
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
@@ -62,6 +63,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
   // さらにメモもマージする
   mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList);
+  mergedKadaiList = sortKadaiList(mergedKadaiList);
 
   return mergedKadaiList;
 }

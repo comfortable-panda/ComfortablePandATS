@@ -161,6 +161,14 @@ function mergeMemoIntoKadaiList(kadaiList: Array<Kadai>, kadaiMemoList: Array<Ka
   return mergedKadaiList;
 }
 
+function sortKadaiList(kadaiList: Array<Kadai>): Array<Kadai> {
+  return Array.from(kadaiList).sort((a, b) => {
+    if (a.closestDueDateTimestamp > b.closestDueDateTimestamp) return 1;
+    if (a.closestDueDateTimestamp < b.closestDueDateTimestamp) return -1;
+    return 0;
+  });
+}
+
 function useCache(fetchedTime: number): boolean{
   return (nowTime - fetchedTime) / 1000 > cacheInterval;
 }
@@ -181,4 +189,5 @@ export {
   useCache,
   genUniqueStr,
   mergeMemoIntoKadaiList,
+  sortKadaiList,
 };
