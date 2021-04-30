@@ -1,0 +1,28 @@
+body {
+    font-family: "Open Sans", sans-serif;
+    min-width: 300px;
+    max-width: 400px;
+    background-color: rgb(202, 202, 202);
+}
+span {
+    font-family: "Open Sans", sans-serif;
+}
+.kadai-title {
+    font-family: "Open Sans", sans-serif;
+    font-size: 12px !important;
+    color: #524e4e;
+    padding-left: 20px;
+    word-break: break-word;
+}
+.kadai-date {
+    font-family: initial;
+    font-size: 11px !important;
+    font-weight: bold;
+    color: #b01011
+}
+.kadai-tab {
+    padding-top: 60px;
+}
+.sp{
+    margin: 10px;
+}

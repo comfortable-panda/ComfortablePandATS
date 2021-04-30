@@ -3,21 +3,38 @@ import { deleteKadaiMemo, toggleKadaiFinishedFlag } from './eventListener';
 import { Kadai, LectureInfo } from './kadai';
 import { fetchLectureIDs } from './network';
 import { loadFromStorage } from './storage'
-import { createLectureIDMap, getDaysUntil, getTimeRemain, nowTime } from './utils';
+import {
+  convertArrayToKadai,
+  createLectureIDMap,
+  getDaysUntil,
+  getTimeRemain,
+  mergeMemoIntoKadaiList,
+  nowTime,
+  sortKadaiList
+} from "./utils";
+import { mergedKadaiList } from "./content_script";
 
 const subpandaRoot = document.querySelector("#subpanda");
 
 async function dumpCache() {
   if (subpandaRoot == null) return;
+  let mergedKadaiList: Array<Kadai>;
 
   const kadais = await loadFromStorage("TSkadaiList") as Array<Kadai>;
+  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
+  mergedKadaiList = mergeMemoIntoKadaiList(kadais, kadaiMemoList);
   const lectureIDs = await loadFromStorage("TSlectureids") as Array<LectureInfo>;
-  updateSubPandA(kadais, lectureIDs);
+  updateSubPandA(sortKadaiList(mergedKadaiList), lectureIDs);
 }
 
 function addSubPandAToPopup() {
   if (subpandaRoot == null) return;
-
+  const miniPandALogo = createElem("img", {
+    className: "logo",
+    alt: "logo",
+    src: chrome.extension.getURL("img/logo.png"),
+  });
+  appendChildAll(subPandA, [miniPandALogo])
   subpandaRoot.appendChild(subPandA);
 }
 
@@ -67,11 +84,6 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
         const memoBadge = document.createElement("span");
         memoBadge.classList.add("add-badge", "add-badge-success");
         memoBadge.innerText = "メモ";
-        const deleteBadge = document.createElement("span");
-        deleteBadge.className = "del-button";
-        deleteBadge.id = kadai.kadaiID;
-        deleteBadge.addEventListener("click", deleteKadaiMemo, true);
-        deleteBadge.innerText = "×";
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
@@ -92,7 +104,6 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
             kadaiTitle.textContent = "";
             kadaiTitle.appendChild(memoBadge);
             kadaiTitle.append(kadai.assignmentTitle);
-            kadaiTitle.appendChild(deleteBadge);
           }
 
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
