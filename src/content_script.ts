@@ -74,12 +74,17 @@ export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDL
   updateMiniPandA(mergedKadaiList, lectureIDList);
 }
 
+async function saveCacheOfLectureIDs(lectureIDs: Array<LectureInfo>) {
+  saveToStorage("TSlectureids", lectureIDs);
+}
+
 async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
     fetchedTime = await loadFromStorage("TSkadaiFetchedTime");
     lectureIDList = fetchLectureIDs()[1];
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
+    await saveCacheOfLectureIDs(lectureIDList);
 
     await displayMiniPandA(mergedKadaiList, lectureIDList, fetchedTime);
 

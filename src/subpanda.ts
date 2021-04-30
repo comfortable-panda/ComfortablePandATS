@@ -11,7 +11,7 @@ async function dumpCache() {
   if (subpandaRoot == null) return;
 
   const kadais = await loadFromStorage("TSkadaiList") as Array<Kadai>;
-  const lectureIDs = fetchLectureIDs()[1];
+  const lectureIDs = await loadFromStorage("TSlectureids") as Array<LectureInfo>;
   updateSubPandA(kadais, lectureIDs);
 }
 
@@ -49,7 +49,7 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
       dueGroupBody.id = initLetter[i] + item.lectureID;
       const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true) as HTMLAnchorElement;
       dueGroupLectureName.classList.add(`lecture-${dueGroupColor[i]}`, "lecture-name")
-      dueGroupLectureName.textContent = "" + lectureIDMap.get(item.lectureID);
+      dueGroupLectureName.textContent = "" + (lectureIDMap.get(item.lectureID) || "???");
       // const topSite = item.getTopSite();
       // if (topSite != null) {
       //   dueGroupLectureName.href = topSite;
