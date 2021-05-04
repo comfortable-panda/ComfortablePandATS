@@ -82,7 +82,7 @@ function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
     for (const e of i.kadaiEntries){
       const entry = new KadaiEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.assignmentDetail);
       entry.kadaiPage = e.kadaiPage;
-      kadaiEntries.push(entry);
+      if (entry.dueDateTimestamp * 1000 > nowTime) kadaiEntries.push(entry);
     }
     kadaiList.push(new Kadai(i.lectureID, i.lectureName, kadaiEntries, i.isRead))
   }
@@ -109,6 +109,9 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
     else {
       // 未読フラグを引き継ぐ
       let isRead = oldKadaiList[idx].isRead;
+      // 何も課題がない時は既読フラグをつける
+      if (newKadai.kadaiEntries.length === 0) isRead = true;
+
       let mergedKadaiEntries = [];
       for (const newKadaiEntry of newKadai.kadaiEntries){
         // 新しく取得した課題が保存された課題一覧の中にあるか探す
@@ -158,6 +161,14 @@ function mergeMemoIntoKadaiList(kadaiList: Array<Kadai>, kadaiMemoList: Array<Ka
   return mergedKadaiList;
 }
 
+function sortKadaiList(kadaiList: Array<Kadai>): Array<Kadai> {
+  return Array.from(kadaiList).sort((a, b) => {
+    if (a.closestDueDateTimestamp > b.closestDueDateTimestamp) return 1;
+    if (a.closestDueDateTimestamp < b.closestDueDateTimestamp) return -1;
+    return 0;
+  });
+}
+
 function useCache(fetchedTime: number): boolean{
   return (nowTime - fetchedTime) / 1000 > cacheInterval;
 }
@@ -178,4 +189,5 @@ export {
   useCache,
   genUniqueStr,
   mergeMemoIntoKadaiList,
+  sortKadaiList,
 };

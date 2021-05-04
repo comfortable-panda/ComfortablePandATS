@@ -20,6 +20,8 @@ export const miniPandA = createElem("div", { id: "miniPandA" });
 miniPandA.classList.add("sidenav");
 miniPandA.classList.add("cp_tab");
 
+export const subPandA = createElem("div", { id: "subPandA" });
+
 export const kadaiDiv = createElem("div", { className: "kadai-tab" });
 export const examDiv = createElem("div", { className: "exam-tab" });
 

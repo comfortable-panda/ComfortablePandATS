@@ -16,8 +16,9 @@ import {
   mergeMemoIntoKadaiList,
   miniPandAReady,
   nowTime,
+  sortKadaiList,
   updateIsReadFlag,
-  useCache,
+  useCache
 } from "./utils";
 
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
@@ -44,7 +45,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
       if (k.status === "fulfilled") newKadaiList.push(k.value);
     }
     // 取得した時間を保存
-    await saveToStorage("TSfetchedTime", nowTime);
+    await saveToStorage("TSkadaiFetchedTime", nowTime);
 
     // 保存してあったものとマージする
     mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
@@ -62,6 +63,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useCache
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
   // さらにメモもマージする
   mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList);
+  mergedKadaiList = sortKadaiList(mergedKadaiList);
 
   return mergedKadaiList;
 }
@@ -72,12 +74,17 @@ export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDL
   updateMiniPandA(mergedKadaiList, lectureIDList);
 }
 
+async function saveCacheOfLectureIDs(lectureIDs: Array<LectureInfo>) {
+  saveToStorage("TSlectureids", lectureIDs);
+}
+
 async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
-    fetchedTime = await loadFromStorage("TSfetchedTime");
+    fetchedTime = await loadFromStorage("TSkadaiFetchedTime");
     lectureIDList = fetchLectureIDs()[1];
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(fetchedTime));
+    await saveCacheOfLectureIDs(lectureIDList);
 
     await displayMiniPandA(mergedKadaiList, lectureIDList, fetchedTime);
 
