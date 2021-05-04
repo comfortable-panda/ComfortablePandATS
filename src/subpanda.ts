@@ -24,21 +24,26 @@ async function dumpCache() {
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
   mergedKadaiList = mergeMemoIntoKadaiList(kadais, kadaiMemoList);
   const lectureIDs = await loadFromStorage("TSlectureids") as Array<LectureInfo>;
-  updateSubPandA(sortKadaiList(mergedKadaiList), lectureIDs);
+  const fetchedTime = await loadFromStorage("TSkadaiFetchedTime") as number;
+  updateSubPandA(sortKadaiList(mergedKadaiList), lectureIDs, fetchedTime);
 }
 
 function addSubPandAToPopup() {
   if (subpandaRoot == null) return;
-  const miniPandALogo = createElem("img", {
-    className: "logo",
+  const subPandALogo = createElem("img", {
+    className: "subpanda-logo",
     alt: "logo",
     src: chrome.extension.getURL("img/logo.png"),
   });
-  appendChildAll(subPandA, [miniPandALogo])
+  appendChildAll(subPandA, [subPandALogo])
   subpandaRoot.appendChild(subPandA);
 }
 
-function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
+function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>, fetchedTime: number): void {
+  const fetchedTimestamp = new Date(fetchedTime);
+  const fetchedTimeString = createElem("p", { className: "kadai-time" });
+  fetchedTimeString.innerText = "取得日時： " + fetchedTimestamp.toLocaleDateString() + " " + fetchedTimestamp.getHours() + ":" + ("00" + fetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + fetchedTimestamp.getSeconds()).slice(-2);
+
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
   const dueGroupColor = ["danger", "warning", "success", "other"];
   const initLetter = ["a", "b", "c", "d"];
@@ -120,7 +125,7 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
       dueGroupHeader.style.display = "";
       dueGroupContainer.style.display = "";
     }
-    appendChildAll(subPandA, [kadaiDiv, examDiv]);
+    appendChildAll(subPandA, [fetchedTimeString, kadaiDiv, examDiv]);
     appendChildAll(kadaiDiv, [dueGroupHeader, dueGroupContainer]);
   }
 

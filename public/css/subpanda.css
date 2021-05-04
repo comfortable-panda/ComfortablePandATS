@@ -20,9 +20,24 @@ span {
     font-weight: bold;
     color: #b01011
 }
-.kadai-tab {
-    padding-top: 60px;
-}
+/* .kadai-tab {
+} */
 .sp{
     margin: 10px;
+}
+.kadai-time {
+    font-family: "Open Sans", sans-serif;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    margin: 10px;
+    border: inset;
+    font-weight: bold;
+    color: #464646;
+    font-size: small;
+}
+.subpanda-logo {
+    top: 7px;
+    left: 2px;
+    height: 40px;
 }
