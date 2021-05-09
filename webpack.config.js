@@ -7,6 +7,7 @@ module.exports = {
     entry: {
         background: `${__dirname}/src/background.ts`,
         content_script: `${__dirname}/src/content_script.ts`,
+        subpanda: `${__dirname}/src/subpanda.ts`
     },
     module: {
         rules: [
