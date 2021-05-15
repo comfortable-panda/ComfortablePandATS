@@ -6,6 +6,7 @@ export class KadaiEntry {
   isMemo: boolean;
   isFinished: boolean;
   kadaiPage?: string;
+  isQuiz: boolean;
 
   constructor(
     kadaiID: string,
@@ -13,6 +14,7 @@ export class KadaiEntry {
     dueDateTimestamp: number,
     isMemo: boolean,
     isFinished: boolean,
+    isQuiz: boolean,
     assignmentDetail?: string
   ) {
     this.kadaiID = kadaiID;
@@ -21,35 +23,7 @@ export class KadaiEntry {
     this.dueDateTimestamp = dueDateTimestamp;
     this.isMemo = isMemo;
     this.isFinished = isFinished;
-  }
-}
-
-export class QuizEntry {
-  id: string;
-  ownerSite: {
-    id: string;
-    name: string;
-  };
-  title: string;
-  dueDateTimestamp: number;
-  startDateTimestamp: number;
-
-  constructor(
-    id: string,
-    title: string,
-    startDateTimestamp: number,
-    dueDateTimestamp: number,
-    ownerSiteId: string,
-    ownerSiteName: string
-  ) {
-    this.id = id;
-    this.title = title;
-    this.startDateTimestamp = startDateTimestamp;
-    this.dueDateTimestamp = dueDateTimestamp;
-    this.ownerSite = {
-      id: ownerSiteId,
-      name: ownerSiteName
-    };
+    this.isQuiz = isQuiz;
   }
 }
 
@@ -87,25 +61,6 @@ export class Kadai {
       if (entry.kadaiPage != null) return entry.kadaiPage;
     }
     return null;
-  }
-}
-
-export class Quiz {
-  lectureID: string;
-  lectureName: string;
-  quizEntries: Array<QuizEntry>;
-  isRead: boolean;
-
-  constructor(
-    lectureID: string,
-    lectureName: string,
-    quizEntries: Array<QuizEntry>,
-    isRead: boolean
-  ) {
-    this.lectureID = lectureID;
-    this.lectureName = lectureName;
-    this.quizEntries = quizEntries;
-    this.isRead = isRead;
   }
 }
 

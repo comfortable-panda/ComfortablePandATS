@@ -1,8 +1,8 @@
 import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
-import { convertArrayToKadai, genUniqueStr, mergeMemoIntoKadaiList } from "./utils";
-import {displayMiniPandA, fetchedTime, lectureIDList, mergedKadaiList, mergedKadaiListNoMemo} from "./content_script";
+import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
+import {displayMiniPandA, lectureIDList, mergedKadaiListNoMemo} from "./content_script";
 
 let toggle = false;
 
@@ -26,7 +26,7 @@ function toggleKadaiTab(): void {
   const kadaiTab = document.querySelector(".kadai-tab");
   // @ts-ignore
   kadaiTab.style.display = "";
-  const examTab = document.querySelector(".exam-tab");
+  const examTab = document.querySelector(".settings-tab");
   // @ts-ignore
   examTab.style.display = "none";
   const addMemoButton = document.querySelector(".plus-button");
@@ -35,22 +35,28 @@ function toggleKadaiTab(): void {
   const lastKadaiGetTime = document.querySelector(".kadai-time");
   // @ts-ignore
   lastKadaiGetTime.style.display = "";
+  const lastQuizGetTime = document.querySelector(".quiz-time");
+  // @ts-ignore
+  lastQuizGetTime.style.display = "";
 }
 
-function toggleExamTab(): void {
+function toggleSettingsTab(): void {
   // クイズ・小テスト・試験一覧タブを表示・非表示にします
   const kadaiTab = document.querySelector(".kadai-tab");
   // @ts-ignore
   kadaiTab.style.display = "none";
-  const examTab = document.querySelector(".exam-tab");
+  const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
-  examTab.style.display = "";
+  settingsTab.style.display = "";
   const addMemoButton = document.querySelector(".plus-button");
   // @ts-ignore
   addMemoButton.style.display = "none";
   const lastKadaiGetTime = document.querySelector(".kadai-time");
   // @ts-ignore
   lastKadaiGetTime.style.display = "none";
+  const lastQuizGetTime = document.querySelector(".quiz-time");
+  // @ts-ignore
+  lastQuizGetTime.style.display = "none";
 }
 
 function toggleMemoBox(): void {
@@ -71,6 +77,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiID = event.target.id;
   let kadaiList: Array<Kadai>;
   if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
+  if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromStorage("TSQuizList"));
   else kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiList"));
 
   const updatedKadaiList = [];
@@ -79,6 +86,8 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     for (const kadaiEntry of kadai.kadaiEntries) {
       if (kadaiEntry.kadaiID === kadaiID) {
         const isFinished = kadaiEntry.isFinished;
+        let isQuiz = false;
+        if (typeof kadaiEntry.isQuiz !== 'undefined') isQuiz = kadaiEntry.isQuiz;
         updatedKadaiEntries.push(
           new KadaiEntry(
             kadaiEntry.kadaiID,
@@ -86,6 +95,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
             kadaiEntry.dueDateTimestamp,
             kadaiEntry.isMemo,
             !isFinished,
+            isQuiz,
             kadaiEntry.assignmentDetail
           )
         );
@@ -97,6 +107,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   }
 
   if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
+  if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
   else saveToStorage("TSkadaiList", updatedKadaiList);
 }
 
@@ -112,7 +123,7 @@ async function addKadaiMemo(): Promise<void> {
   const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
 
   let kadaiMemoList = await loadFromStorage("TSkadaiMemoList");
-  const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, "");
+  const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, false, "");
   const kadaiMemo = new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true);
 
   if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0){
@@ -138,7 +149,7 @@ async function addKadaiMemo(): Promise<void> {
   }
   miniPandA.remove();
   kadaiDiv.remove();
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList, fetchedTime);
+  await displayMiniPandA(mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList);
 }
 
 async function deleteKadaiMemo(event: any): Promise<void> {
@@ -162,7 +173,7 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   kadaiDiv.remove();
 
   saveToStorage("TSkadaiMemoList", deletedKadaiMemoList);
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList, fetchedTime);
+  await displayMiniPandA(mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList);
 }
 
 async function editFavTabMessage(): Promise<void>{
@@ -184,7 +195,7 @@ async function editFavTabMessage(): Promise<void>{
 export {
   toggleMiniPandA,
   toggleKadaiTab,
-  toggleExamTab,
+  toggleSettingsTab,
   toggleMemoBox,
   toggleKadaiFinishedFlag,
   addKadaiMemo,

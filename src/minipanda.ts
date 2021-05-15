@@ -11,19 +11,20 @@ import {
   KadaiEntryDom,
   DueGroupDom,
   kadaiDiv,
-  examDiv,
+  settingsDiv,
   createElem,
   appendChildAll,
 } from "./dom";
 import {
   toggleMiniPandA,
   toggleKadaiTab,
-  toggleExamTab,
+  toggleSettingsTab,
   toggleMemoBox,
   toggleKadaiFinishedFlag,
   addKadaiMemo,
   deleteKadaiMemo,
 } from "./eventListener";
+import { kadaiFetchedTime, quizFetchedTime } from "./content_script";
 
 
 function createHanburgerButton(): void {
@@ -35,7 +36,7 @@ function createHanburgerButton(): void {
   }
 }
 
-function createMiniPandA(fetchedTime: number): void {
+function createMiniPandA(): void {
   const miniPandALogo = createElem("img", {
     className: "logo",
     alt: "logo",
@@ -48,26 +49,29 @@ function createMiniPandA(fetchedTime: number): void {
 
   const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true });
   kadaiTab.addEventListener("click", toggleKadaiTab);
-  const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: "課題一覧" });
-  const examTab = createElem("input", { type: "radio", id: "examTab", name: "cp_tab", checked: false });
-  examTab.addEventListener("click", toggleExamTab);
-  const examTabLabel = createElem("label", { htmlFor: "examTab", innerText: "テスト・クイズ一覧" });
+  const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: "　課題一覧　" });
+  const settingsTab = createElem("input", { type: "radio", id: "settingsTab", name: "cp_tab", checked: false });
+  settingsTab.addEventListener("click", toggleSettingsTab);
+  const settingsTabLabel = createElem("label", { htmlFor: "settingsTab", innerText: "　詳細設定　" });
   const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" });
   addMemoButton.addEventListener("click", toggleMemoBox, true);
 
-  const fetchedTimestamp = new Date(fetchedTime);
-  const fetchedTimeString = createElem("p", { className: "kadai-time" });
-  fetchedTimeString.innerText = "取得日時： " + fetchedTimestamp.toLocaleDateString() + " " + fetchedTimestamp.getHours() + ":" + ("00" + fetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + fetchedTimestamp.getSeconds()).slice(-2);
-
+  const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
+  const kadaiFetchedTimeString = createElem("p", { className: "kadai-time" });
+  kadaiFetchedTimeString.innerText = "課題取得日時： " + kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
+  const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
+  const quizFetchedTimeString = createElem("p", { className: "quiz-time" });
+  quizFetchedTimeString.innerText = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
   appendChildAll(miniPandA, [
     miniPandALogo,
     miniPandACloseBtn,
     kadaiTab,
     kadaiTabLabel,
-    examTab,
-    examTabLabel,
+    settingsTab,
+    settingsTabLabel,
     addMemoButton,
-    fetchedTimeString
+    kadaiFetchedTimeString,
+    quizFetchedTimeString,
   ]);
 
   const parent = document.getElementById("pageBody");
@@ -78,7 +82,7 @@ function createMiniPandA(fetchedTime: number): void {
 
 function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   const memoEditBox = createElem("div");
-  memoEditBox.classList.add("examBox", "addMemoBox");
+  memoEditBox.classList.add("settingsBox", "addMemoBox");
   memoEditBox.style.display = "none";
   const memoLabel = createElem("label");
   memoLabel.style.display = "block";
@@ -161,6 +165,9 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const memoBadge = document.createElement("span");
         memoBadge.classList.add("add-badge", "add-badge-success");
         memoBadge.innerText = "メモ";
+        const quizBadge = document.createElement("span");
+        quizBadge.classList.add("add-badge", "add-badge-quiz");
+        quizBadge.innerText = "クイズ";
         const deleteBadge = document.createElement("span");
         deleteBadge.className = "del-button";
         deleteBadge.id = kadai.kadaiID;
@@ -189,6 +196,12 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
             kadaiTitle.appendChild(deleteBadge);
           }
 
+          if (kadai.isQuiz) {
+            kadaiTitle.textContent = "";
+            kadaiTitle.appendChild(quizBadge);
+            kadaiTitle.append(kadai.assignmentTitle);
+          }
+
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
           cnt++;
         }
@@ -203,7 +216,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
       dueGroupHeader.style.display = "";
       dueGroupContainer.style.display = "";
     }
-    appendChildAll(miniPandA, [kadaiDiv, examDiv]);
+    appendChildAll(miniPandA, [kadaiDiv, settingsDiv]);
     appendChildAll(kadaiDiv, [dueGroupHeader, dueGroupContainer]);
   }
 

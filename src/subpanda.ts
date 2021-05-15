@@ -1,18 +1,16 @@
-import { appendChildAll, createElem, DueGroupDom, examDiv, kadaiDiv, KadaiEntryDom, subPandA } from './dom';
-import { deleteKadaiMemo, toggleKadaiFinishedFlag } from './eventListener';
+import { appendChildAll, createElem, DueGroupDom, settingsDiv, kadaiDiv, KadaiEntryDom, subPandA } from './dom';
+import { toggleKadaiFinishedFlag } from './eventListener';
 import { Kadai, LectureInfo } from './kadai';
-import { fetchLectureIDs } from './network';
 import { loadFromStorage } from './storage'
 import {
   convertArrayToKadai,
   createLectureIDMap,
   getDaysUntil,
   getTimeRemain,
-  mergeMemoIntoKadaiList,
+  mergeIntoKadaiList,
   nowTime,
   sortKadaiList
 } from "./utils";
-import { mergedKadaiList } from "./content_script";
 
 const subpandaRoot = document.querySelector("#subpanda");
 
@@ -21,8 +19,10 @@ async function dumpCache() {
   let mergedKadaiList: Array<Kadai>;
 
   const kadais = await loadFromStorage("TSkadaiList") as Array<Kadai>;
+  const quizList = await loadFromStorage("TSQuizList") as Array<Kadai>;
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
-  mergedKadaiList = mergeMemoIntoKadaiList(kadais, kadaiMemoList);
+  mergedKadaiList = mergeIntoKadaiList(kadais, quizList);
+  mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, kadaiMemoList);
   const lectureIDs = await loadFromStorage("TSlectureids") as Array<LectureInfo>;
   const fetchedTime = await loadFromStorage("TSkadaiFetchedTime") as number;
   updateSubPandA(sortKadaiList(mergedKadaiList), lectureIDs, fetchedTime);
@@ -89,6 +89,9 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
         const memoBadge = document.createElement("span");
         memoBadge.classList.add("add-badge", "add-badge-success");
         memoBadge.innerText = "メモ";
+        const quizBadge = document.createElement("span");
+        quizBadge.classList.add("add-badge", "add-badge-quiz");
+        quizBadge.innerText = "クイズ";
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
@@ -111,6 +114,12 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
             kadaiTitle.append(kadai.assignmentTitle);
           }
 
+          if (kadai.isQuiz) {
+            kadaiTitle.textContent = "";
+            kadaiTitle.appendChild(quizBadge);
+            kadaiTitle.append(kadai.assignmentTitle);
+          }
+
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
           cnt++;
         }
@@ -125,7 +134,7 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
       dueGroupHeader.style.display = "";
       dueGroupContainer.style.display = "";
     }
-    appendChildAll(subPandA, [fetchedTimeString, kadaiDiv, examDiv]);
+    appendChildAll(subPandA, [fetchedTimeString, kadaiDiv, settingsDiv]);
     appendChildAll(kadaiDiv, [dueGroupHeader, dueGroupContainer]);
   }
 
