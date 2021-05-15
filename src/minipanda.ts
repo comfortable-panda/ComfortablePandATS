@@ -161,6 +161,9 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const memoBadge = document.createElement("span");
         memoBadge.classList.add("add-badge", "add-badge-success");
         memoBadge.innerText = "メモ";
+        const quizBadge = document.createElement("span");
+        quizBadge.classList.add("add-badge", "add-badge-quiz");
+        quizBadge.innerText = "クイズ";
         const deleteBadge = document.createElement("span");
         deleteBadge.className = "del-button";
         deleteBadge.id = kadai.kadaiID;
@@ -187,6 +190,12 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
             kadaiTitle.appendChild(memoBadge);
             kadaiTitle.append(kadai.assignmentTitle);
             kadaiTitle.appendChild(deleteBadge);
+          }
+
+          if (kadai.isQuiz) {
+            kadaiTitle.textContent = "";
+            kadaiTitle.appendChild(quizBadge);
+            kadaiTitle.append(kadai.assignmentTitle);
           }
 
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);

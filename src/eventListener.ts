@@ -2,7 +2,7 @@ import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeMemoIntoKadaiList } from "./utils";
-import {displayMiniPandA, fetchedTime, lectureIDList, mergedKadaiList, mergedKadaiListNoMemo} from "./content_script";
+import {displayMiniPandA, kadaiFetchedTime, lectureIDList, mergedKadaiList, mergedKadaiListNoMemo} from "./content_script";
 
 let toggle = false;
 
@@ -79,6 +79,8 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     for (const kadaiEntry of kadai.kadaiEntries) {
       if (kadaiEntry.kadaiID === kadaiID) {
         const isFinished = kadaiEntry.isFinished;
+        let isQuiz = false;
+        if (typeof kadaiEntry.isQuiz === 'undefined') isQuiz = kadaiEntry.isQuiz;
         updatedKadaiEntries.push(
           new KadaiEntry(
             kadaiEntry.kadaiID,
@@ -86,6 +88,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
             kadaiEntry.dueDateTimestamp,
             kadaiEntry.isMemo,
             !isFinished,
+            isQuiz,
             kadaiEntry.assignmentDetail
           )
         );
@@ -112,7 +115,7 @@ async function addKadaiMemo(): Promise<void> {
   const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
 
   let kadaiMemoList = await loadFromStorage("TSkadaiMemoList");
-  const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, "");
+  const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, false, "");
   const kadaiMemo = new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true);
 
   if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0){
@@ -138,7 +141,7 @@ async function addKadaiMemo(): Promise<void> {
   }
   miniPandA.remove();
   kadaiDiv.remove();
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList, fetchedTime);
+  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList, kadaiFetchedTime);
 }
 
 async function deleteKadaiMemo(event: any): Promise<void> {
@@ -162,7 +165,7 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   kadaiDiv.remove();
 
   saveToStorage("TSkadaiMemoList", deletedKadaiMemoList);
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList, fetchedTime);
+  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList, kadaiFetchedTime);
 }
 
 async function editFavTabMessage(): Promise<void>{

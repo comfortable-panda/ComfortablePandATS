@@ -6,6 +6,7 @@ export class KadaiEntry {
   isMemo: boolean;
   isFinished: boolean;
   kadaiPage?: string;
+  isQuiz: boolean;
 
   constructor(
     kadaiID: string,
@@ -13,6 +14,7 @@ export class KadaiEntry {
     dueDateTimestamp: number,
     isMemo: boolean,
     isFinished: boolean,
+    isQuiz: boolean,
     assignmentDetail?: string
   ) {
     this.kadaiID = kadaiID;
@@ -21,6 +23,7 @@ export class KadaiEntry {
     this.dueDateTimestamp = dueDateTimestamp;
     this.isMemo = isMemo;
     this.isFinished = isFinished;
+    this.isQuiz = isQuiz;
   }
 }
 

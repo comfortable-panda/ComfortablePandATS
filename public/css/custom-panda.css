@@ -446,6 +446,11 @@
     background-color: #28a745;
 }
 
+.add-badge-quiz {
+    color: #fff;
+    background-color: #e85555;
+}
+
 .del-button {
     color: #c61212;
     position: relative;

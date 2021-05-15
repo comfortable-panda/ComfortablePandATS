@@ -4,7 +4,8 @@ import lectureName = DueGroupDom.lectureName;
 import { saveToStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
-const cacheInterval = 120;
+const kadaiCacheInterval = 60 * 2;
+const quizCacheInterval = 60 * 10;
 
 function getDaysUntil(dt1: number, dt2: number): number {
   // 締め切りまでの日数を計算します
@@ -79,8 +80,8 @@ function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
   const kadaiList = [];
   for (const i of arr) {
     const kadaiEntries = [];
-    for (const e of i.kadaiEntries){
-      const entry = new KadaiEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.assignmentDetail);
+    for (const e of i.kadaiEntries) {
+      const entry = new KadaiEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
       entry.kadaiPage = e.kadaiPage;
       if (entry.dueDateTimestamp * 1000 > nowTime) kadaiEntries.push(entry);
     }
@@ -129,6 +130,7 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
             newKadaiEntry.dueDateTimestamp,
             newKadaiEntry.isMemo,
             oldKadaiList[idx].kadaiEntries[q].isFinished,
+            newKadaiEntry.isQuiz,
             newKadaiEntry.assignmentDetail
           );
           entry.kadaiPage = newKadaiEntry.kadaiPage;
@@ -169,7 +171,7 @@ function sortKadaiList(kadaiList: Array<Kadai>): Array<Kadai> {
   });
 }
 
-function useCache(fetchedTime: number): boolean{
+function useCache(fetchedTime: number, cacheInterval: number): boolean{
   return (nowTime - fetchedTime) / 1000 > cacheInterval;
 }
 
@@ -178,6 +180,8 @@ function genUniqueStr(): string {
 }
 
 export {
+  kadaiCacheInterval,
+  quizCacheInterval,
   getDaysUntil,
   getTimeRemain,
   createLectureIDMap,

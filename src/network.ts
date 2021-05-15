@@ -65,18 +65,34 @@ function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, site
       const kadaiTitle = json.title;
       const kadaiDetail = json.instructions;
       const kadaiDueEpoch = json.dueTime.epochSecond;
-      const entry = new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, false, kadaiDetail);
+      const entry = new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, false, false, kadaiDetail);
       entry.kadaiPage = baseURL + "/portal/site/" + siteID;
       return entry;
     });
 }
 
-function convJsonToQuizEntries(data: Record<string, any>): Array<QuizEntry> {
-  return (data.sam_pub_collection as Array<Record<string, any>>)
-    .map((json: Record<string, any>) => {
-      return new QuizEntry(json.publishedAssessmentId, json.title, json.startDate, json.dueDate, json.ownerSite, json.ownerSiteId);
+function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<KadaiEntry> {
+  return data.sam_pub_collection
+    .filter((json: any) => json.dueDate >= nowTime)
+    .filter((json: any) => json.startDate < nowTime)
+    .map((json: any) => {
+      const quizID = json.publishedAssessmentId;
+      const quizTitle = json.title;
+      const quizDetail = "";
+      const quizDueEpoch = json.dueDate / 1000;
+      const entry = new KadaiEntry(quizID, quizTitle, quizDueEpoch, false, false, true, quizDetail);
+      entry.kadaiPage = baseURL + "/portal/site/" + siteID;
+      return entry;
     });
 }
+
+// function convJsonToQuizEntries(data: Record<string, any>): Array<QuizEntry> {
+//   return (data.sam_pub_collection as Array<Record<string, any>>)
+//     .map((json: Record<string, any>) => {
+//       return new QuizEntry(json.publishedAssessmentId, json.title, json.startDate, json.dueDate, json.ownerSite, json.ownerSiteId);
+//     });
+// }
+
 
 function getQuizOfLectureID(baseURL: string, siteID: string) {
   const queryURL = baseURL + "/direct/sam_pub/context/" + siteID + ".json";
@@ -87,18 +103,18 @@ function getQuizOfLectureID(baseURL: string, siteID: string) {
   request.setRequestHeader("Cache-Control", "no-cache");
   request.setRequestHeader("If-Modified-Since","Thu, 01 Jun 1970 00:00:00 GMT");
   request.responseType = "json";
-  
+
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
       const res = request.response;
-      if (!res || !res.sam_pub_collection) reject("404 quiz data not found");
+      if (!res || !res.sam_pub_collection) reject("404 kadai data not found");
       else {
-        const quizEntries = convJsonToQuizEntries(res);
+        const kadaiEntries = convJsonToQuizEntries(res, baseURL, siteID);
         resolve(
-          new Quiz(
+          new Kadai(
             siteID,
             siteID, // TODO: lectureName
-            quizEntries,
+            kadaiEntries,
             false
           )
         );
