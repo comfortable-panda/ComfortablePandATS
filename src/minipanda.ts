@@ -24,6 +24,7 @@ import {
   addKadaiMemo,
   deleteKadaiMemo,
 } from "./eventListener";
+import { kadaiFetchedTime, quizFetchedTime } from "./content_script";
 
 
 function createHanburgerButton(): void {
@@ -35,7 +36,7 @@ function createHanburgerButton(): void {
   }
 }
 
-function createMiniPandA(fetchedTime: number): void {
+function createMiniPandA(): void {
   const miniPandALogo = createElem("img", {
     className: "logo",
     alt: "logo",
@@ -55,10 +56,13 @@ function createMiniPandA(fetchedTime: number): void {
   const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" });
   addMemoButton.addEventListener("click", toggleMemoBox, true);
 
-  const fetchedTimestamp = new Date(fetchedTime);
-  const fetchedTimeString = createElem("p", { className: "kadai-time" });
-  fetchedTimeString.innerText = "取得日時： " + fetchedTimestamp.toLocaleDateString() + " " + fetchedTimestamp.getHours() + ":" + ("00" + fetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + fetchedTimestamp.getSeconds()).slice(-2);
-
+  console.log("s", kadaiFetchedTime)
+  const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
+  const kadaiFetchedTimeString = createElem("p", { className: "kadai-time" });
+  kadaiFetchedTimeString.innerText = "課題取得日時： " + kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
+  const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
+  const quizFetchedTimeString = createElem("p", { className: "kadai-time" });
+  quizFetchedTimeString.innerText = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
   appendChildAll(miniPandA, [
     miniPandALogo,
     miniPandACloseBtn,
@@ -67,7 +71,8 @@ function createMiniPandA(fetchedTime: number): void {
     examTab,
     examTabLabel,
     addMemoButton,
-    fetchedTimeString
+    kadaiFetchedTimeString,
+    quizFetchedTimeString,
   ]);
 
   const parent = document.getElementById("pageBody");

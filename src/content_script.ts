@@ -32,7 +32,8 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
   // ストレージから前回保存したkadaiListを読み込む
   const oldKadaiList = await loadFromStorage("TSkadaiList");
   const newKadaiList = [];
-  const newQuizList = [];
+  const oldQuizList = await loadFromStorage("TSQuizList");
+  let newQuizList = [];
 
   if (useKadaiCache) {
     console.log("課題キャッシュなし");
@@ -48,6 +49,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
     }
     // 取得した時間を保存
     await saveToStorage("TSkadaiFetchedTime", nowTime);
+    kadaiFetchedTime = nowTime;
 
     // 保存してあったものとマージする
     mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
@@ -72,16 +74,26 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
     }
     // 取得した時間を保存
     await saveToStorage("TSquizFetchedTime", nowTime);
+    quizFetchedTime = nowTime;
+    await saveToStorage("TSQuizList", newQuizList);
 
     // 保存してあったものとマージする
     // mergedKadaiListNoMemo = compareAndMergeKadaiList(mergedKadaiListNoMemo, newQuizList);
     // mergedKadaiList = compareAndMergeKadaiList(mergedKadaiListNoMemo, newQuizList);
-    mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, newQuizList);
-    console.log("quizList", newQuizList)
+    // mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, newQuizList);
+    // console.log("quizList", newQuizList)
+  } else {
+    if(typeof oldKadaiList !== "undefined"){
+      newQuizList = oldQuizList
+      // mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, oldQuizList);
+    }
+    console.log("old quiz", oldQuizList)
   }
 
   // マージ後のkadaiListをストレージに保存する
   await saveToStorage("TSkadaiList", mergedKadaiListNoMemo);
+
+  mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, newQuizList);
 
   // メモ一覧を読み込む
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
@@ -92,8 +104,8 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
   return mergedKadaiList;
 }
 
-export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>, fetchedTime: number): Promise<void>{
-  createMiniPandA(useCache(fetchedTime, kadaiCacheInterval) ? nowTime : fetchedTime);
+export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
+  createMiniPandA();
   appendMemoBox(lectureIDList);
   updateMiniPandA(mergedKadaiList, lectureIDList);
 }
@@ -111,14 +123,12 @@ async function main() {
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(kadaiFetchedTime, kadaiCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
     await saveCacheOfLectureIDs(lectureIDList);
 
-    await displayMiniPandA(mergedKadaiList, lectureIDList, kadaiFetchedTime);
+    await displayMiniPandA(mergedKadaiList, lectureIDList);
 
     miniPandAReady();
     updateIsReadFlag(mergedKadaiListNoMemo);
     await addMissingBookmarkedLectures();
     createNavBarNotification(lectureIDList, mergedKadaiList);
-    let a = await getQuizOfLectureID(baseURL, "2021-110-6060-000");
-    console.log("a",a)
   }
 }
 

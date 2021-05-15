@@ -71,6 +71,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiID = event.target.id;
   let kadaiList: Array<Kadai>;
   if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
+  if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromStorage("TSQuizList"));
   else kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiList"));
 
   const updatedKadaiList = [];
@@ -80,7 +81,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
       if (kadaiEntry.kadaiID === kadaiID) {
         const isFinished = kadaiEntry.isFinished;
         let isQuiz = false;
-        if (typeof kadaiEntry.isQuiz === 'undefined') isQuiz = kadaiEntry.isQuiz;
+        if (typeof kadaiEntry.isQuiz !== 'undefined') isQuiz = kadaiEntry.isQuiz;
         updatedKadaiEntries.push(
           new KadaiEntry(
             kadaiEntry.kadaiID,
@@ -100,6 +101,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   }
 
   if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
+  if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
   else saveToStorage("TSkadaiList", updatedKadaiList);
 }
 
@@ -141,7 +143,7 @@ async function addKadaiMemo(): Promise<void> {
   }
   miniPandA.remove();
   kadaiDiv.remove();
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList, kadaiFetchedTime);
+  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList);
 }
 
 async function deleteKadaiMemo(event: any): Promise<void> {
@@ -165,7 +167,7 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   kadaiDiv.remove();
 
   saveToStorage("TSkadaiMemoList", deletedKadaiMemoList);
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList, kadaiFetchedTime);
+  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList);
 }
 
 async function editFavTabMessage(): Promise<void>{
