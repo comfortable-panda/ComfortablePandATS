@@ -76,16 +76,9 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
     await saveToStorage("TSquizFetchedTime", nowTime);
     quizFetchedTime = nowTime;
     await saveToStorage("TSQuizList", newQuizList);
-
-    // 保存してあったものとマージする
-    // mergedKadaiListNoMemo = compareAndMergeKadaiList(mergedKadaiListNoMemo, newQuizList);
-    // mergedKadaiList = compareAndMergeKadaiList(mergedKadaiListNoMemo, newQuizList);
-    // mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, newQuizList);
-    // console.log("quizList", newQuizList)
   } else {
     if(typeof oldKadaiList !== "undefined"){
       newQuizList = oldQuizList
-      // mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, oldQuizList);
     }
     console.log("old quiz", oldQuizList)
   }
