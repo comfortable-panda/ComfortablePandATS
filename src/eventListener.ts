@@ -1,7 +1,7 @@
 import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
-import { convertArrayToKadai, genUniqueStr, mergeMemoIntoKadaiList } from "./utils";
+import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {displayMiniPandA, kadaiFetchedTime, lectureIDList, mergedKadaiList, mergedKadaiListNoMemo} from "./content_script";
 
 let toggle = false;
@@ -143,7 +143,7 @@ async function addKadaiMemo(): Promise<void> {
   }
   miniPandA.remove();
   kadaiDiv.remove();
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList);
+  await displayMiniPandA(mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList);
 }
 
 async function deleteKadaiMemo(event: any): Promise<void> {
@@ -167,7 +167,7 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   kadaiDiv.remove();
 
   saveToStorage("TSkadaiMemoList", deletedKadaiMemoList);
-  await displayMiniPandA(mergeMemoIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList);
+  await displayMiniPandA(mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList);
 }
 
 async function editFavTabMessage(): Promise<void>{

@@ -13,7 +13,7 @@ import {
   compareAndMergeKadaiList,
   convertArrayToKadai,
   isLoggedIn, kadaiCacheInterval,
-  mergeMemoIntoKadaiList,
+  mergeIntoKadaiList,
   miniPandAReady,
   nowTime, quizCacheInterval,
   sortKadaiList,
@@ -36,7 +36,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
   let newQuizList = [];
 
   if (useKadaiCache) {
-    console.log("課題キャッシュなし");
+    console.log("Loading assignments...");
     const pendingList = [];
     // 課題取得待ちリストに追加
     for (const i of lectureIDList) {
@@ -55,13 +55,12 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
     mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
     mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
   } else {
-    console.log("課題キャッシュあり");
     mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
     mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
   }
 
   if (useQuizCache) {
-    console.log("クイズキャッシュなし");
+    console.log("Loading quizzes...");
     const pendingList = [];
     // クイズ取得待ちリストに追加
     for (const i of lectureIDList) {
@@ -80,18 +79,17 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
     if(typeof oldKadaiList !== "undefined"){
       newQuizList = oldQuizList
     }
-    console.log("old quiz", oldQuizList)
   }
 
   // マージ後のkadaiListをストレージに保存する
   await saveToStorage("TSkadaiList", mergedKadaiListNoMemo);
 
-  mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, newQuizList);
+  mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, newQuizList);
 
   // メモ一覧を読み込む
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
   // さらにメモもマージする
-  mergedKadaiList = mergeMemoIntoKadaiList(mergedKadaiList, kadaiMemoList);
+  mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, kadaiMemoList);
   mergedKadaiList = sortKadaiList(mergedKadaiList);
 
   return mergedKadaiList;

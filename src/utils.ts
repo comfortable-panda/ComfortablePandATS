@@ -145,19 +145,19 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
   return mergedKadaiList;
 }
 
-function mergeMemoIntoKadaiList(kadaiList: Array<Kadai>, kadaiMemoList: Array<Kadai>): Array<Kadai>{
+function mergeIntoKadaiList(targetKadaiList: Array<Kadai>, newKadaiList: Array<Kadai>): Array<Kadai>{
   const mergedKadaiList = [];
-  for (const kadai of kadaiList){
+  for (const kadai of targetKadaiList){
     mergedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, kadai.kadaiEntries, kadai.isRead));
   }
-  for (const kadaiMemo of kadaiMemoList){
-    const idx = kadaiList.findIndex((kadai) => {
-      return (kadaiMemo.lectureID === kadai.lectureID)
+  for (const kadaiList of newKadaiList){
+    const idx = targetKadaiList.findIndex((kadai) => {
+      return (kadaiList.lectureID === kadai.lectureID)
     });
     if (idx !== -1) {
-      mergedKadaiList[idx].kadaiEntries = mergedKadaiList[idx].kadaiEntries.concat(kadaiMemo.kadaiEntries);
+      mergedKadaiList[idx].kadaiEntries = mergedKadaiList[idx].kadaiEntries.concat(kadaiList.kadaiEntries);
     } else {
-      mergedKadaiList.push(new Kadai(kadaiMemo.lectureID, kadaiMemo.lectureName, kadaiMemo.kadaiEntries, true));
+      mergedKadaiList.push(new Kadai(kadaiList.lectureID, kadaiList.lectureName, kadaiList.kadaiEntries, true));
     }
   }
   return mergedKadaiList;
@@ -192,6 +192,6 @@ export {
   updateIsReadFlag,
   useCache,
   genUniqueStr,
-  mergeMemoIntoKadaiList,
+  mergeIntoKadaiList,
   sortKadaiList,
 };

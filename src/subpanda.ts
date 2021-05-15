@@ -8,7 +8,7 @@ import {
   createLectureIDMap,
   getDaysUntil,
   getTimeRemain,
-  mergeMemoIntoKadaiList,
+  mergeIntoKadaiList,
   nowTime,
   sortKadaiList
 } from "./utils";
@@ -22,7 +22,7 @@ async function dumpCache() {
 
   const kadais = await loadFromStorage("TSkadaiList") as Array<Kadai>;
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
-  mergedKadaiList = mergeMemoIntoKadaiList(kadais, kadaiMemoList);
+  mergedKadaiList = mergeIntoKadaiList(kadais, kadaiMemoList);
   const lectureIDs = await loadFromStorage("TSlectureids") as Array<LectureInfo>;
   const fetchedTime = await loadFromStorage("TSkadaiFetchedTime") as number;
   updateSubPandA(sortKadaiList(mergedKadaiList), lectureIDs, fetchedTime);

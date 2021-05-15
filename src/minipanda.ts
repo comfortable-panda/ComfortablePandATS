@@ -56,7 +56,6 @@ function createMiniPandA(): void {
   const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" });
   addMemoButton.addEventListener("click", toggleMemoBox, true);
 
-  console.log("s", kadaiFetchedTime)
   const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
   const kadaiFetchedTimeString = createElem("p", { className: "kadai-time" });
   kadaiFetchedTimeString.innerText = "課題取得日時： " + kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
