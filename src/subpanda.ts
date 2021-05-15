@@ -21,8 +21,10 @@ async function dumpCache() {
   let mergedKadaiList: Array<Kadai>;
 
   const kadais = await loadFromStorage("TSkadaiList") as Array<Kadai>;
+  const quizList = await loadFromStorage("TSQuizList") as Array<Kadai>;
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
-  mergedKadaiList = mergeIntoKadaiList(kadais, kadaiMemoList);
+  mergedKadaiList = mergeIntoKadaiList(kadais, quizList);
+  mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, kadaiMemoList);
   const lectureIDs = await loadFromStorage("TSlectureids") as Array<LectureInfo>;
   const fetchedTime = await loadFromStorage("TSkadaiFetchedTime") as number;
   updateSubPandA(sortKadaiList(mergedKadaiList), lectureIDs, fetchedTime);
@@ -89,6 +91,9 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
         const memoBadge = document.createElement("span");
         memoBadge.classList.add("add-badge", "add-badge-success");
         memoBadge.innerText = "メモ";
+        const quizBadge = document.createElement("span");
+        quizBadge.classList.add("add-badge", "add-badge-quiz");
+        quizBadge.innerText = "クイズ";
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
@@ -108,6 +113,12 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
           if (kadai.isMemo) {
             kadaiTitle.textContent = "";
             kadaiTitle.appendChild(memoBadge);
+            kadaiTitle.append(kadai.assignmentTitle);
+          }
+
+          if (kadai.isQuiz) {
+            kadaiTitle.textContent = "";
+            kadaiTitle.appendChild(quizBadge);
             kadaiTitle.append(kadai.assignmentTitle);
           }
 
