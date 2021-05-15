@@ -149,7 +149,9 @@ async function addKadaiMemo(): Promise<void> {
   }
   miniPandA.remove();
   kadaiDiv.remove();
-  await displayMiniPandA(mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList), lectureIDList);
+  const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList);
+  const quizList = await loadFromStorage("TSQuizList");
+  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
 }
 
 async function deleteKadaiMemo(event: any): Promise<void> {
@@ -173,7 +175,9 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   kadaiDiv.remove();
 
   saveToStorage("TSkadaiMemoList", deletedKadaiMemoList);
-  await displayMiniPandA(mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList), lectureIDList);
+  const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList);
+  const quizList = await loadFromStorage("TSQuizList");
+  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
 }
 
 async function editFavTabMessage(): Promise<void>{
