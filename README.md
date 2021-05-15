@@ -67,6 +67,7 @@ Also check box is available for you to distinguish completed assignments from wo
 - 2021/04/13 v3.0.4 Bug fix.
 - 2021/04/13 v3.1.0 Bug fix.
 - 2021/05/05 v3.2.0 SubPandA first release.
+- 2021/05/15 v3.3.0 Add quiz-fetch feature.
 
 # License
 MIT
