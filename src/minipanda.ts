@@ -11,14 +11,14 @@ import {
   KadaiEntryDom,
   DueGroupDom,
   kadaiDiv,
-  examDiv,
+  settingsDiv,
   createElem,
   appendChildAll,
 } from "./dom";
 import {
   toggleMiniPandA,
   toggleKadaiTab,
-  toggleExamTab,
+  toggleSettingsTab,
   toggleMemoBox,
   toggleKadaiFinishedFlag,
   addKadaiMemo,
@@ -49,10 +49,10 @@ function createMiniPandA(): void {
 
   const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true });
   kadaiTab.addEventListener("click", toggleKadaiTab);
-  const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: "課題一覧" });
-  const examTab = createElem("input", { type: "radio", id: "examTab", name: "cp_tab", checked: false });
-  examTab.addEventListener("click", toggleExamTab);
-  const examTabLabel = createElem("label", { htmlFor: "examTab", innerText: "テスト・クイズ一覧" });
+  const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: "　課題一覧　" });
+  const settingsTab = createElem("input", { type: "radio", id: "settingsTab", name: "cp_tab", checked: false });
+  settingsTab.addEventListener("click", toggleSettingsTab);
+  const settingsTabLabel = createElem("label", { htmlFor: "settingsTab", innerText: "　詳細設定　" });
   const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" });
   addMemoButton.addEventListener("click", toggleMemoBox, true);
 
@@ -60,15 +60,15 @@ function createMiniPandA(): void {
   const kadaiFetchedTimeString = createElem("p", { className: "kadai-time" });
   kadaiFetchedTimeString.innerText = "課題取得日時： " + kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
-  const quizFetchedTimeString = createElem("p", { className: "kadai-time" });
+  const quizFetchedTimeString = createElem("p", { className: "quiz-time" });
   quizFetchedTimeString.innerText = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
   appendChildAll(miniPandA, [
     miniPandALogo,
     miniPandACloseBtn,
     kadaiTab,
     kadaiTabLabel,
-    examTab,
-    examTabLabel,
+    settingsTab,
+    settingsTabLabel,
     addMemoButton,
     kadaiFetchedTimeString,
     quizFetchedTimeString,
@@ -82,7 +82,7 @@ function createMiniPandA(): void {
 
 function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   const memoEditBox = createElem("div");
-  memoEditBox.classList.add("examBox", "addMemoBox");
+  memoEditBox.classList.add("settingsBox", "addMemoBox");
   memoEditBox.style.display = "none";
   const memoLabel = createElem("label");
   memoLabel.style.display = "block";
@@ -216,7 +216,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
       dueGroupHeader.style.display = "";
       dueGroupContainer.style.display = "";
     }
-    appendChildAll(miniPandA, [kadaiDiv, examDiv]);
+    appendChildAll(miniPandA, [kadaiDiv, settingsDiv]);
     appendChildAll(kadaiDiv, [dueGroupHeader, dueGroupContainer]);
   }
 

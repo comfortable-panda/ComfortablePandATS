@@ -2,7 +2,7 @@ import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
-import {displayMiniPandA, kadaiFetchedTime, lectureIDList, mergedKadaiList, mergedKadaiListNoMemo} from "./content_script";
+import {displayMiniPandA, lectureIDList, mergedKadaiListNoMemo} from "./content_script";
 
 let toggle = false;
 
@@ -26,7 +26,7 @@ function toggleKadaiTab(): void {
   const kadaiTab = document.querySelector(".kadai-tab");
   // @ts-ignore
   kadaiTab.style.display = "";
-  const examTab = document.querySelector(".exam-tab");
+  const examTab = document.querySelector(".settings-tab");
   // @ts-ignore
   examTab.style.display = "none";
   const addMemoButton = document.querySelector(".plus-button");
@@ -35,22 +35,28 @@ function toggleKadaiTab(): void {
   const lastKadaiGetTime = document.querySelector(".kadai-time");
   // @ts-ignore
   lastKadaiGetTime.style.display = "";
+  const lastQuizGetTime = document.querySelector(".quiz-time");
+  // @ts-ignore
+  lastQuizGetTime.style.display = "";
 }
 
-function toggleExamTab(): void {
+function toggleSettingsTab(): void {
   // クイズ・小テスト・試験一覧タブを表示・非表示にします
   const kadaiTab = document.querySelector(".kadai-tab");
   // @ts-ignore
   kadaiTab.style.display = "none";
-  const examTab = document.querySelector(".exam-tab");
+  const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
-  examTab.style.display = "";
+  settingsTab.style.display = "";
   const addMemoButton = document.querySelector(".plus-button");
   // @ts-ignore
   addMemoButton.style.display = "none";
   const lastKadaiGetTime = document.querySelector(".kadai-time");
   // @ts-ignore
   lastKadaiGetTime.style.display = "none";
+  const lastQuizGetTime = document.querySelector(".quiz-time");
+  // @ts-ignore
+  lastQuizGetTime.style.display = "none";
 }
 
 function toggleMemoBox(): void {
@@ -189,7 +195,7 @@ async function editFavTabMessage(): Promise<void>{
 export {
   toggleMiniPandA,
   toggleKadaiTab,
-  toggleExamTab,
+  toggleSettingsTab,
   toggleMemoBox,
   toggleKadaiFinishedFlag,
   addKadaiMemo,

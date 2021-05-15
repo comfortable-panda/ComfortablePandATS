@@ -1,7 +1,6 @@
-import { appendChildAll, createElem, DueGroupDom, examDiv, kadaiDiv, KadaiEntryDom, subPandA } from './dom';
-import { deleteKadaiMemo, toggleKadaiFinishedFlag } from './eventListener';
+import { appendChildAll, createElem, DueGroupDom, settingsDiv, kadaiDiv, KadaiEntryDom, subPandA } from './dom';
+import { toggleKadaiFinishedFlag } from './eventListener';
 import { Kadai, LectureInfo } from './kadai';
-import { fetchLectureIDs } from './network';
 import { loadFromStorage } from './storage'
 import {
   convertArrayToKadai,
@@ -12,7 +11,6 @@ import {
   nowTime,
   sortKadaiList
 } from "./utils";
-import { mergedKadaiList } from "./content_script";
 
 const subpandaRoot = document.querySelector("#subpanda");
 
@@ -136,7 +134,7 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
       dueGroupHeader.style.display = "";
       dueGroupContainer.style.display = "";
     }
-    appendChildAll(subPandA, [fetchedTimeString, kadaiDiv, examDiv]);
+    appendChildAll(subPandA, [fetchedTimeString, kadaiDiv, settingsDiv]);
     appendChildAll(kadaiDiv, [dueGroupHeader, dueGroupContainer]);
   }
 
