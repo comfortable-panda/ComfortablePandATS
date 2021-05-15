@@ -77,7 +77,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiID = event.target.id;
   let kadaiList: Array<Kadai>;
   if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
-  if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromStorage("TSQuizList"));
+  else if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromStorage("TSQuizList"));
   else kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiList"));
 
   const updatedKadaiList = [];
@@ -106,8 +106,9 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
   }
 
+
   if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
-  if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
+  else if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
   else saveToStorage("TSkadaiList", updatedKadaiList);
 }
 
