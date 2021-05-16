@@ -1,8 +1,9 @@
 import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
-import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
+import { convertArrayToKadai, genUniqueStr, kadaiCacheInterval, mergeIntoKadaiList, quizCacheInterval } from "./utils";
 import {displayMiniPandA, lectureIDList, mergedKadaiListNoMemo} from "./content_script";
+import { Settings } from "./settings";
 
 let toggle = false;
 
@@ -26,9 +27,9 @@ function toggleKadaiTab(): void {
   const kadaiTab = document.querySelector(".kadai-tab");
   // @ts-ignore
   kadaiTab.style.display = "";
-  const examTab = document.querySelector(".settings-tab");
+  const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
-  examTab.style.display = "none";
+  settingsTab.style.display = "none";
   const addMemoButton = document.querySelector(".plus-button");
   // @ts-ignore
   addMemoButton.style.display = "";
@@ -110,6 +111,25 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
   else if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
   else saveToStorage("TSkadaiList", updatedKadaiList);
+}
+
+async function updateSettings(event: any): Promise<void> {
+  const settingsID = event.target.id;
+  let settingsValue = event.currentTarget.value;
+  if (settingsValue === "on") settingsValue = event.currentTarget.checked;
+
+  console.log("Settings value", settingsID ,settingsValue)
+  let settings = new Settings();
+  const oldSettings = await loadFromStorage("TSSettings");
+  settings.kadaiCacheInterval = oldSettings.kadaiCacheInterval ?? kadaiCacheInterval;
+  settings.quizCacheInterval = oldSettings.quizCacheInterval ?? quizCacheInterval;
+  settings.makePandAGreatAgain = oldSettings.makePandAGreatAgain ?? false;
+  settings.displayCheckedKadai = oldSettings.displayCheckedKadai ?? true;
+  // @ts-ignore
+  settings[settingsID] = settingsValue;
+
+  console.log("settings", settings);
+  saveToStorage("TSSettings", settings);
 }
 
 async function addKadaiMemo(): Promise<void> {
@@ -204,6 +224,7 @@ export {
   toggleMemoBox,
   toggleKadaiFinishedFlag,
   addKadaiMemo,
+  updateSettings,
   deleteKadaiMemo,
   editFavTabMessage,
 };

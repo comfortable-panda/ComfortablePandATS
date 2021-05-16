@@ -5,8 +5,8 @@ import {
   appendMemoBox,
   createHanburgerButton,
   createMiniPandA,
-  createNavBarNotification,
-  updateMiniPandA,
+  createNavBarNotification, createSettingsTab,
+  updateMiniPandA
 } from "./minipanda";
 import { addMissingBookmarkedLectures } from "./bookmark";
 import {
@@ -20,6 +20,7 @@ import {
   updateIsReadFlag,
   useCache
 } from "./utils";
+import { Settings } from "./settings";
 
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
 export let kadaiFetchedTime: number;
@@ -98,6 +99,12 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
 export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
   createMiniPandA();
   appendMemoBox(lectureIDList);
+  const s = new Settings();
+  s.displayCheckedKadai = true;
+  s.kadaiCacheInterval = 10;
+  s.makePandAGreatAgain = false;
+  s.quizCacheInterval = 10;
+  createSettingsTab(s);
   updateMiniPandA(mergedKadaiList, lectureIDList);
 }
 

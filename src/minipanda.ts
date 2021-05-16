@@ -1,30 +1,27 @@
 import { Kadai, LectureInfo } from "./kadai";
+import { createLectureIDMap, getDaysUntil, getTimeRemain, nowTime } from "./utils";
 import {
-  nowTime,
-  getDaysUntil,
-  getTimeRemain,
-  createLectureIDMap,
-} from "./utils";
-import {
-  miniPandA,
-  hamburger,
-  KadaiEntryDom,
-  DueGroupDom,
-  kadaiDiv,
-  settingsDiv,
-  createElem,
   appendChildAll,
+  createElem,
+  DueGroupDom,
+  hamburger,
+  kadaiDiv,
+  KadaiEntryDom,
+  miniPandA,
+  settingsDiv,
+  SettingsDom
 } from "./dom";
 import {
-  toggleMiniPandA,
-  toggleKadaiTab,
-  toggleSettingsTab,
-  toggleMemoBox,
-  toggleKadaiFinishedFlag,
   addKadaiMemo,
   deleteKadaiMemo,
+  toggleKadaiFinishedFlag,
+  toggleKadaiTab,
+  toggleMemoBox,
+  toggleMiniPandA,
+  toggleSettingsTab, updateSettings
 } from "./eventListener";
 import { kadaiFetchedTime, quizFetchedTime } from "./content_script";
+import { Settings } from "./settings";
 
 
 function createHanburgerButton(): void {
@@ -118,6 +115,44 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   appendChildAll(memoEditBox, [todoLecLabel, todoContentLabel, todoDueLabel, todoSubmitButton]);
   kadaiDiv.appendChild(memoEditBox);
 }
+
+function createSettingItem(itemDescription: string, value: boolean | number | undefined, id: string) {
+  if (typeof value !== "undefined") {
+    const mainDiv = SettingsDom.mainDiv.cloneNode(true);
+    const div = SettingsDom.div.cloneNode(true);
+    const label = SettingsDom.label.cloneNode(true);
+    const p = SettingsDom.p.cloneNode(true);
+    p.innerText = itemDescription;
+    if (typeof value === "boolean") {
+      label.classList.add("switch");
+      const toggleBtn = SettingsDom.toggleBtn.cloneNode(true);
+      toggleBtn.checked = value;
+      toggleBtn.id = id
+      toggleBtn.addEventListener("change", updateSettings, true);
+      appendChildAll(label, [toggleBtn, SettingsDom.span.cloneNode(true)]);
+    }
+    if (typeof value === "number") {
+      const inputBox = SettingsDom.inputBox.cloneNode(true);
+      inputBox.value = value;
+      inputBox.id = id;
+      inputBox.addEventListener("change", updateSettings, true);
+      appendChildAll(label, [inputBox]);
+    }
+    appendChildAll(mainDiv, [p, label]);
+    settingsDiv.appendChild(mainDiv);
+  }
+}
+
+function createSettingsTab(settings: Settings) {
+  console.log("da",settings.displayCheckedKadai)
+  createSettingItem("提出済みの課題を表示する", settings.displayCheckedKadai, "displayCheckedKadai");
+  createSettingItem("公開前の課題を表示する", settings.makePandAGreatAgain, "makePandAGreatAgain");
+  createSettingItem("課題取得間隔", settings.kadaiCacheInterval, "kadaiCacheInterval");
+  createSettingItem("クイズ取得間隔", settings.quizCacheInterval, "quizCacheInterval");
+
+  settingsDiv.style.display = "none";
+}
+
 
 function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
@@ -280,6 +315,7 @@ export {
   createHanburgerButton,
   createMiniPandA,
   appendMemoBox,
+  createSettingsTab,
   updateMiniPandA,
   createNavBarNotification,
 };
