@@ -2,7 +2,16 @@ import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
-import {displayMiniPandA, lectureIDList, mergedKadaiListNoMemo} from "./content_script";
+import {
+  CPsettings,
+  displayMiniPandA,
+  kadaiCacheInterval,
+  lectureIDList, loadAndMergeKadaiList, mergedKadaiList,
+  mergedKadaiListNoMemo,
+  quizCacheInterval
+} from "./content_script";
+import { Settings } from "./settings";
+import { createNavBarNotification, deleteNavBarNotification } from "./minipanda";
 
 let toggle = false;
 
@@ -26,9 +35,9 @@ function toggleKadaiTab(): void {
   const kadaiTab = document.querySelector(".kadai-tab");
   // @ts-ignore
   kadaiTab.style.display = "";
-  const examTab = document.querySelector(".settings-tab");
+  const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
-  examTab.style.display = "none";
+  settingsTab.style.display = "none";
   const addMemoButton = document.querySelector(".plus-button");
   // @ts-ignore
   addMemoButton.style.display = "";
@@ -110,6 +119,38 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
   else if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
   else saveToStorage("TSkadaiList", updatedKadaiList);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
+}
+
+async function updateSettings(event: any): Promise<void> {
+  const settingsID = event.target.id;
+  let settingsValue = event.currentTarget.value;
+  if (settingsValue === "on") settingsValue = event.currentTarget.checked;
+  else settingsValue = parseInt(event.currentTarget.value);
+
+  console.log("Settings value", settingsID, settingsValue);
+  let settings = new Settings();
+  const oldSettings = await loadFromStorage("TSSettings");
+  settings.kadaiCacheInterval = oldSettings.kadaiCacheInterval ?? kadaiCacheInterval;
+  settings.quizCacheInterval = oldSettings.quizCacheInterval ?? quizCacheInterval;
+  settings.makePandAGreatAgain = oldSettings.makePandAGreatAgain ?? false;
+  settings.displayCheckedKadai = oldSettings.displayCheckedKadai ?? true;
+  // @ts-ignore
+  settings[settingsID] = settingsValue;
+  // @ts-ignore
+  CPsettings[settingsID] = settingsValue;
+
+  console.log("settings", settings);
+  saveToStorage("TSSettings", settings);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function addKadaiMemo(): Promise<void> {
@@ -153,6 +194,11 @@ async function addKadaiMemo(): Promise<void> {
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList);
   const quizList = await loadFromStorage("TSQuizList");
   await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function deleteKadaiMemo(event: any): Promise<void> {
@@ -179,6 +225,11 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList);
   const quizList = await loadFromStorage("TSQuizList");
   await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function editFavTabMessage(): Promise<void>{
@@ -204,6 +255,7 @@ export {
   toggleMemoBox,
   toggleKadaiFinishedFlag,
   addKadaiMemo,
+  updateSettings,
   deleteKadaiMemo,
   editFavTabMessage,
 };

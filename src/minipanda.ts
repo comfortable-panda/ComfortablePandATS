@@ -1,30 +1,38 @@
 import { Kadai, LectureInfo } from "./kadai";
 import {
-  nowTime,
+  createLectureIDMap,
   getDaysUntil,
   getTimeRemain,
-  createLectureIDMap,
+  nowTime,
 } from "./utils";
 import {
-  miniPandA,
-  hamburger,
-  KadaiEntryDom,
-  DueGroupDom,
-  kadaiDiv,
-  settingsDiv,
-  createElem,
   appendChildAll,
+  createElem,
+  DueGroupDom,
+  hamburger,
+  kadaiDiv,
+  KadaiEntryDom,
+  miniPandA,
+  settingsDiv,
+  SettingsDom
 } from "./dom";
 import {
-  toggleMiniPandA,
-  toggleKadaiTab,
-  toggleSettingsTab,
-  toggleMemoBox,
-  toggleKadaiFinishedFlag,
   addKadaiMemo,
   deleteKadaiMemo,
+  toggleKadaiFinishedFlag,
+  toggleKadaiTab,
+  toggleMemoBox,
+  toggleMiniPandA,
+  toggleSettingsTab, updateSettings
 } from "./eventListener";
-import { kadaiFetchedTime, quizFetchedTime } from "./content_script";
+import {
+  CPsettings,
+  kadaiCacheInterval,
+  kadaiFetchedTime,
+  quizCacheInterval,
+  quizFetchedTime,
+  VERSION,
+} from "./content_script";
 
 
 function createHanburgerButton(): void {
@@ -42,6 +50,8 @@ function createMiniPandA(): void {
     alt: "logo",
     src: chrome.extension.getURL("img/logo.png"),
   });
+  const version = createElem("p", {classList: "cp-version"});
+  version.innerText = `Version ${VERSION}`;
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
   miniPandACloseBtn.classList.add("closebtn", "q");
@@ -64,6 +74,7 @@ function createMiniPandA(): void {
   quizFetchedTimeString.innerText = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
   appendChildAll(miniPandA, [
     miniPandALogo,
+    version,
     miniPandACloseBtn,
     kadaiTab,
     kadaiTabLabel,
@@ -119,7 +130,46 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   kadaiDiv.appendChild(memoEditBox);
 }
 
+function createSettingItem(itemDescription: string, value: boolean | number, id: string, display=true) {
+  const mainDiv = SettingsDom.mainDiv.cloneNode(true);
+  const div = SettingsDom.div.cloneNode(true);
+  const label = SettingsDom.label.cloneNode(true);
+  const p = SettingsDom.p.cloneNode(true);
+  p.innerText = itemDescription;
+  if(!display)mainDiv.style.display = "none";
+  if (typeof value === "boolean") {
+    label.classList.add("switch");
+    const toggleBtn = SettingsDom.toggleBtn.cloneNode(true);
+    toggleBtn.checked = value;
+    toggleBtn.id = id;
+    toggleBtn.addEventListener("change", updateSettings, true);
+    const span = SettingsDom.span.cloneNode(true);
+
+    appendChildAll(label, [toggleBtn, span]);
+  }
+  if (typeof value === "number") {
+    const inputBox = SettingsDom.inputBox.cloneNode(true);
+    inputBox.value = value;
+    inputBox.id = id;
+    inputBox.addEventListener("change", updateSettings, true);
+    appendChildAll(label, [inputBox]);
+  }
+  appendChildAll(mainDiv, [p, label]);
+  settingsDiv.appendChild(mainDiv);
+}
+
+async function createSettingsTab() {
+  createSettingItem("提出済みの課題を表示する", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
+  createSettingItem("課題取得間隔 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
+  createSettingItem("クイズ取得間隔 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
+  createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
+
+  settingsDiv.style.display = "none";
+}
+
+
 function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
+  console.log("kadaiList", kadaiList)
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
   const dueGroupColor = ["danger", "warning", "success", "other"];
   const initLetter = ["a", "b", "c", "d"];
@@ -235,6 +285,28 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
   }
 }
 
+function deleteNavBarNotification(): void{
+  const q1 = document.querySelectorAll(".red-badge");
+  // @ts-ignore
+  for (const _ of q1){
+    _.classList.remove("red-badge");
+  }
+  const q2 = document.querySelectorAll(".nav-danger");
+  // @ts-ignore
+  for (const _ of q2){
+    _.classList.remove("nav-danger");
+  }
+  const q3 = document.querySelectorAll(".nav-warning");
+  // @ts-ignore
+  for (const _ of q3){
+    _.classList.remove("nav-warning");
+  }
+  const q4 = document.querySelectorAll(".nav-safe");
+  // @ts-ignore
+  for (const _ of q4){
+    _.classList.remove("nav-safe");
+  }
+}
 
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
@@ -249,10 +321,11 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
         return kadai.lectureID === lectureID;
       });
       if (q !== -1) {
-        if (!kadaiList[q].isRead) {
+        const closestTime = (CPsettings.displayCheckedKadai) ? kadaiList[q].closestDueDateTimestamp : kadaiList[q].closestDueDateTimestampExcludeFinished;
+        if (!kadaiList[q].isRead && closestTime !== -1) {
           defaultTab[j].classList.add("red-badge");
         }
-        const daysUntilDue = getDaysUntil(nowTime, kadaiList[q].closestDueDateTimestamp * 1000);
+        const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
 
         if (daysUntilDue > 0 && daysUntilDue <= 1) {
@@ -280,6 +353,8 @@ export {
   createHanburgerButton,
   createMiniPandA,
   appendMemoBox,
+  createSettingsTab,
   updateMiniPandA,
+  deleteNavBarNotification,
   createNavBarNotification,
 };
