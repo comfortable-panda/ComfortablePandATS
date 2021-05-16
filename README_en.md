@@ -72,4 +72,4 @@ Also check box is available for you to distinguish completed assignments from wo
 - 2021/05/16 v3.4.1 Fixed minor bugs.
 
 # License
-MIT
+Apache-2.0 License
