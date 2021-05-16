@@ -1,6 +1,4 @@
 import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
-import { DueGroupDom } from "./dom";
-import lectureName = DueGroupDom.lectureName;
 import { saveToStorage } from "./storage";
 
 export const nowTime = new Date().getTime();

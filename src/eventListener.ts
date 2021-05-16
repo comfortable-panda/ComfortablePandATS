@@ -6,9 +6,10 @@ import {
   CPsettings,
   displayMiniPandA,
   kadaiCacheInterval,
-  lectureIDList, loadAndMergeKadaiList, mergedKadaiList,
+  lectureIDList,
+  loadAndMergeKadaiList,
   mergedKadaiListNoMemo,
-  quizCacheInterval
+  quizCacheInterval,
 } from "./content_script";
 import { Settings } from "./settings";
 import { createNavBarNotification, deleteNavBarNotification } from "./minipanda";
@@ -85,6 +86,7 @@ function toggleMemoBox(): void {
 async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiID = event.target.id;
   let kadaiList: Array<Kadai>;
+  // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
   if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
   else if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromStorage("TSQuizList"));
   else kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiList"));
@@ -96,7 +98,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
       if (kadaiEntry.kadaiID === kadaiID) {
         const isFinished = kadaiEntry.isFinished;
         let isQuiz = false;
-        if (typeof kadaiEntry.isQuiz !== 'undefined') isQuiz = kadaiEntry.isQuiz;
+        if (typeof kadaiEntry.isQuiz !== "undefined") isQuiz = kadaiEntry.isQuiz;
         updatedKadaiEntries.push(
           new KadaiEntry(
             kadaiEntry.kadaiID,
@@ -114,8 +116,6 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     }
     updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
   }
-
-
   if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
   else if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
   else saveToStorage("TSkadaiList", updatedKadaiList);
@@ -132,8 +132,7 @@ async function updateSettings(event: any): Promise<void> {
   if (settingsValue === "on") settingsValue = event.currentTarget.checked;
   else settingsValue = parseInt(event.currentTarget.value);
 
-  console.log("Settings value", settingsID, settingsValue);
-  let settings = new Settings();
+  const settings = new Settings();
   const oldSettings = await loadFromStorage("TSSettings");
   settings.kadaiCacheInterval = oldSettings.kadaiCacheInterval ?? kadaiCacheInterval;
   settings.quizCacheInterval = oldSettings.quizCacheInterval ?? quizCacheInterval;
@@ -143,8 +142,6 @@ async function updateSettings(event: any): Promise<void> {
   settings[settingsID] = settingsValue;
   // @ts-ignore
   CPsettings[settingsID] = settingsValue;
-
-  console.log("settings", settings);
   saveToStorage("TSSettings", settings);
 
   // NavBarを再描画
@@ -173,7 +170,7 @@ async function addKadaiMemo(): Promise<void> {
     const idx = kadaiMemoList.findIndex((oldKadaiMemo: Kadai) => {
       return (oldKadaiMemo.lectureID === todoLecID);
     });
-    if (idx !== -1){
+    if (idx !== -1) {
       kadaiMemoList[idx].kadaiEntries.push(kadaiMemoEntry);
     } else {
       kadaiMemoList.push(kadaiMemo)
@@ -183,6 +180,7 @@ async function addKadaiMemo(): Promise<void> {
   }
   saveToStorage("TSkadaiMemoList", kadaiMemoList);
 
+  // miniPandAを再描画
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
   }
@@ -212,6 +210,8 @@ async function deleteKadaiMemo(event: any): Promise<void> {
     }
     deletedKadaiMemoList.push(new Kadai(kadaiMemo.lectureID, kadaiMemo.lectureName, kadaiMemoEntries, kadaiMemo.isRead));
   }
+
+  // miniPandAを再描画
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
   }

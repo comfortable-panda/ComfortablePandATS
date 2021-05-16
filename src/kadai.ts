@@ -56,6 +56,7 @@ export class Kadai {
     return min;
   }
 
+  // 完了済み以外からclosestTimeを取得する
   get closestDueDateTimestampExcludeFinished(): number {
     if (this.kadaiEntries.length == 0) return -1;
     let min = this.kadaiEntries[0].dueDateTimestamp;

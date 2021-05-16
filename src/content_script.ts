@@ -5,8 +5,9 @@ import {
   appendMemoBox,
   createHanburgerButton,
   createMiniPandA,
-  createNavBarNotification, createSettingsTab,
-  updateMiniPandA
+  createNavBarNotification,
+  createSettingsTab,
+  updateMiniPandA,
 } from "./minipanda";
 import { addMissingBookmarkedLectures } from "./bookmark";
 import {
@@ -18,7 +19,7 @@ import {
   nowTime,
   sortKadaiList,
   updateIsReadFlag,
-  useCache
+  useCache,
 } from "./utils";
 import { Settings } from "./settings";
 
@@ -122,7 +123,6 @@ async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
     await loadSettings();
-
     kadaiFetchedTime = await loadFromStorage("TSkadaiFetchedTime");
     quizFetchedTime = await loadFromStorage("TSquizFetchedTime");
     lectureIDList = fetchLectureIDs()[1];
