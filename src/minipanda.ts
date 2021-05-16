@@ -142,7 +142,7 @@ function createSettingItem(itemDescription: string, value: boolean | number | st
     const toggleBtn = SettingsDom.toggleBtn.cloneNode(true);
     toggleBtn.checked = value;
     toggleBtn.id = id;
-    toggleBtn.addEventListener("change", function(res:any){updateSettings(res,"check");}, true);
+    toggleBtn.addEventListener("change", function (res: any) { updateSettings(res, "check"); }, true);
     const span = SettingsDom.span.cloneNode(true);
     appendChildAll(label, [toggleBtn, span]);
   }
@@ -150,14 +150,14 @@ function createSettingItem(itemDescription: string, value: boolean | number | st
     const inputBox = SettingsDom.inputBox.cloneNode(true);
     inputBox.value = value;
     inputBox.id = id;
-    inputBox.addEventListener("change", function(res:any){updateSettings(res,"number");}, true);
+    inputBox.addEventListener("change", function (res: any) { updateSettings(res, "number"); }, true);
     appendChildAll(label, [inputBox]);
   }
   if (typeof value === "string") {
     const inputBox = SettingsDom.stringBox.cloneNode(true);
     inputBox.value = value;
     inputBox.id = id;
-    inputBox.addEventListener("change", function(res:any){updateSettings(res,"string");}, true);
+    inputBox.addEventListener("change", function (res: any) { updateSettings(res, "string"); }, true);
     appendChildAll(label, [inputBox]);
   }
   appendChildAll(mainDiv, [p, label]);
@@ -321,29 +321,29 @@ function deleteNavBarNotification(): void {
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
-/*
-  for (let i = 0; i < document.styleSheets.length; i++) {
-    let sheet = document.styleSheets[i];
-    for (let j = 0; j < sheet.cssRules.length; j++) {
-      var rule = sheet.cssRules[j];
-      console.log(j);
-      if (!(rule instanceof CSSStyleRule)) {
-        continue;
-      }
-      if(rule.selectorText.includes(".kadai-danger")){
-        console.log("danger");
-      }
-      if(rule.selectorText.includes(".kadai-warning")){
-        console.log("kadai-warning");
-
-      }
-      if(rule.selectorText.includes(".kadai-success")){
-        console.log("kadai-success");
-
+  /*
+    for (let i = 0; i < document.styleSheets.length; i++) {
+      let sheet = document.styleSheets[i];
+      for (let j = 0; j < sheet.cssRules.length; j++) {
+        var rule = sheet.cssRules[j];
+        console.log(j);
+        if (!(rule instanceof CSSStyleRule)) {
+          continue;
+        }
+        if(rule.selectorText.includes(".kadai-danger")){
+          console.log("danger");
+        }
+        if(rule.selectorText.includes(".kadai-warning")){
+          console.log("kadai-warning");
+  
+        }
+        if(rule.selectorText.includes(".kadai-success")){
+          console.log("kadai-success");
+  
+        }
       }
     }
-  }
-*/
+  */
   for (const lecture of lectureIDList) {
     for (let j = 3; j < defaultTabCount; j++) {
       // @ts-ignore
@@ -379,15 +379,44 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
       }
     }
   }
-  var dangerelem=document.getElementsByClassName("kadai-danger");
-  for(var i=0;i<dangerelem.length;i++){
-    var elem=dangerelem[i] as HTMLElement;
-    var color="solid 2px "+CPsettings.colorDanger??"#e85555";
-    (<any>elem.style)["border-top"]=color;
-    (<any>elem.style)["border-left"]=color;
-    (<any>elem.style)["border-bottom"]=color;
-    (<any>elem.style)["border-right"]=color;
+  var overwriteborder = function (className: string, color: string|undefined) {
+    var dangerelem = document.getElementsByClassName(className);
+    for (var i = 0; i < dangerelem.length; i++) {
+      var elem = dangerelem[i] as HTMLElement;
+      var attr = "solid 2px " + color;
+      (<any>elem.style)["border-top"] = attr;
+      (<any>elem.style)["border-left"] = attr;
+      (<any>elem.style)["border-bottom"] = attr;
+      (<any>elem.style)["border-right"] = attr;
+    }
   }
+  var overwritebackground = function (className: string, color: string|undefined) {
+    var dangerelem = document.getElementsByClassName(className);
+    for (var i = 0; i < dangerelem.length; i++) {
+      var elem = dangerelem[i] as HTMLElement;
+      elem.setAttribute("style","background:"+color+"!important");
+    }
+  }
+  overwriteborder("kadai-danger",CPsettings.colorDanger?? "#e85555");
+  overwriteborder("kadai-success",CPsettings.colorSuccess?? "#62b665");
+  overwriteborder("kadai-warning",CPsettings.colorWarning?? "#d7aa57");
+
+  overwriteborder("sidenav-danger",CPsettings.colorDanger?? "#e85555");
+  overwriteborder("sidenav-success",CPsettings.colorSuccess?? "#62b665");
+  overwriteborder("sidenav-warning",CPsettings.colorWarning?? "#d7aa57");
+
+
+  overwritebackground("lecture-danger",CPsettings.colorDanger?? "#e85555");
+  overwritebackground("lecture-success",CPsettings.colorSuccess?? "#62b665");
+  overwritebackground("lecture-warning",CPsettings.colorWarning?? "#d7aa57");
+
+  overwritebackground("nav-danger",CPsettings.colorDanger?? "#e85555");
+  overwritebackground("nav-safe",CPsettings.colorSuccess?? "#62b665");
+  overwritebackground("nav-warning",CPsettings.colorWarning?? "#d7aa57");
+
+  overwriteborder("nav-danger",CPsettings.colorDanger?? "#e85555");
+  overwriteborder("nav-safe",CPsettings.colorSuccess?? "#62b665");
+  overwriteborder("nav-warning",CPsettings.colorWarning?? "#d7aa57");
 }
 
 export {
