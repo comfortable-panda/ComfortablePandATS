@@ -32,7 +32,7 @@ export let mergedKadaiList: Array<Kadai>;
 export let mergedKadaiListNoMemo: Array<Kadai>;
 export let CPsettings: Settings;
 
-async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
+export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
   // ストレージから前回保存したkadaiListを読み込む
   const oldKadaiList = await loadFromStorage("TSkadaiList");
   const newKadaiList = [];
@@ -81,7 +81,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
     await saveToStorage("TSQuizList", newQuizList);
   } else {
     if(typeof oldKadaiList !== "undefined"){
-      newQuizList = oldQuizList
+      newQuizList = oldQuizList;
     }
   }
 

@@ -272,6 +272,28 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
   }
 }
 
+function deleteNavBarNotification(): void{
+  const q1 = document.querySelectorAll(".red-badge");
+  // @ts-ignore
+  for (const _ of q1){
+    _.classList.remove("red-badge");
+  }
+  const q2 = document.querySelectorAll(".nav-danger");
+  // @ts-ignore
+  for (const _ of q2){
+    _.classList.remove("nav-danger");
+  }
+  const q3 = document.querySelectorAll(".nav-warning");
+  // @ts-ignore
+  for (const _ of q3){
+    _.classList.remove("nav-warning");
+  }
+  const q4 = document.querySelectorAll(".nav-safe");
+  // @ts-ignore
+  for (const _ of q4){
+    _.classList.remove("nav-safe");
+  }
+}
 
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
@@ -320,5 +342,6 @@ export {
   appendMemoBox,
   createSettingsTab,
   updateMiniPandA,
+  deleteNavBarNotification,
   createNavBarNotification,
 };

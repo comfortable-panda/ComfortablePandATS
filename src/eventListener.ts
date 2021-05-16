@@ -5,11 +5,12 @@ import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {
   displayMiniPandA,
   kadaiCacheInterval,
-  lectureIDList,
+  lectureIDList, loadAndMergeKadaiList, mergedKadaiList,
   mergedKadaiListNoMemo,
   quizCacheInterval
 } from "./content_script";
 import { Settings } from "./settings";
+import { createNavBarNotification, deleteNavBarNotification } from "./minipanda";
 
 let toggle = false;
 
@@ -117,6 +118,11 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
   else if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
   else saveToStorage("TSkadaiList", updatedKadaiList);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function updateSettings(event: any): Promise<void> {
