@@ -47,4 +47,15 @@ namespace DueGroupDom {
   export const lectureName = createElem("a");
 }
 
-export { KadaiEntryDom, DueGroupDom, createElem, appendChildAll };
+// eslint-disable-next-line @typescript-eslint/no-namespace
+namespace SettingsDom {
+  export const mainDiv = createElem("div", {className: "cp-settings"});
+  export const div = createElem("div");
+  export const p = createElem("p", {className: "cp-settings-text"});
+  export const label = createElem("label");
+  export const toggleBtn = createElem("input", { type: "checkbox" });
+  export const inputBox = createElem("input", { type: "number", className: "cp-settings-inputbox" });
+  export const span = createElem("span", { className: "slider round" });
+}
+
+export { KadaiEntryDom, DueGroupDom, SettingsDom, createElem, appendChildAll };

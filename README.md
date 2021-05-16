@@ -1,50 +1,48 @@
 # ComfortablePandATS
-A browser extention that makes PandA life comfortable
+PandAを快適にするブラウザ拡張機能です．
 
-# Installation
-1. Goto `chrome://extensions/` on your GoogleChrome
-1. Enable **developer mode**.
-1. Click **LOAD UNPACKED** button on upper left hand corner.
-1. Select this folder(confortable-panda) and install.
-1. You are all set:)
+# ダウンロードリンク
+- [Google Chrome](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
+- [Firefox](https://public.tinax.work/~tinaxd/cpff/)
+- Microsoft Edge
 
-# How to compile
-Run
-```
-npx webpack
-```
+# 使い方
+1. 拡張機能をブラウザにインストールします．
+1. PandAにログインします．
+1. PandAの右上に☰ボタンが追加されていたら導入成功です．
 
-# Usage
-1. Login to PandA
-1. Proceed to main page.
-1. Done. Your upper tab color is changed and ☰ icon is displayed.
-
-# Features
-## Tab coloring
-Colors lecture tab according to due date.
+# 機能紹介
+## タブの色付け
+課題やクイズの締め切り期日に応じて講義タブが色付けされます．
 - ![#f03c15](https://via.placeholder.com/15/e85555/000000?text=+)
-  Due date <= 1 Day
+  締め切り24時間以内
 - ![#f03c15](https://via.placeholder.com/15/d7aa57/000000?text=+)
-  Due date <= 5 Days
+  締め切り5日以内
 - ![#f03c15](https://via.placeholder.com/15/62b665/000000?text=+)
-  Due date <= 14 Days
+  締め切り14日以内
 
-## Notification Badge
-Tells your unchecked latest assignments.
+## 新規課題通知
+前回アクセス時から新たに追加された課題があった場合，講義タブの左上に赤丸の通知バッジを表示します．
+通知バッジが表示されているサイトを開くと通知バッジは消えます．
 
-If you open lecture page with notification badge on, the badge will disappear.
+## miniPandA
+右上の☰を押すとminiPandAが開きます.
+公開されている課題とクイズの一覧が表示されます．
+また，メモ機能を使うことでminiPandA上に課題メモを追加することができます．
 
-## miniPandA (Side-menu)
-Click ☰ to open miniPandA.
-All available assignments as well as quizzes will be displayed.
-You can add your custom assignment to miniPandA with PLUS button located on upper right hand side.
 
-Also check box is available for you to distinguish completed assignments from working assignments.
+# キャッシュ機能
+PandAへの負荷を軽減するために課題・クイズ取得にキャッシュ機能を導入しています．
+デフォルトのキャッシュ間隔は以下のとおりです．
+- 課題取得---2分間
+- クイズ取得---10分間  
+キャッシュ時間は設定から変更することができます
+
 
 # Screenshot
 ![](https://user-images.githubusercontent.com/41512077/90533356-5504e080-e1b3-11ea-8065-bc10ec624ddf.png)
 
-# Update Log
+# 更新履歴
 - 2020/05/20 v0.9.0 Prototype release
 - 2020/05/21 v1.0.0 Release
 - 2020/05/22 v1.0.1 Fixed some minor bugs & refactored
@@ -68,6 +66,15 @@ Also check box is available for you to distinguish completed assignments from wo
 - 2021/04/13 v3.1.0 Bug fix.
 - 2021/05/05 v3.2.0 SubPandA first release.
 - 2021/05/15 v3.3.0 Add quiz-fetch feature.
+- 2021/05/16 v3.4.0 Add setting tab.
+- 2021/05/16 v3.4.1 Fixed minor bugs.
+- 2021/05/16 v3.4.3 Fixed minor bugs.
+
+# コンパイル方法
+Run
+```
+npx webpack
+```
 
 # License
 MIT

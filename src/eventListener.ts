@@ -2,7 +2,17 @@ import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
-import {displayMiniPandA, lectureIDList, mergedKadaiListNoMemo} from "./content_script";
+import {
+  CPsettings,
+  displayMiniPandA,
+  kadaiCacheInterval,
+  lectureIDList,
+  loadAndMergeKadaiList,
+  mergedKadaiListNoMemo,
+  quizCacheInterval,
+} from "./content_script";
+import { Settings } from "./settings";
+import { createNavBarNotification, deleteNavBarNotification } from "./minipanda";
 
 let toggle = false;
 
@@ -26,9 +36,9 @@ function toggleKadaiTab(): void {
   const kadaiTab = document.querySelector(".kadai-tab");
   // @ts-ignore
   kadaiTab.style.display = "";
-  const examTab = document.querySelector(".settings-tab");
+  const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
-  examTab.style.display = "none";
+  settingsTab.style.display = "none";
   const addMemoButton = document.querySelector(".plus-button");
   // @ts-ignore
   addMemoButton.style.display = "";
@@ -76,6 +86,7 @@ function toggleMemoBox(): void {
 async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiID = event.target.id;
   let kadaiList: Array<Kadai>;
+  // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
   if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
   else if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromStorage("TSQuizList"));
   else kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiList"));
@@ -87,7 +98,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
       if (kadaiEntry.kadaiID === kadaiID) {
         const isFinished = kadaiEntry.isFinished;
         let isQuiz = false;
-        if (typeof kadaiEntry.isQuiz !== 'undefined') isQuiz = kadaiEntry.isQuiz;
+        if (typeof kadaiEntry.isQuiz !== "undefined") isQuiz = kadaiEntry.isQuiz;
         updatedKadaiEntries.push(
           new KadaiEntry(
             kadaiEntry.kadaiID,
@@ -105,11 +116,38 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     }
     updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
   }
-
-
   if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
   else if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
   else saveToStorage("TSkadaiList", updatedKadaiList);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
+}
+
+async function updateSettings(event: any): Promise<void> {
+  const settingsID = event.target.id;
+  let settingsValue = event.currentTarget.value;
+  if (settingsValue === "on") settingsValue = event.currentTarget.checked;
+  else settingsValue = parseInt(event.currentTarget.value);
+
+  const settings = new Settings();
+  const oldSettings = await loadFromStorage("TSSettings");
+  settings.kadaiCacheInterval = oldSettings.kadaiCacheInterval ?? kadaiCacheInterval;
+  settings.quizCacheInterval = oldSettings.quizCacheInterval ?? quizCacheInterval;
+  settings.makePandAGreatAgain = oldSettings.makePandAGreatAgain ?? false;
+  settings.displayCheckedKadai = oldSettings.displayCheckedKadai ?? true;
+  // @ts-ignore
+  settings[settingsID] = settingsValue;
+  // @ts-ignore
+  CPsettings[settingsID] = settingsValue;
+  saveToStorage("TSSettings", settings);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function addKadaiMemo(): Promise<void> {
@@ -132,7 +170,7 @@ async function addKadaiMemo(): Promise<void> {
     const idx = kadaiMemoList.findIndex((oldKadaiMemo: Kadai) => {
       return (oldKadaiMemo.lectureID === todoLecID);
     });
-    if (idx !== -1){
+    if (idx !== -1) {
       kadaiMemoList[idx].kadaiEntries.push(kadaiMemoEntry);
     } else {
       kadaiMemoList.push(kadaiMemo)
@@ -142,6 +180,7 @@ async function addKadaiMemo(): Promise<void> {
   }
   saveToStorage("TSkadaiMemoList", kadaiMemoList);
 
+  // miniPandAを再描画
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
   }
@@ -153,6 +192,11 @@ async function addKadaiMemo(): Promise<void> {
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList);
   const quizList = await loadFromStorage("TSQuizList");
   await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function deleteKadaiMemo(event: any): Promise<void> {
@@ -166,6 +210,8 @@ async function deleteKadaiMemo(event: any): Promise<void> {
     }
     deletedKadaiMemoList.push(new Kadai(kadaiMemo.lectureID, kadaiMemo.lectureName, kadaiMemoEntries, kadaiMemo.isRead));
   }
+
+  // miniPandAを再描画
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
   }
@@ -179,6 +225,11 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList);
   const quizList = await loadFromStorage("TSQuizList");
   await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function editFavTabMessage(): Promise<void>{
@@ -204,6 +255,7 @@ export {
   toggleMemoBox,
   toggleKadaiFinishedFlag,
   addKadaiMemo,
+  updateSettings,
   deleteKadaiMemo,
   editFavTabMessage,
 };

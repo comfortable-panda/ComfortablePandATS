@@ -567,3 +567,81 @@
 #subpanda {
     padding: 3px;
 }
+
+.settings-tab {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    font-weight: bold;
+    color: rgb(70, 70, 70);
+    margin: 10px;
+    border-width: initial;
+    border-style: inset;
+    border-color: initial;
+    border-image: initial;
+}
+
+.cp-version{
+    padding-left: 5px;
+    font-weight: bold;
+}
+
+.cp-settings {
+    padding-left: 20px;
+    padding-top: 10px;
+}
+
+.cp-settings-text {
+    display:inline;
+}
+
+.cp-settings-inputbox {
+    margin-left: 10px;
+    width: 65px;
+}
+
+.switch {
+    position: relative;
+    display: -webkit-inline-box;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 40px;
+    height: 20px;
+    background: grey;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+}
+
+.slider:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 90px;
+    transition: 0.3s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+}
+

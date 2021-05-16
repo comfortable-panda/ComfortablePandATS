@@ -6,29 +6,35 @@ import {
   createHanburgerButton,
   createMiniPandA,
   createNavBarNotification,
+  createSettingsTab,
   updateMiniPandA,
 } from "./minipanda";
 import { addMissingBookmarkedLectures } from "./bookmark";
 import {
   compareAndMergeKadaiList,
   convertArrayToKadai,
-  isLoggedIn, kadaiCacheInterval,
+  isLoggedIn,
   mergeIntoKadaiList,
   miniPandAReady,
-  nowTime, quizCacheInterval,
+  nowTime,
   sortKadaiList,
   updateIsReadFlag,
-  useCache
+  useCache,
 } from "./utils";
+import { Settings } from "./settings";
 
+export const VERSION = "3.4.3";
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
+export let kadaiCacheInterval = 60 * 2;
+export let quizCacheInterval = 60 * 10;
 export let kadaiFetchedTime: number;
 export let quizFetchedTime: number;
 export let lectureIDList: Array<LectureInfo>;
 export let mergedKadaiList: Array<Kadai>;
 export let mergedKadaiListNoMemo: Array<Kadai>;
+export let CPsettings: Settings;
 
-async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
+export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
   // ストレージから前回保存したkadaiListを読み込む
   const oldKadaiList = await loadFromStorage("TSkadaiList");
   const newKadaiList = [];
@@ -77,7 +83,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
     await saveToStorage("TSQuizList", newQuizList);
   } else {
     if(typeof oldKadaiList !== "undefined"){
-      newQuizList = oldQuizList
+      newQuizList = oldQuizList;
     }
   }
 
@@ -98,6 +104,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
 export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
   createMiniPandA();
   appendMemoBox(lectureIDList);
+  createSettingsTab();
   updateMiniPandA(mergedKadaiList, lectureIDList);
 }
 
@@ -105,9 +112,17 @@ async function saveCacheOfLectureIDs(lectureIDs: Array<LectureInfo>) {
   saveToStorage("TSlectureids", lectureIDs);
 }
 
+async function loadSettings(){
+  CPsettings = await loadFromStorage("TSSettings");
+  kadaiCacheInterval = CPsettings.kadaiCacheInterval ?? 60 * 2;
+  quizCacheInterval = CPsettings.quizCacheInterval ?? 60 * 10;
+  CPsettings.displayCheckedKadai = CPsettings.displayCheckedKadai ?? true;
+}
+
 async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
+    await loadSettings();
     kadaiFetchedTime = await loadFromStorage("TSkadaiFetchedTime");
     quizFetchedTime = await loadFromStorage("TSquizFetchedTime");
     lectureIDList = fetchLectureIDs()[1];
