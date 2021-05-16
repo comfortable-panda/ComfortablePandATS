@@ -286,10 +286,10 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
         return kadai.lectureID === lectureID;
       });
       if (q !== -1) {
-        if (!kadaiList[q].isRead) {
+        const closestTime = (CPsettings.displayCheckedKadai) ? kadaiList[q].closestDueDateTimestamp : kadaiList[q].closestDueDateTimestampExcludeFinished;
+        if (!kadaiList[q].isRead && closestTime !== -1) {
           defaultTab[j].classList.add("red-badge");
         }
-        const closestTime = (CPsettings.displayCheckedKadai) ? kadaiList[q].closestDueDateTimestamp : kadaiList[q].closestDueDateTimestampExcludeFinished;
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
 

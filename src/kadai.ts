@@ -69,7 +69,7 @@ export class Kadai {
         min = entry.dueDateTimestamp;
       }
     }
-    if(excludeCount === this.kadaiEntries.length) min = -1;
+    if (excludeCount === this.kadaiEntries.length) min = -1;
     return min;
   }
 
