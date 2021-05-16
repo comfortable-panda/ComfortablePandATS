@@ -68,6 +68,7 @@ PandAへの負荷を軽減するために課題・クイズ取得にキャッシ
 - 2021/05/15 v3.3.0 Add quiz-fetch feature.
 - 2021/05/16 v3.4.0 Add setting tab.
 - 2021/05/16 v3.4.1 Fixed minor bugs.
+- 2021/05/16 v3.4.3 Fixed minor bugs.
 
 # コンパイル方法
 Run

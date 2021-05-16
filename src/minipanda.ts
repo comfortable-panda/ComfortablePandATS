@@ -159,7 +159,7 @@ function createSettingItem(itemDescription: string, value: boolean | number, id:
 }
 
 async function createSettingsTab() {
-  createSettingItem("提出済みの課題を表示する", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
+  createSettingItem("完了済の課題も色付けする", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
   createSettingItem("課題キャッシュ時間 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
   createSettingItem("クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
   createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
