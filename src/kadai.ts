@@ -56,6 +56,23 @@ export class Kadai {
     return min;
   }
 
+  get closestDueDateTimestampExcludeFinished(): number {
+    if (this.kadaiEntries.length == 0) return -1;
+    let min = this.kadaiEntries[0].dueDateTimestamp;
+    let excludeCount = 0;
+    for (const entry of this.kadaiEntries) {
+      if (entry.isFinished) {
+        excludeCount++;
+        continue;
+      }
+      if (min > entry.dueDateTimestamp) {
+        min = entry.dueDateTimestamp;
+      }
+    }
+    if(excludeCount === this.kadaiEntries.length) min = -1;
+    return min;
+  }
+
   getTopSite(): string | null {
     for (const entry of this.kadaiEntries) {
       if (entry.kadaiPage != null) return entry.kadaiPage;

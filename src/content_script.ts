@@ -110,12 +110,18 @@ async function saveCacheOfLectureIDs(lectureIDs: Array<LectureInfo>) {
   saveToStorage("TSlectureids", lectureIDs);
 }
 
+async function loadSettings(){
+  CPsettings = await loadFromStorage("TSSettings");
+  kadaiCacheInterval = CPsettings.kadaiCacheInterval ?? 60 * 2;
+  quizCacheInterval = CPsettings.quizCacheInterval ?? 60 * 10;
+  CPsettings.displayCheckedKadai = CPsettings.displayCheckedKadai ?? true;
+}
+
 async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
-    CPsettings = await loadFromStorage("TSSettings");
-    kadaiCacheInterval = CPsettings.kadaiCacheInterval ?? 60 * 2;
-    quizCacheInterval = CPsettings.quizCacheInterval ?? 60 * 10;
+    await loadSettings();
+
     kadaiFetchedTime = await loadFromStorage("TSkadaiFetchedTime");
     quizFetchedTime = await loadFromStorage("TSquizFetchedTime");
     lectureIDList = fetchLectureIDs()[1];

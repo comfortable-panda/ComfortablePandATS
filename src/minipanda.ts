@@ -289,7 +289,8 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
         if (!kadaiList[q].isRead) {
           defaultTab[j].classList.add("red-badge");
         }
-        const daysUntilDue = getDaysUntil(nowTime, kadaiList[q].closestDueDateTimestamp * 1000);
+        const closestTime = (CPsettings.displayCheckedKadai) ? kadaiList[q].closestDueDateTimestamp : kadaiList[q].closestDueDateTimestampExcludeFinished;
+        const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
 
         if (daysUntilDue > 0 && daysUntilDue <= 1) {
