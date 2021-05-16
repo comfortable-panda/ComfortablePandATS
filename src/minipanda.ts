@@ -142,7 +142,7 @@ function createSettingItem(itemDescription: string, value: boolean | number | st
     const toggleBtn = SettingsDom.toggleBtn.cloneNode(true);
     toggleBtn.checked = value;
     toggleBtn.id = id;
-    toggleBtn.addEventListener("change", function(res:any){updateSettings(res,"boolean");}, true);
+    toggleBtn.addEventListener("change", function(res:any){updateSettings(res,"check");}, true);
     const span = SettingsDom.span.cloneNode(true);
     appendChildAll(label, [toggleBtn, span]);
   }

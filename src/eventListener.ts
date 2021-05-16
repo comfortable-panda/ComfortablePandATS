@@ -126,19 +126,24 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   createNavBarNotification(lectureIDList, newKadaiList);
 }
 
-async function updateSettings(event: any,type:string): Promise<void> {
+async function updateSettings(event: any, type: string): Promise<void> {
   const settingsID = event.target.id;
   let settingsValue = event.currentTarget.value;
   /*
   if (settingsValue === "on") settingsValue = event.currentTarget.checked;
   else settingsValue = parseInt(event.currentTarget.value);
 */
-  if (settingsValue === "on") {
-    settingsValue = event.currentTarget.checked;
-  }else if(typeof settingsValue=="number"){
-    
+  switch (type) {
+    case "check":
+      settingsValue = event.currentTarget.checked;
+      break;
+    case "number":
+      settingsValue = parseInt(event.currentTarget.value);
+      break;
+    case "string":
+      break;
   }
-  
+
   const settings = new Settings();
   const oldSettings = await loadFromStorage("TSSettings");
   settings.kadaiCacheInterval = oldSettings.kadaiCacheInterval ?? kadaiCacheInterval;
