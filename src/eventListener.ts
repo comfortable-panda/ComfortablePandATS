@@ -3,6 +3,7 @@ import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {
+  CPsettings,
   displayMiniPandA,
   kadaiCacheInterval,
   lectureIDList, loadAndMergeKadaiList, mergedKadaiList,
@@ -140,9 +141,16 @@ async function updateSettings(event: any): Promise<void> {
   settings.displayCheckedKadai = oldSettings.displayCheckedKadai ?? true;
   // @ts-ignore
   settings[settingsID] = settingsValue;
+  // @ts-ignore
+  CPsettings[settingsID] = settingsValue;
 
   console.log("settings", settings);
   saveToStorage("TSSettings", settings);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function addKadaiMemo(): Promise<void> {
