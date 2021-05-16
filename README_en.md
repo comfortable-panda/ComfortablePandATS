@@ -1,11 +1,17 @@
 # ComfortablePandATS
 A browser extention that makes PandA life comfortable
 
-# Installation
-1. Goto `chrome://extensions/` on your GoogleChrome
+# Installation links
+- [Google Chrome](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
+- [Firefox](https://public.tinax.work/~tinaxd/cpff/)
+- [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/njbljhcmnodocldppoiejkcmcebpmljc)
+
+
+# Manual installation(not recommended)
+1. Go to `chrome://extensions/` on your GoogleChrome
 1. Enable **developer mode**.
 1. Click **LOAD UNPACKED** button on upper left hand corner.
-1. Select this folder(confortable-panda) and install.
+1. Select this folder(comfortable-panda) and install.
 1. You are all set:)
 
 # How to compile
@@ -13,6 +19,7 @@ Run
 ```
 npx webpack
 ```
+in the root directory of cloned repository.
 
 # Usage
 1. Login to PandA
@@ -23,11 +30,11 @@ npx webpack
 ## Tab coloring
 Colors lecture tab according to due date.
 - ![#f03c15](https://via.placeholder.com/15/e85555/000000?text=+)
-  Due date <= 1 Day
+  Due date <= 1 Day ahead
 - ![#f03c15](https://via.placeholder.com/15/d7aa57/000000?text=+)
-  Due date <= 5 Days
+  Due date <= 5 Days ahead
 - ![#f03c15](https://via.placeholder.com/15/62b665/000000?text=+)
-  Due date <= 14 Days
+  Due date <= 14 Days ahead
 
 ## Notification Badge
 Tells your unchecked latest assignments.
@@ -37,7 +44,7 @@ If you open lecture page with notification badge on, the badge will disappear.
 ## miniPandA (Side-menu)
 Click ☰ to open miniPandA.
 All available assignments as well as quizzes will be displayed.
-You can add your custom assignment to miniPandA with PLUS button located on upper right hand side.
+You can add your custom assignment to miniPandA with PLUS button located on the upper right hand side.
 
 Also check box is available for you to distinguish completed assignments from working assignments.
 
