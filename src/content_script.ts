@@ -23,7 +23,7 @@ import {
 } from "./utils";
 import { Settings } from "./settings";
 
-export const VERSION = "3.4.1";
+export const VERSION = "3.4.2";
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
 export let kadaiCacheInterval = 60 * 2;
 export let quizCacheInterval = 60 * 10;
