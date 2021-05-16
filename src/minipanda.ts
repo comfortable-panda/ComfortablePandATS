@@ -50,7 +50,7 @@ function createMiniPandA(): void {
     alt: "logo",
     src: chrome.extension.getURL("img/logo.png"),
   });
-  const version = createElem("p", {classList: "cp-version"});
+  const version = createElem("p", { classList: "cp-version" });
   version.innerText = `Version ${VERSION}`;
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
@@ -66,10 +66,10 @@ function createMiniPandA(): void {
   const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" });
   addMemoButton.addEventListener("click", toggleMemoBox, true);
 
-  const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
+  const kadaiFetchedTimestamp = new Date((typeof kadaiFetchedTime === "number") ? kadaiFetchedTime : nowTime);
   const kadaiFetchedTimeString = createElem("p", { className: "kadai-time" });
   kadaiFetchedTimeString.innerText = "課題取得日時： " + kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
-  const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
+  const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number") ? quizFetchedTime : nowTime);
   const quizFetchedTimeString = createElem("p", { className: "quiz-time" });
   quizFetchedTimeString.innerText = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
   appendChildAll(miniPandA, [
@@ -130,28 +130,34 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   kadaiDiv.appendChild(memoEditBox);
 }
 
-function createSettingItem(itemDescription: string, value: boolean | number, id: string, display=true) {
+function createSettingItem(itemDescription: string, value: boolean | number | string, id: string, display = true) {
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);
   const div = SettingsDom.div.cloneNode(true);
   const label = SettingsDom.label.cloneNode(true);
   const p = SettingsDom.p.cloneNode(true);
   p.innerText = itemDescription;
-  if(!display)mainDiv.style.display = "none";
+  if (!display) mainDiv.style.display = "none";
   if (typeof value === "boolean") {
     label.classList.add("switch");
     const toggleBtn = SettingsDom.toggleBtn.cloneNode(true);
     toggleBtn.checked = value;
     toggleBtn.id = id;
-    toggleBtn.addEventListener("change", updateSettings, true);
+    toggleBtn.addEventListener("change", function(res:any){updateSettings(res,"boolean");}, true);
     const span = SettingsDom.span.cloneNode(true);
-
     appendChildAll(label, [toggleBtn, span]);
   }
   if (typeof value === "number") {
     const inputBox = SettingsDom.inputBox.cloneNode(true);
     inputBox.value = value;
     inputBox.id = id;
-    inputBox.addEventListener("change", updateSettings, true);
+    inputBox.addEventListener("change", function(res:any){updateSettings(res,"number");}, true);
+    appendChildAll(label, [inputBox]);
+  }
+  if (typeof value === "string") {
+    const inputBox = SettingsDom.stringBox.cloneNode(true);
+    inputBox.value = value;
+    inputBox.id = id;
+    inputBox.addEventListener("change", function(res:any){updateSettings(res,"string");}, true);
     appendChildAll(label, [inputBox]);
   }
   appendChildAll(mainDiv, [p, label]);
@@ -163,6 +169,10 @@ async function createSettingsTab() {
   createSettingItem("課題キャッシュ時間 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
   createSettingItem("クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
   createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
+
+  createSettingItem("カラー 締切1日前", CPsettings.colorDanger ?? "#e85555", "colorDanger");
+  createSettingItem("カラー 締切5日前", CPsettings.colorWarning ?? "#d7aa57", "colorWarning");
+  createSettingItem("カラー 締切14日前", CPsettings.colorSuccess ?? "#62b665", "colorSuccess");
 
   settingsDiv.style.display = "none";
 }
@@ -285,25 +295,25 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
   }
 }
 
-function deleteNavBarNotification(): void{
+function deleteNavBarNotification(): void {
   const q1 = document.querySelectorAll(".red-badge");
   // @ts-ignore
-  for (const _ of q1){
+  for (const _ of q1) {
     _.classList.remove("red-badge");
   }
   const q2 = document.querySelectorAll(".nav-danger");
   // @ts-ignore
-  for (const _ of q2){
+  for (const _ of q2) {
     _.classList.remove("nav-danger");
   }
   const q3 = document.querySelectorAll(".nav-warning");
   // @ts-ignore
-  for (const _ of q3){
+  for (const _ of q3) {
     _.classList.remove("nav-warning");
   }
   const q4 = document.querySelectorAll(".nav-safe");
   // @ts-ignore
-  for (const _ of q4){
+  for (const _ of q4) {
     _.classList.remove("nav-safe");
   }
 }
@@ -311,7 +321,29 @@ function deleteNavBarNotification(): void{
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
+/*
+  for (let i = 0; i < document.styleSheets.length; i++) {
+    let sheet = document.styleSheets[i];
+    for (let j = 0; j < sheet.cssRules.length; j++) {
+      var rule = sheet.cssRules[j];
+      console.log(j);
+      if (!(rule instanceof CSSStyleRule)) {
+        continue;
+      }
+      if(rule.selectorText.includes(".kadai-danger")){
+        console.log("danger");
+      }
+      if(rule.selectorText.includes(".kadai-warning")){
+        console.log("kadai-warning");
 
+      }
+      if(rule.selectorText.includes(".kadai-success")){
+        console.log("kadai-success");
+
+      }
+    }
+  }
+*/
   for (const lecture of lectureIDList) {
     for (let j = 3; j < defaultTabCount; j++) {
       // @ts-ignore
@@ -346,6 +378,15 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
         }
       }
     }
+  }
+  var dangerelem=document.getElementsByClassName("kadai-danger");
+  for(var i=0;i<dangerelem.length;i++){
+    var elem=dangerelem[i] as HTMLElement;
+    var color="solid 2px "+CPsettings.colorDanger??"#e85555";
+    (<any>elem.style)["border-top"]=color;
+    (<any>elem.style)["border-left"]=color;
+    (<any>elem.style)["border-bottom"]=color;
+    (<any>elem.style)["border-right"]=color;
   }
 }
 

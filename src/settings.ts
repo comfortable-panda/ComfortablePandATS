@@ -4,4 +4,7 @@ export class Settings {
   theme?: string;
   displayCheckedKadai?: boolean;
   makePandAGreatAgain?: boolean;
+  colorDanger?:string;
+  colorWarning?:string;
+  colorSuccess?:string;
 }

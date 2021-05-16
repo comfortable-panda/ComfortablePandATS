@@ -54,6 +54,7 @@ namespace SettingsDom {
   export const p = createElem("p", {className: "cp-settings-text"});
   export const label = createElem("label");
   export const toggleBtn = createElem("input", { type: "checkbox" });
+  export const stringBox = createElem("input", {className: "cp-settings-inputbox" });
   export const inputBox = createElem("input", { type: "number", className: "cp-settings-inputbox" });
   export const span = createElem("span", { className: "slider round" });
 }
