@@ -1,5 +1,6 @@
 import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
 import { nowTime } from "./utils";
+import { CPsettings } from "./content_script";
 
 // Lecture ID をすべて取得する
 // ネットワーク通信は行わない
@@ -87,9 +88,11 @@ function getQuizOfLectureID(baseURL: string, siteID: string) {
 }
 
 function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<KadaiEntry> {
-  return data.assignment_collection
+  let assignment_collection = data.assignment_collection;
+  if (!CPsettings.makePandAGreatAgain)
+    assignment_collection = assignment_collection.filter((json: any) => json.openTime.epochSecond * 1000 < nowTime)
+  return assignment_collection
     .filter((json: any) => json.dueTime.epochSecond * 1000 >= nowTime)
-    .filter((json: any) => json.openTime.epochSecond * 1000 < nowTime)
     .map((json: any) => {
       const kadaiID = json.id;
       const kadaiTitle = json.title;

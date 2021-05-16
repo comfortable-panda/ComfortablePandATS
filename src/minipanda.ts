@@ -25,7 +25,14 @@ import {
   toggleMiniPandA,
   toggleSettingsTab, updateSettings
 } from "./eventListener";
-import { CPsettings, kadaiCacheInterval, kadaiFetchedTime, quizCacheInterval, quizFetchedTime } from "./content_script";
+import {
+  CPsettings,
+  kadaiCacheInterval,
+  kadaiFetchedTime,
+  quizCacheInterval,
+  quizFetchedTime,
+  VERSION,
+} from "./content_script";
 
 
 function createHanburgerButton(): void {
@@ -43,6 +50,8 @@ function createMiniPandA(): void {
     alt: "logo",
     src: chrome.extension.getURL("img/logo.png"),
   });
+  const version = createElem("p", {classList: "cp-version"});
+  version.innerText = `Version ${VERSION}`;
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
   miniPandACloseBtn.classList.add("closebtn", "q");
@@ -65,6 +74,7 @@ function createMiniPandA(): void {
   quizFetchedTimeString.innerText = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
   appendChildAll(miniPandA, [
     miniPandALogo,
+    version,
     miniPandACloseBtn,
     kadaiTab,
     kadaiTabLabel,
@@ -126,13 +136,16 @@ function createSettingItem(itemDescription: string, value: boolean | number, id:
   const label = SettingsDom.label.cloneNode(true);
   const p = SettingsDom.p.cloneNode(true);
   p.innerText = itemDescription;
+  if(!display)mainDiv.style.display = "none";
   if (typeof value === "boolean") {
     label.classList.add("switch");
     const toggleBtn = SettingsDom.toggleBtn.cloneNode(true);
     toggleBtn.checked = value;
-    toggleBtn.id = id
+    toggleBtn.id = id;
     toggleBtn.addEventListener("change", updateSettings, true);
-    appendChildAll(label, [toggleBtn, SettingsDom.span.cloneNode(true)]);
+    const span = SettingsDom.span.cloneNode(true);
+
+    appendChildAll(label, [toggleBtn, span]);
   }
   if (typeof value === "number") {
     const inputBox = SettingsDom.inputBox.cloneNode(true);
@@ -142,14 +155,14 @@ function createSettingItem(itemDescription: string, value: boolean | number, id:
     appendChildAll(label, [inputBox]);
   }
   appendChildAll(mainDiv, [p, label]);
-  if(display)settingsDiv.appendChild(mainDiv);
+  settingsDiv.appendChild(mainDiv);
 }
 
 async function createSettingsTab() {
   createSettingItem("提出済みの課題を表示する", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
-  createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
   createSettingItem("課題取得間隔", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
   createSettingItem("クイズ取得間隔", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
+  createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
 
   settingsDiv.style.display = "none";
 }
