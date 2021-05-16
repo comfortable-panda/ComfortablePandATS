@@ -4,8 +4,6 @@ import lectureName = DueGroupDom.lectureName;
 import { saveToStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
-const kadaiCacheInterval = 60 * 2;
-const quizCacheInterval = 60 * 10;
 
 function getDaysUntil(dt1: number, dt2: number): number {
   // 締め切りまでの日数を計算します
@@ -180,8 +178,6 @@ function genUniqueStr(): string {
 }
 
 export {
-  kadaiCacheInterval,
-  quizCacheInterval,
   getDaysUntil,
   getTimeRemain,
   createLectureIDMap,

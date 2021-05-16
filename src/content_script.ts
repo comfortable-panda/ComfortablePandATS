@@ -12,10 +12,10 @@ import { addMissingBookmarkedLectures } from "./bookmark";
 import {
   compareAndMergeKadaiList,
   convertArrayToKadai,
-  isLoggedIn, kadaiCacheInterval,
+  isLoggedIn,
   mergeIntoKadaiList,
   miniPandAReady,
-  nowTime, quizCacheInterval,
+  nowTime,
   sortKadaiList,
   updateIsReadFlag,
   useCache
@@ -23,11 +23,14 @@ import {
 import { Settings } from "./settings";
 
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
+export let kadaiCacheInterval = 60 * 2;
+export let quizCacheInterval = 60 * 10;
 export let kadaiFetchedTime: number;
 export let quizFetchedTime: number;
 export let lectureIDList: Array<LectureInfo>;
 export let mergedKadaiList: Array<Kadai>;
 export let mergedKadaiListNoMemo: Array<Kadai>;
+export let CPsettings: Settings;
 
 async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
   // ストレージから前回保存したkadaiListを読み込む
@@ -99,12 +102,7 @@ async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadai
 export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
   createMiniPandA();
   appendMemoBox(lectureIDList);
-  const s = new Settings();
-  s.displayCheckedKadai = true;
-  s.kadaiCacheInterval = 10;
-  s.makePandAGreatAgain = false;
-  s.quizCacheInterval = 10;
-  createSettingsTab(s);
+  createSettingsTab();
   updateMiniPandA(mergedKadaiList, lectureIDList);
 }
 
@@ -115,6 +113,9 @@ async function saveCacheOfLectureIDs(lectureIDs: Array<LectureInfo>) {
 async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
+    CPsettings = await loadFromStorage("TSSettings");
+    kadaiCacheInterval = CPsettings.kadaiCacheInterval ?? 60 * 2;
+    quizCacheInterval = CPsettings.quizCacheInterval ?? 60 * 10;
     kadaiFetchedTime = await loadFromStorage("TSkadaiFetchedTime");
     quizFetchedTime = await loadFromStorage("TSquizFetchedTime");
     lectureIDList = fetchLectureIDs()[1];

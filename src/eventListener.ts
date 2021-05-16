@@ -1,8 +1,14 @@
 import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
-import { convertArrayToKadai, genUniqueStr, kadaiCacheInterval, mergeIntoKadaiList, quizCacheInterval } from "./utils";
-import {displayMiniPandA, lectureIDList, mergedKadaiListNoMemo} from "./content_script";
+import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
+import {
+  displayMiniPandA,
+  kadaiCacheInterval,
+  lectureIDList,
+  mergedKadaiListNoMemo,
+  quizCacheInterval
+} from "./content_script";
 import { Settings } from "./settings";
 
 let toggle = false;
@@ -117,8 +123,9 @@ async function updateSettings(event: any): Promise<void> {
   const settingsID = event.target.id;
   let settingsValue = event.currentTarget.value;
   if (settingsValue === "on") settingsValue = event.currentTarget.checked;
+  else settingsValue = parseInt(event.currentTarget.value);
 
-  console.log("Settings value", settingsID ,settingsValue)
+  console.log("Settings value", settingsID, settingsValue);
   let settings = new Settings();
   const oldSettings = await loadFromStorage("TSSettings");
   settings.kadaiCacheInterval = oldSettings.kadaiCacheInterval ?? kadaiCacheInterval;
