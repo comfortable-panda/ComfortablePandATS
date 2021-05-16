@@ -120,7 +120,7 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   kadaiDiv.appendChild(memoEditBox);
 }
 
-function createSettingItem(itemDescription: string, value: boolean | number, id: string) {
+function createSettingItem(itemDescription: string, value: boolean | number, id: string, display=true) {
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);
   const div = SettingsDom.div.cloneNode(true);
   const label = SettingsDom.label.cloneNode(true);
@@ -142,12 +142,12 @@ function createSettingItem(itemDescription: string, value: boolean | number, id:
     appendChildAll(label, [inputBox]);
   }
   appendChildAll(mainDiv, [p, label]);
-  settingsDiv.appendChild(mainDiv);
+  if(display)settingsDiv.appendChild(mainDiv);
 }
 
 async function createSettingsTab() {
   createSettingItem("提出済みの課題を表示する", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
-  createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain");
+  createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
   createSettingItem("課題取得間隔", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
   createSettingItem("クイズ取得間隔", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
 

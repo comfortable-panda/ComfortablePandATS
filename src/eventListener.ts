@@ -194,6 +194,11 @@ async function addKadaiMemo(): Promise<void> {
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList);
   const quizList = await loadFromStorage("TSQuizList");
   await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function deleteKadaiMemo(event: any): Promise<void> {
@@ -220,6 +225,11 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList);
   const quizList = await loadFromStorage("TSQuizList");
   await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  createNavBarNotification(lectureIDList, newKadaiList);
 }
 
 async function editFavTabMessage(): Promise<void>{
