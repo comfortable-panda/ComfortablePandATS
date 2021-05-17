@@ -153,7 +153,7 @@ function createSettingItem(itemDescription: string, value: boolean | number, id:
   settingsDiv.appendChild(mainDiv);
 }
 
-async function createSettingsTab() {
+async function createSettingsTab(): Promise<void> {
   createSettingItem("完了済の課題も色付けする", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
   createSettingItem("課題キャッシュ時間 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
   createSettingItem("クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
@@ -163,7 +163,6 @@ async function createSettingsTab() {
 }
 
 function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
-  console.log("kadaiList", kadaiList)
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
   const dueGroupColor = ["danger", "warning", "success", "other"];
   const initLetter = ["a", "b", "c", "d"];
@@ -209,10 +208,6 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const memoBadge = createElem("span", {classList: "add-badge add-badge-success", innerText: "メモ"});
         const quizBadge = createElem("span", {classList: "add-badge add-badge-quiz", innerText: "クイズ"});
         const deleteBadge = createElem("span", {className: "del-button", id: kadai.kadaiID, innerText:"×"}, {"click": deleteKadaiMemo});
-        deleteBadge.className = "del-button";
-        deleteBadge.id = kadai.kadaiID;
-        deleteBadge.addEventListener("click", deleteKadaiMemo, true);
-        deleteBadge.innerText = "×";
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
@@ -229,18 +224,15 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
           kadaiCheckbox.addEventListener("change", toggleKadaiFinishedFlag, false);
           kadaiLabel.htmlFor = kadai.kadaiID;
 
-          if (kadai.isMemo) {
+          const addBadge = function(badge, deleteBadge?) {
             kadaiTitle.textContent = "";
-            kadaiTitle.appendChild(memoBadge);
+            kadaiTitle.appendChild(badge);
             kadaiTitle.append(kadai.assignmentTitle);
-            kadaiTitle.appendChild(deleteBadge);
-          }
+            if (deleteBadge) kadaiTitle.appendChild(deleteBadge);
+          };
 
-          if (kadai.isQuiz) {
-            kadaiTitle.textContent = "";
-            kadaiTitle.appendChild(quizBadge);
-            kadaiTitle.append(kadai.assignmentTitle);
-          }
+          if (kadai.isMemo) addBadge(memoBadge, deleteBadge);
+          if (kadai.isQuiz) addBadge(quizBadge);
 
           appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
           cnt++;
@@ -265,11 +257,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
     const kadaiTab = kadaiDiv;
     const relaxDiv = createElem("div", { className: "relaxpanda" });
     const relaxPandaP = createElem("p", { className: "relaxpanda-p", innerText: "現在表示できる課題はありません" });
-    const relaxPandaImg = createElem("img", {
-      className: "relaxpanda-img",
-      alt: "logo",
-      src: chrome.extension.getURL("img/relaxPanda.png"),
-    });
+    const relaxPandaImg = createElem("img", { className: "relaxpanda-img", alt: "logo", src: chrome.extension.getURL("img/relaxPanda.png")});
     appendChildAll(relaxDiv, [relaxPandaP, relaxPandaImg]);
     kadaiTab.appendChild(relaxDiv);
   }
