@@ -1,13 +1,15 @@
 import { Kadai, LectureInfo } from "./kadai";
 import {
   createLectureIDMap,
+  formatTimestamp,
   getDaysUntil,
   getTimeRemain,
-  nowTime,
+  nowTime
 } from "./utils";
 import {
   addAttributes,
-  appendChildAll, cloneElem,
+  appendChildAll,
+  cloneElem,
   createElem,
   DueGroupDom,
   hamburger,
@@ -36,7 +38,6 @@ import {
   VERSION,
 } from "./content_script";
 
-
 function createHanburgerButton(): void {
   const topbar = document.getElementById("mastLogin");
   try {
@@ -52,7 +53,7 @@ function createMiniPandA(): void {
     alt: "logo",
     src: chrome.extension.getURL("img/logo.png"),
   });
-  const version = createElem("p", {classList: "cp-version", innerText: `Version ${VERSION}`});
+  const version = createElem("p", {　classList: "cp-version", innerText: `Version ${VERSION}`});
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
   miniPandACloseBtn.classList.add("closebtn", "q");
@@ -178,11 +179,9 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
       const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true) as HTMLAnchorElement;
       dueGroupLectureName.classList.add(`lecture-${dueGroupColor[i]}`, "lecture-name")
       dueGroupLectureName.textContent = "" + lectureIDMap.get(item.lectureID);
-      const topSite = item.getTopSite();
-      if (topSite != null) {
-        dueGroupLectureName.href = topSite;
-      }
       dueGroupBody.appendChild(dueGroupLectureName);
+      const topSite = item.getTopSite();
+      if (topSite != null) dueGroupLectureName.href = topSite;
 
       // 各講義の課題一覧についてループ
       let cnt = 0;
@@ -196,8 +195,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const quizBadge = createElem("span", {classList: "add-badge add-badge-quiz", innerText: "クイズ"});
         const deleteBadge = createElem("span", {className: "del-button", id: kadai.kadaiID, innerText:"×"}, {"click": deleteKadaiMemo});
 
-        const _date = new Date(kadai.dueDateTimestamp * 1000);
-        const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
+        const dispDue = formatTimestamp(kadai.dueDateTimestamp);
         const timeRemain = getTimeRemain((kadai.dueDateTimestamp * 1000 - nowTime) / 1000);
 
         const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp * 1000);
