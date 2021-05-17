@@ -128,41 +128,34 @@ async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Ar
 
 function createSettingItem(itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);
-  const div = SettingsDom.div.cloneNode(true);
   const label = SettingsDom.label.cloneNode(true);
   const p = SettingsDom.p.cloneNode(true);
   p.innerText = itemDescription;
   if (!display) mainDiv.style.display = "none";
-  if (typeof value === "boolean") {
-    label.classList.add("switch");
-    const toggleBtn = SettingsDom.toggleBtn.cloneNode(true);
-    toggleBtn.checked = value;
-    toggleBtn.id = id;
-    toggleBtn.addEventListener("change", function (res: any) { updateSettings(res, "check"); }, true);
-    const span = SettingsDom.span.cloneNode(true);
-    appendChildAll(label, [toggleBtn, span]);
+
+  let settingItem;
+  const span = SettingsDom.span.cloneNode(true);
+  switch (typeof value){
+    case "boolean":
+      label.classList.add("switch");
+      settingItem = cloneElem(SettingsDom.toggleBtn, {checked: value, id: id}, {"change": function (res: any) { updateSettings(res, "check");}});
+      break;
+    case "number":
+      settingItem = cloneElem(SettingsDom.inputBox, {value: value, id: id}, {"change": function (res: any) { updateSettings(res, "number");}});
+      break;
+    case "string":
+      if (id === "reset") {
+        settingItem = cloneElem(SettingsDom.resetBtn, {value: value, id: id}, {"click": function (res: any) { updateSettings(res, "reset");}});
+      } else {
+        settingItem = cloneElem(SettingsDom.stringBox, {value: value, id: id}, {"change": function (res: any) { updateSettings(res, "string");}});
+      }
+      break;
+    default:
+      break;
   }
-  if (typeof value === "number") {
-    const inputBox = SettingsDom.inputBox.cloneNode(true);
-    inputBox.value = value;
-    inputBox.id = id;
-    inputBox.addEventListener("change", function (res: any) { updateSettings(res, "number"); }, true);
-    appendChildAll(label, [inputBox]);
-  }
-  if (typeof value === "string") {
-    const inputBox = SettingsDom.stringBox.cloneNode(true);
-    inputBox.value = value;
-    inputBox.id = id;
-    inputBox.addEventListener("change", function (res: any) { updateSettings(res, "string"); }, true);
-    appendChildAll(label, [inputBox]);
-  }
-  if (typeof value === "object") {
-    const inputBox = SettingsDom.resetBtn.cloneNode(true);
-    inputBox.value = "リセット";
-    inputBox.id = id;
-    inputBox.addEventListener("click", function (res: any) { updateSettings(res, "reset"); }, true);
-    appendChildAll(label, [inputBox]);
-  }
+
+  if (typeof value === "boolean") appendChildAll(label, [settingItem, span]);
+  else appendChildAll(label, [settingItem]);
   appendChildAll(mainDiv, [p, label]);
   settingsDiv.appendChild(mainDiv);
 }
@@ -181,7 +174,7 @@ async function createSettingsTab(): Promise<void> {
   createSettingItem("カラー② 締切5日前", CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
   createSettingItem("カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
 
-  createSettingItem("デフォルト色に戻す", null, "reset");
+  createSettingItem("デフォルト色に戻す", "reset", "reset");
   settingsDiv.style.display = "none";
 }
 
@@ -290,29 +283,7 @@ function deleteNavBarNotification(): void {
 function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
-  /*
-    for (let i = 0; i < document.styleSheets.length; i++) {
-      let sheet = document.styleSheets[i];
-      for (let j = 0; j < sheet.cssRules.length; j++) {
-        var rule = sheet.cssRules[j];
-        console.log(j);
-        if (!(rule instanceof CSSStyleRule)) {
-          continue;
-        }
-        if(rule.selectorText.includes(".kadai-danger")){
-          console.log("danger");
-        }
-        if(rule.selectorText.includes(".kadai-warning")){
-          console.log("kadai-warning");
 
-        }
-        if(rule.selectorText.includes(".kadai-success")){
-          console.log("kadai-success");
-
-        }
-      }
-    }
-  */
   for (const lecture of lectureIDList) {
     for (let j = 3; j < defaultTabCount; j++) {
       // @ts-ignore
@@ -348,24 +319,28 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
       }
     }
   }
-  var overwriteborder = function (className: string, color: string|undefined) {
-    var dangerelem = document.getElementsByClassName(className);
-    for (var i = 0; i < dangerelem.length; i++) {
-      var elem = dangerelem[i] as HTMLElement;
-      var attr = "solid 2px " + color;
+  overrideCSSColor();
+}
+
+function overrideCSSColor() {
+  const overwriteborder = function (className: string, color: string | undefined) {
+    const dangerelem = document.getElementsByClassName(className);
+    for (let i = 0; i < dangerelem.length; i++) {
+      const elem = dangerelem[i] as HTMLElement;
+      const attr = "solid 2px " + color;
       (<any>elem.style)["border-top"] = attr;
       (<any>elem.style)["border-left"] = attr;
       (<any>elem.style)["border-bottom"] = attr;
       (<any>elem.style)["border-right"] = attr;
     }
-  }
-  var overwritebackground = function (className: string, color: string|undefined) {
-    var dangerelem = document.getElementsByClassName(className);
-    for (var i = 0; i < dangerelem.length; i++) {
-      var elem = dangerelem[i] as HTMLElement;
-      elem.setAttribute("style","background:"+color+"!important");
+  };
+  const overwritebackground = function (className: string, color: string | undefined) {
+    const dangerelem = document.getElementsByClassName(className);
+    for (let i = 0; i < dangerelem.length; i++) {
+      const elem = dangerelem[i] as HTMLElement;
+      elem.setAttribute("style", "background:" + color + "!important");
     }
-  }
+  };
   overwriteborder("kadai-danger",CPsettings.miniColorDanger?? "#e85555");
   overwriteborder("kadai-success",CPsettings.miniColorSuccess?? "#62b665");
   overwriteborder("kadai-warning",CPsettings.miniColorWarning?? "#d7aa57");
