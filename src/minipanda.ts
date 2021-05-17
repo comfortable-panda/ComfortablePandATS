@@ -196,6 +196,7 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
       const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true) as HTMLAnchorElement;
       dueGroupLectureName.classList.add(`lecture-${dueGroupColor[i]}`, "lecture-name")
       dueGroupLectureName.textContent = "" + lectureIDMap.get(item.lectureID);
+      dueGroupBody.appendChild(dueGroupLectureName);
       const topSite = item.getTopSite();
       if (topSite != null) dueGroupLectureName.href = topSite;
 
