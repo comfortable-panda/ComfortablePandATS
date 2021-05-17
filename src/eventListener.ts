@@ -10,7 +10,7 @@ import {
   mergedKadaiListNoMemo,
   quizCacheInterval,
 } from "./content_script";
-import { Settings } from "./settings";
+import { DefaultSettings, Settings } from "./settings";
 import { createNavBarNotification, deleteNavBarNotification, displayMiniPandA } from "./minipanda";
 
 let toggle = false;
@@ -142,35 +142,25 @@ async function updateSettings(event: any, type: string): Promise<void> {
 
   const settings = new Settings();
   const oldSettings = await loadFromStorage("TSSettings");
-  settings.kadaiCacheInterval = oldSettings.kadaiCacheInterval ?? kadaiCacheInterval;
-  settings.quizCacheInterval = oldSettings.quizCacheInterval ?? quizCacheInterval;
-  settings.makePandAGreatAgain = oldSettings.makePandAGreatAgain ?? false;
-  settings.displayCheckedKadai = oldSettings.displayCheckedKadai ?? true;
-  settings.topColorDanger = oldSettings.topColorDanger ?? "#f78989";
-  settings.topColorWarning = oldSettings.topColorWarning ?? "#fdd783";
-  settings.topColorSuccess = oldSettings.topColorSuccess ?? "#8bd48d";
-  settings.miniColorDanger = oldSettings.miniColorDanger ?? "#e85555";
-  settings.miniColorWarning = oldSettings.miniColorWarning ?? "#d7aa57";
-  settings.miniColorSuccess = oldSettings.miniColorSuccess ?? "#62b665";
+  for (const i in DefaultSettings){
+    // @ts-ignore
+    settings[i] = oldSettings[i] ?? DefaultSettings[i];
+  }
 
   if (type === "reset") {
-    const dict = {
-      topColorDanger: "#f78989",
-      topColorWarning: "#fdd783",
-      topColorSuccess: "#8bd48d",
-      miniColorDanger: "#e85555",
-      miniColorWarning: "#d7aa57",
-      miniColorSuccess: "#62b665",
-    };
-    for (const k in dict) {
+    const dict = [
+      "topColorDanger", "topColorWarning" ,"topColorSuccess",
+      "miniColorDanger", "miniColorWarning" ,"miniColorSuccess"
+    ];
+    for (const k of dict) {
       // @ts-ignore
-      settings[k] = dict[k];
+      settings[k] = DefaultSettings[k];
       // @ts-ignore
-      CPsettings[k] = dict[k];
+      CPsettings[k] = DefaultSettings[k];
       const q = <HTMLInputElement>document.getElementById(k);
       if (q) {
         // @ts-ignore
-        q.value = dict[k];
+        q.value = DefaultSettings[k];
       }
     }
   } else {
@@ -180,7 +170,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
     CPsettings[settingsID] = settingsValue;
   }
 
-  // console.log(settings);
+  console.log(settings);
   saveToStorage("TSSettings", settings);
 
   // NavBarを再描画

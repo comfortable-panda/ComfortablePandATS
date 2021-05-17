@@ -99,14 +99,6 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, u
   return mergedKadaiList;
 }
 
-// export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
-//   createMiniPandA();
-//   appendMemoBox(lectureIDList);
-//   createSettingsTab();
-//   updateMiniPandA(mergedKadaiList, lectureIDList);
-// }
-
-
 async function loadSettings() {
   CPsettings = await loadFromStorage("TSSettings");
   kadaiCacheInterval = CPsettings.kadaiCacheInterval ?? 60 * 2;
