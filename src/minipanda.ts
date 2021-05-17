@@ -296,25 +296,14 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
 }
 
 function deleteNavBarNotification(): void {
-  const q1 = document.querySelectorAll(".red-badge");
-  // @ts-ignore
-  for (const _ of q1) {
-    _.classList.remove("red-badge");
-  }
-  const q2 = document.querySelectorAll(".nav-danger");
-  // @ts-ignore
-  for (const _ of q2) {
-    _.classList.remove("nav-danger");
-  }
-  const q3 = document.querySelectorAll(".nav-warning");
-  // @ts-ignore
-  for (const _ of q3) {
-    _.classList.remove("nav-warning");
-  }
-  const q4 = document.querySelectorAll(".nav-safe");
-  // @ts-ignore
-  for (const _ of q4) {
-    _.classList.remove("nav-safe");
+  const classlist = ["red-badge", "nav-danger", "nav-warning", "nav-safe"];
+  for (const c of classlist){
+    const q = document.querySelectorAll(`.${c}`);
+    // @ts-ignore
+    for (const _ of q) {
+      _.classList.remove(`${c}`);
+      _.style = "";
+    }
   }
 }
 
