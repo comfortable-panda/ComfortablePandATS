@@ -170,7 +170,6 @@ async function updateSettings(event: any, type: string): Promise<void> {
     CPsettings[settingsID] = settingsValue;
   }
 
-  console.log(settings);
   saveToStorage("TSSettings", settings);
 
   // NavBarを再描画

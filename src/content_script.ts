@@ -2,12 +2,9 @@ import { loadFromStorage, saveToStorage } from "./storage";
 import { Kadai, LectureInfo } from "./kadai";
 import { fetchLectureIDs, getKadaiOfLectureID, getQuizOfLectureID } from "./network";
 import {
-  appendMemoBox,
   createHanburgerButton,
-  createMiniPandA,
   createNavBarNotification,
-  createSettingsTab, displayMiniPandA,
-  updateMiniPandA
+  displayMiniPandA,
 } from "./minipanda";
 import { addMissingBookmarkedLectures } from "./bookmark";
 import {
@@ -24,7 +21,7 @@ import {
 import { Settings } from "./settings";
 
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
-export const VERSION = "3.4.3";
+export const VERSION = "3.5.0";
 export let kadaiCacheInterval = 60 * 2;
 export let quizCacheInterval = 60 * 10;
 export let kadaiFetchedTime: number;
