@@ -1,10 +1,16 @@
 import { toggleMiniPandA } from "./eventListener";
 
-function createElem(tag: string, dict?: { [key: string]: any }): any {
+function createElem(tag: string, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?:any)=>void|Promise<void> }): any {
   const elem = document.createElement(tag);
   for (const key in dict) {
-    // @ts-ignore
-    elem[key] = dict[key];
+    if (key === "style") elem[key].display = dict[key];
+    else {
+      // @ts-ignore
+      elem[key] = dict[key];
+    }
+  }
+  for (const key in eventListener) {
+    elem.addEventListener(key, eventListener[key]);
   }
   return elem;
 }
@@ -25,9 +31,7 @@ export const subPandA = createElem("div", { id: "subPandA" });
 export const kadaiDiv = createElem("div", { className: "kadai-tab" });
 export const settingsDiv = createElem("div", { className: "settings-tab" });
 
-export const hamburger = createElem("div");
-hamburger.className = "loader";
-hamburger.addEventListener("click", toggleMiniPandA);
+export const hamburger = createElem("div", { className: "loader" }, {"click": toggleMiniPandA});
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace KadaiEntryDom {

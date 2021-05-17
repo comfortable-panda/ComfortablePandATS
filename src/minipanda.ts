@@ -14,7 +14,7 @@ import {
   KadaiEntryDom,
   miniPandA,
   settingsDiv,
-  SettingsDom
+  SettingsDom,
 } from "./dom";
 import {
   addKadaiMemo,
@@ -23,7 +23,8 @@ import {
   toggleKadaiTab,
   toggleMemoBox,
   toggleMiniPandA,
-  toggleSettingsTab, updateSettings
+  toggleSettingsTab,
+  updateSettings,
 } from "./eventListener";
 import {
   CPsettings,
@@ -57,14 +58,11 @@ function createMiniPandA(): void {
   miniPandACloseBtn.classList.add("closebtn", "q");
   miniPandACloseBtn.addEventListener("click", toggleMiniPandA);
 
-  const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true });
-  kadaiTab.addEventListener("click", toggleKadaiTab);
+  const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true }, {"click": toggleKadaiTab});
   const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: "　課題一覧　" });
-  const settingsTab = createElem("input", { type: "radio", id: "settingsTab", name: "cp_tab", checked: false });
-  settingsTab.addEventListener("click", toggleSettingsTab);
+  const settingsTab = createElem("input", { type: "radio", id: "settingsTab", name: "cp_tab", checked: false }, {"click": toggleSettingsTab});
   const settingsTabLabel = createElem("label", { htmlFor: "settingsTab", innerText: "　詳細設定　" });
-  const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" });
-  addMemoButton.addEventListener("click", toggleMemoBox, true);
+  const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" },{"click": toggleMemoBox});
 
   const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
   const kadaiFetchedTimeString = createElem("p", { className: "kadai-time" });
@@ -92,11 +90,8 @@ function createMiniPandA(): void {
 }
 
 function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
-  const memoEditBox = createElem("div");
-  memoEditBox.classList.add("settingsBox", "addMemoBox");
-  memoEditBox.style.display = "none";
-  const memoLabel = createElem("label");
-  memoLabel.style.display = "block";
+  const memoEditBox = createElem("div", {className: "settingsBox addMemoBox", style: "none"});
+  const memoLabel = createElem("label", {style: "block"});
 
   const todoLecLabel = memoLabel.cloneNode(true);
   todoLecLabel.innerText = "講義名";
@@ -167,7 +162,6 @@ async function createSettingsTab() {
   settingsDiv.style.display = "none";
 }
 
-
 function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
   console.log("kadaiList", kadaiList)
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
@@ -212,13 +206,9 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const kadaiDueDate = KadaiEntryDom.dueDate.cloneNode(true);
         const kadaiRemainTime = KadaiEntryDom.remainTime.cloneNode(true);
         const kadaiTitle = KadaiEntryDom.title.cloneNode(true);
-        const memoBadge = document.createElement("span");
-        memoBadge.classList.add("add-badge", "add-badge-success");
-        memoBadge.innerText = "メモ";
-        const quizBadge = document.createElement("span");
-        quizBadge.classList.add("add-badge", "add-badge-quiz");
-        quizBadge.innerText = "クイズ";
-        const deleteBadge = document.createElement("span");
+        const memoBadge = createElem("span", {classList: "add-badge add-badge-success", innerText: "メモ"});
+        const quizBadge = createElem("span", {classList: "add-badge add-badge-quiz", innerText: "クイズ"});
+        const deleteBadge = createElem("span", {className: "del-button", id: kadai.kadaiID, innerText:"×"}, {"click": deleteKadaiMemo});
         deleteBadge.className = "del-button";
         deleteBadge.id = kadai.kadaiID;
         deleteBadge.addEventListener("click", deleteKadaiMemo, true);
@@ -285,26 +275,15 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
   }
 }
 
-function deleteNavBarNotification(): void{
-  const q1 = document.querySelectorAll(".red-badge");
-  // @ts-ignore
-  for (const _ of q1){
-    _.classList.remove("red-badge");
-  }
-  const q2 = document.querySelectorAll(".nav-danger");
-  // @ts-ignore
-  for (const _ of q2){
-    _.classList.remove("nav-danger");
-  }
-  const q3 = document.querySelectorAll(".nav-warning");
-  // @ts-ignore
-  for (const _ of q3){
-    _.classList.remove("nav-warning");
-  }
-  const q4 = document.querySelectorAll(".nav-safe");
-  // @ts-ignore
-  for (const _ of q4){
-    _.classList.remove("nav-safe");
+function deleteNavBarNotification(): void {
+  const classlist = ["red-badge", "nav-danger", "nav-warning", "nav-safe"];
+  for (const c of classlist){
+    const q = document.querySelectorAll(`.${c}`);
+    // @ts-ignore
+    for (const _ of q) {
+      _.classList.remove(`${c}`);
+      _.style = "";
+    }
   }
 }
 
