@@ -4,7 +4,7 @@ import {
   formatTimestamp,
   getDaysUntil,
   getTimeRemain,
-  nowTime
+  nowTime,
 } from "./utils";
 import {
   addAttributes,
