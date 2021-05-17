@@ -166,13 +166,13 @@ async function createSettingsTab(): Promise<void> {
   createSettingItem("クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
   createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
 
-  createSettingItem("カラー① 締切1日前", CPsettings.topColorDanger ?? "#e85555", "topColorDanger");
-  createSettingItem("カラー① 締切5日前", CPsettings.topColorWarning ?? "#d7aa57", "topColorWarning");
-  createSettingItem("カラー① 締切14日前", CPsettings.topColorSuccess ?? "#62b665", "topColorSuccess");
+  createSettingItem("カラー① 締切24時間前", CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
+  createSettingItem("カラー① 締切5日前", CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
+  createSettingItem("カラー① 締切14日前", CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
 
-  createSettingItem("カラー② 締切1日前", CPsettings.miniColorDanger ?? "#f78989", "miniColorDanger");
-  createSettingItem("カラー② 締切5日前", CPsettings.miniColorWarning ?? "#fdd783", "miniColorWarning");
-  createSettingItem("カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#8bd48d", "miniColorSuccess");
+  createSettingItem("カラー② 締切24時間前", CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
+  createSettingItem("カラー② 締切5日前", CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
+  createSettingItem("カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
 
   settingsDiv.style.display = "none";
 }
@@ -358,18 +358,19 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
       elem.setAttribute("style","background:"+color+"!important");
     }
   }
-  overwriteborder("kadai-danger",CPsettings.topColorDanger?? "#e85555");
-  overwriteborder("kadai-success",CPsettings.topColorSuccess?? "#62b665");
-  overwriteborder("kadai-warning",CPsettings.topColorWarning?? "#d7aa57");
-  overwritebackground("lecture-danger",CPsettings.topColorDanger?? "#e85555");
-  overwritebackground("lecture-success",CPsettings.topColorSuccess?? "#62b665");
-  overwritebackground("lecture-warning",CPsettings.topColorWarning?? "#d7aa57");
-  overwritebackground("nav-danger",CPsettings.miniColorDanger?? "#f78989");
-  overwritebackground("nav-safe",CPsettings.miniColorSuccess?? "#8bd48d");
-  overwritebackground("nav-warning",CPsettings.miniColorWarning?? "#fdd783");
-  overwriteborder("nav-danger",CPsettings.miniColorDanger?? "#f78989");
-  overwriteborder("nav-safe",CPsettings.miniColorSuccess?? "#8bd48d");
-  overwriteborder("nav-warning",CPsettings.miniColorWarning?? "#fdd783");
+  overwriteborder("kadai-danger",CPsettings.miniColorDanger?? "#e85555");
+  overwriteborder("kadai-success",CPsettings.miniColorSuccess?? "#62b665");
+  overwriteborder("kadai-warning",CPsettings.miniColorWarning?? "#d7aa57");
+  overwritebackground("lecture-danger",CPsettings.miniColorDanger?? "#e85555");
+  overwritebackground("lecture-success",CPsettings.miniColorSuccess?? "#62b665");
+  overwritebackground("lecture-warning",CPsettings.miniColorWarning?? "#d7aa57");
+
+  overwritebackground("nav-danger",CPsettings.topColorDanger?? "#f78989");
+  overwritebackground("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
+  overwritebackground("nav-warning",CPsettings.topColorWarning?? "#fdd783");
+  overwriteborder("nav-danger",CPsettings.topColorDanger?? "#f78989");
+  overwriteborder("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
+  overwriteborder("nav-warning",CPsettings.topColorWarning?? "#fdd783");
 }
 
 export {
