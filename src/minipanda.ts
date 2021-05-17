@@ -6,7 +6,8 @@ import {
   nowTime,
 } from "./utils";
 import {
-  appendChildAll,
+  addAttributes,
+  appendChildAll, cloneElem,
   createElem,
   DueGroupDom,
   hamburger,
@@ -14,7 +15,7 @@ import {
   KadaiEntryDom,
   miniPandA,
   settingsDiv,
-  SettingsDom,
+  SettingsDom
 } from "./dom";
 import {
   addKadaiMemo,
@@ -51,8 +52,7 @@ function createMiniPandA(): void {
     alt: "logo",
     src: chrome.extension.getURL("img/logo.png"),
   });
-  const version = createElem("p", {classList: "cp-version"});
-  version.innerText = `Version ${VERSION}`;
+  const version = createElem("p", {classList: "cp-version", innerText: `Version ${VERSION}`});
 
   const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
   miniPandACloseBtn.classList.add("closebtn", "q");
@@ -92,34 +92,27 @@ function createMiniPandA(): void {
 function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   const memoEditBox = createElem("div", {className: "settingsBox addMemoBox", style: "none"});
   const memoLabel = createElem("label", {style: "block"});
-
-  const todoLecLabel = memoLabel.cloneNode(true);
-  todoLecLabel.innerText = "講義名";
+  const todoLecLabel = cloneElem(memoLabel, {innerText: "講義名"});
   const todoLecSelect = createElem("select", { className: "todoLecName" });
   const todoLecOption = createElem("option");
 
   for (const lecture of lectureIDList) {
-    const c_todoLecOption = todoLecOption.cloneNode(true);
-    c_todoLecOption.text = lecture.lectureName;
-    c_todoLecOption.id = lecture.lectureID;
+    const c_todoLecOption = cloneElem(todoLecOption, {text: lecture.lectureName, id: lecture.lectureID});
     todoLecSelect.appendChild(c_todoLecOption);
   }
 
   todoLecLabel.appendChild(todoLecSelect);
 
-  const todoContentLabel = memoLabel.cloneNode(true);
-  todoContentLabel.innerText = "メモ";
+  const todoContentLabel = cloneElem(memoLabel, { innerText: "メモ" });
   const todoContentInput = createElem("input", { type: "text", className: "todoContent" });
   todoContentLabel.appendChild(todoContentInput);
 
-  const todoDueLabel = memoLabel.cloneNode(true);
-  todoDueLabel.innerText = "期限";
+  const todoDueLabel = cloneElem(memoLabel, {innerText: "期限"});
   const todoDueInput = createElem("input", { type: "datetime-local", className: "todoDue" });
   todoDueInput.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
   todoDueLabel.appendChild(todoDueInput);
 
-  const todoSubmitButton = createElem("button", { type: "submit", id: "todo-add", innerText: "追加" });
-  todoSubmitButton.addEventListener("click", addKadaiMemo, true);
+  const todoSubmitButton = createElem("button", { type: "submit", id: "todo-add", innerText: "追加" }, {"click": addKadaiMemo});
 
   appendChildAll(memoEditBox, [todoLecLabel, todoContentLabel, todoDueLabel, todoSubmitButton]);
   kadaiDiv.appendChild(memoEditBox);
@@ -172,22 +165,16 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
   for (let i = 0; i < 4; i++) {
     let entryCount = 0;
     // 色別のグループを作成する
-    const dueGroupHeader = DueGroupDom.header.cloneNode(true);
-    const dueGroupHeaderTitle = DueGroupDom.headerTitle.cloneNode(true);
-    dueGroupHeader.className = `sidenav-${dueGroupColor[i]}`;
-    dueGroupHeader.style.display = "none";
-    dueGroupHeaderTitle.textContent = `${dueGroupHeaderName[i]}`;
+    const dueGroupHeader = cloneElem(DueGroupDom.header, {className: `sidenav-${dueGroupColor[i]}`, style:"none"});
+    const dueGroupHeaderTitle = cloneElem(DueGroupDom.headerTitle, {textContent: `${dueGroupHeaderName[i]}`});
+    const dueGroupContainer = cloneElem(DueGroupDom.container, {style:"none"});
     dueGroupHeader.appendChild(dueGroupHeaderTitle);
-    const dueGroupContainer = DueGroupDom.container.cloneNode(true);
     dueGroupContainer.classList.add(`sidenav-list-${dueGroupColor[i]}`);
-    dueGroupContainer.style.display = "none";
 
     // 各講義についてループ
     for (const item of kadaiList) {
       // 課題アイテムを入れるやつを作成
-      const dueGroupBody = DueGroupDom.body.cloneNode(true);
-      dueGroupBody.className = `kadai-${dueGroupColor[i]}`;
-      dueGroupBody.id = initLetter[i] + item.lectureID;
+      const dueGroupBody = cloneElem(DueGroupDom.body, {className: `kadai-${dueGroupColor[i]}`, id:initLetter[i] + item.lectureID});
       const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true) as HTMLAnchorElement;
       dueGroupLectureName.classList.add(`lecture-${dueGroupColor[i]}`, "lecture-name")
       dueGroupLectureName.textContent = "" + lectureIDMap.get(item.lectureID);
@@ -200,11 +187,11 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
       // 各講義の課題一覧についてループ
       let cnt = 0;
       for (const kadai of item.kadaiEntries) {
-        let kadaiCheckbox = KadaiEntryDom.checkbox.cloneNode(true);
-        const kadaiLabel = KadaiEntryDom.label.cloneNode(true);
-        const kadaiDueDate = KadaiEntryDom.dueDate.cloneNode(true);
-        const kadaiRemainTime = KadaiEntryDom.remainTime.cloneNode(true);
-        const kadaiTitle = KadaiEntryDom.title.cloneNode(true);
+        let kadaiCheckbox = cloneElem(KadaiEntryDom.checkbox);
+        const kadaiLabel = cloneElem(KadaiEntryDom.label);
+        const kadaiDueDate = cloneElem(KadaiEntryDom.dueDate);
+        const kadaiRemainTime = cloneElem(KadaiEntryDom.remainTime);
+        const kadaiTitle = cloneElem(KadaiEntryDom.title);
         const memoBadge = createElem("span", {classList: "add-badge add-badge-success", innerText: "メモ"});
         const quizBadge = createElem("span", {classList: "add-badge add-badge-quiz", innerText: "クイズ"});
         const deleteBadge = createElem("span", {className: "del-button", id: kadai.kadaiID, innerText:"×"}, {"click": deleteKadaiMemo});
@@ -219,12 +206,10 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
           kadaiRemainTime.textContent = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
           kadaiTitle.textContent = "" + kadai.assignmentTitle;
           if (kadai.isFinished) kadaiCheckbox.checked = true;
-          kadaiCheckbox.id = kadai.kadaiID;
-          kadaiCheckbox.lectureID = item.lectureID;
-          kadaiCheckbox.addEventListener("change", toggleKadaiFinishedFlag, false);
+          kadaiCheckbox = addAttributes(kadaiCheckbox, {id: kadai.kadaiID, lectureID:item.lectureID}, {"change": toggleKadaiFinishedFlag})
           kadaiLabel.htmlFor = kadai.kadaiID;
 
-          const addBadge = function(badge, deleteBadge?) {
+          const addBadge = function (badge: any, deleteBadge?: any) {
             kadaiTitle.textContent = "";
             kadaiTitle.appendChild(badge);
             kadaiTitle.append(kadai.assignmentTitle);

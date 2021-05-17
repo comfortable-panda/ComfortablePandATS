@@ -1,7 +1,7 @@
 import { toggleMiniPandA } from "./eventListener";
 
-function createElem(tag: string, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?:any)=>void|Promise<void> }): any {
-  const elem = document.createElement(tag);
+
+function addAttributes(elem: any, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?:any)=>void|Promise<void> }): any{
   for (const key in dict) {
     if (key === "style") elem[key].display = dict[key];
     else {
@@ -13,6 +13,18 @@ function createElem(tag: string, dict?: { [key: string]: any }, eventListener?: 
     elem.addEventListener(key, eventListener[key]);
   }
   return elem;
+}
+
+function createElem(tag: string, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?:any)=>void|Promise<void> }): any {
+  const elem = document.createElement(tag);
+  addAttributes(elem, dict, eventListener);
+  return elem;
+}
+
+function cloneElem(elem: any, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?:any)=>void|Promise<void> }): any {
+  const clone = elem.cloneNode(true);
+  addAttributes(clone, dict, eventListener);
+  return clone;
 }
 
 function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
@@ -62,4 +74,4 @@ namespace SettingsDom {
   export const span = createElem("span", { className: "slider round" });
 }
 
-export { KadaiEntryDom, DueGroupDom, SettingsDom, createElem, appendChildAll };
+export { KadaiEntryDom, DueGroupDom, SettingsDom, addAttributes, createElem, cloneElem, appendChildAll };
