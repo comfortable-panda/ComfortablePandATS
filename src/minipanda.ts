@@ -126,7 +126,7 @@ async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Ar
   updateMiniPandA(mergedKadaiList, lectureIDList);
 }
 
-function createSettingItem(itemDescription: string, value: boolean | number | string, id: string, display = true) {
+function createSettingItem(itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);
   const div = SettingsDom.div.cloneNode(true);
   const label = SettingsDom.label.cloneNode(true);
@@ -156,6 +156,13 @@ function createSettingItem(itemDescription: string, value: boolean | number | st
     inputBox.addEventListener("change", function (res: any) { updateSettings(res, "string"); }, true);
     appendChildAll(label, [inputBox]);
   }
+  if (typeof value === "object") {
+    const inputBox = SettingsDom.resetBtn.cloneNode(true);
+    inputBox.value = "リセット";
+    inputBox.id = id;
+    inputBox.addEventListener("click", function (res: any) { updateSettings(res, "reset"); }, true);
+    appendChildAll(label, [inputBox]);
+  }
   appendChildAll(mainDiv, [p, label]);
   settingsDiv.appendChild(mainDiv);
 }
@@ -174,6 +181,7 @@ async function createSettingsTab(): Promise<void> {
   createSettingItem("カラー② 締切5日前", CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
   createSettingItem("カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
 
+  createSettingItem("デフォルト色に戻す", null, "reset");
   settingsDiv.style.display = "none";
 }
 

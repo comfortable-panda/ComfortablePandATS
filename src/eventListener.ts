@@ -128,10 +128,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
 async function updateSettings(event: any, type: string): Promise<void> {
   const settingsID = event.target.id;
   let settingsValue = event.currentTarget.value;
-  /*
-  if (settingsValue === "on") settingsValue = event.currentTarget.checked;
-  else settingsValue = parseInt(event.currentTarget.value);
-*/
+
   switch (type) {
     case "check":
       settingsValue = event.currentTarget.checked;
@@ -156,11 +153,33 @@ async function updateSettings(event: any, type: string): Promise<void> {
   settings.miniColorWarning = oldSettings.miniColorWarning ?? "#d7aa57";
   settings.miniColorSuccess = oldSettings.miniColorSuccess ?? "#62b665";
 
-  // @ts-ignore
-  settings[settingsID] = settingsValue;
-  // @ts-ignore
-  CPsettings[settingsID] = settingsValue;
-  console.log(settings);
+  if (type === "reset") {
+    const dict = {
+      topColorDanger: "#f78989",
+      topColorWarning: "#fdd783",
+      topColorSuccess: "#8bd48d",
+      miniColorDanger: "#e85555",
+      miniColorWarning: "#d7aa57",
+      miniColorSuccess: "#62b665",
+    };
+    for (const k in dict) {
+      // @ts-ignore
+      settings[k] = dict[k];
+      // @ts-ignore
+      CPsettings[k] = dict[k];
+      const q = <HTMLInputElement>document.getElementById(k);
+      if (q) {
+        // @ts-ignore
+        q.value = dict[k];
+      }
+    }
+  } else {
+    // @ts-ignore
+    settings[settingsID] = settingsValue;
+    // @ts-ignore
+    CPsettings[settingsID] = settingsValue;
+  }
+
   saveToStorage("TSSettings", settings);
 
   // NavBarを再描画
