@@ -6,8 +6,8 @@ import {
   createHanburgerButton,
   createMiniPandA,
   createNavBarNotification,
-  createSettingsTab,
-  updateMiniPandA,
+  createSettingsTab, displayMiniPandA,
+  updateMiniPandA
 } from "./minipanda";
 import { addMissingBookmarkedLectures } from "./bookmark";
 import {
@@ -23,8 +23,8 @@ import {
 } from "./utils";
 import { Settings } from "./settings";
 
-export const VERSION = "3.4.3";
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
+export const VERSION = "3.4.3";
 export let kadaiCacheInterval = 60 * 2;
 export let quizCacheInterval = 60 * 10;
 export let kadaiFetchedTime: number;
@@ -37,8 +37,8 @@ export let CPsettings: Settings;
 export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
   // ストレージから前回保存したkadaiListを読み込む
   const oldKadaiList = await loadFromStorage("TSkadaiList");
-  const newKadaiList = [];
   const oldQuizList = await loadFromStorage("TSQuizList");
+  let newKadaiList = [];
   let newQuizList = [];
 
   if (useKadaiCache) {
@@ -56,14 +56,12 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, u
     // 取得した時間を保存
     await saveToStorage("TSkadaiFetchedTime", nowTime);
     kadaiFetchedTime = nowTime;
-
-    // 保存してあったものとマージする
-    mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
-    mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
   } else {
-    mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
-    mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, oldKadaiList);
+    newKadaiList = oldKadaiList;
   }
+  // 保存してあったものとマージする
+  mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
+  mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
 
   if (useQuizCache) {
     console.log("Loading quizzes...");
@@ -82,7 +80,7 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, u
     quizFetchedTime = nowTime;
     await saveToStorage("TSQuizList", newQuizList);
   } else {
-    if(typeof oldKadaiList !== "undefined"){
+    if (typeof oldKadaiList !== "undefined") {
       newQuizList = oldQuizList;
     }
   }
@@ -101,40 +99,41 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, u
   return mergedKadaiList;
 }
 
-export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
-  createMiniPandA();
-  appendMemoBox(lectureIDList);
-  createSettingsTab();
-  updateMiniPandA(mergedKadaiList, lectureIDList);
-}
+// export async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
+//   createMiniPandA();
+//   appendMemoBox(lectureIDList);
+//   createSettingsTab();
+//   updateMiniPandA(mergedKadaiList, lectureIDList);
+// }
 
-async function saveCacheOfLectureIDs(lectureIDs: Array<LectureInfo>) {
-  saveToStorage("TSlectureids", lectureIDs);
-}
 
-async function loadSettings(){
+async function loadSettings() {
   CPsettings = await loadFromStorage("TSSettings");
   kadaiCacheInterval = CPsettings.kadaiCacheInterval ?? 60 * 2;
   quizCacheInterval = CPsettings.quizCacheInterval ?? 60 * 10;
   CPsettings.displayCheckedKadai = CPsettings.displayCheckedKadai ?? true;
+  kadaiFetchedTime = await loadFromStorage("TSkadaiFetchedTime");
+  quizFetchedTime = await loadFromStorage("TSquizFetchedTime");
+}
+
+async function loadLectureIDs() {
+  lectureIDList = fetchLectureIDs()[1];
+  await saveToStorage("TSlectureids", lectureIDList);
 }
 
 async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
     await loadSettings();
-    kadaiFetchedTime = await loadFromStorage("TSkadaiFetchedTime");
-    quizFetchedTime = await loadFromStorage("TSquizFetchedTime");
-    lectureIDList = fetchLectureIDs()[1];
+    await loadLectureIDs();
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(kadaiFetchedTime, kadaiCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
-    await saveCacheOfLectureIDs(lectureIDList);
 
+    await addMissingBookmarkedLectures();
     await displayMiniPandA(mergedKadaiList, lectureIDList);
+    createNavBarNotification(lectureIDList, mergedKadaiList);
 
     miniPandAReady();
     updateIsReadFlag(mergedKadaiListNoMemo);
-    await addMissingBookmarkedLectures();
-    createNavBarNotification(lectureIDList, mergedKadaiList);
   }
 }
 
