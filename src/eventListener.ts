@@ -4,7 +4,6 @@ import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {
   CPsettings,
-  displayMiniPandA,
   kadaiCacheInterval,
   lectureIDList,
   loadAndMergeKadaiList,
@@ -12,7 +11,7 @@ import {
   quizCacheInterval,
 } from "./content_script";
 import { Settings } from "./settings";
-import { createNavBarNotification, deleteNavBarNotification } from "./minipanda";
+import { createNavBarNotification, deleteNavBarNotification, displayMiniPandA } from "./minipanda";
 
 let toggle = false;
 
@@ -189,7 +188,7 @@ async function addKadaiMemo(): Promise<void> {
     if (idx !== -1) {
       kadaiMemoList[idx].kadaiEntries.push(kadaiMemoEntry);
     } else {
-      kadaiMemoList.push(kadaiMemo)
+      kadaiMemoList.push(kadaiMemo);
     }
   } else {
     kadaiMemoList = [kadaiMemo];
@@ -249,6 +248,7 @@ async function deleteKadaiMemo(event: any): Promise<void> {
 }
 
 async function editFavTabMessage(): Promise<void> {
+  // 200ms待ってからgetElementしないと，jQueryで生成される前に参照してしまう
   await new Promise((r) => setTimeout(r, 200));
   try {
     const message = document.getElementsByClassName("favorites-max-marker")[0];
