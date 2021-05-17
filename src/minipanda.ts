@@ -119,6 +119,13 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   kadaiDiv.appendChild(memoEditBox);
 }
 
+async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
+  createMiniPandA();
+  appendMemoBox(lectureIDList);
+  await createSettingsTab();
+  updateMiniPandA(mergedKadaiList, lectureIDList);
+}
+
 function createSettingItem(itemDescription: string, value: boolean | number, id: string, display=true) {
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);
   const div = SettingsDom.div.cloneNode(true);
@@ -305,6 +312,7 @@ export {
   appendMemoBox,
   createSettingsTab,
   updateMiniPandA,
+  displayMiniPandA,
   deleteNavBarNotification,
   createNavBarNotification,
 };

@@ -17,7 +17,7 @@ function getTimeRemain(_remainTime: number): [number, number, number] {
   return [day, hours, minutes];
 }
 
-function formatTimestamp(timestamp): string{
+function formatTimestamp(timestamp: number): string {
   const _date = new Date(timestamp * 1000);
   return _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
 }

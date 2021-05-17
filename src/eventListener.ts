@@ -4,7 +4,6 @@ import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {
   CPsettings,
-  displayMiniPandA,
   kadaiCacheInterval,
   lectureIDList,
   loadAndMergeKadaiList,
@@ -12,7 +11,7 @@ import {
   quizCacheInterval,
 } from "./content_script";
 import { Settings } from "./settings";
-import { createNavBarNotification, deleteNavBarNotification } from "./minipanda";
+import { createNavBarNotification, deleteNavBarNotification, displayMiniPandA } from "./minipanda";
 
 let toggle = false;
 
