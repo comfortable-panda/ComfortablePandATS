@@ -126,30 +126,36 @@ async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Ar
   updateMiniPandA(mergedKadaiList, lectureIDList);
 }
 
-function createSettingItem(itemDescription: string, value: boolean | number, id: string, display=true) {
+function createSettingItem(itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);
-  const div = SettingsDom.div.cloneNode(true);
   const label = SettingsDom.label.cloneNode(true);
   const p = SettingsDom.p.cloneNode(true);
   p.innerText = itemDescription;
-  if(!display)mainDiv.style.display = "none";
-  if (typeof value === "boolean") {
-    label.classList.add("switch");
-    const toggleBtn = SettingsDom.toggleBtn.cloneNode(true);
-    toggleBtn.checked = value;
-    toggleBtn.id = id;
-    toggleBtn.addEventListener("change", updateSettings, true);
-    const span = SettingsDom.span.cloneNode(true);
+  if (!display) mainDiv.style.display = "none";
 
-    appendChildAll(label, [toggleBtn, span]);
+  let settingItem;
+  const span = SettingsDom.span.cloneNode(true);
+  switch (typeof value){
+    case "boolean":
+      label.classList.add("switch");
+      settingItem = cloneElem(SettingsDom.toggleBtn, {checked: value, id: id}, {"change": function (res: any) { updateSettings(res, "check");}});
+      break;
+    case "number":
+      settingItem = cloneElem(SettingsDom.inputBox, {value: value, id: id}, {"change": function (res: any) { updateSettings(res, "number");}});
+      break;
+    case "string":
+      if (id === "reset") {
+        settingItem = cloneElem(SettingsDom.resetBtn, {value: value, id: id}, {"click": function (res: any) { updateSettings(res, "reset");}});
+      } else {
+        settingItem = cloneElem(SettingsDom.stringBox, {value: value, id: id}, {"change": function (res: any) { updateSettings(res, "string");}});
+      }
+      break;
+    default:
+      break;
   }
-  if (typeof value === "number") {
-    const inputBox = SettingsDom.inputBox.cloneNode(true);
-    inputBox.value = value;
-    inputBox.id = id;
-    inputBox.addEventListener("change", updateSettings, true);
-    appendChildAll(label, [inputBox]);
-  }
+
+  if (typeof value === "boolean") appendChildAll(label, [settingItem, span]);
+  else appendChildAll(label, [settingItem]);
   appendChildAll(mainDiv, [p, label]);
   settingsDiv.appendChild(mainDiv);
 }
@@ -160,6 +166,15 @@ async function createSettingsTab(): Promise<void> {
   createSettingItem("クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
   createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
 
+  createSettingItem("カラー① 締切24時間前", CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
+  createSettingItem("カラー① 締切5日前", CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
+  createSettingItem("カラー① 締切14日前", CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
+
+  createSettingItem("カラー② 締切24時間前", CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
+  createSettingItem("カラー② 締切5日前", CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
+  createSettingItem("カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
+
+  createSettingItem("デフォルト色に戻す", "reset", "reset");
   settingsDiv.style.display = "none";
 }
 
@@ -304,6 +319,41 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
       }
     }
   }
+  overrideCSSColor();
+}
+
+function overrideCSSColor() {
+  const overwriteborder = function (className: string, color: string | undefined) {
+    const dangerelem = document.getElementsByClassName(className);
+    for (let i = 0; i < dangerelem.length; i++) {
+      const elem = dangerelem[i] as HTMLElement;
+      const attr = "solid 2px " + color;
+      (<any>elem.style)["border-top"] = attr;
+      (<any>elem.style)["border-left"] = attr;
+      (<any>elem.style)["border-bottom"] = attr;
+      (<any>elem.style)["border-right"] = attr;
+    }
+  };
+  const overwritebackground = function (className: string, color: string | undefined) {
+    const dangerelem = document.getElementsByClassName(className);
+    for (let i = 0; i < dangerelem.length; i++) {
+      const elem = dangerelem[i] as HTMLElement;
+      elem.setAttribute("style", "background:" + color + "!important");
+    }
+  };
+  overwriteborder("kadai-danger",CPsettings.miniColorDanger?? "#e85555");
+  overwriteborder("kadai-success",CPsettings.miniColorSuccess?? "#62b665");
+  overwriteborder("kadai-warning",CPsettings.miniColorWarning?? "#d7aa57");
+  overwritebackground("lecture-danger",CPsettings.miniColorDanger?? "#e85555");
+  overwritebackground("lecture-success",CPsettings.miniColorSuccess?? "#62b665");
+  overwritebackground("lecture-warning",CPsettings.miniColorWarning?? "#d7aa57");
+
+  overwritebackground("nav-danger",CPsettings.topColorDanger?? "#f78989");
+  overwritebackground("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
+  overwritebackground("nav-warning",CPsettings.topColorWarning?? "#fdd783");
+  overwriteborder("nav-danger",CPsettings.topColorDanger?? "#f78989");
+  overwriteborder("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
+  overwriteborder("nav-warning",CPsettings.topColorWarning?? "#fdd783");
 }
 
 export {

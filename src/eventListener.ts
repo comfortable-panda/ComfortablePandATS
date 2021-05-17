@@ -10,7 +10,7 @@ import {
   mergedKadaiListNoMemo,
   quizCacheInterval,
 } from "./content_script";
-import { Settings } from "./settings";
+import { DefaultSettings, Settings } from "./settings";
 import { createNavBarNotification, deleteNavBarNotification, displayMiniPandA } from "./minipanda";
 
 let toggle = false;
@@ -125,22 +125,52 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   createNavBarNotification(lectureIDList, newKadaiList);
 }
 
-async function updateSettings(event: any): Promise<void> {
+async function updateSettings(event: any, type: string): Promise<void> {
   const settingsID = event.target.id;
   let settingsValue = event.currentTarget.value;
-  if (settingsValue === "on") settingsValue = event.currentTarget.checked;
-  else settingsValue = parseInt(event.currentTarget.value);
+
+  switch (type) {
+    case "check":
+      settingsValue = event.currentTarget.checked;
+      break;
+    case "number":
+      settingsValue = parseInt(event.currentTarget.value);
+      break;
+    case "string":
+      break;
+  }
 
   const settings = new Settings();
   const oldSettings = await loadFromStorage("TSSettings");
-  settings.kadaiCacheInterval = oldSettings.kadaiCacheInterval ?? kadaiCacheInterval;
-  settings.quizCacheInterval = oldSettings.quizCacheInterval ?? quizCacheInterval;
-  settings.makePandAGreatAgain = oldSettings.makePandAGreatAgain ?? false;
-  settings.displayCheckedKadai = oldSettings.displayCheckedKadai ?? true;
-  // @ts-ignore
-  settings[settingsID] = settingsValue;
-  // @ts-ignore
-  CPsettings[settingsID] = settingsValue;
+  for (const i in DefaultSettings){
+    // @ts-ignore
+    settings[i] = oldSettings[i] ?? DefaultSettings[i];
+  }
+
+  if (type === "reset") {
+    const dict = [
+      "topColorDanger", "topColorWarning" ,"topColorSuccess",
+      "miniColorDanger", "miniColorWarning" ,"miniColorSuccess"
+    ];
+    for (const k of dict) {
+      // @ts-ignore
+      settings[k] = DefaultSettings[k];
+      // @ts-ignore
+      CPsettings[k] = DefaultSettings[k];
+      const q = <HTMLInputElement>document.getElementById(k);
+      if (q) {
+        // @ts-ignore
+        q.value = DefaultSettings[k];
+      }
+    }
+  } else {
+    // @ts-ignore
+    settings[settingsID] = settingsValue;
+    // @ts-ignore
+    CPsettings[settingsID] = settingsValue;
+  }
+
+  console.log(settings);
   saveToStorage("TSSettings", settings);
 
   // NavBarを再描画
@@ -161,10 +191,10 @@ async function addKadaiMemo(): Promise<void> {
   const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
 
   let kadaiMemoList = await loadFromStorage("TSkadaiMemoList");
-  const kadaiMemoEntry = new KadaiEntry(genUniqueStr(),todoContent, todoTimestamp, true, false, false, "");
+  const kadaiMemoEntry = new KadaiEntry(genUniqueStr(), todoContent, todoTimestamp, true, false, false, "");
   const kadaiMemo = new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true);
 
-  if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0){
+  if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0) {
     kadaiMemoList = convertArrayToKadai(kadaiMemoList);
     const idx = kadaiMemoList.findIndex((oldKadaiMemo: Kadai) => {
       return (oldKadaiMemo.lectureID === todoLecID);
