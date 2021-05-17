@@ -1,10 +1,12 @@
 export class Settings {
   kadaiCacheInterval?: number;
   quizCacheInterval?: number;
-  theme?: string;
   displayCheckedKadai?: boolean;
   makePandAGreatAgain?: boolean;
-  colorDanger?:string;
-  colorWarning?:string;
-  colorSuccess?:string;
+  topColorDanger?: string;
+  topColorWarning?: string;
+  topColorSuccess?: string;
+  miniColorDanger?: string;
+  miniColorWarning?: string;
+  miniColorSuccess?: string;
 }

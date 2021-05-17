@@ -166,9 +166,13 @@ async function createSettingsTab(): Promise<void> {
   createSettingItem("クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
   createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
 
-  createSettingItem("カラー 締切1日前", CPsettings.colorDanger ?? "#e85555", "colorDanger");
-  createSettingItem("カラー 締切5日前", CPsettings.colorWarning ?? "#d7aa57", "colorWarning");
-  createSettingItem("カラー 締切14日前", CPsettings.colorSuccess ?? "#62b665", "colorSuccess");
+  createSettingItem("カラー① 締切1日前", CPsettings.topColorDanger ?? "#e85555", "topColorDanger");
+  createSettingItem("カラー① 締切5日前", CPsettings.topColorWarning ?? "#d7aa57", "topColorWarning");
+  createSettingItem("カラー① 締切14日前", CPsettings.topColorSuccess ?? "#62b665", "topColorSuccess");
+
+  createSettingItem("カラー② 締切1日前", CPsettings.miniColorDanger ?? "#f78989", "miniColorDanger");
+  createSettingItem("カラー② 締切5日前", CPsettings.miniColorWarning ?? "#fdd783", "miniColorWarning");
+  createSettingItem("カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#8bd48d", "miniColorSuccess");
 
   settingsDiv.style.display = "none";
 }
@@ -354,26 +358,18 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
       elem.setAttribute("style","background:"+color+"!important");
     }
   }
-  overwriteborder("kadai-danger",CPsettings.colorDanger?? "#e85555");
-  overwriteborder("kadai-success",CPsettings.colorSuccess?? "#62b665");
-  overwriteborder("kadai-warning",CPsettings.colorWarning?? "#d7aa57");
-
-  overwriteborder("sidenav-danger",CPsettings.colorDanger?? "#e85555");
-  overwriteborder("sidenav-success",CPsettings.colorSuccess?? "#62b665");
-  overwriteborder("sidenav-warning",CPsettings.colorWarning?? "#d7aa57");
-
-
-  overwritebackground("lecture-danger",CPsettings.colorDanger?? "#e85555");
-  overwritebackground("lecture-success",CPsettings.colorSuccess?? "#62b665");
-  overwritebackground("lecture-warning",CPsettings.colorWarning?? "#d7aa57");
-
-  overwritebackground("nav-danger",CPsettings.colorDanger?? "#e85555");
-  overwritebackground("nav-safe",CPsettings.colorSuccess?? "#62b665");
-  overwritebackground("nav-warning",CPsettings.colorWarning?? "#d7aa57");
-
-  overwriteborder("nav-danger",CPsettings.colorDanger?? "#e85555");
-  overwriteborder("nav-safe",CPsettings.colorSuccess?? "#62b665");
-  overwriteborder("nav-warning",CPsettings.colorWarning?? "#d7aa57");
+  overwriteborder("kadai-danger",CPsettings.topColorDanger?? "#e85555");
+  overwriteborder("kadai-success",CPsettings.topColorSuccess?? "#62b665");
+  overwriteborder("kadai-warning",CPsettings.topColorWarning?? "#d7aa57");
+  overwritebackground("lecture-danger",CPsettings.topColorDanger?? "#e85555");
+  overwritebackground("lecture-success",CPsettings.topColorSuccess?? "#62b665");
+  overwritebackground("lecture-warning",CPsettings.topColorWarning?? "#d7aa57");
+  overwritebackground("nav-danger",CPsettings.miniColorDanger?? "#f78989");
+  overwritebackground("nav-safe",CPsettings.miniColorSuccess?? "#8bd48d");
+  overwritebackground("nav-warning",CPsettings.miniColorWarning?? "#fdd783");
+  overwriteborder("nav-danger",CPsettings.miniColorDanger?? "#f78989");
+  overwriteborder("nav-safe",CPsettings.miniColorSuccess?? "#8bd48d");
+  overwriteborder("nav-warning",CPsettings.miniColorWarning?? "#fdd783");
 }
 
 export {

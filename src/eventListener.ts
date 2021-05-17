@@ -149,9 +149,13 @@ async function updateSettings(event: any, type: string): Promise<void> {
   settings.quizCacheInterval = oldSettings.quizCacheInterval ?? quizCacheInterval;
   settings.makePandAGreatAgain = oldSettings.makePandAGreatAgain ?? false;
   settings.displayCheckedKadai = oldSettings.displayCheckedKadai ?? true;
-  settings.colorDanger = oldSettings.colorDanger ?? "#e85555";
-  settings.colorWarning = oldSettings.colorWarning ?? "#d7aa57";
-  settings.colorSuccess = oldSettings.colorSuccess ?? "#62b665";
+  settings.topColorDanger = oldSettings.colorDanger ?? "#e85555";
+  settings.topColorWarning = oldSettings.colorWarning ?? "#d7aa57";
+  settings.topColorSuccess = oldSettings.colorSuccess ?? "#62b665";
+  settings.miniColorDanger = oldSettings.colorDanger ?? "#f78989";
+  settings.miniColorWarning = oldSettings.colorWarning ?? "#fdd783";
+  settings.miniColorSuccess = oldSettings.colorSuccess ?? "#8bd48d";
+
   // @ts-ignore
   settings[settingsID] = settingsValue;
   // @ts-ignore
