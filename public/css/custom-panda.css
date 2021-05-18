@@ -13,6 +13,11 @@
     border: 0px solid #8bd48d !important;
 }
 
+.nav-other {
+    background: #adadad !important;
+    border: 0px solid #adadad !important;
+}
+
 .red-badge::after {
     z-index: 1;
     content: "";

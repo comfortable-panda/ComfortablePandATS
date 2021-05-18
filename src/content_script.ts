@@ -21,7 +21,7 @@ import {
 import { Settings } from "./settings";
 
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
-export const VERSION = "3.5.1";
+export const VERSION = "3.5.2";
 export let kadaiCacheInterval = 60 * 2;
 export let quizCacheInterval = 60 * 10;
 export let kadaiFetchedTime: number;
