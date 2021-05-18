@@ -21,7 +21,7 @@ import {
 import { Settings } from "./settings";
 
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
-export const VERSION = "3.5.0";
+export const VERSION = "3.5.1";
 export let kadaiCacheInterval = 60 * 2;
 export let quizCacheInterval = 60 * 10;
 export let kadaiFetchedTime: number;
@@ -75,17 +75,18 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, u
     // 取得した時間を保存
     await saveToStorage("TSquizFetchedTime", nowTime);
     quizFetchedTime = nowTime;
-    await saveToStorage("TSQuizList", newQuizList);
   } else {
-    if (typeof oldKadaiList !== "undefined") {
+    if (typeof oldQuizList !== "undefined") {
       newQuizList = oldQuizList;
     }
   }
+  const mergedQuizList = compareAndMergeKadaiList(oldQuizList, newQuizList);
 
   // マージ後のkadaiListをストレージに保存する
   await saveToStorage("TSkadaiList", mergedKadaiListNoMemo);
+  await saveToStorage("TSQuizList", mergedQuizList);
 
-  mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, newQuizList);
+  mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, mergedQuizList);
 
   // メモ一覧を読み込む
   const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
