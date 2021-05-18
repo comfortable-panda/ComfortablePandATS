@@ -4,7 +4,7 @@ PandAを快適にするブラウザ拡張機能です．
 # ダウンロードリンク
 - [Google Chrome](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
 - [Firefox](https://public.tinax.work/~tinaxd/cpff/)
-- Microsoft Edge
+- [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/njbljhcmnodocldppoiejkcmcebpmljc)
 
 # 使い方
 1. 拡張機能をブラウザにインストールします．
@@ -44,31 +44,32 @@ PandAへの負荷を軽減するために課題・クイズ取得にキャッシ
 
 # 更新履歴
 - 2020/05/20 v0.9.0 Prototype release
-- 2020/05/21 v1.0.0 Release
-- 2020/05/22 v1.0.1 Fixed some minor bugs & refactored
-- 2020/05/26 v1.0.2 Fixed notification badge related bug
-- 2020/06/10 v1.1.0 Added side menu for displaying all available kadais.
-- 2020/06/11 v1.1.3 Minor bug fix & enhancement.
-- 2020/06/13 v1.2.0 Added check button.
-- 2020/06/23 v1.3.0 Added quiz/exam tab.
-- 2020/06/24 v1.3.1 Fixed bug.
-- 2020/06/30 v1.4.0 Add custom todo.
-- 2020/08/16 v1.4.1 Removed redundant lines.
-- 2020/08/17 v1.5.0 Added relax PandA and spinning wheel.
-- 2020/10/02 v1.5.2 Fixed badge reset bug.
-- 2020/10/25 v1.6.0 Add cache.
-- 2020/10/28 v1.6.1 Using async on storage.get
-- 2020/12/22 v1.7.0 Order assignments by closestTime.
-- 2021/03/28 v2.0.0 Support for Sakai21.
-- 2021/04/10 v2.1.0 Fixed errors.
-- 2021/04/13 v3.0.0 Re-wrote everything using Typescript.
-- 2021/04/13 v3.0.4 Bug fix.
-- 2021/04/13 v3.1.0 Bug fix.
-- 2021/05/05 v3.2.0 SubPandA first release.
-- 2021/05/15 v3.3.0 Add quiz-fetch feature.
-- 2021/05/16 v3.4.0 Add setting tab.
-- 2021/05/16 v3.4.1 Fixed minor bugs.
-- 2021/05/16 v3.4.3 Fixed minor bugs.
+- 2020/05/21 v1.0.0 一般公開
+- 2020/05/22 v1.0.1 小さなバグを修正。
+- 2020/05/26 v1.0.2 通知バッジに関するバグを修正。
+- 2020/06/10 v1.1.0 全ての課題を表示するサイドメニューを追加。
+- 2020/06/11 v1.1.3 小さなバグを修正。
+- 2020/06/13 v1.2.0 課題チェックボタンを追加。
+- 2020/06/23 v1.3.0 クイズ・試験タブを追加。
+- 2020/06/24 v1.3.1 バグを修正。
+- 2020/06/30 v1.4.0 カスタムToDo機能を追加。
+- 2020/08/16 v1.4.1 冗長な行を削除。
+- 2020/08/17 v1.5.0 relax PandA と更新中インジケーターを追加。
+- 2020/10/02 v1.5.2 通知バッジがリセットされるバグを修正。
+- 2020/10/25 v1.6.0 キャッシュを使用するようになった。
+- 2020/10/28 v1.6.1 Storage アクセスを非同期化。
+- 2020/12/22 v1.7.0 締め切り順に課題がソートされるようになった。
+- 2021/03/28 v2.0.0 Sakai 21 のサポート
+- 2021/04/10 v2.1.0 エラー修正。
+- 2021/04/13 v3.0.0 Typescript で一から作り直し。
+- 2021/04/13 v3.0.4 バグ修正。
+- 2021/04/13 v3.1.0 バグ修正。
+- 2021/05/05 v3.2.0 SubPandA 実装。
+- 2021/05/15 v3.3.0 クイズを取得可能にした。
+- 2021/05/16 v3.4.0 設定画面を追加。
+- 2021/05/16 v3.4.1 小さなバグを修正。
+- 2021/05/16 v3.4.3 小さなバグを修正。
+- 2021/05/17 v3.5.0 カラーユニバーサルデザインに対応
 
 # コンパイル方法
 Run
@@ -77,4 +78,4 @@ npx webpack
 ```
 
 # License
-MIT
+Apache-2.0 License
