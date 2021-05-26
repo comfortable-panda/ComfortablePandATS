@@ -43,7 +43,7 @@ function createHanburgerButton(): void {
   }
 }
 
-function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
+export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
   const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
   const kadaiFetchedTimeString = kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
@@ -112,21 +112,28 @@ function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
     showSuccess: successElements.length > 0,
     otherElements: otherElements,
     showOther: otherElements.length > 0,
-    addMemoBoxLectures: addMemoBoxLectures
+    addMemoBoxLectures: addMemoBoxLectures,
+    subset: subset
   };
 
   fetch(chrome.extension.getURL("views/minipanda.mustache"))
     .then((res) => res.text())
     .then((template) => {
       const rendered = Mustache.render(template, templateVars);
-      miniPandA.innerHTML = rendered;
-      const parent = document.getElementById("pageBody");
-      const ref = document.getElementById("toolMenuWrap");
-      parent?.insertBefore(miniPandA, ref);
-      registerEventHandlers(miniPandA);
-      createSettingsTab(miniPandA);
-      initState(miniPandA);
+      insertionProcess(rendered);
+      registerEventHandlers(root);
+      if (!subset) createSettingsTab(root);
+      initState(root);
     });
+}
+
+function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
+  createMiniPandAGeneralized(miniPandA, kadaiList, lectureIDList, false, (rendered) => {
+    miniPandA.innerHTML = rendered;
+    const parent = document.getElementById("pageBody");
+    const ref = document.getElementById("toolMenuWrap");
+    parent?.insertBefore(miniPandA, ref);
+  });
 }
 
 async function createSettingsTab(root: Element): Promise<void> {

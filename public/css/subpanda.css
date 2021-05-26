@@ -9,6 +9,7 @@ body {
 span {
     font-family: "Open Sans", sans-serif;
 }
+
 .kadai-title {
     font-family: "Open Sans", sans-serif;
     font-size: 12px !important;
@@ -38,10 +39,24 @@ span {
     color: #464646;
     font-size: small;
 }
-.subpanda-logo {
+
+.quiz-time {
+    font-family: "Open Sans", sans-serif;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    margin: 10px;
+    border: inset;
+    font-weight: bold;
+    color: #464646;
+    font-size: small;
+}
+
+.logo {
     top: 7px;
     left: 2px;
     height: 40px;
+    position: unset;
 }
 
 .cp-version{

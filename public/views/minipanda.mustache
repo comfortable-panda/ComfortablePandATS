@@ -1,14 +1,17 @@
 <img class="logo" alt="logo" src="{{minipandaLogo}}">
 <p class="cp-version">Version {{VERSION}}</p>
+{{^subset}}
 <a id="close_btn" class="closebtn q" href="#">x</a>
 <input id="kadaiTab" type="radio" name="cp_tab">
 <label for="kadaiTab"> 課題一覧 </label>
 <input id="settingsTab" type="radio" name="cp_tab">
 <label for="settingsTab"> 詳細設定 </label>
 <button class="plus-button">+</button>
+{{/subset}}
 <p class="kadai-time">課題取得日時： {{kadaiFetchedTime}}</p>
 <p class="quiz-time">クイズ取得日時： {{quizFetchedTime}}</p>
 <div class="kadai-tab">
+    {{^subset}}
     <div class="settingsBox addMemoBox" style="display: none;">
         <label style="display: block;">講義名<select class="todoLecName">
             {{#addMemoBoxLectures}}
@@ -19,6 +22,7 @@
         <label style="display: block;">期限<input type="datetime-local" class="todoDue"></label>
         <button type="submit" id="todo-add">追加</button>
     </div>
+    {{/subset}}
 
     {{#showDanger}}
     <div class="sidenav-danger">
@@ -59,14 +63,16 @@
             <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
-            {{#isMemo}}
-                <span class="add-badge add-badge-success">メモ</span>
-                <span class="del-button" id="{{id}}">×</span>
-            {{/isMemo}}
-            {{#isQuiz}}
-                <span class="add-badge add-badge-quiz">クイズ</span>
-            {{/isQuiz}}
-            <p class="kadai-title">{{title}}</p>
+            <p class="kadai-title">
+                {{#isMemo}}
+                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="del-button" id="{{id}}">×</span>
+                {{/isMemo}}
+                {{#isQuiz}}
+                    <span class="add-badge add-badge-quiz">クイズ</span>
+                {{/isQuiz}}
+                {{title}}
+            </p>
         </div>
         {{/warningElements}}
     </div>
@@ -84,14 +90,16 @@
             <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
-            {{#isMemo}}
-                <span class="add-badge add-badge-success">メモ</span>
-                <span class="del-button" id="{{id}}">×</span>
-            {{/isMemo}}
-            {{#isQuiz}}
-                <span class="add-badge add-badge-quiz">クイズ</span>
-            {{/isQuiz}}
-            <p class="kadai-title">{{title}}</p>
+            <p class="kadai-title">
+                {{#isMemo}}
+                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="del-button" id="{{id}}">×</span>
+                {{/isMemo}}
+                {{#isQuiz}}
+                    <span class="add-badge add-badge-quiz">クイズ</span>
+                {{/isQuiz}}
+                {{title}}
+            </p>
         </div>
         {{/successElements}}
     </div>
@@ -109,19 +117,23 @@
             <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
-            {{#isMemo}}
-                <span class="add-badge add-badge-success">メモ</span>
-                <span class="del-button" id="{{id}}">×</span>
-            {{/isMemo}}
-            {{#isQuiz}}
-                <span class="add-badge add-badge-quiz">クイズ</span>
-            {{/isQuiz}}
-            <p class="kadai-title">{{title}}</p>
+            <p class="kadai-title">
+                {{#isMemo}}
+                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="del-button" id="{{id}}">×</span>
+                {{/isMemo}}
+                {{#isQuiz}}
+                    <span class="add-badge add-badge-quiz">クイズ</span>
+                {{/isQuiz}}
+                {{title}}
+            </p>
         </div>
         {{/otherElements}}
     </div>
     {{/showOther}}
 </div>
 
+{{^subset}}
 <div class="settings-tab" style="">
 </div>
+{{/subset}}
