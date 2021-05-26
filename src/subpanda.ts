@@ -1,4 +1,4 @@
-import { appendChildAll, createElem, DueGroupDom, settingsDiv, kadaiDiv, KadaiEntryDom, subPandA } from './dom';
+import { appendChildAll, createElem, DueGroupDom, kadaiDiv, KadaiEntryDom, subPandA } from './dom';
 import { toggleKadaiFinishedFlag } from './eventListener';
 import { Kadai, LectureInfo } from './kadai';
 import { loadFromStorage } from './storage'
@@ -11,6 +11,9 @@ import {
   nowTime,
   sortKadaiList
 } from "./utils";
+import {
+  VERSION
+} from "./content_script"
 
 const subpandaRoot = document.querySelector("#subpanda");
 
@@ -25,7 +28,8 @@ async function dumpCache() {
   mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, kadaiMemoList);
   const lectureIDs = await loadFromStorage("TSlectureids") as Array<LectureInfo>;
   const fetchedTime = await loadFromStorage("TSkadaiFetchedTime") as number;
-  updateSubPandA(sortKadaiList(mergedKadaiList), lectureIDs, fetchedTime);
+  const quizFetchedTime = await loadFromStorage("TSquizFetchedTime") as number;
+  updateSubPandA(sortKadaiList(mergedKadaiList), lectureIDs, fetchedTime, quizFetchedTime);
 }
 
 function addSubPandAToPopup() {
@@ -39,10 +43,15 @@ function addSubPandAToPopup() {
   subpandaRoot.appendChild(subPandA);
 }
 
-function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>, fetchedTime: number): void {
+function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>, fetchedTime: number, quizFetchedTime: number): void {
+  const version = createElem("p", {　classList: "cp-version", innerText: `Version ${VERSION}`});
+
   const fetchedTimestamp = new Date(fetchedTime);
   const fetchedTimeString = createElem("p", { className: "kadai-time" });
   fetchedTimeString.innerText = "取得日時： " + fetchedTimestamp.toLocaleDateString() + " " + fetchedTimestamp.getHours() + ":" + ("00" + fetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + fetchedTimestamp.getSeconds()).slice(-2);
+  const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
+  const quizFetchedTimeString = createElem("p", { className: "kadai-time" });
+  quizFetchedTimeString.innerText = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
 
   const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
   const dueGroupColor = ["danger", "warning", "success", "other"];
@@ -134,7 +143,7 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
       dueGroupHeader.style.display = "";
       dueGroupContainer.style.display = "";
     }
-    appendChildAll(subPandA, [fetchedTimeString, kadaiDiv, settingsDiv]);
+    appendChildAll(subPandA, [version, fetchedTimeString, quizFetchedTimeString, kadaiDiv]);
     appendChildAll(kadaiDiv, [dueGroupHeader, dueGroupContainer]);
   }
 
