@@ -37,6 +37,8 @@ import {
   quizFetchedTime,
   VERSION,
 } from "./content_script";
+// @ts-ignore
+import Mustache = require('mustache');
 
 function createHanburgerButton(): void {
   const topbar = document.getElementById("mastLogin");
@@ -47,47 +49,28 @@ function createHanburgerButton(): void {
   }
 }
 
-function createMiniPandA(): void {
-  const miniPandALogo = createElem("img", {
-    className: "logo",
-    alt: "logo",
-    src: chrome.extension.getURL("img/logo.png"),
-  });
-  const version = createElem("p", {　classList: "cp-version", innerText: `Version ${VERSION}`});
-
-  const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
-  miniPandACloseBtn.classList.add("closebtn", "q");
-  miniPandACloseBtn.addEventListener("click", toggleMiniPandA);
-
-  const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true }, {"click": toggleKadaiTab});
-  const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: "　課題一覧　" });
-  const settingsTab = createElem("input", { type: "radio", id: "settingsTab", name: "cp_tab", checked: false }, {"click": toggleSettingsTab});
-  const settingsTabLabel = createElem("label", { htmlFor: "settingsTab", innerText: "　詳細設定　" });
-  const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" },{"click": toggleMemoBox});
-
+function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
   const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
-  const kadaiFetchedTimeString = createElem("p", { className: "kadai-time" });
-  kadaiFetchedTimeString.innerText = "課題取得日時： " + kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
+  const kadaiFetchedTimeString = "課題取得日時： " + kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
-  const quizFetchedTimeString = createElem("p", { className: "quiz-time" });
-  quizFetchedTimeString.innerText = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
-  appendChildAll(miniPandA, [
-    miniPandALogo,
-    version,
-    miniPandACloseBtn,
-    kadaiTab,
-    kadaiTabLabel,
-    settingsTab,
-    settingsTabLabel,
-    addMemoButton,
-    kadaiFetchedTimeString,
-    quizFetchedTimeString,
-  ]);
+  const quizFetchedTimeString = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
+  
+  const templateVars = {
+    kadaiFetchedTime: kadaiFetchedTimeString,
+    quizFetchedTime: quizFetchedTimeString,
+    minipandaLogo: chrome.extension.getURL("img/logo.png"),
+    VERSION: VERSION,
+  };
 
-  const parent = document.getElementById("pageBody");
-  const ref = document.getElementById("toolMenuWrap");
-
-  parent?.insertBefore(miniPandA, ref);
+  fetch(chrome.extension.getURL("views/minipanda.mustache"))
+    .then((res) => res.text())
+    .then((template) => {
+      const rendered = Mustache.render(template, templateVars);
+      miniPandA.innerHTML = rendered;
+      const parent = document.getElementById("pageBody");
+      const ref = document.getElementById("toolMenuWrap");
+      parent?.insertBefore(miniPandA, ref);
+    });
 }
 
 function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
@@ -120,7 +103,7 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
 }
 
 async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
-  createMiniPandA();
+  createMiniPandA(mergedKadaiList, lectureIDList);
   appendMemoBox(lectureIDList);
   await createSettingsTab();
   updateMiniPandA(mergedKadaiList, lectureIDList);

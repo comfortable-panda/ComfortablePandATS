@@ -1,0 +1,75 @@
+<img class="logo" alt="logo" src="{{minipandaLogo}}">
+<p class="cp-version">Version {{VERSION}}</p>
+<a id="close_btn" class="closebtn q" href="#">x</a>
+<input id="kadaiTab" type="radio" name="cp_tab">
+<label for="kadaiTab"> 課題一覧 </label>
+<input id="settingsTab" type="radio" name="cp_tab">
+<label for="settingsTab"> 詳細設定 </label>
+<button class="plus-button">+</button>
+<p class="kadai-time">課題取得日時： {{kadaiFetchedTime}}</p>
+<p class="quiz-time">クイズ取得日時： {{quizFetchedTime}}</p>
+<div class="kadai-tab">
+    {{#showDanger}}
+    <div class="sidenav-danger">
+    </div>
+    <div class="sidenav-list sidenav-list-danger">
+        {{#dangerElements}}
+        <div id="{{id}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{dangerBorderColor}}">
+            <a class="lecture-danger lecture-name" href="{{href}}">{{lectureName}}</a>
+            <input id="" class="todo-check" type="checkbox">
+            <p class="kadai-date">{{date}}</p>
+            <span class="time-remain">{{remain}}</span>
+            <p class="kadai-title">{{title}}</p>
+        </div>
+        {{/dangerElements}}
+    </div>
+    {{/showDanger}}
+
+    {{#showWarning}}
+    <div class="sidenav-warning">
+    </div>
+    <div class="sidenav-list sidenav-list-warning">
+        {{#warningElements}}
+        <div id="{{id}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{warningBorderColor}}">
+            <a class="lecture-warning lecture-name" href="{{href}}">{{lectureName}}</a>
+            <input id="" class="todo-check" type="checkbox">
+            <p class="kadai-date">{{date}}</p>
+            <span class="time-remain">{{remain}}</span>
+            <p class="kadai-title">{{title}}</p>
+        </div>
+        {{/warningElements}}
+    </div>
+    {{/showWarning}}
+
+    {{#showSuccess}}
+    <div class="sidenav-success">
+    </div>
+    <div class="sidenav-list sidenav-list-success">
+        {{#successElements}}
+        <div id="{{id}}" class="kadai-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            <a class="lecture-success lecture-name" href="{{href}}">{{lectureName}}</a>
+            <input id="" class="todo-check" type="checkbox">
+            <p class="kadai-date">{{date}}</p>
+            <span class="time-remain">{{remain}}</span>
+            <p class="kadai-title">{{title}}</p>
+        </div>
+        {{/successElements}}
+    </div>
+    {{/showSuccess}}
+
+    {{#showOther}}
+    <div class="sidenav-other">
+    </div>
+    <div class="sidenav-list sidenav-list-other">
+        {{#otherElements}}
+        <div id="{{id}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{otherBorderColor}}">
+            <a class="lecture-other lecture-name" href="{{href}}">{{lectureName}}</a>
+            <input id="" class="todo-check" type="checkbox">
+            <p class="kadai-date">{{date}}</p>
+            <span class="time-remain">{{remain}}</span>
+            <p class="kadai-title">{{title}}</p>
+        </div>
+        {{/otherElements}}
+    </div>
+    {{/showOther}}
+</div>
