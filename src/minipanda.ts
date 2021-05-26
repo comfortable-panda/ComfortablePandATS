@@ -207,6 +207,8 @@ function registerEventHandlers(root: Element) {
 function initState(root: Element) {
   // @ts-ignore
   root.querySelector('#kadaiTab')?.checked = true;
+  // @ts-ignore
+  root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
 }
 
 async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
