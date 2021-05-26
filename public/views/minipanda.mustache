@@ -20,6 +20,13 @@
             <input id="" class="todo-check" type="checkbox">
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
+            {{#isMemo}}
+                <span class="add-badge add-badge-success">メモ</span>
+                <span class="del-button" id="{{id}}">×</span>
+            {{/isMemo}}
+            {{#isQuiz}}
+                <span class="add-badge add-badge-quiz">クイズ</span>
+            {{/isQuiz}}
             <p class="kadai-title">{{title}}</p>
         </div>
         {{/dangerElements}}
@@ -37,6 +44,13 @@
             <input id="" class="todo-check" type="checkbox">
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
+            {{#isMemo}}
+                <span class="add-badge add-badge-success">メモ</span>
+                <span class="del-button" id="{{id}}">×</span>
+            {{/isMemo}}
+            {{#isQuiz}}
+                <span class="add-badge add-badge-quiz">クイズ</span>
+            {{/isQuiz}}
             <p class="kadai-title">{{title}}</p>
         </div>
         {{/warningElements}}
@@ -54,6 +68,13 @@
             <input id="" class="todo-check" type="checkbox">
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
+            {{#isMemo}}
+                <span class="add-badge add-badge-success">メモ</span>
+                <span class="del-button" id="{{id}}">×</span>
+            {{/isMemo}}
+            {{#isQuiz}}
+                <span class="add-badge add-badge-quiz">クイズ</span>
+            {{/isQuiz}}
             <p class="kadai-title">{{title}}</p>
         </div>
         {{/successElements}}
@@ -71,6 +92,13 @@
             <input id="" class="todo-check" type="checkbox">
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
+            {{#isMemo}}
+                <span class="add-badge add-badge-success">メモ</span>
+                <span class="del-button" id="{{id}}">×</span>
+            {{/isMemo}}
+            {{#isQuiz}}
+                <span class="add-badge add-badge-quiz">クイズ</span>
+            {{/isQuiz}}
             <p class="kadai-title">{{title}}</p>
         </div>
         {{/otherElements}}

@@ -78,7 +78,9 @@ function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         lectureName: lectureName,
         date: kadaiDueDateText,
         remain: remainTimeText,
-        title: kadaiTitle
+        title: kadaiTitle,
+        isMemo: kadai.isMemo,
+        isQuiz: kadai.isQuiz
       };
 
       if (daysUntilDue > 0 && daysUntilDue <= 1) {
