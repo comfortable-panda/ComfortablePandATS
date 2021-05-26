@@ -54,12 +54,58 @@ function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
   const kadaiFetchedTimeString = "課題取得日時： " + kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
   const quizFetchedTimeString = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
-  
+
+  const lectureIDMap = createLectureIDMap(lectureIDList);
+  const dangerElements: Array<Object> = [];
+  const warningElements: Array<Object> = [];
+  const successElements: Array<Object> = [];
+  const otherElements: Array<Object> = [];
+  // loop over lectures
+  kadaiList.forEach(item => {
+    const lectureName = lectureIDMap.get(item.lectureID);
+    // loop over kadais
+    item.kadaiEntries.forEach(kadai => {
+      const dispDue = formatTimestamp(kadai.dueDateTimestamp);
+      const timeRemain = getTimeRemain((kadai.dueDateTimestamp*1000-nowTime) / 1000);
+      const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp*1000);
+
+      const remainTimeText = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
+      const kadaiDueDateText = "" + dispDue;
+      const kadaiTitle = "" + kadai.assignmentTitle;
+      const kadaiChecked = kadai.isFinished;
+
+      const vars = {
+        lectureName: lectureName,
+        date: kadaiDueDateText,
+        remain: remainTimeText,
+        title: kadaiTitle
+      };
+
+      if (daysUntilDue > 0 && daysUntilDue <= 1) {
+        dangerElements.push(vars);
+      } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
+        warningElements.push(vars);
+      } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
+        successElements.push(vars);
+      } else {
+        otherElements.push(vars);
+      }
+    });
+  });
+
   const templateVars = {
     kadaiFetchedTime: kadaiFetchedTimeString,
     quizFetchedTime: quizFetchedTimeString,
     minipandaLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
+    dangerElements: dangerElements,
+    showDanger: dangerElements.length > 0,
+    warningElements: warningElements,
+    showWarning: warningElements.length > 0,
+    successElements: successElements,
+    showSuccess: successElements.length > 0,
+    otherElements: otherElements,
+    showOther: otherElements.length > 0
   };
 
   fetch(chrome.extension.getURL("views/minipanda.mustache"))
