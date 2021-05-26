@@ -1,4 +1,4 @@
-import { appendChildAll, createElem, DueGroupDom, settingsDiv, kadaiDiv, KadaiEntryDom, subPandA } from './dom';
+import { appendChildAll, createElem, DueGroupDom, kadaiDiv, KadaiEntryDom, subPandA } from './dom';
 import { toggleKadaiFinishedFlag } from './eventListener';
 import { Kadai, LectureInfo } from './kadai';
 import { loadFromStorage } from './storage'
@@ -134,7 +134,7 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
       dueGroupHeader.style.display = "";
       dueGroupContainer.style.display = "";
     }
-    appendChildAll(subPandA, [fetchedTimeString, kadaiDiv, settingsDiv]);
+    //appendChildAll(subPandA, [fetchedTimeString, kadaiDiv, settingsDiv]);
     appendChildAll(kadaiDiv, [dueGroupHeader, dueGroupContainer]);
   }
 

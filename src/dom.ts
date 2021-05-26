@@ -41,7 +41,6 @@ miniPandA.classList.add("cp_tab");
 export const subPandA = createElem("div", { id: "subPandA" });
 
 export const kadaiDiv = createElem("div", { className: "kadai-tab" });
-export const settingsDiv = createElem("div", { className: "settings-tab" });
 
 export const hamburger = createElem("div", { className: "loader" }, {"click": toggleMiniPandA});
 

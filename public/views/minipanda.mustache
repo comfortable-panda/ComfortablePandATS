@@ -9,25 +9,39 @@
 <p class="kadai-time">課題取得日時： {{kadaiFetchedTime}}</p>
 <p class="quiz-time">クイズ取得日時： {{quizFetchedTime}}</p>
 <div class="kadai-tab">
+    <div class="settingsBox addMemoBox" style="display: none;">
+        <label style="display: block;">講義名<select class="todoLecName">
+            {{#addMemoBoxLectures}}
+            <option id="{{id}}">{{lectureName}}</option>
+            {{/addMemoBoxLectures}}
+        </select></label>
+        <label style="display: block;">メモ<input type="text" class="todoContent"></label>
+        <label style="display: block;">期限<input type="datetime-local" class="todoDue"></label>
+        <button type="submit" id="todo-add">追加</button>
+    </div>
+
     {{#showDanger}}
     <div class="sidenav-danger">
         <span class="q">締め切り２４時間以内</span>
     </div>
     <div class="sidenav-list sidenav-list-danger">
         {{#dangerElements}}
-        <div id="{{id}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{dangerBorderColor}}">
+        <div id="b{{lectureId}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{dangerBorderColor}}">
             <a class="lecture-danger lecture-name" href="{{href}}">{{lectureName}}</a>
-            <input id="" class="todo-check" type="checkbox">
+            <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
+            <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
-            {{#isMemo}}
-                <span class="add-badge add-badge-success">メモ</span>
-                <span class="del-button" id="{{id}}">×</span>
-            {{/isMemo}}
-            {{#isQuiz}}
-                <span class="add-badge add-badge-quiz">クイズ</span>
-            {{/isQuiz}}
-            <p class="kadai-title">{{title}}</p>
+            <p class="kadai-title">
+                {{#isMemo}}
+                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="del-button" id="{{id}}">×</span>
+                {{/isMemo}}
+                {{#isQuiz}}
+                    <span class="add-badge add-badge-quiz">クイズ</span>
+                {{/isQuiz}}
+                {{title}}
+            </p>
         </div>
         {{/dangerElements}}
     </div>
@@ -39,9 +53,10 @@
     </div>
     <div class="sidenav-list sidenav-list-warning">
         {{#warningElements}}
-        <div id="{{id}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{warningBorderColor}}">
+        <div id="b{{lectureId}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{warningBorderColor}}">
             <a class="lecture-warning lecture-name" href="{{href}}">{{lectureName}}</a>
-            <input id="" class="todo-check" type="checkbox">
+            <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
+            <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
             {{#isMemo}}
@@ -63,9 +78,10 @@
     </div>
     <div class="sidenav-list sidenav-list-success">
         {{#successElements}}
-        <div id="{{id}}" class="kadai-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+        <div id="b{{lectureId}}" class="kadai-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
             <a class="lecture-success lecture-name" href="{{href}}">{{lectureName}}</a>
-            <input id="" class="todo-check" type="checkbox">
+            <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
+            <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
             {{#isMemo}}
@@ -87,9 +103,10 @@
     </div>
     <div class="sidenav-list sidenav-list-other">
         {{#otherElements}}
-        <div id="{{id}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{otherBorderColor}}">
+        <div id="b{{lectureId}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{otherBorderColor}}">
             <a class="lecture-other lecture-name" href="{{href}}">{{lectureName}}</a>
-            <input id="" class="todo-check" type="checkbox">
+            <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
+            <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
             <span class="time-remain">{{remain}}</span>
             {{#isMemo}}
@@ -104,4 +121,7 @@
         {{/otherElements}}
     </div>
     {{/showOther}}
+</div>
+
+<div class="settings-tab" style="">
 </div>
