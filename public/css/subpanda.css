@@ -3,6 +3,8 @@ body {
     min-width: 300px;
     max-width: 400px;
     background-color: rgb(202, 202, 202);
+    font-size: medium;
+    line-height: normal;
 }
 span {
     font-family: "Open Sans", sans-serif;
@@ -40,4 +42,10 @@ span {
     top: 7px;
     left: 2px;
     height: 40px;
+}
+
+.cp-version{
+    font-family: "Open  Sans", sans-serif;
+    padding-left: 5px;
+    font-weight: bold;
 }
