@@ -70,8 +70,8 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
       const kadaiTitle = "" + kadai.assignmentTitle;
       const kadaiChecked = kadai.isFinished;
 
-      const vars = {
-        lectureName: lectureName,
+      const entry = {
+        timestamp: kadai.dueDateTimestamp,
         date: kadaiDueDateText,
         remain: remainTimeText,
         title: kadaiTitle,
@@ -79,17 +79,35 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
         isQuiz: kadai.isQuiz,
         lectureId: item.lectureID,
         id: kadai.kadaiID,
-        checked: kadaiChecked
+        checked: kadaiChecked,
+      };
+      const vars = {
+        lectureName: lectureName,
+        entries: [entry],
+      };
+
+      const appendElement = (lectureName: string|undefined, elements: Array<Object>) => {
+        // @ts-ignore
+        const lecName = elements.map(e => e.lectureName);
+        if (lecName.includes(lectureName)){
+          const idx = lecName.indexOf(lectureName);
+          // @ts-ignore
+          elements[idx].entries.push(entry);
+          // @ts-ignore ソートする
+          elements[idx].entries.sort((a, b) => {return a.timestamp - b.timestamp})
+        } else {
+          elements.push(vars);
+        }
       };
 
       if (daysUntilDue > 0 && daysUntilDue <= 1) {
-        dangerElements.push(vars);
+        appendElement(lectureName, dangerElements);
       } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
-        warningElements.push(vars);
+        appendElement(lectureName, warningElements);
       } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
-        successElements.push(vars);
+        appendElement(lectureName, successElements);
       } else {
-        otherElements.push(vars);
+        appendElement(lectureName, otherElements);
       }
     });
 
@@ -99,18 +117,27 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     });
   });
 
+  const sortElements = (elements: Array<Object>) => {
+    elements.sort((a, b) => {
+      // @ts-ignore
+      const timestamp = (o) => Math.min(...o.entries.map((p) => p.timestamp));
+      return timestamp(a) - timestamp(b);
+    });
+    return elements;
+  };
+
   const templateVars = {
     kadaiFetchedTime: kadaiFetchedTimeString,
     quizFetchedTime: quizFetchedTimeString,
     minipandaLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
-    dangerElements: dangerElements,
+    dangerElements: sortElements(dangerElements),
     showDanger: dangerElements.length > 0,
-    warningElements: warningElements,
+    warningElements: sortElements(warningElements),
     showWarning: warningElements.length > 0,
-    successElements: successElements,
+    successElements: sortElements(successElements),
     showSuccess: successElements.length > 0,
-    otherElements: otherElements,
+    otherElements: sortElements(otherElements),
     showOther: otherElements.length > 0,
     addMemoBoxLectures: addMemoBoxLectures,
     subset: subset
