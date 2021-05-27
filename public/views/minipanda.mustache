@@ -32,6 +32,7 @@
         {{#dangerElements}}
         <div id="b{{lectureId}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{dangerBorderColor}}">
             <a class="lecture-danger lecture-name" href="{{href}}">{{lectureName}}</a>
+            {{#entries}}
             <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
             <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
@@ -46,6 +47,7 @@
                 {{/isQuiz}}
                 {{title}}
             </p>
+            {{/entries}}
         </div>
         {{/dangerElements}}
     </div>
@@ -59,6 +61,7 @@
         {{#warningElements}}
         <div id="b{{lectureId}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{warningBorderColor}}">
             <a class="lecture-warning lecture-name" href="{{href}}">{{lectureName}}</a>
+            {{#entries}}
             <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
             <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
@@ -73,6 +76,7 @@
                 {{/isQuiz}}
                 {{title}}
             </p>
+            {{/entries}}
         </div>
         {{/warningElements}}
     </div>
@@ -86,6 +90,7 @@
         {{#successElements}}
         <div id="b{{lectureId}}" class="kadai-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
             <a class="lecture-success lecture-name" href="{{href}}">{{lectureName}}</a>
+            {{#entries}}
             <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
             <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
@@ -100,6 +105,7 @@
                 {{/isQuiz}}
                 {{title}}
             </p>
+            {{/entries}}
         </div>
         {{/successElements}}
     </div>
@@ -113,6 +119,7 @@
         {{#otherElements}}
         <div id="b{{lectureId}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{otherBorderColor}}">
             <a class="lecture-other lecture-name" href="{{href}}">{{lectureName}}</a>
+            {{#entries}}
             <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
             <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
@@ -127,6 +134,7 @@
                 {{/isQuiz}}
                 {{title}}
             </p>
+            {{/entries}}
         </div>
         {{/otherElements}}
     </div>
