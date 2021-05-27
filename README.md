@@ -3,7 +3,7 @@ PandAを快適にするブラウザ拡張機能です．
 
 # ダウンロードリンク
 - [Google Chrome](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
-- [Firefox](https://public.tinax.work/~tinaxd/cpff/)
+- [Firefox](https://tinaxd.github.io/comfortable-panda-firefox-updates/index.html)
 - [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/njbljhcmnodocldppoiejkcmcebpmljc)
 
 # 使い方

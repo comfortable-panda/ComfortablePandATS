@@ -3,7 +3,7 @@ A browser extention that makes PandA life comfortable
 
 # Installation links
 - [Google Chrome](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
-- [Firefox](https://public.tinax.work/~tinaxd/cpff/)
+- [Firefox](https://tinaxd.github.io/comfortable-panda-firefox-updates/index.html)
 - [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/njbljhcmnodocldppoiejkcmcebpmljc)
 
 
