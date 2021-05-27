@@ -315,6 +315,11 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
           for (let i = 0; i < aTagCount; i++) {
             defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
           }
+        } else if (daysUntilDue > 14) {
+          defaultTab[j].classList.add("nav-other");
+          for (let i = 0; i < aTagCount; i++) {
+            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-other");
+          }
         }
       }
     }
