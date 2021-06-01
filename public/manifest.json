@@ -45,7 +45,7 @@
   "applications": {
     "gecko": {
       "id": "comfortable.panda@das08",
-      "update_url":"https://das82.com/downloads/updates.json"
+      "update_url":"https://tinaxd.github.io/comfortable-panda-firefox-updates/updates.json"
     }
   }
 }
