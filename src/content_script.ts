@@ -19,6 +19,7 @@ import {
   useCache,
 } from "./utils";
 import { Settings } from "./settings";
+import { detectSubmission } from "./submissionDetector"
 
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
 export const VERSION = "3.5.2";
@@ -128,3 +129,24 @@ async function main() {
 }
 
 main();
+
+// 課題提出画面にいるなら、課題を完了済みとしてマークする
+detectSubmission(info => {
+  console.log('submission detected');
+  console.log(info);
+  loadFromStorage("TSkadaiList")
+    .then((kadaiList: Array<Kadai>) => {
+      LOOP:
+      for (const kadai of kadaiList) {
+        if (kadai.lectureID == info.siteId) {
+          for (const kadaiEntry of kadai.kadaiEntries) {
+            if (kadaiEntry.kadaiID == info.assignmentId) {
+              kadaiEntry.isFinished = true;
+              break LOOP;
+            }
+          }
+        }
+      }
+      saveToStorage("TSkadaiList", kadaiList);
+    });
+});
