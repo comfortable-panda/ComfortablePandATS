@@ -80,6 +80,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
         lectureId: item.lectureID,
         id: kadai.kadaiID,
         checked: kadaiChecked,
+        href: item.getTopSite() == null ? "" : item.getTopSite()
       };
       const vars = {
         lectureName: lectureName,
