@@ -16,9 +16,9 @@ function getSiteIdAndHrefLectureNameMap(): Map<string, { href: string, title: st
 }
 
 function isCurrentSite(siteId: string): boolean {
-  const currentSiteIdM = window.location.href.match(/https?:\/\/panda\.ecs\.kyoto-u\.ac\.jp\/portal\/site\/([^\/]+)/);
+  const currentSiteIdM = window.location.href.match(/https?:\/\/([^\/]+)\/portal\/site\/([^\/]+)/);
   if (currentSiteIdM == null) return false;
-  return currentSiteIdM[1] == siteId;
+  return currentSiteIdM[2] == siteId;
 }
 
 function getCurrentShownSiteHrefs(): Array<string> {
@@ -33,11 +33,11 @@ function getCurrentShownSiteHrefs(): Array<string> {
 
 // お気に入り上限を超えた講義を topbar に追加する
 // ネットワーク通信を行うので注意
-function addMissingBookmarkedLectures(): Promise<void> {
+function addMissingBookmarkedLectures(baseURL: string): Promise<void> {
   const topnav = document.querySelector("#topnav");
   if (topnav == null) return new Promise((resolve, reject) => resolve());
   const request = new XMLHttpRequest();
-  request.open("GET", "https://panda.ecs.kyoto-u.ac.jp/portal/favorites/list");
+  request.open("GET", `${baseURL}/portal/favorites/list`);
   request.responseType = "json";
   // @ts-ignore
   document.querySelector(".organizeFavorites").addEventListener("click", editFavTabMessage);

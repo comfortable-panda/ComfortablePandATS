@@ -25,7 +25,7 @@
       "css": [
         "css/custom-panda.css"
       ],
-      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*"]
+      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*", "https://trysakai.longsight.com/*"]
     }
   ],
   "background": {

@@ -20,7 +20,7 @@ import {
 } from "./utils";
 import { Settings } from "./settings";
 
-const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
+let baseURL = "https://panda.ecs.kyoto-u.ac.jp";
 export const VERSION = "3.5.2";
 export let kadaiCacheInterval = 60 * 2;
 export let quizCacheInterval = 60 * 10;
@@ -112,13 +112,17 @@ async function loadLectureIDs() {
 }
 
 async function main() {
+  if (window.location.href.match(/https?:\/\/trysakai\.longsight\.com\/portal\/([^\/]+)/)){
+    // Apple Demo
+    baseURL = "https://trysakai.longsight.com";
+  }
   if (isLoggedIn()) {
     createHanburgerButton();
     await loadSettings();
     await loadLectureIDs();
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(kadaiFetchedTime, kadaiCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
 
-    await addMissingBookmarkedLectures();
+    await addMissingBookmarkedLectures(baseURL);
     await displayMiniPandA(mergedKadaiList, lectureIDList);
     createNavBarNotification(lectureIDList, mergedKadaiList);
 
