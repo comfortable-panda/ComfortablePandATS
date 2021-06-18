@@ -118,8 +118,8 @@
     <div class="sidenav-list sidenav-list-other">
         {{#otherElements}}
         <div id="b{{lectureId}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{otherBorderColor}}">
+        <a class="lecture-other lecture-name" href="{{href}}">{{lectureName}}</a>
             {{#entries}}
-            <a class="lecture-other lecture-name" href="{{href}}">{{lectureName}}</a>
             <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
             <label for="{{id}}"></label>
             <p class="kadai-date">{{date}}</p>
