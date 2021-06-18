@@ -127,6 +127,13 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     return elements;
   };
 
+  let relaxPandA = null;
+  if (kadaiList.length == 0) {
+    relaxPandA = {
+      img: chrome.extension.getURL("img/relaxPanda.png")
+    };
+  }
+
   const templateVars = {
     kadaiFetchedTime: kadaiFetchedTimeString,
     quizFetchedTime: quizFetchedTimeString,
@@ -141,7 +148,8 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     otherElements: sortElements(otherElements),
     showOther: otherElements.length > 0,
     addMemoBoxLectures: addMemoBoxLectures,
-    subset: subset
+    subset: subset,
+    showRelaxPandA: relaxPandA
   };
 
   fetch(chrome.extension.getURL("views/minipanda.mustache"))
