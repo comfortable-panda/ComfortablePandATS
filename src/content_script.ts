@@ -125,28 +125,31 @@ async function main() {
 
     miniPandAReady();
     updateIsReadFlag(mergedKadaiListNoMemo);
+
+    // 課題提出画面にいるなら、課題を完了済みとしてマークする
+    detectSubmission((info) => {
+      console.log('submission detected');
+      console.log(info);
+      // 設定がONのとき
+      if (CPsettings.detectSubmission) {
+        loadFromStorage("TSkadaiList")
+          .then((kadaiList: Array<Kadai>) => {
+            LOOP:
+              for (const kadai of kadaiList) {
+                if (kadai.lectureID == info.siteId) {
+                  for (const kadaiEntry of kadai.kadaiEntries) {
+                    if (kadaiEntry.kadaiID == info.assignmentId) {
+                      kadaiEntry.isFinished = true;
+                      break LOOP;
+                    }
+                  }
+                }
+              }
+            saveToStorage("TSkadaiList", kadaiList);
+          });
+      }
+    });
   }
 }
 
 main();
-
-// 課題提出画面にいるなら、課題を完了済みとしてマークする
-detectSubmission(info => {
-  console.log('submission detected');
-  console.log(info);
-  loadFromStorage("TSkadaiList")
-    .then((kadaiList: Array<Kadai>) => {
-      LOOP:
-      for (const kadai of kadaiList) {
-        if (kadai.lectureID == info.siteId) {
-          for (const kadaiEntry of kadai.kadaiEntries) {
-            if (kadaiEntry.kadaiID == info.assignmentId) {
-              kadaiEntry.isFinished = true;
-              break LOOP;
-            }
-          }
-        }
-      }
-      saveToStorage("TSkadaiList", kadaiList);
-    });
-});
