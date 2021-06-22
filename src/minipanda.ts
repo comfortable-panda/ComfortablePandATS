@@ -165,6 +165,7 @@ async function createSettingsTab(): Promise<void> {
   createSettingItem("課題キャッシュ時間 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
   createSettingItem("クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
   createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
+  createSettingItem("提出時に自動で完了済にする", CPsettings.detectSubmission ?? false, "detectSubmission");
 
   createSettingItem("カラー① 締切24時間前", CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
   createSettingItem("カラー① 締切5日前", CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
