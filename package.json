@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "build": "webpack"
   },
-  "author": "",
+  "author": "das08(Kyoto University)",
   "license": "Apache-2.0",
   "dependencies": {
     "@types/chrome": "^0.0.144",
