@@ -1,7 +1,7 @@
 {
-  "name": "Comfortable PandA",
-  "description": "Makes our PandA life more comfortable!",
-  "version": "3.5.2",
+  "name": "Comfortable Sakai",
+  "description": "Comfortable Sakai is a browser extension for managing assignments and quizzes on Sakai LMS.",
+  "version": "1.0.0",
   "manifest_version": 2,
   "icons": {
     "16": "img/icon16.png",
@@ -14,7 +14,7 @@
       "24": "img/icon24.png",
       "32": "img/icon32.png"
     },
-    "default_title": "Comfortable PandA",
+    "default_title": "Comfortable Sakai",
     "default_popup": "popup.html"
   },
   "content_scripts": [
