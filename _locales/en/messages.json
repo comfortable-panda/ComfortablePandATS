@@ -1,3 +1,11 @@
 {
-  "EXTENSION_DESCRIPTION": {"message": "Comfortable Sakai is a browser extension for managing assignments and quizzes on Sakai LMS."}
+  "EXTENSION_DESCRIPTION": {"message": "Comfortable Sakai is a browser extension for managing assignments and quizzes on Sakai LMS."},
+  "tab_assignments": {"message": "Assignments"},
+  "tab_settings": {"message": "Settings"},
+  "todo_box_course_name": {"message": "Course Name"},
+  "todo_box_memo": {"message": "Memo"},
+  "todo_box_due_date": {"message": "Due Date"},
+  "todo_box_add": {"message": "Add"},
+  "badge_quiz": {"message": "Quiz"},
+  "badge_memo": {"message": "Memo"}
 }

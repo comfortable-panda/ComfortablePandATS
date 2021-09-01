@@ -1,3 +1,11 @@
 {
-  "EXTENSION_DESCRIPTION": {"message":"Comfortable SakaiはSakai LMS上の課題やクイズを管理するための拡張機能です。"}
+  "EXTENSION_DESCRIPTION": {"message":"Comfortable SakaiはSakai LMS上の課題やクイズを管理するための拡張機能です。"},
+  "tab_assignments": {"message": "課題一覧"},
+  "tab_settings": {"message": "詳細設定"},
+  "todo_box_course_name": {"message": "講義名"},
+  "todo_box_memo": {"message": "メモ内容"},
+  "todo_box_due_date": {"message": "期限"},
+  "todo_box_add": {"message": "追加する"},
+  "badge_quiz": {"message": "クイズ"},
+  "badge_memo": {"message": "メモ"}
 }
