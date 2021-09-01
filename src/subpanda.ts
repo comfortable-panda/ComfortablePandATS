@@ -81,10 +81,6 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
       const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true) as HTMLAnchorElement;
       dueGroupLectureName.classList.add(`lecture-${dueGroupColor[i]}`, "lecture-name")
       dueGroupLectureName.textContent = "" + (lectureIDMap.get(item.lectureID) || "???");
-      // const topSite = item.getTopSite();
-      // if (topSite != null) {
-      //   dueGroupLectureName.href = topSite;
-      // }
       dueGroupBody.appendChild(dueGroupLectureName);
 
       // 各講義の課題一覧についてループ
