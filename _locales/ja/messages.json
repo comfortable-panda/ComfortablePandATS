@@ -7,5 +7,21 @@
   "todo_box_due_date": {"message": "期限"},
   "todo_box_add": {"message": "追加する"},
   "badge_quiz": {"message": "クイズ"},
-  "badge_memo": {"message": "メモ"}
+  "badge_memo": {"message": "メモ"},
+  "settings_assignment_cache": {"message": "課題キャッシュ時間 [秒]"},
+  "settings_quizzes_cache": {"message": "クイズキャッシュ時間 [秒]"},
+  "settings_color_checked_item": {"message": "チェック済の課題も色付けする"},
+  "settings_reset_colors": {"message": "デフォルト色に戻す"},
+  "settings_colors_hour": { "message": "カラー #$color$ 締切$time$時間前",
+    "placeholders": {
+      "color": { "content": "$1" },
+      "time": { "content": "$2" }
+    }
+  },
+  "settings_colors_day": { "message": "カラー #$color$ 締切$time$日前",
+    "placeholders": {
+      "color": { "content": "$1" },
+      "time": { "content": "$2" }
+    }
+  }
 }

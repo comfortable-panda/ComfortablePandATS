@@ -161,19 +161,19 @@ function createSettingItem(itemDescription: string, value: boolean | number | st
 }
 
 async function createSettingsTab(): Promise<void> {
-  createSettingItem("完了済の課題も色付けする", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
-  createSettingItem("課題キャッシュ時間 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
-  createSettingItem("クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
-  
-  createSettingItem("カラー① 締切24時間前", CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
-  createSettingItem("カラー① 締切5日前", CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
-  createSettingItem("カラー① 締切14日前", CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
+  createSettingItem(chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
+  createSettingItem(chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
+  createSettingItem(chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
 
-  createSettingItem("カラー② 締切24時間前", CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
-  createSettingItem("カラー② 締切5日前", CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
-  createSettingItem("カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['1', 5]), CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['1', 14]), CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
 
-  createSettingItem("デフォルト色に戻す", "reset", "reset");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
+
+  createSettingItem(chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
   settingsDiv.style.display = "none";
 }
 
