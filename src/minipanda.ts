@@ -212,8 +212,8 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const kadaiDueDate = cloneElem(KadaiEntryDom.dueDate);
         const kadaiRemainTime = cloneElem(KadaiEntryDom.remainTime);
         const kadaiTitle = cloneElem(KadaiEntryDom.title);
-        const memoBadge = createElem("span", {classList: "add-badge add-badge-success", innerText: chrome.i18n.getMessage('badge_memo')});
-        const quizBadge = createElem("span", {classList: "add-badge add-badge-quiz", innerText: chrome.i18n.getMessage('todo_box_quiz')});
+        const memoBadge = createElem("span", {classList: "add-badge add-badge-success", innerText: chrome.i18n.getMessage('memo')});
+        const quizBadge = createElem("span", {classList: "add-badge add-badge-quiz", innerText: chrome.i18n.getMessage('quiz')});
         const deleteBadge = createElem("span", {className: "del-button", id: kadai.kadaiID, innerText:"×"}, {"click": deleteKadaiMemo});
 
         const dispDue = formatTimestamp(kadai.dueDateTimestamp);
