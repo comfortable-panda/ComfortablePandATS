@@ -24,7 +24,11 @@
       "time": { "content": "$2" }
     }
   },
-  ,
   "assignment_acquisition_date": {"message": "課題取得日時: "},
-  "testquiz_acquisition_date": {"message": "クイズ取得日時: "}
+  "testquiz_acquisition_date": {"message": "クイズ取得日時: "},
+  "due24h": {"message": "締め切り２４時間以内"},
+  "due5d": {"message": "締め切り５日以内"},
+  "due14d": {"message": "締め切り１４日以内"},
+  "dueOver14d": {"message": "その他"},
+  "no_available_assignments": {"message": "現在表示できる課題はありません"}
 }
