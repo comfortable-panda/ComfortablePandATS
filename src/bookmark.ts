@@ -33,11 +33,11 @@ function getCurrentShownSiteHrefs(): Array<string> {
 
 // お気に入り上限を超えた講義を topbar に追加する
 // ネットワーク通信を行うので注意
-function addMissingBookmarkedLectures(): Promise<void> {
+function addBookmarkedCourseSites(baseURL: string): Promise<void> {
   const topnav = document.querySelector("#topnav");
   if (topnav == null) return new Promise((resolve, reject) => resolve());
   const request = new XMLHttpRequest();
-  request.open("GET", "https://panda.ecs.kyoto-u.ac.jp/portal/favorites/list");
+  request.open("GET", baseURL + "/portal/favorites/list");
   request.responseType = "json";
   // @ts-ignore
   document.querySelector(".organizeFavorites").addEventListener("click", editFavTabMessage);
@@ -61,7 +61,7 @@ function addMissingBookmarkedLectures(): Promise<void> {
         const title = siteInfo.title;
 
         // skip if the site is already shown
-        if (currentlyShownSites.find(c => c == href) != null) continue;
+        if (currentlyShownSites.find((c) => c == href) != null) continue;
 
         const li = document.createElement("li");
         li.classList.add("Mrphs-sitesNav__menuitem");
@@ -81,4 +81,4 @@ function addMissingBookmarkedLectures(): Promise<void> {
   });
 }
 
-export { addMissingBookmarkedLectures };
+export { addBookmarkedCourseSites };

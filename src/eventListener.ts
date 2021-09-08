@@ -1,22 +1,24 @@
 import { kadaiDiv, miniPandA } from "./dom";
-import { loadFromStorage, saveToStorage } from "./storage";
+import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {
   CPsettings,
-  kadaiCacheInterval,
   lectureIDList,
   loadAndMergeKadaiList,
   mergedKadaiListNoMemo,
-  quizCacheInterval,
 } from "./content_script";
 import { DefaultSettings, Settings } from "./settings";
-import { createNavBarNotification, deleteNavBarNotification, displayMiniPandA } from "./minipanda";
+import {
+  createNavBarNotification,
+  deleteNavBarNotification,
+  displayMiniPandA,
+} from "./minipanda";
 
 let toggle = false;
 
-function toggleMiniPandA(): void {
-  // miniPandAを表示・非表示にします
+function toggleMiniSakai(): void {
+  // miniSakaiを表示・非表示にします
   if (toggle) {
     miniPandA.style.width = "0px";
     document.getElementById("cover")?.remove();
@@ -25,7 +27,7 @@ function toggleMiniPandA(): void {
     const cover = document.createElement("div");
     cover.id = "cover";
     document.getElementsByTagName("body")[0].appendChild(cover);
-    cover.onclick = toggleMiniPandA;
+    cover.onclick = toggleMiniSakai;
   }
   toggle = !toggle;
 }
@@ -38,7 +40,7 @@ function toggleKadaiTab(): void {
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "none";
-  const addMemoButton = document.querySelector(".plus-button");
+  const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "";
   const lastKadaiGetTime = document.querySelector(".kadai-time");
@@ -57,7 +59,7 @@ function toggleSettingsTab(): void {
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "";
-  const addMemoButton = document.querySelector(".plus-button");
+  const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "none";
   const lastKadaiGetTime = document.querySelector(".kadai-time");
@@ -86,9 +88,9 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiID = event.target.id;
   let kadaiList: Array<Kadai>;
   // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
-  if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
-  else if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromStorage("TSQuizList"));
-  else kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiList"));
+  if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
+  else if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromLocalStorage("TSQuizList"));
+  else kadaiList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiList"));
 
   const updatedKadaiList = [];
   for (const kadai of kadaiList) {
@@ -115,9 +117,9 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     }
     updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
   }
-  if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
-  else if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
-  else saveToStorage("TSkadaiList", updatedKadaiList);
+  if (kadaiID[0] === "m") saveToLocalStorage("TSkadaiMemoList", updatedKadaiList);
+  else if (kadaiID[0] === "q") saveToLocalStorage("TSQuizList", updatedKadaiList);
+  else saveToLocalStorage("TSkadaiList", updatedKadaiList);
 
   // NavBarを再描画
   deleteNavBarNotification();
@@ -141,7 +143,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
   }
 
   const settings = new Settings();
-  const oldSettings = await loadFromStorage("TSSettings");
+  const oldSettings = await loadFromLocalStorage("TSSettings");
   for (const i in DefaultSettings){
     // @ts-ignore
     settings[i] = oldSettings[i] ?? DefaultSettings[i];
@@ -170,7 +172,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
     CPsettings[settingsID] = settingsValue;
   }
 
-  saveToStorage("TSSettings", settings);
+  saveToLocalStorage("TSSettings", settings);
 
   // NavBarを再描画
   deleteNavBarNotification();
@@ -189,7 +191,7 @@ async function addKadaiMemo(): Promise<void> {
   const todoDue = document.querySelector(".todoDue").value;
   const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
 
-  let kadaiMemoList = await loadFromStorage("TSkadaiMemoList");
+  let kadaiMemoList = await loadFromLocalStorage("TSkadaiMemoList");
   const kadaiMemoEntry = new KadaiEntry(genUniqueStr(), todoContent, todoTimestamp, true, false, false, "");
   const kadaiMemo = new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true);
 
@@ -206,7 +208,7 @@ async function addKadaiMemo(): Promise<void> {
   } else {
     kadaiMemoList = [kadaiMemo];
   }
-  saveToStorage("TSkadaiMemoList", kadaiMemoList);
+  saveToLocalStorage("TSkadaiMemoList", kadaiMemoList);
 
   // miniPandAを再描画
   while (miniPandA.firstChild) {
@@ -218,7 +220,7 @@ async function addKadaiMemo(): Promise<void> {
   miniPandA.remove();
   kadaiDiv.remove();
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList);
-  const quizList = await loadFromStorage("TSQuizList");
+  const quizList = await loadFromLocalStorage("TSQuizList");
   await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
 
   // NavBarを再描画
@@ -229,7 +231,7 @@ async function addKadaiMemo(): Promise<void> {
 
 async function deleteKadaiMemo(event: any): Promise<void> {
   const kadaiID = event.target.id;
-  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
+  const kadaiMemoList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
   const deletedKadaiMemoList = [];
   for (const kadaiMemo of kadaiMemoList) {
     const kadaiMemoEntries = [];
@@ -249,9 +251,9 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   miniPandA.remove();
   kadaiDiv.remove();
 
-  saveToStorage("TSkadaiMemoList", deletedKadaiMemoList);
+  saveToLocalStorage("TSkadaiMemoList", deletedKadaiMemoList);
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList);
-  const quizList = await loadFromStorage("TSQuizList");
+  const quizList = await loadFromLocalStorage("TSQuizList");
   await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
 
   // NavBarを再描画
@@ -278,7 +280,7 @@ async function editFavTabMessage(): Promise<void> {
 }
 
 export {
-  toggleMiniPandA,
+  toggleMiniSakai,
   toggleKadaiTab,
   toggleSettingsTab,
   toggleMemoBox,

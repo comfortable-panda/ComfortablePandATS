@@ -19,7 +19,7 @@ import {
   toggleKadaiFinishedFlag,
   toggleKadaiTab,
   toggleMemoBox,
-  toggleMiniPandA,
+  toggleMiniSakai,
   toggleSettingsTab,
   updateSettings,
 } from "./eventListener";
@@ -34,7 +34,7 @@ import {
 // @ts-ignore
 import Mustache = require("mustache");
 
-function createHanburgerButton(): void {
+function createMiniSakaiBtn(): void {
   const topbar = document.getElementById("mastLogin");
   try {
     topbar?.appendChild(hamburger);
@@ -255,8 +255,8 @@ function registerEventHandlers(root: Element) {
   root.querySelector('#kadaiTab')?.addEventListener('click', () => toggleKadaiTab());
   root.querySelector('#settingsTab')?.addEventListener('click', () => toggleSettingsTab());
   root.querySelectorAll('.todo-check').forEach(c => c.addEventListener('change', (e) => toggleKadaiFinishedFlag(e)));
-  root.querySelector('#close_btn')?.addEventListener('click', () => toggleMiniPandA());
-  root.querySelector('.plus-button')?.addEventListener('click', () => toggleMemoBox());
+  root.querySelector('#close_btn')?.addEventListener('click', () => toggleMiniSakai());
+  root.querySelector('#plus-button')?.addEventListener('click', () => toggleMemoBox());
   root.querySelector('#todo-add')?.addEventListener('click', () => addKadaiMemo());
   root.querySelectorAll('.del-button').forEach(b => b.addEventListener('click', (e) => deleteKadaiMemo(e)));
 }
@@ -366,7 +366,7 @@ function overrideCSSColor() {
 }
 
 export {
-  createHanburgerButton,
+  createMiniSakaiBtn,
   createMiniPandA,
   displayMiniPandA,
   deleteNavBarNotification,

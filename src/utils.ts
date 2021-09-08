@@ -1,5 +1,5 @@
 import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
-import { saveToStorage } from "./storage";
+import { saveToLocalStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
 
@@ -47,7 +47,7 @@ function getCurrentLectureID() {
   const url = location.href;
   let lectureID = "";
   const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
-  if (url.match(reg)){
+  if (url.match(reg)) {
     // @ts-ignore
     lectureID = url.match(reg)[2];
   }
@@ -58,18 +58,18 @@ function updateIsReadFlag(kadaiList: Array<Kadai>): void {
   const lectureID = getCurrentLectureID();
   const updatedKadaiList = [];
   if (lectureID && lectureID.length >= 17) {
-    for (const kadai of kadaiList){
-      if (kadai.lectureID === lectureID){
+    for (const kadai of kadaiList) {
+      if (kadai.lectureID === lectureID) {
         updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, kadai.kadaiEntries, true));
-      }else{
+      } else {
         updatedKadaiList.push(kadai);
       }
     }
-    saveToStorage("TSkadaiList", updatedKadaiList);
+    saveToLocalStorage("TSkadaiList", updatedKadaiList);
   }
 }
 
-function miniPandAReady(): void {
+function miniSakaiReady(): void {
   // ロード表示を切り替えて3本線表示にする
   const hamburger = document.getElementsByClassName("loader")[0];
   hamburger.className = "";
@@ -153,7 +153,7 @@ function mergeIntoKadaiList(targetKadaiList: Array<Kadai>, newKadaiList: Array<K
   }
   for (const kadaiList of newKadaiList){
     const idx = targetKadaiList.findIndex((kadai) => {
-      return (kadaiList.lectureID === kadai.lectureID)
+      return kadaiList.lectureID === kadai.lectureID;
     });
     if (idx !== -1) {
       mergedKadaiList[idx].kadaiEntries = mergedKadaiList[idx].kadaiEntries.concat(kadaiList.kadaiEntries);
@@ -173,7 +173,7 @@ function sortKadaiList(kadaiList: Array<Kadai>): Array<Kadai> {
 }
 
 function useCache(fetchedTime: number, cacheInterval: number): boolean{
-  return (nowTime - fetchedTime) / 1000 > cacheInterval;
+  return (nowTime - fetchedTime) / 1000 <= cacheInterval;
 }
 
 function genUniqueStr(): string {
@@ -186,7 +186,7 @@ export {
   formatTimestamp,
   createLectureIDMap,
   isLoggedIn,
-  miniPandAReady,
+  miniSakaiReady,
   convertArrayToKadai,
   compareAndMergeKadaiList,
   updateIsReadFlag,
