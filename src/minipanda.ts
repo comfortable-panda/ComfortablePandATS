@@ -158,7 +158,12 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
       due24h: chrome.i18n.getMessage("due24h"),
       due5d: chrome.i18n.getMessage("due5d"),
       due14d: chrome.i18n.getMessage("due14d"),
+      dueOver14d: chrome.i18n.getMessage("dueOver14d"),
       relaxPandaA: chrome.i18n.getMessage("no_available_assignments"),
+    },
+    badge: {
+      memo: chrome.i18n.getMessage("memo"),
+      quiz: chrome.i18n.getMessage("quiz"),
     },
   };
 

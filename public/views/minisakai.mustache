@@ -39,11 +39,11 @@
             <span class="time-remain">{{remain}}</span>
             <p class="kadai-title">
                 {{#isMemo}}
-                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="add-badge add-badge-success">{{badge.memo}}</span>
                     <span class="del-button" id="{{id}}">×</span>
                 {{/isMemo}}
                 {{#isQuiz}}
-                    <span class="add-badge add-badge-quiz">クイズ</span>
+                    <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
                 {{/isQuiz}}
                 {{title}}
             </p>
@@ -68,11 +68,11 @@
             <span class="time-remain">{{remain}}</span>
             <p class="kadai-title">
                 {{#isMemo}}
-                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="add-badge add-badge-success">{{badge.memo}}</span>
                     <span class="del-button" id="{{id}}">×</span>
                 {{/isMemo}}
                 {{#isQuiz}}
-                    <span class="add-badge add-badge-quiz">クイズ</span>
+                    <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
                 {{/isQuiz}}
                 {{title}}
             </p>
@@ -97,11 +97,11 @@
             <span class="time-remain">{{remain}}</span>
             <p class="kadai-title">
                 {{#isMemo}}
-                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="add-badge add-badge-success">{{badge.memo}}</span>
                     <span class="del-button" id="{{id}}">×</span>
                 {{/isMemo}}
                 {{#isQuiz}}
-                    <span class="add-badge add-badge-quiz">クイズ</span>
+                    <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
                 {{/isQuiz}}
                 {{title}}
             </p>
@@ -113,7 +113,7 @@
 
     {{#showOther}}
     <div class="sidenav-other">
-        <span class="q">その他</span>
+        <span class="q">{{titles.dueOver14d}}</span>
     </div>
     <div class="sidenav-list sidenav-list-other">
         {{#otherElements}}
@@ -126,11 +126,11 @@
             <span class="time-remain">{{remain}}</span>
             <p class="kadai-title">
                 {{#isMemo}}
-                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="add-badge add-badge-success">{{badge.memo}}</span>
                     <span class="del-button" id="{{id}}">×</span>
                 {{/isMemo}}
                 {{#isQuiz}}
-                    <span class="add-badge add-badge-quiz">クイズ</span>
+                    <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
                 {{/isQuiz}}
                 {{title}}
             </p>

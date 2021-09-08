@@ -29,5 +29,6 @@
   "due24h": {"message": "Due within 24hrs"},
   "due5d": {"message": "Due within 5days"},
   "due14d": {"message": "Due within 14days"},
+  "dueOver14d": {"message": "Others"},
   "no_available_assignments": {"message": "There are no available assignments now."}
 }
