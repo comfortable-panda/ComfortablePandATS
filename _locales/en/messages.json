@@ -5,7 +5,7 @@
   "todo_box_course_name": {"message": "Course Name"},
   "todo_box_memo": {"message": "Memo"},
   "todo_box_due_date": {"message": "Due Date"},
-  "todo_box_add": {"message": "Add"},
+  "todo_box_add": {"message": "Add Memo"},
   "quiz": {"message": "Quiz"},
   "memo": {"message": "Memo"},
   "settings_assignment_cache": {"message": "Assignment Cache [s]"},

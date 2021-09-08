@@ -20,14 +20,25 @@
 <div class="kadai-tab">
     {{^subset}}
     <div class="settingsBox addMemoBox" style="display: none;">
-        <label style="display: block;">{{todoBox.courseName}}<select class="todoLecName">
-            {{#addMemoBoxLectures}}
-            <option id="{{id}}">{{lectureName}}</option>
-            {{/addMemoBoxLectures}}
-        </select></label>
-        <label style="display: block;">{{todoBox.memoLabel}}<input type="text" class="todoContent"></label>
-        <label style="display: block;">{{todoBox.dueDate}}<input type="datetime-local" class="todoDue"></label>
-        <button type="submit" id="todo-add">{{todoBox.addBtnLabel}}</button>
+        <div class="miniSakai-memoBoxItem">
+            <p>{{todoBox.courseName}}</p>
+            <label><select class="todoLecName">
+                {{#addMemoBoxLectures}}
+                    <option id="{{id}}">{{lectureName}}</option>
+                {{/addMemoBoxLectures}}
+            </select></label>
+        </div>
+        <div class="miniSakai-memoBoxItem">
+            <p>{{todoBox.memoLabel}}</p>
+            <label><input type="text" class="todoContent"></label>
+        </div>
+        <div class="miniSakai-memoBoxItem">
+            <p>{{todoBox.dueDate}}</p>
+            <label><input type="datetime-local" class="todoDue"></label>
+        </div>
+        <div class="miniSakai-memoBoxItem">
+            <button type="submit" id="todo-add">{{todoBox.addBtnLabel}}</button>
+        </div>
     </div>
     {{/subset}}
 
