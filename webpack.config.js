@@ -29,7 +29,7 @@ module.exports = {
         new CopyPlugin({
             patterns:[
                 {from: "./public", to: "./"},
-                {from: "./_locales", to: "./_locales"},
+                {from: "./_locales/en", to: "./_locales/en"},
                 {from: "./manifest.json", }
             ],
         }),
