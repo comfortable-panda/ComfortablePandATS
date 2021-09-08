@@ -41,6 +41,7 @@
   "web_accessible_resources": [
     "css/custom-panda.css",
     "img/logo.png",
-    "img/relaxPanda.png"
+    "img/relaxPanda.png",
+    "views/minipanda.mustache"
   ]
 }

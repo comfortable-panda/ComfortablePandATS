@@ -7,16 +7,10 @@ import {
   nowTime,
 } from "./utils";
 import {
-  addAttributes,
   appendChildAll,
   cloneElem,
-  createElem,
-  DueGroupDom,
   hamburger,
-  kadaiDiv,
-  KadaiEntryDom,
   miniPandA,
-  settingsDiv,
   SettingsDom
 } from "./dom";
 import {
@@ -37,6 +31,8 @@ import {
   quizFetchedTime,
   VERSION,
 } from "./content_script";
+// @ts-ignore
+import Mustache = require('mustache');
 
 function createHanburgerButton(): void {
   const topbar = document.getElementById("mastLogin");
@@ -47,86 +43,160 @@ function createHanburgerButton(): void {
   }
 }
 
-function createMiniPandA(): void {
-  const miniPandALogo = createElem("img", {
-    className: "logo",
-    alt: "logo",
-    src: chrome.extension.getURL("img/logo.png"),
-  });
-  const version = createElem("p", {　classList: "cp-version", innerText: `Version ${VERSION}`});
-
-  const miniPandACloseBtn = createElem("a", { href: "#", id: "close_btn", textContent: "×" });
-  miniPandACloseBtn.classList.add("closebtn", "q");
-  miniPandACloseBtn.addEventListener("click", toggleMiniPandA);
-
-  const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true }, {"click": toggleKadaiTab});
-  const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: chrome.i18n.getMessage('tab_assignments') });
-  const settingsTab = createElem("input", { type: "radio", id: "settingsTab", name: "cp_tab", checked: false }, {"click": toggleSettingsTab});
-  const settingsTabLabel = createElem("label", { htmlFor: "settingsTab", innerText: chrome.i18n.getMessage('tab_settings') });
-  const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" },{"click": toggleMemoBox});
-
+export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
   const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
-  const kadaiFetchedTimeString = createElem("p", { className: "kadai-time" });
-  kadaiFetchedTimeString.innerText = "課題取得日時： " + kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
+  const kadaiFetchedTimeString = kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
-  const quizFetchedTimeString = createElem("p", { className: "quiz-time" });
-  quizFetchedTimeString.innerText = "クイズ取得日時： " + quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
-  appendChildAll(miniPandA, [
-    miniPandALogo,
-    version,
-    miniPandACloseBtn,
-    kadaiTab,
-    kadaiTabLabel,
-    settingsTab,
-    settingsTabLabel,
-    addMemoButton,
-    kadaiFetchedTimeString,
-    quizFetchedTimeString,
-  ]);
+  const quizFetchedTimeString = quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
 
-  const parent = document.getElementById("pageBody");
-  const ref = document.getElementById("toolMenuWrap");
+  const addMemoBoxLectures: Array<Object> = [];
 
-  parent?.insertBefore(miniPandA, ref);
-}
+  const lectureIDMap = createLectureIDMap(lectureIDList);
+  const dangerElements: Array<Object> = [];
+  const warningElements: Array<Object> = [];
+  const successElements: Array<Object> = [];
+  const otherElements: Array<Object> = [];
+  // loop over lectures
+  kadaiList.forEach(item => {
+    const lectureName = lectureIDMap.get(item.lectureID);
+    // loop over kadais
+    item.kadaiEntries.forEach(kadai => {
+      const dispDue = formatTimestamp(kadai.dueDateTimestamp);
+      const timeRemain = getTimeRemain((kadai.dueDateTimestamp*1000-nowTime) / 1000);
+      const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp*1000);
 
-function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
-  const memoEditBox = createElem("div", {className: "settingsBox addMemoBox", style: "none"});
-  const memoLabel = createElem("label", {style: "block"});
-  const todoLecLabel = cloneElem(memoLabel, {innerText: chrome.i18n.getMessage('todo_box_course_name')});
-  const todoLecSelect = createElem("select", { className: "todoLecName" });
-  const todoLecOption = createElem("option");
+      const remainTimeText = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
+      const kadaiDueDateText = "" + dispDue;
+      const kadaiTitle = "" + kadai.assignmentTitle;
+      const kadaiChecked = kadai.isFinished;
 
-  for (const lecture of lectureIDList) {
-    const c_todoLecOption = cloneElem(todoLecOption, {text: lecture.lectureName, id: lecture.lectureID});
-    todoLecSelect.appendChild(c_todoLecOption);
+      const entry = {
+        timestamp: kadai.dueDateTimestamp,
+        date: kadaiDueDateText,
+        remain: remainTimeText,
+        title: kadaiTitle,
+        isMemo: kadai.isMemo,
+        isQuiz: kadai.isQuiz,
+        lectureId: item.lectureID,
+        id: kadai.kadaiID,
+        checked: kadaiChecked,
+        href: item.getTopSite() == null ? "" : item.getTopSite()
+      };
+      const vars = {
+        lectureName: lectureName,
+        entries: [entry],
+      };
+
+      const appendElement = (lectureName: string|undefined, elements: Array<Object>) => {
+        // @ts-ignore
+        const lecName = elements.map(e => e.lectureName);
+        if (lecName.includes(lectureName)){
+          const idx = lecName.indexOf(lectureName);
+          // @ts-ignore
+          elements[idx].entries.push(entry);
+          // @ts-ignore ソートする
+          elements[idx].entries.sort((a, b) => {return a.timestamp - b.timestamp})
+        } else {
+          elements.push(vars);
+        }
+      };
+
+      if (daysUntilDue > 0 && daysUntilDue <= 1) {
+        appendElement(lectureName, dangerElements);
+      } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
+        appendElement(lectureName, warningElements);
+      } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
+        appendElement(lectureName, successElements);
+      } else {
+        appendElement(lectureName, otherElements);
+      }
+    });
+
+    addMemoBoxLectures.push({
+      id: item.lectureID,
+      lectureName: lectureName
+    });
+  });
+
+  const sortElements = (elements: Array<Object>) => {
+    elements.sort((a, b) => {
+      // @ts-ignore
+      const timestamp = (o) => Math.min(...o.entries.map((p) => p.timestamp));
+      return timestamp(a) - timestamp(b);
+    });
+    return elements;
+  };
+
+  let relaxPandA = null;
+  if (kadaiList.length == 0) {
+    relaxPandA = {
+      img: chrome.extension.getURL("img/relaxPanda.png")
+    };
   }
 
-  todoLecLabel.appendChild(todoLecSelect);
+  const templateVars = {
+    kadaiFetchedTime: kadaiFetchedTimeString,
+    quizFetchedTime: quizFetchedTimeString,
+    minipandaLogo: chrome.extension.getURL("img/logo.png"),
+    VERSION: VERSION,
+    dangerElements: sortElements(dangerElements),
+    showDanger: dangerElements.length > 0,
+    warningElements: sortElements(warningElements),
+    showWarning: warningElements.length > 0,
+    successElements: sortElements(successElements),
+    showSuccess: successElements.length > 0,
+    otherElements: sortElements(otherElements),
+    showOther: otherElements.length > 0,
+    addMemoBoxLectures: addMemoBoxLectures,
+    subset: subset,
+    showRelaxPandA: relaxPandA
+  };
 
-  const todoContentLabel = cloneElem(memoLabel, { innerText: chrome.i18n.getMessage('todo_box_memo') });
-  const todoContentInput = createElem("input", { type: "text", className: "todoContent" });
-  todoContentLabel.appendChild(todoContentInput);
-
-  const todoDueLabel = cloneElem(memoLabel, { innerText: chrome.i18n.getMessage('todo_box_due_date') });
-  const todoDueInput = createElem("input", { type: "datetime-local", className: "todoDue" });
-  todoDueInput.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
-  todoDueLabel.appendChild(todoDueInput);
-
-  const todoSubmitButton = createElem("button", { type: "submit", id: "todo-add", innerText: chrome.i18n.getMessage('todo_box_add') }, {"click": addKadaiMemo});
-
-  appendChildAll(memoEditBox, [todoLecLabel, todoContentLabel, todoDueLabel, todoSubmitButton]);
-  kadaiDiv.appendChild(memoEditBox);
+  fetch(chrome.extension.getURL("views/minipanda.mustache"))
+    .then((res) => res.text())
+    .then((template) => {
+      const rendered = Mustache.render(template, templateVars);
+      insertionProcess(rendered);
+      registerEventHandlers(root);
+      if (!subset) createSettingsTab(root);
+      initState(root);
+    });
 }
 
-async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
-  createMiniPandA();
-  appendMemoBox(lectureIDList);
-  await createSettingsTab();
-  updateMiniPandA(mergedKadaiList, lectureIDList);
+function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
+  createMiniPandAGeneralized(miniPandA, kadaiList, lectureIDList, false, (rendered) => {
+    miniPandA.innerHTML = rendered;
+    const parent = document.getElementById("pageBody");
+    const ref = document.getElementById("toolMenuWrap");
+    parent?.insertBefore(miniPandA, ref);
+  });
 }
 
-function createSettingItem(itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
+async function createSettingsTab(root: Element): Promise<void> {
+  createSettingItem(root, "完了済の課題も色付けする", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
+  createSettingItem(root, "課題キャッシュ時間 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
+  createSettingItem(root, "クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
+  createSettingItem(root, "デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
+
+  createSettingItem(root, "カラー① 締切24時間前", CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
+  createSettingItem(root, "カラー① 締切5日前", CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
+  createSettingItem(root, "カラー① 締切14日前", CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
+
+  createSettingItem(root, "カラー② 締切24時間前", CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
+  createSettingItem(root, "カラー② 締切5日前", CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
+  createSettingItem(root, "カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
+
+  createSettingItem(root, "デフォルト色に戻す", "reset", "reset");
+  // @ts-ignore
+  root.querySelector('.settings-tab')?.style.display = "none";
+}
+
+function createSettingItem(root: Element, itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
+  const settingsDiv = root.querySelector('.settings-tab');
+  if (settingsDiv == null) {
+    console.log('.settings-tab not found');
+    return;
+  }
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);
   const label = SettingsDom.label.cloneNode(true);
   const p = SettingsDom.p.cloneNode(true);
@@ -160,111 +230,25 @@ function createSettingItem(itemDescription: string, value: boolean | number | st
   settingsDiv.appendChild(mainDiv);
 }
 
-async function createSettingsTab(): Promise<void> {
-  createSettingItem(chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
-  createSettingItem(chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
-  createSettingItem(chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
-
-  createSettingItem(chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
-  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['1', 5]), CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
-  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['1', 14]), CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
-
-  createSettingItem(chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
-  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
-  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
-
-  createSettingItem(chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
-  settingsDiv.style.display = "none";
+function registerEventHandlers(root: Element) {
+  root.querySelector('#kadaiTab')?.addEventListener('click', () => toggleKadaiTab());
+  root.querySelector('#settingsTab')?.addEventListener('click', () => toggleSettingsTab());
+  root.querySelectorAll('.todo-check').forEach(c => c.addEventListener('change', (e) => toggleKadaiFinishedFlag(e)));
+  root.querySelector('#close_btn')?.addEventListener('click', () => toggleMiniPandA());
+  root.querySelector('.plus-button')?.addEventListener('click', () => toggleMemoBox());
+  root.querySelector('#todo-add')?.addEventListener('click', () => addKadaiMemo());
+  root.querySelectorAll('.del-button').forEach(b => b.addEventListener('click', (e) => deleteKadaiMemo(e)));
 }
 
-function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
-  const dueGroupHeaderName = ["締め切り２４時間以内", "締め切り５日以内", "締め切り１４日以内", "その他"];
-  const dueGroupColor = ["danger", "warning", "success", "other"];
-  const initLetter = ["a", "b", "c", "d"];
-  const lectureIDMap = createLectureIDMap(lectureIDList);
+function initState(root: Element) {
+  // @ts-ignore
+  root.querySelector('#kadaiTab')?.checked = true;
+  // @ts-ignore
+  root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
+}
 
-  // 0: <24h, 1: <5d, 2: <14d, 3: >14d
-  for (let i = 0; i < 4; i++) {
-    let entryCount = 0;
-    // 色別のグループを作成する
-    const dueGroupHeader = cloneElem(DueGroupDom.header, {className: `sidenav-${dueGroupColor[i]}`, style:"none"});
-    const dueGroupHeaderTitle = cloneElem(DueGroupDom.headerTitle, {textContent: `${dueGroupHeaderName[i]}`});
-    const dueGroupContainer = cloneElem(DueGroupDom.container, {style:"none"});
-    dueGroupHeader.appendChild(dueGroupHeaderTitle);
-    dueGroupContainer.classList.add(`sidenav-list-${dueGroupColor[i]}`);
-
-    // 各講義についてループ
-    for (const item of kadaiList) {
-      // 課題アイテムを入れるやつを作成
-      const dueGroupBody = cloneElem(DueGroupDom.body, {className: `kadai-${dueGroupColor[i]}`, id:initLetter[i] + item.lectureID});
-      const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true) as HTMLAnchorElement;
-      dueGroupLectureName.classList.add(`lecture-${dueGroupColor[i]}`, "lecture-name")
-      dueGroupLectureName.textContent = "" + lectureIDMap.get(item.lectureID);
-      dueGroupBody.appendChild(dueGroupLectureName);
-      const topSite = item.getTopSite();
-      if (topSite != null) dueGroupLectureName.href = topSite;
-
-      // 各講義の課題一覧についてループ
-      let cnt = 0;
-      for (const kadai of item.kadaiEntries) {
-        let kadaiCheckbox = cloneElem(KadaiEntryDom.checkbox);
-        const kadaiLabel = cloneElem(KadaiEntryDom.label);
-        const kadaiDueDate = cloneElem(KadaiEntryDom.dueDate);
-        const kadaiRemainTime = cloneElem(KadaiEntryDom.remainTime);
-        const kadaiTitle = cloneElem(KadaiEntryDom.title);
-        const memoBadge = createElem("span", {classList: "add-badge add-badge-success", innerText: chrome.i18n.getMessage('memo')});
-        const quizBadge = createElem("span", {classList: "add-badge add-badge-quiz", innerText: chrome.i18n.getMessage('quiz')});
-        const deleteBadge = createElem("span", {className: "del-button", id: kadai.kadaiID, innerText:"×"}, {"click": deleteKadaiMemo});
-
-        const dispDue = formatTimestamp(kadai.dueDateTimestamp);
-        const timeRemain = getTimeRemain((kadai.dueDateTimestamp * 1000 - nowTime) / 1000);
-
-        const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp * 1000);
-        if ((daysUntilDue > 0 && daysUntilDue <= 1 && i === 0) || (daysUntilDue > 1 && daysUntilDue <= 5 && i === 1) || (daysUntilDue > 5 && daysUntilDue <= 14 && i === 2) || (daysUntilDue > 14 && i === 3)) {
-          kadaiDueDate.textContent = "" + dispDue;
-          kadaiRemainTime.textContent = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
-          kadaiTitle.textContent = "" + kadai.assignmentTitle;
-          if (kadai.isFinished) kadaiCheckbox.checked = true;
-          kadaiCheckbox = addAttributes(kadaiCheckbox, {id: kadai.kadaiID, lectureID:item.lectureID}, {"change": toggleKadaiFinishedFlag})
-          kadaiLabel.htmlFor = kadai.kadaiID;
-
-          const addBadge = function (badge: any, deleteBadge?: any) {
-            kadaiTitle.textContent = "";
-            kadaiTitle.appendChild(badge);
-            kadaiTitle.append(kadai.assignmentTitle);
-            if (deleteBadge) kadaiTitle.appendChild(deleteBadge);
-          };
-
-          if (kadai.isMemo) addBadge(memoBadge, deleteBadge);
-          if (kadai.isQuiz) addBadge(quizBadge);
-
-          appendChildAll(dueGroupBody, [kadaiCheckbox, kadaiLabel, kadaiDueDate, kadaiRemainTime, kadaiTitle]);
-          cnt++;
-        }
-      }
-      // 各講義の課題で該当するものがある場合はグループに追加
-      if (cnt > 0) {
-        dueGroupContainer.appendChild(dueGroupBody);
-        entryCount++;
-      }
-    }
-    if (entryCount > 0) {
-      dueGroupHeader.style.display = "";
-      dueGroupContainer.style.display = "";
-    }
-    appendChildAll(miniPandA, [kadaiDiv, settingsDiv]);
-    appendChildAll(kadaiDiv, [dueGroupHeader, dueGroupContainer]);
-  }
-
-  // 何もない時はRelaxPandAを表示する
-  if (kadaiList.length === 0) {
-    const kadaiTab = kadaiDiv;
-    const relaxDiv = createElem("div", { className: "relaxpanda" });
-    const relaxPandaP = createElem("p", { className: "relaxpanda-p", innerText: "現在表示できる課題はありません" });
-    const relaxPandaImg = createElem("img", { className: "relaxpanda-img", alt: "logo", src: chrome.extension.getURL("img/relaxPanda.png")});
-    appendChildAll(relaxDiv, [relaxPandaP, relaxPandaImg]);
-    kadaiTab.appendChild(relaxDiv);
-  }
+async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
+  createMiniPandA(mergedKadaiList, lectureIDList);
 }
 
 function deleteNavBarNotification(): void {
@@ -363,10 +347,7 @@ function overrideCSSColor() {
 export {
   createHanburgerButton,
   createMiniPandA,
-  appendMemoBox,
-  createSettingsTab,
-  updateMiniPandA,
   displayMiniPandA,
   deleteNavBarNotification,
-  createNavBarNotification,
+  createNavBarNotification
 };

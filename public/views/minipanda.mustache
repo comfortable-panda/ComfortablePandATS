@@ -1,0 +1,154 @@
+<img class="logo" alt="logo" src="{{minipandaLogo}}">
+<p class="cp-version">Version {{VERSION}}</p>
+{{^subset}}
+<a id="close_btn" class="closebtn q" href="#">x</a>
+<input id="kadaiTab" type="radio" name="cp_tab">
+<label for="kadaiTab"> 課題一覧 </label>
+<input id="settingsTab" type="radio" name="cp_tab">
+<label for="settingsTab"> 詳細設定 </label>
+<button class="plus-button">+</button>
+{{/subset}}
+<p class="kadai-time">課題取得日時： {{kadaiFetchedTime}}</p>
+<p class="quiz-time">クイズ取得日時： {{quizFetchedTime}}</p>
+<div class="kadai-tab">
+    {{^subset}}
+    <div class="settingsBox addMemoBox" style="display: none;">
+        <label style="display: block;">講義名<select class="todoLecName">
+            {{#addMemoBoxLectures}}
+            <option id="{{id}}">{{lectureName}}</option>
+            {{/addMemoBoxLectures}}
+        </select></label>
+        <label style="display: block;">メモ<input type="text" class="todoContent"></label>
+        <label style="display: block;">期限<input type="datetime-local" class="todoDue"></label>
+        <button type="submit" id="todo-add">追加</button>
+    </div>
+    {{/subset}}
+
+    {{#showDanger}}
+    <div class="sidenav-danger">
+        <span class="q">締め切り２４時間以内</span>
+    </div>
+    <div class="sidenav-list sidenav-list-danger">
+        {{#dangerElements}}
+        <div id="b{{lectureId}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{dangerBorderColor}}">
+            {{#entries}}
+            <a class="lecture-danger lecture-name" href="{{href}}">{{lectureName}}</a>
+            <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
+            <label for="{{id}}"></label>
+            <p class="kadai-date">{{date}}</p>
+            <span class="time-remain">{{remain}}</span>
+            <p class="kadai-title">
+                {{#isMemo}}
+                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="del-button" id="{{id}}">×</span>
+                {{/isMemo}}
+                {{#isQuiz}}
+                    <span class="add-badge add-badge-quiz">クイズ</span>
+                {{/isQuiz}}
+                {{title}}
+            </p>
+            {{/entries}}
+        </div>
+        {{/dangerElements}}
+    </div>
+    {{/showDanger}}
+
+    {{#showWarning}}
+    <div class="sidenav-warning">
+        <span class="q">締め切り５日以内</span>
+    </div>
+    <div class="sidenav-list sidenav-list-warning">
+        {{#warningElements}}
+        <div id="b{{lectureId}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{warningBorderColor}}">
+            {{#entries}}
+            <a class="lecture-warning lecture-name" href="{{href}}">{{lectureName}}</a>
+            <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
+            <label for="{{id}}"></label>
+            <p class="kadai-date">{{date}}</p>
+            <span class="time-remain">{{remain}}</span>
+            <p class="kadai-title">
+                {{#isMemo}}
+                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="del-button" id="{{id}}">×</span>
+                {{/isMemo}}
+                {{#isQuiz}}
+                    <span class="add-badge add-badge-quiz">クイズ</span>
+                {{/isQuiz}}
+                {{title}}
+            </p>
+            {{/entries}}
+        </div>
+        {{/warningElements}}
+    </div>
+    {{/showWarning}}
+
+    {{#showSuccess}}
+    <div class="sidenav-success">
+        <span class="q">締め切り１４日以内</span>
+    </div>
+    <div class="sidenav-list sidenav-list-success">
+        {{#successElements}}
+        <div id="b{{lectureId}}" class="kadai-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            {{#entries}}
+            <a class="lecture-success lecture-name" href="{{href}}">{{lectureName}}</a>
+            <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
+            <label for="{{id}}"></label>
+            <p class="kadai-date">{{date}}</p>
+            <span class="time-remain">{{remain}}</span>
+            <p class="kadai-title">
+                {{#isMemo}}
+                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="del-button" id="{{id}}">×</span>
+                {{/isMemo}}
+                {{#isQuiz}}
+                    <span class="add-badge add-badge-quiz">クイズ</span>
+                {{/isQuiz}}
+                {{title}}
+            </p>
+            {{/entries}}
+        </div>
+        {{/successElements}}
+    </div>
+    {{/showSuccess}}
+
+    {{#showOther}}
+    <div class="sidenav-other">
+        <span class="q">その他</span>
+    </div>
+    <div class="sidenav-list sidenav-list-other">
+        {{#otherElements}}
+        <div id="b{{lectureId}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{otherBorderColor}}">
+        <a class="lecture-other lecture-name" href="{{href}}">{{lectureName}}</a>
+            {{#entries}}
+            <input id="{{id}}" class="todo-check" type="checkbox" {{#checked}}checked{{/checked}}>
+            <label for="{{id}}"></label>
+            <p class="kadai-date">{{date}}</p>
+            <span class="time-remain">{{remain}}</span>
+            <p class="kadai-title">
+                {{#isMemo}}
+                    <span class="add-badge add-badge-success">メモ</span>
+                    <span class="del-button" id="{{id}}">×</span>
+                {{/isMemo}}
+                {{#isQuiz}}
+                    <span class="add-badge add-badge-quiz">クイズ</span>
+                {{/isQuiz}}
+                {{title}}
+            </p>
+            {{/entries}}
+        </div>
+        {{/otherElements}}
+    </div>
+    {{/showOther}}
+
+    {{#showRelaxPandA}}
+    <div class="relaxpanda">
+        <p class="relaxpanda-p">現在表示できる課題はありません</p>
+        <img alt="logo" class="relaxpanda-img" src="{{img}}">
+    </div>
+    {{/showRelaxPandA}}
+</div>
+
+{{^subset}}
+<div class="settings-tab" style="">
+</div>
+{{/subset}}
