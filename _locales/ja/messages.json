@@ -5,7 +5,7 @@
   "todo_box_course_name": {"message": "講義名"},
   "todo_box_memo": {"message": "メモ内容"},
   "todo_box_due_date": {"message": "期限"},
-  "todo_box_add": {"message": "追加する"},
+  "todo_box_add": {"message": "メモを追加"},
   "quiz": {"message": "クイズ"},
   "memo": {"message": "メモ"},
   "settings_assignment_cache": {"message": "課題キャッシュ時間 [秒]"},

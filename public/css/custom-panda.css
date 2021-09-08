@@ -607,6 +607,14 @@
     width: 65px;
 }
 
+.miniSakai-memoBoxItem {
+    padding-top: 5px;
+    display: block;
+    flex-direction: column;
+    font-weight: bold;
+    color: rgb(70, 70, 70);
+}
+
 .switch {
     position: relative;
     display: inline-flex;
