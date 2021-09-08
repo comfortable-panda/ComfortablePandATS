@@ -2,7 +2,6 @@ export class Settings {
   kadaiCacheInterval?: number;
   quizCacheInterval?: number;
   displayCheckedKadai?: boolean;
-  makePandAGreatAgain?: boolean;
   topColorDanger?: string;
   topColorWarning?: string;
   topColorSuccess?: string;
@@ -15,7 +14,6 @@ export class DefaultSettings extends Settings {
   static kadaiCacheInterval = 120;
   static quizCacheInterval = 600;
   static displayCheckedKadai = true;
-  static makePandAGreatAgain = false;
   static topColorDanger = "#f78989";
   static topColorWarning = "#fdd783";
   static topColorSuccess = "#8bd48d";

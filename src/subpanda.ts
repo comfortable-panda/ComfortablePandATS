@@ -81,10 +81,6 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
       const dueGroupLectureName = DueGroupDom.lectureName.cloneNode(true) as HTMLAnchorElement;
       dueGroupLectureName.classList.add(`lecture-${dueGroupColor[i]}`, "lecture-name")
       dueGroupLectureName.textContent = "" + (lectureIDMap.get(item.lectureID) || "???");
-      // const topSite = item.getTopSite();
-      // if (topSite != null) {
-      //   dueGroupLectureName.href = topSite;
-      // }
       dueGroupBody.appendChild(dueGroupLectureName);
 
       // 各講義の課題一覧についてループ
@@ -97,10 +93,10 @@ function updateSubPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInf
         const kadaiTitle = KadaiEntryDom.title.cloneNode(true);
         const memoBadge = document.createElement("span");
         memoBadge.classList.add("add-badge", "add-badge-success");
-        memoBadge.innerText = "メモ";
+        memoBadge.innerText = chrome.i18n.getMessage('memo');
         const quizBadge = document.createElement("span");
         quizBadge.classList.add("add-badge", "add-badge-quiz");
-        quizBadge.innerText = "クイズ";
+        quizBadge.innerText = chrome.i18n.getMessage('quiz');
 
         const _date = new Date(kadai.dueDateTimestamp * 1000);
         const dispDue = _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);

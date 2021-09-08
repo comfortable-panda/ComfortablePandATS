@@ -88,9 +88,7 @@ function getQuizOfLectureID(baseURL: string, siteID: string) {
 }
 
 function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<KadaiEntry> {
-  let assignment_collection = data.assignment_collection;
-  if (!CPsettings.makePandAGreatAgain)
-    assignment_collection = assignment_collection.filter((json: any) => json.openTime.epochSecond * 1000 < nowTime)
+  const assignment_collection = data.assignment_collection;
   return assignment_collection
     .filter((json: any) => json.dueTime.epochSecond * 1000 >= nowTime)
     .map((json: any) => {

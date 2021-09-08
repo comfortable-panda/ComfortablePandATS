@@ -60,9 +60,9 @@ function createMiniPandA(): void {
   miniPandACloseBtn.addEventListener("click", toggleMiniPandA);
 
   const kadaiTab = createElem("input", { type: "radio", id: "kadaiTab", name: "cp_tab", checked: true }, {"click": toggleKadaiTab});
-  const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: "　課題一覧　" });
+  const kadaiTabLabel = createElem("label", { htmlFor: "kadaiTab", innerText: chrome.i18n.getMessage('tab_assignments') });
   const settingsTab = createElem("input", { type: "radio", id: "settingsTab", name: "cp_tab", checked: false }, {"click": toggleSettingsTab});
-  const settingsTabLabel = createElem("label", { htmlFor: "settingsTab", innerText: "　詳細設定　" });
+  const settingsTabLabel = createElem("label", { htmlFor: "settingsTab", innerText: chrome.i18n.getMessage('tab_settings') });
   const addMemoButton = createElem("button", { className: "plus-button", innerText: "+" },{"click": toggleMemoBox});
 
   const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
@@ -93,7 +93,7 @@ function createMiniPandA(): void {
 function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
   const memoEditBox = createElem("div", {className: "settingsBox addMemoBox", style: "none"});
   const memoLabel = createElem("label", {style: "block"});
-  const todoLecLabel = cloneElem(memoLabel, {innerText: "講義名"});
+  const todoLecLabel = cloneElem(memoLabel, {innerText: chrome.i18n.getMessage('todo_box_course_name')});
   const todoLecSelect = createElem("select", { className: "todoLecName" });
   const todoLecOption = createElem("option");
 
@@ -104,16 +104,16 @@ function appendMemoBox(lectureIDList: Array<LectureInfo>): void {
 
   todoLecLabel.appendChild(todoLecSelect);
 
-  const todoContentLabel = cloneElem(memoLabel, { innerText: "メモ" });
+  const todoContentLabel = cloneElem(memoLabel, { innerText: chrome.i18n.getMessage('todo_box_memo') });
   const todoContentInput = createElem("input", { type: "text", className: "todoContent" });
   todoContentLabel.appendChild(todoContentInput);
 
-  const todoDueLabel = cloneElem(memoLabel, {innerText: "期限"});
+  const todoDueLabel = cloneElem(memoLabel, { innerText: chrome.i18n.getMessage('todo_box_due_date') });
   const todoDueInput = createElem("input", { type: "datetime-local", className: "todoDue" });
   todoDueInput.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
   todoDueLabel.appendChild(todoDueInput);
 
-  const todoSubmitButton = createElem("button", { type: "submit", id: "todo-add", innerText: "追加" }, {"click": addKadaiMemo});
+  const todoSubmitButton = createElem("button", { type: "submit", id: "todo-add", innerText: chrome.i18n.getMessage('todo_box_add') }, {"click": addKadaiMemo});
 
   appendChildAll(memoEditBox, [todoLecLabel, todoContentLabel, todoDueLabel, todoSubmitButton]);
   kadaiDiv.appendChild(memoEditBox);
@@ -161,20 +161,19 @@ function createSettingItem(itemDescription: string, value: boolean | number | st
 }
 
 async function createSettingsTab(): Promise<void> {
-  createSettingItem("完了済の課題も色付けする", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
-  createSettingItem("課題キャッシュ時間 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
-  createSettingItem("クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
-  createSettingItem("デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
+  createSettingItem(chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
+  createSettingItem(chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
+  createSettingItem(chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
 
-  createSettingItem("カラー① 締切24時間前", CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
-  createSettingItem("カラー① 締切5日前", CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
-  createSettingItem("カラー① 締切14日前", CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['1', 5]), CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['1', 14]), CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
 
-  createSettingItem("カラー② 締切24時間前", CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
-  createSettingItem("カラー② 締切5日前", CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
-  createSettingItem("カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
+  createSettingItem(chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
 
-  createSettingItem("デフォルト色に戻す", "reset", "reset");
+  createSettingItem(chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
   settingsDiv.style.display = "none";
 }
 
@@ -213,8 +212,8 @@ function updateMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
         const kadaiDueDate = cloneElem(KadaiEntryDom.dueDate);
         const kadaiRemainTime = cloneElem(KadaiEntryDom.remainTime);
         const kadaiTitle = cloneElem(KadaiEntryDom.title);
-        const memoBadge = createElem("span", {classList: "add-badge add-badge-success", innerText: "メモ"});
-        const quizBadge = createElem("span", {classList: "add-badge add-badge-quiz", innerText: "クイズ"});
+        const memoBadge = createElem("span", {classList: "add-badge add-badge-success", innerText: chrome.i18n.getMessage('memo')});
+        const quizBadge = createElem("span", {classList: "add-badge add-badge-quiz", innerText: chrome.i18n.getMessage('quiz')});
         const deleteBadge = createElem("span", {className: "del-button", id: kadai.kadaiID, innerText:"×"}, {"click": deleteKadaiMemo});
 
         const dispDue = formatTimestamp(kadai.dueDateTimestamp);
