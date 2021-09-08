@@ -16,7 +16,7 @@ import {
   convertArrayToKadai,
   isLoggedIn,
   mergeIntoKadaiList,
-  miniPandAReady,
+  miniSakaiReady,
   nowTime,
   sortKadaiList,
   updateIsReadFlag,
@@ -126,7 +126,7 @@ async function main() {
     await displayMiniPandA(mergedKadaiList, lectureIDList);
     createNavBarNotification(lectureIDList, mergedKadaiList);
 
-    miniPandAReady();
+    miniSakaiReady();
     updateIsReadFlag(mergedKadaiListNoMemo);
   }
 }

@@ -4,19 +4,21 @@ import { Kadai, KadaiEntry } from "./kadai";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {
   CPsettings,
-  kadaiCacheInterval,
   lectureIDList,
   loadAndMergeKadaiList,
   mergedKadaiListNoMemo,
-  quizCacheInterval,
 } from "./content_script";
 import { DefaultSettings, Settings } from "./settings";
-import { createNavBarNotification, deleteNavBarNotification, displayMiniPandA } from "./minipanda";
+import {
+  createNavBarNotification,
+  deleteNavBarNotification,
+  displayMiniPandA,
+} from "./minipanda";
 
 let toggle = false;
 
-function toggleMiniPandA(): void {
-  // miniPandAを表示・非表示にします
+function toggleMiniSakai(): void {
+  // miniSakaiを表示・非表示にします
   if (toggle) {
     miniPandA.style.width = "0px";
     document.getElementById("cover")?.remove();
@@ -25,7 +27,7 @@ function toggleMiniPandA(): void {
     const cover = document.createElement("div");
     cover.id = "cover";
     document.getElementsByTagName("body")[0].appendChild(cover);
-    cover.onclick = toggleMiniPandA;
+    cover.onclick = toggleMiniSakai;
   }
   toggle = !toggle;
 }
@@ -38,7 +40,7 @@ function toggleKadaiTab(): void {
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "none";
-  const addMemoButton = document.querySelector(".plus-button");
+  const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "";
   const lastKadaiGetTime = document.querySelector(".kadai-time");
@@ -57,7 +59,7 @@ function toggleSettingsTab(): void {
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "";
-  const addMemoButton = document.querySelector(".plus-button");
+  const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "none";
   const lastKadaiGetTime = document.querySelector(".kadai-time");
@@ -278,7 +280,7 @@ async function editFavTabMessage(): Promise<void> {
 }
 
 export {
-  toggleMiniPandA,
+  toggleMiniSakai,
   toggleKadaiTab,
   toggleSettingsTab,
   toggleMemoBox,
