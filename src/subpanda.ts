@@ -1,5 +1,5 @@
 import { Kadai, LectureInfo } from './kadai';
-import { loadFromStorage } from './storage'
+import { loadFromLocalStorage } from './storage'
 import {
   convertArrayToKadai,
   mergeIntoKadaiList,
@@ -15,10 +15,10 @@ const subpandaRoot = document.querySelector("#subpanda");
 async function updateSubPandA(root: Element) {
   let mergedKadaiList: Array<Kadai>;
 
-  const kadais = await loadFromStorage("TSkadaiList") as Array<Kadai>;
-  const quizList = await loadFromStorage("TSQuizList") as Array<Kadai>;
-  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
-  const lectureIDs = await loadFromStorage("TSlectureids") as Array<LectureInfo>;
+  const kadais = await loadFromLocalStorage("TSkadaiList") as Array<Kadai>;
+  const quizList = await loadFromLocalStorage("TSQuizList") as Array<Kadai>;
+  const kadaiMemoList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
+  const lectureIDs = await loadFromLocalStorage("TSlectureids") as Array<LectureInfo>;
   mergedKadaiList = mergeIntoKadaiList(kadais, quizList);
   mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, kadaiMemoList);
   mergedKadaiList = sortKadaiList(mergedKadaiList);

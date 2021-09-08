@@ -1,12 +1,16 @@
-import { loadFromStorage, saveToStorage } from "./storage";
+import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { Kadai, LectureInfo } from "./kadai";
-import { fetchLectureIDs, getKadaiOfLectureID, getQuizOfLectureID } from "./network";
 import {
-  createHanburgerButton,
+  fetchLectureIDs,
+  getKadaiOfLectureID,
+  getQuizOfLectureID,
+} from "./network";
+import {
+  createMiniSakaiBtn,
   createNavBarNotification,
   displayMiniPandA,
 } from "./minipanda";
-import { addMissingBookmarkedLectures } from "./bookmark";
+import { addBookmarkedCourseSites } from "./bookmark";
 import {
   compareAndMergeKadaiList,
   convertArrayToKadai,
@@ -18,12 +22,12 @@ import {
   updateIsReadFlag,
   useCache,
 } from "./utils";
-import { Settings } from "./settings";
+import { DefaultSettings, Settings } from "./settings";
 
-const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
+export const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
 export const VERSION = "1.0.0";
-export let kadaiCacheInterval = 60 * 2;
-export let quizCacheInterval = 60 * 10;
+export let kadaiCacheInterval: number;
+export let quizCacheInterval: number;
 export let kadaiFetchedTime: number;
 export let quizFetchedTime: number;
 export let lectureIDList: Array<LectureInfo>;
@@ -33,13 +37,15 @@ export let CPsettings: Settings;
 
 export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
   // ストレージから前回保存したkadaiListを読み込む
-  const oldKadaiList = await loadFromStorage("TSkadaiList");
-  const oldQuizList = await loadFromStorage("TSQuizList");
+  const oldKadaiList = await loadFromLocalStorage("TSkadaiList");
+  const oldQuizList = await loadFromLocalStorage("TSQuizList");
   let newKadaiList = [];
   let newQuizList = [];
 
   if (useKadaiCache) {
-    console.log("Loading assignments...");
+    newKadaiList = oldKadaiList;
+  } else {
+    console.log("Fetching assignments...");
     const pendingList = [];
     // 課題取得待ちリストに追加
     for (const i of lectureIDList) {
@@ -51,17 +57,19 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, u
       if (k.status === "fulfilled") newKadaiList.push(k.value);
     }
     // 取得した時間を保存
-    await saveToStorage("TSkadaiFetchedTime", nowTime);
+    await saveToLocalStorage("TSkadaiFetchedTime", nowTime);
     kadaiFetchedTime = nowTime;
-  } else {
-    newKadaiList = oldKadaiList;
   }
   // 保存してあったものとマージする
   mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
   mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
 
   if (useQuizCache) {
-    console.log("Loading quizzes...");
+    if (typeof oldQuizList !== "undefined") {
+      newQuizList = oldQuizList;
+    }
+  } else {
+    console.log("Fetching quizzes...");
     const pendingList = [];
     // クイズ取得待ちリストに追加
     for (const i of lectureIDList) {
@@ -73,23 +81,19 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, u
       if (k.status === "fulfilled") newQuizList.push(k.value);
     }
     // 取得した時間を保存
-    await saveToStorage("TSquizFetchedTime", nowTime);
+    await saveToLocalStorage("TSquizFetchedTime", nowTime);
     quizFetchedTime = nowTime;
-  } else {
-    if (typeof oldQuizList !== "undefined") {
-      newQuizList = oldQuizList;
-    }
   }
   const mergedQuizList = compareAndMergeKadaiList(oldQuizList, newQuizList);
 
   // マージ後のkadaiListをストレージに保存する
-  await saveToStorage("TSkadaiList", mergedKadaiListNoMemo);
-  await saveToStorage("TSQuizList", mergedQuizList);
+  await saveToLocalStorage("TSkadaiList", mergedKadaiListNoMemo);
+  await saveToLocalStorage("TSQuizList", mergedQuizList);
 
   mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, mergedQuizList);
 
   // メモ一覧を読み込む
-  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
+  const kadaiMemoList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
   // さらにメモもマージする
   mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, kadaiMemoList);
   mergedKadaiList = sortKadaiList(mergedKadaiList);
@@ -98,27 +102,27 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, u
 }
 
 async function loadSettings() {
-  CPsettings = await loadFromStorage("TSSettings");
-  kadaiCacheInterval = CPsettings.kadaiCacheInterval ?? 60 * 2;
-  quizCacheInterval = CPsettings.quizCacheInterval ?? 60 * 10;
+  CPsettings = await loadFromLocalStorage("TSSettings");
+  kadaiCacheInterval = CPsettings.kadaiCacheInterval ?? DefaultSettings.kadaiCacheInterval;
+  quizCacheInterval = CPsettings.quizCacheInterval ?? DefaultSettings.quizCacheInterval;
   CPsettings.displayCheckedKadai = CPsettings.displayCheckedKadai ?? true;
-  kadaiFetchedTime = await loadFromStorage("TSkadaiFetchedTime");
-  quizFetchedTime = await loadFromStorage("TSquizFetchedTime");
+  kadaiFetchedTime = await loadFromLocalStorage("TSkadaiFetchedTime");
+  quizFetchedTime = await loadFromLocalStorage("TSquizFetchedTime");
 }
 
 async function loadLectureIDs() {
   lectureIDList = fetchLectureIDs()[1];
-  await saveToStorage("TSlectureids", lectureIDList);
+  await saveToLocalStorage("TSlectureids", lectureIDList);
 }
 
 async function main() {
   if (isLoggedIn()) {
-    createHanburgerButton();
+    createMiniSakaiBtn();
     await loadSettings();
     await loadLectureIDs();
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(kadaiFetchedTime, kadaiCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
 
-    await addMissingBookmarkedLectures();
+    await addBookmarkedCourseSites(baseURL);
     await displayMiniPandA(mergedKadaiList, lectureIDList);
     createNavBarNotification(lectureIDList, mergedKadaiList);
 

@@ -1,5 +1,5 @@
 import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
-import { saveToStorage } from "./storage";
+import { saveToLocalStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
 
@@ -65,7 +65,7 @@ function updateIsReadFlag(kadaiList: Array<Kadai>): void {
         updatedKadaiList.push(kadai);
       }
     }
-    saveToStorage("TSkadaiList", updatedKadaiList);
+    saveToLocalStorage("TSkadaiList", updatedKadaiList);
   }
 }
 
@@ -173,7 +173,7 @@ function sortKadaiList(kadaiList: Array<Kadai>): Array<Kadai> {
 }
 
 function useCache(fetchedTime: number, cacheInterval: number): boolean{
-  return (nowTime - fetchedTime) / 1000 > cacheInterval;
+  return (nowTime - fetchedTime) / 1000 <= cacheInterval;
 }
 
 function genUniqueStr(): string {

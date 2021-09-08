@@ -34,7 +34,7 @@ import {
 // @ts-ignore
 import Mustache = require("mustache");
 
-function createHanburgerButton(): void {
+function createMiniSakaiBtn(): void {
   const topbar = document.getElementById("mastLogin");
   try {
     topbar?.appendChild(hamburger);
@@ -366,7 +366,7 @@ function overrideCSSColor() {
 }
 
 export {
-  createHanburgerButton,
+  createMiniSakaiBtn,
   createMiniPandA,
   displayMiniPandA,
   deleteNavBarNotification,

@@ -40,7 +40,8 @@ function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai>
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
       const res = request.response;
-      if (!res || !res.assignment_collection) reject("404 kadai data not found");
+      if (!res || !res.assignment_collection)
+        reject("404 kadai data not found");
       else {
         const kadaiEntries = convJsonToKadaiEntries(res, baseURL, lectureID);
         resolve(

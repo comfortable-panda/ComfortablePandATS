@@ -1,13 +1,13 @@
-function loadFromStorage(key: string): Promise<any> {
+function loadFromLocalStorage(key: string): Promise<any> {
   return new Promise(function (resolve, reject) {
     chrome.storage.local.get(key, function (items: any) {
-      if (typeof items[key] === "undefined") resolve([])
+      if (typeof items[key] === "undefined") resolve([]);
       else resolve(items[key]);
     });
   });
 }
 
-function saveToStorage(key: string, value: any): Promise<any> {
+function saveToLocalStorage(key: string, value: any): Promise<any> {
   const entity: { [key: string]: [value: any] } = {};
   entity[key] = value;
   return new Promise(function (resolve, reject) {
@@ -17,4 +17,4 @@ function saveToStorage(key: string, value: any): Promise<any> {
   });
 }
 
-export { loadFromStorage, saveToStorage };
+export { loadFromLocalStorage, saveToLocalStorage };
