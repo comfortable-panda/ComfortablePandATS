@@ -31,8 +31,8 @@ import {
   quizFetchedTime,
   VERSION,
 } from "./content_script";
-// @ts-ignore
-import Mustache = require('mustache');
+// @ts-ignore// @ts-ignore
+import Mustache = require("mustache");
 
 function createHanburgerButton(): void {
   const topbar = document.getElementById("mastLogin");
@@ -152,7 +152,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     showRelaxPandA: relaxPandA
   };
 
-  fetch(chrome.extension.getURL("views/minipanda.mustache"))
+  fetch(chrome.extension.getURL("views/minisakai.mustache"))
     .then((res) => res.text())
     .then((template) => {
       const rendered = Mustache.render(template, templateVars);
@@ -165,18 +165,18 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
 
 function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
   createMiniPandAGeneralized(miniPandA, kadaiList, lectureIDList, false, (rendered) => {
-    miniPandA.innerHTML = rendered;
-    const parent = document.getElementById("pageBody");
-    const ref = document.getElementById("toolMenuWrap");
-    parent?.insertBefore(miniPandA, ref);
-  });
+      miniPandA.innerHTML = rendered;
+      const parent = document.getElementById("pageBody");
+      const ref = document.getElementById("toolMenuWrap");
+      parent?.insertBefore(miniPandA, ref);
+    }
+  );
 }
 
 async function createSettingsTab(root: Element): Promise<void> {
   createSettingItem(root, "完了済の課題も色付けする", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
   createSettingItem(root, "課題キャッシュ時間 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
   createSettingItem(root, "クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
-  createSettingItem(root, "デバッグモード", CPsettings.makePandAGreatAgain ?? false, "makePandAGreatAgain", false);
 
   createSettingItem(root, "カラー① 締切24時間前", CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
   createSettingItem(root, "カラー① 締切5日前", CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
@@ -188,13 +188,13 @@ async function createSettingsTab(root: Element): Promise<void> {
 
   createSettingItem(root, "デフォルト色に戻す", "reset", "reset");
   // @ts-ignore
-  root.querySelector('.settings-tab')?.style.display = "none";
+  root.querySelector(".settings-tab")?.style.display = "none";
 }
 
 function createSettingItem(root: Element, itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
   const settingsDiv = root.querySelector('.settings-tab');
   if (settingsDiv == null) {
-    console.log('.settings-tab not found');
+    console.log(".settings-tab not found");
     return;
   }
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);

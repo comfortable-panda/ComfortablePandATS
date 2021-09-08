@@ -24,7 +24,6 @@
       "time": { "content": "$2" }
     }
   },
-  ,
   "assignment_acquisition_date": {"message": "課題取得日時: "},
   "testquiz_acquisition_date": {"message": "クイズ取得日時: "}
 }
