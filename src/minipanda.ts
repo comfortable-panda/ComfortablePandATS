@@ -155,6 +155,10 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
       settingsTab: chrome.i18n.getMessage("tab_settings"),
       kadaiFetchedTime: chrome.i18n.getMessage("assignment_acquisition_date"),
       quizFetchedTime: chrome.i18n.getMessage("testquiz_acquisition_date"),
+      due24h: chrome.i18n.getMessage("due24h"),
+      due5d: chrome.i18n.getMessage("due5d"),
+      due14d: chrome.i18n.getMessage("due14d"),
+      relaxPandaA: chrome.i18n.getMessage("no_available_assignments"),
     },
   };
 

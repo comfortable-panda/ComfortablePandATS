@@ -8,8 +8,8 @@
 <label for="settingsTab"> {{titles.settingsTab}} </label>
 <button class="plus-button">+</button>
 {{/subset}}
-<p class="kadai-time">{{title.kadaiFetchedTime}}: {{kadaiFetchedTime}}</p>
-<p class="quiz-time">{{title.quizFetchedTime}}: {{quizFetchedTime}}</p>
+<p class="kadai-time">{{titles.kadaiFetchedTime}}: {{kadaiFetchedTime}}</p>
+<p class="quiz-time">{{titles.quizFetchedTime}}: {{quizFetchedTime}}</p>
 <div class="kadai-tab">
     {{^subset}}
     <div class="settingsBox addMemoBox" style="display: none;">
@@ -26,7 +26,7 @@
 
     {{#showDanger}}
     <div class="sidenav-danger">
-        <span class="q">締め切り２４時間以内</span>
+        <span class="q">{{titles.due24h}}</span>
     </div>
     <div class="sidenav-list sidenav-list-danger">
         {{#dangerElements}}
@@ -55,7 +55,7 @@
 
     {{#showWarning}}
     <div class="sidenav-warning">
-        <span class="q">締め切り５日以内</span>
+        <span class="q">{{titles.due5d}}</span>
     </div>
     <div class="sidenav-list sidenav-list-warning">
         {{#warningElements}}
@@ -84,7 +84,7 @@
 
     {{#showSuccess}}
     <div class="sidenav-success">
-        <span class="q">締め切り１４日以内</span>
+        <span class="q">{{titles.due14d}}</span>
     </div>
     <div class="sidenav-list sidenav-list-success">
         {{#successElements}}
@@ -142,7 +142,7 @@
 
     {{#showRelaxPandA}}
     <div class="relaxpanda">
-        <p class="relaxpanda-p">現在表示できる課題はありません</p>
+        <p class="relaxpanda-p">{{titles.relaxPandA}}</p>
         <img alt="logo" class="relaxpanda-img" src="{{img}}">
     </div>
     {{/showRelaxPandA}}
