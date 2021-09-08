@@ -13,14 +13,14 @@
 <div class="kadai-tab">
     {{^subset}}
     <div class="settingsBox addMemoBox" style="display: none;">
-        <label style="display: block;">講義名<select class="todoLecName">
+        <label style="display: block;">{{todoBox.courseName}}<select class="todoLecName">
             {{#addMemoBoxLectures}}
             <option id="{{id}}">{{lectureName}}</option>
             {{/addMemoBoxLectures}}
         </select></label>
-        <label style="display: block;">メモ<input type="text" class="todoContent"></label>
-        <label style="display: block;">期限<input type="datetime-local" class="todoDue"></label>
-        <button type="submit" id="todo-add">追加</button>
+        <label style="display: block;">{{todoBox.memoLabel}}<input type="text" class="todoContent"></label>
+        <label style="display: block;">{{todoBox.dueDate}}<input type="datetime-local" class="todoDue"></label>
+        <button type="submit" id="todo-add">{{todoBox.addBtnLabel}}</button>
     </div>
     {{/subset}}
 
