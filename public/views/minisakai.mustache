@@ -3,13 +3,13 @@
 {{^subset}}
 <a id="close_btn" class="closebtn q" href="#">x</a>
 <input id="kadaiTab" type="radio" name="cp_tab">
-<label for="kadaiTab"> 課題一覧 </label>
+<label for="kadaiTab"> {{titles.kadaiTab}} </label>
 <input id="settingsTab" type="radio" name="cp_tab">
-<label for="settingsTab"> 詳細設定 </label>
+<label for="settingsTab"> {{titles.settingsTab}} </label>
 <button class="plus-button">+</button>
 {{/subset}}
-<p class="kadai-time">課題取得日時： {{kadaiFetchedTime}}</p>
-<p class="quiz-time">クイズ取得日時： {{quizFetchedTime}}</p>
+<p class="kadai-time">{{title.kadaiFetchedTime}}: {{kadaiFetchedTime}}</p>
+<p class="quiz-time">{{title.quizFetchedTime}}: {{quizFetchedTime}}</p>
 <div class="kadai-tab">
     {{^subset}}
     <div class="settingsBox addMemoBox" style="display: none;">

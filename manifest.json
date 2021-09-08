@@ -42,6 +42,6 @@
     "css/custom-panda.css",
     "img/logo.png",
     "img/relaxPanda.png",
-    "views/minipanda.mustache"
+    "views/minisakai.mustache"
   ]
 }

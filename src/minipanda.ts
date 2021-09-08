@@ -31,7 +31,7 @@ import {
   quizFetchedTime,
   VERSION,
 } from "./content_script";
-// @ts-ignore// @ts-ignore
+// @ts-ignore
 import Mustache = require("mustache");
 
 function createHanburgerButton(): void {
@@ -39,7 +39,7 @@ function createHanburgerButton(): void {
   try {
     topbar?.appendChild(hamburger);
   } catch (e) {
-    console.log("could not launch miniPandA.");
+    console.log("could not launch miniSakai.");
   }
 }
 
@@ -114,7 +114,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
 
     addMemoBoxLectures.push({
       id: item.lectureID,
-      lectureName: lectureName
+      lectureName: lectureName,
     });
   });
 
@@ -130,7 +130,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
   let relaxPandA = null;
   if (kadaiList.length == 0) {
     relaxPandA = {
-      img: chrome.extension.getURL("img/relaxPanda.png")
+      img: chrome.extension.getURL("img/relaxPanda.png"),
     };
   }
 
@@ -149,7 +149,13 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     showOther: otherElements.length > 0,
     addMemoBoxLectures: addMemoBoxLectures,
     subset: subset,
-    showRelaxPandA: relaxPandA
+    showRelaxPandA: relaxPandA,
+    titles: {
+      kadaiTab: chrome.i18n.getMessage("tab_assignments"),
+      settingsTab: chrome.i18n.getMessage("tab_settings"),
+      kadaiFetchedTime: chrome.i18n.getMessage("assignment_acquisition_date"),
+      quizFetchedTime: chrome.i18n.getMessage("testquiz_acquisition_date"),
+    },
   };
 
   fetch(chrome.extension.getURL("views/minisakai.mustache"))
@@ -174,19 +180,19 @@ function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureIn
 }
 
 async function createSettingsTab(root: Element): Promise<void> {
-  createSettingItem(root, "完了済の課題も色付けする", CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
-  createSettingItem(root, "課題キャッシュ時間 [秒]", CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
-  createSettingItem(root, "クイズキャッシュ時間 [秒]", CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
+  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
 
-  createSettingItem(root, "カラー① 締切24時間前", CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
-  createSettingItem(root, "カラー① 締切5日前", CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
-  createSettingItem(root, "カラー① 締切14日前", CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 5]), CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 14]), CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
 
-  createSettingItem(root, "カラー② 締切24時間前", CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
-  createSettingItem(root, "カラー② 締切5日前", CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
-  createSettingItem(root, "カラー② 締切14日前", CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
 
-  createSettingItem(root, "デフォルト色に戻す", "reset", "reset");
+  createSettingItem(root, chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
   // @ts-ignore
   root.querySelector(".settings-tab")?.style.display = "none";
 }
