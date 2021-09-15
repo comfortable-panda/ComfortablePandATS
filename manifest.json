@@ -26,7 +26,7 @@
       "css": [
         "css/custom-panda.css"
       ],
-      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*"]
+      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*", "https://qa12-mysql.nightly.sakaiproject.org/*", "https://qa20-mysql.nightly.sakaiproject.org/"]
     }
   ],
   "background": {
