@@ -289,7 +289,7 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
   const defaultTabCount = Object.keys(defaultTab).length;
 
   for (const lecture of lectureIDList) {
-    for (let j = 3; j < defaultTabCount; j++) {
+    for (let j = 2; j < defaultTabCount; j++) {
       // @ts-ignore
       const lectureID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
 
