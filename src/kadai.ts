@@ -85,15 +85,15 @@ export class Kadai {
 
 export class CourseSiteInfo {
   tabType: string;
-  lectureID: string;
-  lectureName: string;
+  courseID: string;
+  courseName: string;
   constructor(
     tabType: string,
-    lectureID: string,
-    lectureName: string
+    courseID: string,
+    courseName: string
   ) {
     this.tabType = tabType;
-    this.lectureID = lectureID;
-    this.lectureName = lectureName;
+    this.courseID = courseID;
+    this.courseName = courseName;
   }
 }

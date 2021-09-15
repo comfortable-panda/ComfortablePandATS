@@ -14,28 +14,27 @@ function getBaseURL(): string {
 
 // Lecture ID をすべて取得する
 // ネットワーク通信は行わない
-// returns [{tabType, lectureID, lectureName}]
 function getCourseIDList(): Array<CourseSiteInfo> {
   const elementCollection = document.getElementsByClassName("fav-sites-entry");
   const elements = Array.prototype.slice.call(elementCollection);
   const result = [];
   for (const elem of elements) {
-    const lectureInfo = { tabType: "default", lectureID: "", lectureName: "" }; // tabTypeはPandAのトップバーに存在するかしないか
+    const lectureInfo = new CourseSiteInfo("default", "", ""); // tabTypeはPandAのトップバーに存在するかしないか
     const lecture = elem
       .getElementsByTagName("div")[0]
       .getElementsByTagName("a")[0];
     const m = lecture.href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)");
     if (m && m[2][0] !== "~") {
-      lectureInfo.lectureID = m[2];
-      lectureInfo.lectureName = lecture.title;
+      lectureInfo.courseID = m[2];
+      lectureInfo.courseName = lecture.title;
       result.push(lectureInfo);
     }
   }
   return result;
 }
 
-function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai> {
-  const queryURL = baseURL + "/direct/assignment/site/" + lectureID + ".json";
+function getKadaiFromCourseID(baseURL: string, courseID: string): Promise<Kadai> {
+  const queryURL = baseURL + "/direct/assignment/site/" + courseID + ".json";
   const request = new XMLHttpRequest();
   request.open("GET", queryURL);
   // キャッシュ対策
@@ -49,11 +48,11 @@ function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai>
       if (!res || !res.assignment_collection)
         reject("404 kadai data not found");
       else {
-        const kadaiEntries = convJsonToKadaiEntries(res, baseURL, lectureID);
+        const kadaiEntries = convJsonToKadaiEntries(res, baseURL, courseID);
         resolve(
           new Kadai(
-            lectureID,
-            lectureID, // TODO: lectureName
+            courseID,
+            courseID, // TODO: lectureName
             kadaiEntries,
             false
           )
@@ -64,8 +63,8 @@ function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai>
   });
 }
 
-function getQuizOfLectureID(baseURL: string, siteID: string) {
-  const queryURL = baseURL + "/direct/sam_pub/context/" + siteID + ".json";
+function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Kadai> {
+  const queryURL = baseURL + "/direct/sam_pub/context/" + courseID + ".json";
   const request = new XMLHttpRequest();
   request.open("GET", queryURL);
   // キャッシュ対策
@@ -79,11 +78,11 @@ function getQuizOfLectureID(baseURL: string, siteID: string) {
       const res = request.response;
       if (!res || !res.sam_pub_collection) reject("404 kadai data not found");
       else {
-        const kadaiEntries = convJsonToQuizEntries(res, baseURL, siteID);
+        const kadaiEntries = convJsonToQuizEntries(res, baseURL, courseID);
         resolve(
           new Kadai(
-            siteID,
-            siteID, // TODO: lectureName
+            courseID,
+            courseID, // TODO: lectureName
             kadaiEntries,
             false
           )
@@ -124,4 +123,4 @@ function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteI
     });
 }
 
-export { getBaseURL, getCourseIDList, getKadaiOfLectureID, getQuizOfLectureID };
+export { getBaseURL, getCourseIDList, getKadaiFromCourseID, getQuizFromCourseID };
