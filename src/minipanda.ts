@@ -1,6 +1,6 @@
-import { Kadai, LectureInfo } from "./kadai";
+import { Kadai, CourseSiteInfo } from "./model";
 import {
-  createLectureIDMap,
+  createCourseIDMap,
   formatTimestamp,
   getDaysUntil,
   getTimeRemain,
@@ -43,7 +43,7 @@ function createMiniSakaiBtn(): void {
   }
 }
 
-export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
+export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
   const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
   const kadaiFetchedTimeString = kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
@@ -51,14 +51,14 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
 
   const addMemoBoxLectures: Array<Object> = [];
 
-  const lectureIDMap = createLectureIDMap(lectureIDList);
+  const courseIDMap = createCourseIDMap(courseSiteInfos);
   const dangerElements: Array<Object> = [];
   const warningElements: Array<Object> = [];
   const successElements: Array<Object> = [];
   const otherElements: Array<Object> = [];
   // loop over lectures
   kadaiList.forEach(item => {
-    const lectureName = lectureIDMap.get(item.lectureID);
+    const lectureName = courseIDMap.get(item.lectureID);
     // loop over kadais
     item.kadaiEntries.forEach(kadai => {
       const dispDue = formatTimestamp(kadai.dueDateTimestamp);
@@ -184,8 +184,8 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     });
 }
 
-function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
-  createMiniPandAGeneralized(miniPandA, kadaiList, lectureIDList, false, (rendered) => {
+function createMiniPandA(kadaiList: Array<Kadai>, courseSiteInfos: Array<CourseSiteInfo>): void {
+  createMiniPandAGeneralized(miniPandA, kadaiList, courseSiteInfos, false, (rendered) => {
       miniPandA.innerHTML = rendered;
       const parent = document.getElementById("pageBody");
       const ref = document.getElementById("toolMenuWrap");
@@ -213,7 +213,7 @@ async function createSettingsTab(root: Element): Promise<void> {
 }
 
 function createSettingItem(root: Element, itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
-  const settingsDiv = root.querySelector('.settings-tab');
+  const settingsDiv = root.querySelector(".settings-tab");
   if (settingsDiv == null) {
     console.log(".settings-tab not found");
     return;
@@ -268,8 +268,8 @@ function initState(root: Element) {
   root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
 }
 
-async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
-  createMiniPandA(mergedKadaiList, lectureIDList);
+async function displayMiniPandA(mergedKadaiList: Array<Kadai>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
+  createMiniPandA(mergedKadaiList, courseSiteInfos);
 }
 
 function deleteNavBarNotification(): void {
@@ -284,11 +284,11 @@ function deleteNavBarNotification(): void {
   }
 }
 
-function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
+function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiList: Array<Kadai>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
 
-  for (const lecture of lectureIDList) {
+  for (const courseSiteInfo of courseSiteInfos) {
     for (let j = 2; j < defaultTabCount; j++) {
       // @ts-ignore
       const lectureID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];

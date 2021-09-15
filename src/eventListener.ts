@@ -1,10 +1,10 @@
 import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
-import { Kadai, KadaiEntry } from "./kadai";
+import { Kadai, KadaiEntry } from "./model";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {
   CPsettings,
-  lectureIDList,
+  courseIDList,
   loadAndMergeKadaiList,
   mergedKadaiListNoMemo,
 } from "./content_script";
@@ -123,8 +123,8 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
 
   // NavBarを再描画
   deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, true, true);
-  createNavBarNotification(lectureIDList, newKadaiList);
+  const newKadaiList = await loadAndMergeKadaiList(courseIDList, true, true);
+  createNavBarNotification(courseIDList, newKadaiList);
 }
 
 async function updateSettings(event: any, type: string): Promise<void> {
@@ -176,8 +176,8 @@ async function updateSettings(event: any, type: string): Promise<void> {
 
   // NavBarを再描画
   deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
-  createNavBarNotification(lectureIDList, newKadaiList);
+  const newKadaiList = await loadAndMergeKadaiList(courseIDList, false, false);
+  createNavBarNotification(courseIDList, newKadaiList);
 }
 
 async function addKadaiMemo(): Promise<void> {
@@ -221,12 +221,12 @@ async function addKadaiMemo(): Promise<void> {
   kadaiDiv.remove();
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), courseIDList);
 
   // NavBarを再描画
   deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
-  createNavBarNotification(lectureIDList, newKadaiList);
+  const newKadaiList = await loadAndMergeKadaiList(courseIDList, false, false);
+  createNavBarNotification(courseIDList, newKadaiList);
 }
 
 async function deleteKadaiMemo(event: any): Promise<void> {
@@ -254,12 +254,12 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   saveToLocalStorage("TSkadaiMemoList", deletedKadaiMemoList);
   const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), courseIDList);
 
   // NavBarを再描画
   deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
-  createNavBarNotification(lectureIDList, newKadaiList);
+  const newKadaiList = await loadAndMergeKadaiList(courseIDList, false, false);
+  createNavBarNotification(courseIDList, newKadaiList);
 }
 
 async function editFavTabMessage(): Promise<void> {
