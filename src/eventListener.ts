@@ -123,7 +123,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
 
   // NavBarを再描画
   deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
+  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, true, true);
   createNavBarNotification(lectureIDList, newKadaiList);
 }
 

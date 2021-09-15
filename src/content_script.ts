@@ -2,6 +2,7 @@ import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { Kadai, LectureInfo } from "./kadai";
 import {
   fetchLectureIDs,
+  getBaseURL,
   getKadaiOfLectureID,
   getQuizOfLectureID,
 } from "./network";
@@ -24,7 +25,7 @@ import {
 } from "./utils";
 import { DefaultSettings, Settings } from "./settings";
 
-export const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
+export const baseURL = getBaseURL();
 export const VERSION = "1.0.0";
 export let kadaiCacheInterval: number;
 export let quizCacheInterval: number;
@@ -121,7 +122,6 @@ async function main() {
     await loadSettings();
     await loadLectureIDs();
     mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(kadaiFetchedTime, kadaiCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
-
     await addBookmarkedCourseSites(baseURL);
     await displayMiniPandA(mergedKadaiList, lectureIDList);
     createNavBarNotification(lectureIDList, mergedKadaiList);

@@ -2,6 +2,16 @@ import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
 import { nowTime } from "./utils";
 import { CPsettings } from "./content_script";
 
+
+function getBaseURL(): string {
+  let baseURL = "";
+  const match = location.href.match("(https?://[^/]+)/portal");
+  if (match) {
+    baseURL = match[1];
+  }
+  return baseURL;
+}
+
 // Lecture ID をすべて取得する
 // ネットワーク通信は行わない
 // returns [domain, {tabType, lectureID, lectureName}]
@@ -15,7 +25,7 @@ function fetchLectureIDs(): [string, Array<LectureInfo>] {
     const lecture = elem
       .getElementsByTagName("div")[0]
       .getElementsByTagName("a")[0];
-    const m = lecture.href.match("(https?://[^/]+)/portal/site-reset/([^/]+)");
+    const m = lecture.href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)");
     if (m && m[2][0] !== "~") {
       lectureInfo.lectureID = m[2];
       lectureInfo.lectureName = lecture.title;
@@ -118,4 +128,4 @@ function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteI
     });
 }
 
-export { fetchLectureIDs, getKadaiOfLectureID, getQuizOfLectureID };
+export { getBaseURL, fetchLectureIDs, getKadaiOfLectureID, getQuizOfLectureID };
