@@ -86,7 +86,7 @@ function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
       entry.kadaiPage = e.kadaiPage;
       if (entry.dueDateTimestamp * 1000 > nowTime) kadaiEntries.push(entry);
     }
-    kadaiList.push(new Kadai(new CourseSiteInfo(i.courseID, i.courseName), kadaiEntries, i.isRead))
+    kadaiList.push(new Kadai(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), kadaiEntries, i.isRead))
   }
   return kadaiList;
 }
