@@ -83,7 +83,7 @@ export class Kadai {
   }
 }
 
-export class LectureInfo {
+export class CourseSiteInfo {
   tabType: string;
   lectureID: string;
   lectureName: string;

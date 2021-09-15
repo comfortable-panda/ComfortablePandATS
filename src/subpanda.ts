@@ -1,4 +1,4 @@
-import { Kadai, LectureInfo } from './kadai';
+import { Kadai, CourseSiteInfo } from './kadai';
 import { loadFromLocalStorage } from './storage'
 import {
   convertArrayToKadai,
@@ -6,7 +6,7 @@ import {
   sortKadaiList
 } from "./utils";
 import {
-  lectureIDList
+  courseIDList
 } from "./content_script"
 import { createMiniPandAGeneralized } from "./minipanda"
 
@@ -18,7 +18,7 @@ async function updateSubPandA(root: Element) {
   const kadais = await loadFromLocalStorage("TSkadaiList") as Array<Kadai>;
   const quizList = await loadFromLocalStorage("TSQuizList") as Array<Kadai>;
   const kadaiMemoList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
-  const lectureIDs = await loadFromLocalStorage("TSlectureids") as Array<LectureInfo>;
+  const lectureIDs = await loadFromLocalStorage("TSlectureids") as Array<CourseSiteInfo>;
   mergedKadaiList = mergeIntoKadaiList(kadais, quizList);
   mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, kadaiMemoList);
   mergedKadaiList = sortKadaiList(mergedKadaiList);

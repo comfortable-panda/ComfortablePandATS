@@ -1,4 +1,4 @@
-import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
+import { Kadai, KadaiEntry, CourseSiteInfo } from "./kadai";
 import { nowTime } from "./utils";
 import { CPsettings } from "./content_script";
 
@@ -14,12 +14,11 @@ function getBaseURL(): string {
 
 // Lecture ID をすべて取得する
 // ネットワーク通信は行わない
-// returns [domain, {tabType, lectureID, lectureName}]
-function fetchLectureIDs(): [string, Array<LectureInfo>] {
+// returns [{tabType, lectureID, lectureName}]
+function getCourseIDList(): Array<CourseSiteInfo> {
   const elementCollection = document.getElementsByClassName("fav-sites-entry");
   const elements = Array.prototype.slice.call(elementCollection);
   const result = [];
-  let domain = null;
   for (const elem of elements) {
     const lectureInfo = { tabType: "default", lectureID: "", lectureName: "" }; // tabTypeはPandAのトップバーに存在するかしないか
     const lecture = elem
@@ -30,12 +29,9 @@ function fetchLectureIDs(): [string, Array<LectureInfo>] {
       lectureInfo.lectureID = m[2];
       lectureInfo.lectureName = lecture.title;
       result.push(lectureInfo);
-      if (!domain) {
-        domain = m[1];
-      }
     }
   }
-  return [domain, result];
+  return result;
 }
 
 function getKadaiOfLectureID(baseURL: string, lectureID: string): Promise<Kadai> {
@@ -128,4 +124,4 @@ function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteI
     });
 }
 
-export { getBaseURL, fetchLectureIDs, getKadaiOfLectureID, getQuizOfLectureID };
+export { getBaseURL, getCourseIDList, getKadaiOfLectureID, getQuizOfLectureID };

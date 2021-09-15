@@ -1,4 +1,4 @@
-import { Kadai, LectureInfo } from "./kadai";
+import { Kadai, CourseSiteInfo } from "./kadai";
 import {
   createLectureIDMap,
   formatTimestamp,
@@ -43,7 +43,7 @@ function createMiniSakaiBtn(): void {
   }
 }
 
-export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
+export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai>, lectureIDList: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
   const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
   const kadaiFetchedTimeString = kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
@@ -184,7 +184,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     });
 }
 
-function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): void {
+function createMiniPandA(kadaiList: Array<Kadai>, lectureIDList: Array<CourseSiteInfo>): void {
   createMiniPandAGeneralized(miniPandA, kadaiList, lectureIDList, false, (rendered) => {
       miniPandA.innerHTML = rendered;
       const parent = document.getElementById("pageBody");
@@ -268,7 +268,7 @@ function initState(root: Element) {
   root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
 }
 
-async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<LectureInfo>): Promise<void>{
+async function displayMiniPandA(mergedKadaiList: Array<Kadai>, lectureIDList: Array<CourseSiteInfo>): Promise<void>{
   createMiniPandA(mergedKadaiList, lectureIDList);
 }
 
@@ -284,7 +284,7 @@ function deleteNavBarNotification(): void {
   }
 }
 
-function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: Array<Kadai>): void {
+function createNavBarNotification(lectureIDList: Array<CourseSiteInfo>, kadaiList: Array<Kadai>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
 

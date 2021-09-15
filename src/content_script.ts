@@ -1,7 +1,7 @@
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
-import { Kadai, LectureInfo } from "./kadai";
+import { Kadai, CourseSiteInfo } from "./kadai";
 import {
-  fetchLectureIDs,
+  getCourseIDList,
   getBaseURL,
   getKadaiOfLectureID,
   getQuizOfLectureID,
@@ -31,12 +31,12 @@ export let kadaiCacheInterval: number;
 export let quizCacheInterval: number;
 export let kadaiFetchedTime: number;
 export let quizFetchedTime: number;
-export let lectureIDList: Array<LectureInfo>;
+export let courseIDList: Array<CourseSiteInfo>;
 export let mergedKadaiList: Array<Kadai>;
 export let mergedKadaiListNoMemo: Array<Kadai>;
 export let CPsettings: Settings;
 
-export async function loadAndMergeKadaiList(lectureIDList: Array<LectureInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
+export async function loadAndMergeKadaiList(lectureIDList: Array<CourseSiteInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
   // ストレージから前回保存したkadaiListを読み込む
   const oldKadaiList = await loadFromLocalStorage("TSkadaiList");
   const oldQuizList = await loadFromLocalStorage("TSQuizList");
@@ -111,20 +111,20 @@ async function loadSettings() {
   quizFetchedTime = await loadFromLocalStorage("TSquizFetchedTime");
 }
 
-async function loadLectureIDs() {
-  lectureIDList = fetchLectureIDs()[1];
-  await saveToLocalStorage("TSlectureids", lectureIDList);
+async function loadCourseIDList() {
+  courseIDList = getCourseIDList();
+  await saveToLocalStorage("TSlectureids", courseIDList);
 }
 
 async function main() {
   if (isLoggedIn()) {
     createMiniSakaiBtn();
     await loadSettings();
-    await loadLectureIDs();
-    mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(kadaiFetchedTime, kadaiCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
+    await loadCourseIDList();
+    mergedKadaiList = await loadAndMergeKadaiList(courseIDList, useCache(kadaiFetchedTime, kadaiCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
     await addBookmarkedCourseSites(baseURL);
-    await displayMiniPandA(mergedKadaiList, lectureIDList);
-    createNavBarNotification(lectureIDList, mergedKadaiList);
+    await displayMiniPandA(mergedKadaiList, courseIDList);
+    createNavBarNotification(courseIDList, mergedKadaiList);
 
     miniSakaiReady();
     updateIsReadFlag(mergedKadaiListNoMemo);

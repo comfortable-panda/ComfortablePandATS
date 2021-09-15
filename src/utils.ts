@@ -1,4 +1,4 @@
-import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
+import { Kadai, KadaiEntry, CourseSiteInfo } from "./kadai";
 import { saveToLocalStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
@@ -22,7 +22,7 @@ function formatTimestamp(timestamp: number): string {
   return _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
 }
 
-function createLectureIDMap(lectureIDList: Array<LectureInfo>): Map<string, string> {
+function createLectureIDMap(lectureIDList: Array<CourseSiteInfo>): Map<string, string> {
   // 講義IDと講義名のMapを作る
   const lectureIDMap = new Map<string, string>();
   for (const lec of lectureIDList) {
