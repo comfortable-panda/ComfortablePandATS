@@ -22,13 +22,13 @@ function formatTimestamp(timestamp: number): string {
   return _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
 }
 
-function createLectureIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
+function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
   // 講義IDと講義名のMapを作る
-  const lectureIDMap = new Map<string, string>();
+  const courseIDMap = new Map<string, string>();
   for (const courseSiteInfo of courseSiteInfos) {
-    lectureIDMap.set(courseSiteInfo.lectureID, courseSiteInfo.lectureName);
+    courseIDMap.set(courseSiteInfo.lectureID, courseSiteInfo.lectureName);
   }
-  return lectureIDMap;
+  return courseIDMap;
 }
 
 function isLoggedIn(): boolean {
@@ -42,24 +42,24 @@ function isLoggedIn(): boolean {
   return loggedIn;
 }
 
-function getCurrentLectureID() {
+function getSiteCourseID() {
   // 現在のページの講義IDを返す
   const url = location.href;
-  let lectureID = "";
+  let courseID = "";
   const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
   if (url.match(reg)) {
     // @ts-ignore
-    lectureID = url.match(reg)[2];
+    courseID = url.match(reg)[2];
   }
-  return lectureID;
+  return courseID;
 }
 
 function updateIsReadFlag(kadaiList: Array<Kadai>): void {
-  const lectureID = getCurrentLectureID();
+  const courseID = getSiteCourseID();
   const updatedKadaiList = [];
-  if (lectureID && lectureID.length >= 17) {
+  if (courseID && courseID.length >= 17) {
     for (const kadai of kadaiList) {
-      if (kadai.lectureID === lectureID) {
+      if (kadai.lectureID === courseID) {
         updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, kadai.kadaiEntries, true));
       } else {
         updatedKadaiList.push(kadai);
@@ -184,7 +184,7 @@ export {
   getDaysUntil,
   getTimeRemain,
   formatTimestamp,
-  createLectureIDMap,
+  createCourseIDMap,
   isLoggedIn,
   miniSakaiReady,
   convertArrayToKadai,

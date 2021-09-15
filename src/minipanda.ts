@@ -1,6 +1,6 @@
 import { Kadai, CourseSiteInfo } from "./kadai";
 import {
-  createLectureIDMap,
+  createCourseIDMap,
   formatTimestamp,
   getDaysUntil,
   getTimeRemain,
@@ -51,14 +51,14 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
 
   const addMemoBoxLectures: Array<Object> = [];
 
-  const lectureIDMap = createLectureIDMap(courseSiteInfos);
+  const courseIDMap = createCourseIDMap(courseSiteInfos);
   const dangerElements: Array<Object> = [];
   const warningElements: Array<Object> = [];
   const successElements: Array<Object> = [];
   const otherElements: Array<Object> = [];
   // loop over lectures
   kadaiList.forEach(item => {
-    const lectureName = lectureIDMap.get(item.lectureID);
+    const lectureName = courseIDMap.get(item.lectureID);
     // loop over kadais
     item.kadaiEntries.forEach(kadai => {
       const dispDue = formatTimestamp(kadai.dueDateTimestamp);
@@ -213,7 +213,7 @@ async function createSettingsTab(root: Element): Promise<void> {
 }
 
 function createSettingItem(root: Element, itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
-  const settingsDiv = root.querySelector('.settings-tab');
+  const settingsDiv = root.querySelector(".settings-tab");
   if (settingsDiv == null) {
     console.log(".settings-tab not found");
     return;
