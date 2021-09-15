@@ -1,5 +1,5 @@
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
-import { Kadai, CourseSiteInfo } from "./kadai";
+import { Kadai, CourseSiteInfo } from "./model";
 import {
   getCourseIDList,
   getBaseURL,

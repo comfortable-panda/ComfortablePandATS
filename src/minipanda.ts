@@ -1,4 +1,4 @@
-import { Kadai, CourseSiteInfo } from "./kadai";
+import { Kadai, CourseSiteInfo } from "./model";
 import {
   createCourseIDMap,
   formatTimestamp,

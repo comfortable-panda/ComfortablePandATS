@@ -1,6 +1,6 @@
 import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
-import { Kadai, KadaiEntry } from "./kadai";
+import { Kadai, KadaiEntry } from "./model";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {
   CPsettings,

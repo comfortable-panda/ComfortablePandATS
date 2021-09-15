@@ -1,4 +1,4 @@
-import { Kadai, KadaiEntry, CourseSiteInfo } from "./kadai";
+import { Kadai, KadaiEntry, CourseSiteInfo } from "./model";
 import { nowTime } from "./utils";
 import { CPsettings } from "./content_script";
 

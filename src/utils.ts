@@ -1,4 +1,4 @@
-import { Kadai, KadaiEntry, CourseSiteInfo } from "./kadai";
+import { Kadai, KadaiEntry, CourseSiteInfo } from "./model";
 import { saveToLocalStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
