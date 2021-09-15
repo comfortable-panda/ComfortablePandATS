@@ -22,11 +22,11 @@ function formatTimestamp(timestamp: number): string {
   return _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
 }
 
-function createLectureIDMap(lectureIDList: Array<CourseSiteInfo>): Map<string, string> {
+function createLectureIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
   // 講義IDと講義名のMapを作る
   const lectureIDMap = new Map<string, string>();
-  for (const lec of lectureIDList) {
-    lectureIDMap.set(lec.lectureID, lec.lectureName);
+  for (const courseSiteInfo of courseSiteInfos) {
+    lectureIDMap.set(courseSiteInfo.lectureID, courseSiteInfo.lectureName);
   }
   return lectureIDMap;
 }

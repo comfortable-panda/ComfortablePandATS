@@ -36,7 +36,7 @@ export let mergedKadaiList: Array<Kadai>;
 export let mergedKadaiListNoMemo: Array<Kadai>;
 export let CPsettings: Settings;
 
-export async function loadAndMergeKadaiList(lectureIDList: Array<CourseSiteInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
+export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
   // ストレージから前回保存したkadaiListを読み込む
   const oldKadaiList = await loadFromLocalStorage("TSkadaiList");
   const oldQuizList = await loadFromLocalStorage("TSQuizList");
@@ -49,7 +49,7 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<CourseSiteInfo>
     console.log("Fetching assignments...");
     const pendingList = [];
     // 課題取得待ちリストに追加
-    for (const i of lectureIDList) {
+    for (const i of courseSiteInfos) {
       pendingList.push(getKadaiOfLectureID(baseURL, i.lectureID));
     }
     // 全部揃ったら取得に成功したものをnewKadaiListに入れる
@@ -73,7 +73,7 @@ export async function loadAndMergeKadaiList(lectureIDList: Array<CourseSiteInfo>
     console.log("Fetching quizzes...");
     const pendingList = [];
     // クイズ取得待ちリストに追加
-    for (const i of lectureIDList) {
+    for (const i of courseSiteInfos) {
       pendingList.push(getQuizOfLectureID(baseURL, i.lectureID));
     }
     // 全部揃ったら取得に成功したものをnewQuizListに入れる
