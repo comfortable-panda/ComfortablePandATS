@@ -291,7 +291,7 @@ function createNavBarNotification(lectureIDList: Array<LectureInfo>, kadaiList: 
   for (const lecture of lectureIDList) {
     for (let j = 3; j < defaultTabCount; j++) {
       // @ts-ignore
-      const lectureID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-reset/([^/]+)")[2];
+      const lectureID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
 
       const q = kadaiList.findIndex((kadai) => {
         return kadai.lectureID === lectureID;
