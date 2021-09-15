@@ -19,7 +19,7 @@ function getCourseIDList(): Array<CourseSiteInfo> {
   const elements = Array.prototype.slice.call(elementCollection);
   const result = [];
   for (const elem of elements) {
-    const lectureInfo = new CourseSiteInfo("default", "", ""); // tabTypeはPandAのトップバーに存在するかしないか
+    const lectureInfo = new CourseSiteInfo("", ""); // tabTypeはPandAのトップバーに存在するかしないか
     const lecture = elem
       .getElementsByTagName("div")[0]
       .getElementsByTagName("a")[0];
@@ -48,15 +48,9 @@ function getKadaiFromCourseID(baseURL: string, courseID: string): Promise<Kadai>
       if (!res || !res.assignment_collection)
         reject("404 kadai data not found");
       else {
+        const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
         const kadaiEntries = convJsonToKadaiEntries(res, baseURL, courseID);
-        resolve(
-          new Kadai(
-            courseID,
-            courseID, // TODO: lectureName
-            kadaiEntries,
-            false
-          )
-        );
+        resolve(new Kadai(courseSiteInfo, kadaiEntries, false));
       }
     });
     request.send();
@@ -78,15 +72,9 @@ function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Kadai> 
       const res = request.response;
       if (!res || !res.sam_pub_collection) reject("404 kadai data not found");
       else {
+        const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
         const kadaiEntries = convJsonToQuizEntries(res, baseURL, courseID);
-        resolve(
-          new Kadai(
-            courseID,
-            courseID, // TODO: lectureName
-            kadaiEntries,
-            false
-          )
-        );
+        resolve(new Kadai(courseSiteInfo, kadaiEntries, false));
       }
     });
     request.send();

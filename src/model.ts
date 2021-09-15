@@ -28,19 +28,16 @@ export class KadaiEntry {
 }
 
 export class Kadai {
-  lectureID: string;
-  lectureName: string;
+  courseSiteInfo: CourseSiteInfo;
   kadaiEntries: Array<KadaiEntry>;
   isRead: boolean;
 
   constructor(
-    lectureID: string,
-    lectureName: string,
+    courseSiteInfo: CourseSiteInfo,
     kadaiEntries: Array<KadaiEntry>,
     isRead: boolean
   ) {
-    this.lectureID = lectureID;
-    this.lectureName = lectureName;
+    this.courseSiteInfo = courseSiteInfo;
     this.kadaiEntries = kadaiEntries;
     this.isRead = isRead;
   }
@@ -84,15 +81,12 @@ export class Kadai {
 }
 
 export class CourseSiteInfo {
-  tabType: string;
   courseID: string;
   courseName: string;
   constructor(
-    tabType: string,
     courseID: string,
     courseName: string
   ) {
-    this.tabType = tabType;
     this.courseID = courseID;
     this.courseName = courseName;
   }
