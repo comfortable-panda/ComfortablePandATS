@@ -117,9 +117,10 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
     }
     updatedKadaiList.push(new Kadai(kadai.courseSiteInfo, updatedKadaiEntries, kadai.isRead));
   }
-  if (kadaiID[0] === "m") saveToLocalStorage("TSkadaiMemoList", updatedKadaiList);
-  else if (kadaiID[0] === "q") saveToLocalStorage("TSQuizList", updatedKadaiList);
-  else saveToLocalStorage("TSkadaiList", updatedKadaiList);
+
+  if (kadaiID[0] === "m") await saveToLocalStorage("TSkadaiMemoList", updatedKadaiList);
+  else if (kadaiID[0] === "q") await saveToLocalStorage("TSQuizList", updatedKadaiList);
+  else await saveToLocalStorage("TSkadaiList", updatedKadaiList);
 
   // NavBarを再描画
   deleteNavBarNotification();
