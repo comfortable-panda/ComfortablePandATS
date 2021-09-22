@@ -38,8 +38,8 @@ export let CPsettings: Settings;
 
 export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
   // ストレージから前回保存したkadaiListを読み込む
-  const oldKadaiList = await loadFromLocalStorage("TSkadaiList");
-  const oldQuizList = await loadFromLocalStorage("TSQuizList");
+  const oldKadaiList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiList"));
+  const oldQuizList = convertArrayToKadai(await loadFromLocalStorage("TSQuizList"));
   let newKadaiList = [];
   let newQuizList = [];
 

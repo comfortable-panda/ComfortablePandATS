@@ -57,10 +57,10 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
   const successElements: Array<Object> = [];
   const otherElements: Array<Object> = [];
   // loop over lectures
-  kadaiList.forEach(item => {
-    const lectureName = courseIDMap.get(item.lectureID);
+  kadaiList.forEach((item) => {
+    const lectureName = courseIDMap.get(item.courseSiteInfo.courseID);
     // loop over kadais
-    item.kadaiEntries.forEach(kadai => {
+    item.kadaiEntries.forEach((kadai) => {
       const dispDue = formatTimestamp(kadai.dueDateTimestamp);
       const timeRemain = getTimeRemain((kadai.dueDateTimestamp*1000-nowTime) / 1000);
       const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp*1000);
@@ -77,7 +77,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
         title: kadaiTitle,
         isMemo: kadai.isMemo,
         isQuiz: kadai.isQuiz,
-        lectureId: item.lectureID,
+        lectureId: item.courseSiteInfo.courseID,
         id: kadai.kadaiID,
         checked: kadaiChecked,
         href: item.getTopSite() == null ? "" : item.getTopSite()
@@ -113,7 +113,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     });
 
     addMemoBoxLectures.push({
-      id: item.lectureID,
+      id: item.courseSiteInfo.courseID,
       lectureName: lectureName,
     });
   });
@@ -291,10 +291,10 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiL
   for (const courseSiteInfo of courseSiteInfos) {
     for (let j = 2; j < defaultTabCount; j++) {
       // @ts-ignore
-      const lectureID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
+      const courseID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
 
-      const q = kadaiList.findIndex((kadai) => {
-        return kadai.lectureID === lectureID;
+      const q = kadaiList.findIndex((kadai: Kadai) => {
+        return kadai.courseSiteInfo.courseID === courseID;
       });
       if (q !== -1) {
         const closestTime = (CPsettings.displayCheckedKadai) ? kadaiList[q].closestDueDateTimestamp : kadaiList[q].closestDueDateTimestampExcludeFinished;

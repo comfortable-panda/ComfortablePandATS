@@ -59,8 +59,8 @@ function updateIsReadFlag(kadaiList: Array<Kadai>): void {
   const updatedKadaiList = [];
   if (courseID && courseID.length >= 17) {
     for (const kadai of kadaiList) {
-      if (kadai.lectureID === courseID) {
-        updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, kadai.kadaiEntries, true));
+      if (kadai.courseSiteInfo.courseID === courseID) {
+        updatedKadaiList.push(new Kadai(kadai.courseSiteInfo, kadai.kadaiEntries, true));
       } else {
         updatedKadaiList.push(kadai);
       }
@@ -86,7 +86,7 @@ function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
       entry.kadaiPage = e.kadaiPage;
       if (entry.dueDateTimestamp * 1000 > nowTime) kadaiEntries.push(entry);
     }
-    kadaiList.push(new Kadai(i.lectureID, i.lectureName, kadaiEntries, i.isRead))
+    kadaiList.push(new Kadai(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), kadaiEntries, i.isRead))
   }
   return kadaiList;
 }
@@ -96,16 +96,18 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
 
   // 最新の課題リストをもとにマージする
   for (const newKadai of newKadaiList){
-    const idx = oldKadaiList.findIndex((oldKadai) => {
-      return (oldKadai.lectureID === newKadai.lectureID)
+    const idx = oldKadaiList.findIndex((oldKadai: Kadai) => {
+      return (oldKadai.courseSiteInfo.courseID === newKadai.courseSiteInfo.courseID)
     });
 
     // もし過去に保存した課題リストの中に講義IDが存在しない時
     if (idx === -1) {
       // 未読フラグを立ててマージ
       const isRead = newKadai.kadaiEntries.length === 0;
-      newKadai.kadaiEntries.sort((a, b)=>{return a.dueDateTimestamp - b.dueDateTimestamp});
-      mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, newKadai.kadaiEntries, isRead));
+      newKadai.kadaiEntries.sort((a, b) => {
+        return a.dueDateTimestamp - b.dueDateTimestamp;
+      });
+      mergedKadaiList.push(new Kadai(newKadai.courseSiteInfo, newKadai.kadaiEntries, isRead));
     }
     // 過去に保存した課題リストの中に講義IDが存在する時
     else {
@@ -140,7 +142,7 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
       }
       // 未読フラグ部分を変更してマージ
       mergedKadaiEntries.sort((a, b)=>{return a.dueDateTimestamp - b.dueDateTimestamp});
-      mergedKadaiList.push(new Kadai(newKadai.lectureID, newKadai.lectureName, mergedKadaiEntries, isRead));
+      mergedKadaiList.push(new Kadai(newKadai.courseSiteInfo, mergedKadaiEntries, isRead));
     }
   }
   return mergedKadaiList;
@@ -149,16 +151,16 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
 function mergeIntoKadaiList(targetKadaiList: Array<Kadai>, newKadaiList: Array<Kadai>): Array<Kadai>{
   const mergedKadaiList = [];
   for (const kadai of targetKadaiList){
-    mergedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, kadai.kadaiEntries, kadai.isRead));
+    mergedKadaiList.push(new Kadai(kadai.courseSiteInfo, kadai.kadaiEntries, kadai.isRead));
   }
   for (const kadaiList of newKadaiList){
-    const idx = targetKadaiList.findIndex((kadai) => {
-      return kadaiList.lectureID === kadai.lectureID;
+    const idx = targetKadaiList.findIndex((kadai: Kadai) => {
+      return kadaiList.courseSiteInfo.courseID === kadai.courseSiteInfo.courseID;
     });
     if (idx !== -1) {
       mergedKadaiList[idx].kadaiEntries = mergedKadaiList[idx].kadaiEntries.concat(kadaiList.kadaiEntries);
     } else {
-      mergedKadaiList.push(new Kadai(kadaiList.lectureID, kadaiList.lectureName, kadaiList.kadaiEntries, true));
+      mergedKadaiList.push(new Kadai(kadaiList.courseSiteInfo, kadaiList.kadaiEntries, true));
     }
   }
   return mergedKadaiList;
