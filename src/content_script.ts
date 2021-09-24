@@ -1,5 +1,5 @@
 import { loadFromStorage, saveToStorage } from "./storage";
-import { Kadai, LectureInfo } from "./kadai";
+import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
 import { fetchLectureIDs, getKadaiOfLectureID, getQuizOfLectureID } from "./network";
 import {
   createHanburgerButton,
@@ -21,7 +21,7 @@ import {
 import { Settings } from "./settings";
 
 const baseURL = "https://panda.ecs.kyoto-u.ac.jp";
-export const VERSION = "3.5.2";
+export const VERSION = "4.0.0α";
 export let kadaiCacheInterval = 60 * 2;
 export let quizCacheInterval = 60 * 10;
 export let kadaiFetchedTime: number;
@@ -111,14 +111,44 @@ async function loadLectureIDs() {
   await saveToStorage("TSlectureids", lectureIDList);
 }
 
+async function loadLectureIDsDemo() {
+  lectureIDList = [
+    new LectureInfo("default", "demo1", "サンプル講義1"),
+    new LectureInfo("default", "demo2", "サンプル講義2"),
+    new LectureInfo("default", "demo3", "サンプル講義3"),
+    new LectureInfo("default", "demo4", "サンプル講義4"),
+  ];
+  return lectureIDList;
+}
+
+async function loadKadaiListDemo() {
+  let date = new Date();
+  let kadaiListDemo: Array<Kadai> = [];
+  date.setHours(date.getHours() + 5);
+  kadaiListDemo.push(
+    new Kadai("demo1","",[new KadaiEntry("k1", "サンプル課題1", date.getTime()/1000, false, false, false)], false)
+  );
+  date.setDate(date.getDate() + 2);
+  kadaiListDemo.push(
+    new Kadai("demo2","",[new KadaiEntry("k2", "サンプル課題2", date.getTime()/1000, false, false, false)], false)
+  );
+  date.setDate(date.getDate() + 4);
+  kadaiListDemo.push(
+    new Kadai("demo3","",[new KadaiEntry("k3", "サンプル課題1", date.getTime()/1000, false, false, false)], false)
+  );
+  return kadaiListDemo;
+}
+
 async function main() {
   if (isLoggedIn()) {
     createHanburgerButton();
     await loadSettings();
-    await loadLectureIDs();
-    mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(kadaiFetchedTime, kadaiCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
+    // await loadLectureIDs();
+    await loadLectureIDsDemo();
+    // mergedKadaiList = await loadAndMergeKadaiList(lectureIDList, useCache(kadaiFetchedTime, kadaiCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
+    mergedKadaiList = await loadKadaiListDemo();
 
-    await addMissingBookmarkedLectures();
+    // await addMissingBookmarkedLectures();
     await displayMiniPandA(mergedKadaiList, lectureIDList);
     createNavBarNotification(lectureIDList, mergedKadaiList);
 

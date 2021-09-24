@@ -105,7 +105,7 @@
 }
 
 .sidenav-list {
-    padding: 20px 8px 8px 8px;
+    padding: 20px 8px 0px 8px;
     text-decoration: none;
     color: #818181;
     display: block;
@@ -224,7 +224,7 @@
     border-bottom: solid 2px #e85555;
     border-right: solid 2px #e85555;
     border-radius: 10px 10px 10px 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .kadai-warning {
@@ -233,7 +233,7 @@
     border-bottom: solid 2px #d7aa57;
     border-right: solid 2px #d7aa57;
     border-radius: 10px 10px 10px 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .kadai-success {
@@ -242,7 +242,7 @@
     border-bottom: solid 2px #62b665;
     border-right: solid 2px #62b665;
     border-radius: 10px 10px 10px 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .kadai-other {
@@ -251,7 +251,7 @@
     border-bottom: solid 2px #777777;
     border-right: solid 2px #777777;
     border-radius: 10px 10px 10px 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .kadai-date {

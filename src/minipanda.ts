@@ -80,8 +80,8 @@ function createMiniPandA(): void {
     settingsTab,
     settingsTabLabel,
     addMemoButton,
-    kadaiFetchedTimeString,
-    quizFetchedTimeString,
+    // kadaiFetchedTimeString,
+    // quizFetchedTimeString,
   ]);
 
   const parent = document.getElementById("pageBody");
