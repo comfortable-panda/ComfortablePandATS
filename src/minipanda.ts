@@ -43,9 +43,9 @@ function createMiniSakaiBtn(): void {
   }
 }
 
-export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
-  const kadaiFetchedTimestamp = new Date( (typeof assignmentFetchedTime === "number")? assignmentFetchedTime : nowTime);
-  const kadaiFetchedTimeString = kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
+export function createMiniPandAGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
+  const assignmentFetchedTimestamp = new Date( (typeof assignmentFetchedTime === "number")? assignmentFetchedTime : nowTime);
+  const assignmentFetchedTimeString = assignmentFetchedTimestamp.toLocaleDateString() + " " + assignmentFetchedTimestamp.getHours() + ":" + ("00" + assignmentFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + assignmentFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
   const quizFetchedTimeString = quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
 
@@ -57,41 +57,41 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Assig
   const successElements: Array<Object> = [];
   const otherElements: Array<Object> = [];
   // loop over lectures
-  kadaiList.forEach((item) => {
-    const lectureName = courseIDMap.get(item.courseSiteInfo.courseID);
-    // loop over kadais
-    item.assignmentEntries.forEach((kadai) => {
-      const dispDue = formatTimestamp(kadai.dueDateTimestamp);
-      const timeRemain = getTimeRemain((kadai.dueDateTimestamp*1000-nowTime) / 1000);
-      const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp*1000);
+  assignmentList.forEach((assignment) => {
+    const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
+    // iterate over assignment entries
+    assignment.assignmentEntries.forEach((assignmentEntry) => {
+      const dispDue = formatTimestamp(assignmentEntry.dueDateTimestamp);
+      const timeRemain = getTimeRemain((assignmentEntry.dueDateTimestamp * 1000 - nowTime) / 1000);
+      const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.dueDateTimestamp * 1000);
 
       const remainTimeText = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
-      const kadaiDueDateText = "" + dispDue;
-      const kadaiTitle = "" + kadai.assignmentTitle;
-      const kadaiChecked = kadai.isFinished;
+      const dueDateText = `${dispDue}`;
+      const title = `${assignmentEntry.assignmentTitle}`;
+      const checked = assignmentEntry.isFinished;
 
       const entry = {
-        timestamp: kadai.dueDateTimestamp,
-        date: kadaiDueDateText,
+        timestamp: assignmentEntry.dueDateTimestamp,
+        date: dueDateText,
         remain: remainTimeText,
-        title: kadaiTitle,
-        isMemo: kadai.isMemo,
-        isQuiz: kadai.isQuiz,
-        lectureId: item.courseSiteInfo.courseID,
-        id: kadai.assignmentID,
-        checked: kadaiChecked,
-        href: item.getTopSite() == null ? "" : item.getTopSite()
+        title: title,
+        isMemo: assignmentEntry.isMemo,
+        isQuiz: assignmentEntry.isQuiz,
+        lectureId: assignment.courseSiteInfo.courseID,
+        id: assignmentEntry.assignmentID,
+        checked: checked,
+        href: assignment.getTopSite() == null ? "" : assignment.getTopSite(),
       };
       const vars = {
-        lectureName: lectureName,
+        lectureName: courseName,
         entries: [entry],
       };
 
-      const appendElement = (lectureName: string|undefined, elements: Array<Object>) => {
+      const appendElement = (courseName: string|undefined, elements: Array<Object>) => {
         // @ts-ignore
         const lecName = elements.map(e => e.lectureName);
-        if (lecName.includes(lectureName)){
-          const idx = lecName.indexOf(lectureName);
+        if (lecName.includes(courseName)){
+          const idx = lecName.indexOf(courseName);
           // @ts-ignore
           elements[idx].entries.push(entry);
           // @ts-ignore ソートする
@@ -102,19 +102,19 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Assig
       };
 
       if (daysUntilDue > 0 && daysUntilDue <= 1) {
-        appendElement(lectureName, dangerElements);
+        appendElement(courseName, dangerElements);
       } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
-        appendElement(lectureName, warningElements);
+        appendElement(courseName, warningElements);
       } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
-        appendElement(lectureName, successElements);
+        appendElement(courseName, successElements);
       } else {
-        appendElement(lectureName, otherElements);
+        appendElement(courseName, otherElements);
       }
     });
 
     addMemoBoxLectures.push({
-      id: item.courseSiteInfo.courseID,
-      lectureName: lectureName,
+      id: assignment.courseSiteInfo.courseID,
+      lectureName: courseName,
     });
   });
 
@@ -128,14 +128,14 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Assig
   };
 
   let relaxPandA = null;
-  if (kadaiList.length == 0) {
+  if (assignmentList.length == 0) {
     relaxPandA = {
       img: chrome.extension.getURL("img/relaxPanda.png"),
     };
   }
 
   const templateVars = {
-    kadaiFetchedTime: kadaiFetchedTimeString,
+    kadaiFetchedTime: assignmentFetchedTimeString,
     quizFetchedTime: quizFetchedTimeString,
     minipandaLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
@@ -184,8 +184,8 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Assig
     });
 }
 
-function createMiniPandA(kadaiList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
-  createMiniPandAGeneralized(miniPandA, kadaiList, courseSiteInfos, false, (rendered) => {
+function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
+  createMiniPandAGeneralized(miniPandA, assignmentList, courseSiteInfos, false, (rendered) => {
       miniPandA.innerHTML = rendered;
       const parent = document.getElementById("pageBody");
       const ref = document.getElementById("toolMenuWrap");
@@ -268,8 +268,8 @@ function initState(root: Element) {
   root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
 }
 
-async function displayMiniPandA(mergedKadaiList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
-  createMiniPandA(mergedKadaiList, courseSiteInfos);
+async function displayMiniPandA(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
+  createMiniPandA(mergedAssignmentList, courseSiteInfos);
 }
 
 function deleteNavBarNotification(): void {
@@ -284,7 +284,7 @@ function deleteNavBarNotification(): void {
   }
 }
 
-function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiList: Array<Assignment>): void {
+function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assignmentList: Array<Assignment>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
 
@@ -293,12 +293,12 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiL
       // @ts-ignore
       const courseID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
 
-      const q = kadaiList.findIndex((kadai: Assignment) => {
-        return kadai.courseSiteInfo.courseID === courseID;
+      const q = assignmentList.findIndex((assignment: Assignment) => {
+        return assignment.courseSiteInfo.courseID === courseID;
       });
       if (q !== -1) {
-        const closestTime = (CPsettings.displayCheckedKadai) ? kadaiList[q].closestDueDateTimestamp : kadaiList[q].closestDueDateTimestampExcludeFinished;
-        if (!kadaiList[q].isRead && closestTime !== -1) {
+        const closestTime = (CPsettings.displayCheckedKadai) ? assignmentList[q].closestDueDateTimestamp : assignmentList[q].closestDueDateTimestampExcludeFinished;
+        if (!assignmentList[q].isRead && closestTime !== -1) {
           defaultTab[j].classList.add("red-badge");
         }
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
