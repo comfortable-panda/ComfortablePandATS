@@ -91,7 +91,7 @@ function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, site
       const kadaiDetail = json.instructions;
       const kadaiDueEpoch = json.dueTime.epochSecond;
       const entry = new AssignmentEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, false, false, kadaiDetail);
-      entry.kadaiPage = baseURL + "/portal/site/" + siteID;
+      entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
     });
 }
@@ -106,7 +106,7 @@ function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteI
       const quizDetail = "";
       const quizDueEpoch = json.dueDate / 1000;
       const entry = new AssignmentEntry(quizID, quizTitle, quizDueEpoch, false, false, true, quizDetail);
-      entry.kadaiPage = baseURL + "/portal/site/" + siteID;
+      entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
     });
 }

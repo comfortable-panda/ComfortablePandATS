@@ -5,7 +5,7 @@ export class AssignmentEntry {
   dueDateTimestamp: number; // POSIX time
   isMemo: boolean;
   isFinished: boolean;
-  kadaiPage?: string;
+  assignmentPage?: string;
   isQuiz: boolean;
 
   constructor(
@@ -29,23 +29,23 @@ export class AssignmentEntry {
 
 export class Assignment {
   courseSiteInfo: CourseSiteInfo;
-  kadaiEntries: Array<AssignmentEntry>;
+  assignmentEntries: Array<AssignmentEntry>;
   isRead: boolean;
 
   constructor(
     courseSiteInfo: CourseSiteInfo,
-    kadaiEntries: Array<AssignmentEntry>,
+    assignmentEntries: Array<AssignmentEntry>,
     isRead: boolean
   ) {
     this.courseSiteInfo = courseSiteInfo;
-    this.kadaiEntries = kadaiEntries;
+    this.assignmentEntries = assignmentEntries;
     this.isRead = isRead;
   }
 
   get closestDueDateTimestamp(): number {
-    if (this.kadaiEntries.length == 0) return -1;
-    let min = this.kadaiEntries[0].dueDateTimestamp;
-    for (const entry of this.kadaiEntries) {
+    if (this.assignmentEntries.length == 0) return -1;
+    let min = this.assignmentEntries[0].dueDateTimestamp;
+    for (const entry of this.assignmentEntries) {
       if (min > entry.dueDateTimestamp) {
         min = entry.dueDateTimestamp;
       }
@@ -55,10 +55,10 @@ export class Assignment {
 
   // 完了済み以外からclosestTimeを取得する
   get closestDueDateTimestampExcludeFinished(): number {
-    if (this.kadaiEntries.length == 0) return -1;
+    if (this.assignmentEntries.length == 0) return -1;
     let min = 99999999999999;
     let excludeCount = 0;
-    for (const entry of this.kadaiEntries) {
+    for (const entry of this.assignmentEntries) {
       if (entry.isFinished) {
         excludeCount++;
         continue;
@@ -67,14 +67,14 @@ export class Assignment {
         min = entry.dueDateTimestamp;
       }
     }
-    if (excludeCount === this.kadaiEntries.length) min = -1;
+    if (excludeCount === this.assignmentEntries.length) min = -1;
     if (min === 99999999999999) min = -1;
     return min;
   }
 
   getTopSite(): string | null {
-    for (const entry of this.kadaiEntries) {
-      if (entry.kadaiPage != null) return entry.kadaiPage;
+    for (const entry of this.assignmentEntries) {
+      if (entry.assignmentPage != null) return entry.assignmentPage;
     }
     return null;
   }

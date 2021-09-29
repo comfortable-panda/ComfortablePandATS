@@ -60,7 +60,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Assig
   kadaiList.forEach((item) => {
     const lectureName = courseIDMap.get(item.courseSiteInfo.courseID);
     // loop over kadais
-    item.kadaiEntries.forEach((kadai) => {
+    item.assignmentEntries.forEach((kadai) => {
       const dispDue = formatTimestamp(kadai.dueDateTimestamp);
       const timeRemain = getTimeRemain((kadai.dueDateTimestamp*1000-nowTime) / 1000);
       const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp*1000);

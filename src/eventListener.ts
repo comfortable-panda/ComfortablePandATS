@@ -95,7 +95,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const updatedKadaiList = [];
   for (const kadai of kadaiList) {
     const updatedKadaiEntries = [];
-    for (const kadaiEntry of kadai.kadaiEntries) {
+    for (const kadaiEntry of kadai.assignmentEntries) {
       if (kadaiEntry.assignmentID === kadaiID) {
         const isFinished = kadaiEntry.isFinished;
         let isQuiz = false;
@@ -236,7 +236,7 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   const deletedKadaiMemoList = [];
   for (const kadaiMemo of kadaiMemoList) {
     const kadaiMemoEntries = [];
-    for (const _kadaiMemoEntry of kadaiMemo.kadaiEntries) {
+    for (const _kadaiMemoEntry of kadaiMemo.assignmentEntries) {
       if (_kadaiMemoEntry.assignmentID !== kadaiID) kadaiMemoEntries.push(_kadaiMemoEntry);
     }
     deletedKadaiMemoList.push(new Assignment(kadaiMemo.courseSiteInfo, kadaiMemoEntries, kadaiMemo.isRead));
