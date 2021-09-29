@@ -26,9 +26,12 @@ function getCurrentShownSiteHrefs(): Array<string> {
   if (topnav == null) return new Array<string>();
   const sites = topnav.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const hrefs: Array<string> = [];
-  sites.forEach(site => hrefs.push((site.childNodes[1] as HTMLAnchorElement).href)) // TODO: gabagaba
-  if (hrefs.length < 2) return hrefs;
-  return hrefs.slice(1); // omit "Home"
+  // @ts-ignore
+  for (const site of sites) {
+    const href = (site.getElementsByClassName("link-container")[0] as HTMLAnchorElement).href;
+    hrefs.push(href);
+  }
+  return hrefs;
 }
 
 // お気に入り上限を超えた講義を topbar に追加する
