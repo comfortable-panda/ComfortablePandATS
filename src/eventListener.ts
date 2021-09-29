@@ -1,7 +1,7 @@
 import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import {CourseSiteInfo, Assignment, AssignmentEntry} from "./model";
-import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
+import { convertArrayToAssignment, genUniqueStr, mergeIntoAssignmentList } from "./utils";
 import {
   CPsettings,
   courseIDList,
@@ -88,9 +88,9 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiID = event.target.id;
   let kadaiList: Array<Assignment>;
   // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
-  if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
-  else if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromLocalStorage("TSQuizList"));
-  else kadaiList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiList"));
+  if (kadaiID[0] === "m") kadaiList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
+  else if (kadaiID[0] === "q") kadaiList = convertArrayToAssignment(await loadFromLocalStorage("TSQuizList"));
+  else kadaiList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiList"));
 
   const updatedKadaiList = [];
   for (const kadai of kadaiList) {
@@ -197,7 +197,7 @@ async function addKadaiMemo(): Promise<void> {
   const kadaiMemo = new Assignment(new CourseSiteInfo(todoLecID, todoLecID), [kadaiMemoEntry], true);
 
   if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0) {
-    kadaiMemoList = convertArrayToKadai(kadaiMemoList);
+    kadaiMemoList = convertArrayToAssignment(kadaiMemoList);
     const idx = kadaiMemoList.findIndex((oldKadaiMemo: Assignment) => {
       return (oldKadaiMemo.courseSiteInfo.courseID === todoLecID);
     });
@@ -220,9 +220,9 @@ async function addKadaiMemo(): Promise<void> {
   }
   miniPandA.remove();
   kadaiDiv.remove();
-  const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList);
+  const kadaiList = mergeIntoAssignmentList(mergedKadaiListNoMemo, kadaiMemoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), courseIDList);
+  await displayMiniPandA(mergeIntoAssignmentList(kadaiList, quizList), courseIDList);
 
   // NavBarを再描画
   deleteNavBarNotification();
@@ -232,7 +232,7 @@ async function addKadaiMemo(): Promise<void> {
 
 async function deleteKadaiMemo(event: any): Promise<void> {
   const kadaiID = event.target.id;
-  const kadaiMemoList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
+  const kadaiMemoList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
   const deletedKadaiMemoList = [];
   for (const kadaiMemo of kadaiMemoList) {
     const kadaiMemoEntries = [];
@@ -253,9 +253,9 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   kadaiDiv.remove();
 
   saveToLocalStorage("TSkadaiMemoList", deletedKadaiMemoList);
-  const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList);
+  const kadaiList = mergeIntoAssignmentList(mergedKadaiListNoMemo, deletedKadaiMemoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), courseIDList);
+  await displayMiniPandA(mergeIntoAssignmentList(kadaiList, quizList), courseIDList);
 
   // NavBarを再描画
   deleteNavBarNotification();

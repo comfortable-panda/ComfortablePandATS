@@ -1,9 +1,9 @@
 import { Assignment, CourseSiteInfo } from './model';
 import { loadFromLocalStorage } from './storage'
 import {
-  convertArrayToKadai,
-  mergeIntoKadaiList,
-  sortKadaiList
+  convertArrayToAssignment,
+  mergeIntoAssignmentList,
+  sortAssignmentList
 } from "./utils";
 import {
   courseIDList
@@ -17,11 +17,11 @@ async function updateSubPandA(root: Element) {
 
   const kadais = await loadFromLocalStorage("TSkadaiList") as Array<Assignment>;
   const quizList = await loadFromLocalStorage("TSQuizList") as Array<Assignment>;
-  const kadaiMemoList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
+  const kadaiMemoList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
   const lectureIDs = await loadFromLocalStorage("TSlectureids") as Array<CourseSiteInfo>;
-  mergedKadaiList = mergeIntoKadaiList(kadais, quizList);
-  mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, kadaiMemoList);
-  mergedKadaiList = sortKadaiList(mergedKadaiList);
+  mergedKadaiList = mergeIntoAssignmentList(kadais, quizList);
+  mergedKadaiList = mergeIntoAssignmentList(mergedKadaiList, kadaiMemoList);
+  mergedKadaiList = sortAssignmentList(mergedKadaiList);
 
   createMiniPandAGeneralized(root, mergedKadaiList, lectureIDs, true, (rendered) => {
     console.log(rendered);

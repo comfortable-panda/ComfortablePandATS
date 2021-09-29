@@ -13,13 +13,13 @@ import {
 } from "./minipanda";
 import { addBookmarkedCourseSites } from "./bookmark";
 import {
-  compareAndMergeKadaiList,
-  convertArrayToKadai,
+  compareAndMergeAssignmentList,
+  convertArrayToAssignment,
   isLoggedIn,
-  mergeIntoKadaiList,
+  mergeIntoAssignmentList,
   miniSakaiReady,
   nowTime,
-  sortKadaiList,
+  sortAssignmentList,
   updateIsReadFlag,
   useCache,
 } from "./utils";
@@ -38,8 +38,8 @@ export let CPsettings: Settings;
 
 export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
   // ストレージから前回保存したkadaiListを読み込む
-  const oldKadaiList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiList"));
-  const oldQuizList = convertArrayToKadai(await loadFromLocalStorage("TSQuizList"));
+  const oldKadaiList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiList"));
+  const oldQuizList = convertArrayToAssignment(await loadFromLocalStorage("TSQuizList"));
   let newKadaiList = [];
   let newQuizList = [];
 
@@ -62,8 +62,8 @@ export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInf
     kadaiFetchedTime = nowTime;
   }
   // 保存してあったものとマージする
-  mergedKadaiListNoMemo = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
-  mergedKadaiList = compareAndMergeKadaiList(oldKadaiList, newKadaiList);
+  mergedKadaiListNoMemo = compareAndMergeAssignmentList(oldKadaiList, newKadaiList);
+  mergedKadaiList = compareAndMergeAssignmentList(oldKadaiList, newKadaiList);
 
   if (useQuizCache) {
     if (typeof oldQuizList !== "undefined") {
@@ -85,19 +85,19 @@ export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInf
     await saveToLocalStorage("TSquizFetchedTime", nowTime);
     quizFetchedTime = nowTime;
   }
-  const mergedQuizList = compareAndMergeKadaiList(oldQuizList, newQuizList);
+  const mergedQuizList = compareAndMergeAssignmentList(oldQuizList, newQuizList);
 
   // マージ後のkadaiListをストレージに保存する
   await saveToLocalStorage("TSkadaiList", mergedKadaiListNoMemo);
   await saveToLocalStorage("TSQuizList", mergedQuizList);
 
-  mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, mergedQuizList);
+  mergedKadaiList = mergeIntoAssignmentList(mergedKadaiList, mergedQuizList);
 
   // メモ一覧を読み込む
-  const kadaiMemoList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
+  const kadaiMemoList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
   // さらにメモもマージする
-  mergedKadaiList = mergeIntoKadaiList(mergedKadaiList, kadaiMemoList);
-  mergedKadaiList = sortKadaiList(mergedKadaiList);
+  mergedKadaiList = mergeIntoAssignmentList(mergedKadaiList, kadaiMemoList);
+  mergedKadaiList = sortAssignmentList(mergedKadaiList);
 
   return mergedKadaiList;
 }

@@ -78,7 +78,7 @@ function miniSakaiReady(): void {
   hamburger.textContent = "☰";
 }
 
-function convertArrayToKadai(arr: Array<any>): Array<Assignment>{
+function convertArrayToAssignment(arr: Array<any>): Array<Assignment>{
   const assignmentList = [];
   for (const i of arr) {
     const assignmentEntries = [];
@@ -92,7 +92,7 @@ function convertArrayToKadai(arr: Array<any>): Array<Assignment>{
   return assignmentList;
 }
 
-function compareAndMergeKadaiList(oldAssignmentiList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
+function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
   const mergedAssignmentList = [];
 
   // 最新の課題リストをもとにマージする
@@ -151,7 +151,7 @@ function compareAndMergeKadaiList(oldAssignmentiList: Array<Assignment>, newAssi
   return mergedAssignmentList;
 }
 
-function mergeIntoKadaiList(targetAssignmentList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
+function mergeIntoAssignmentList(targetAssignmentList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
   const mergedAssignmentList = [];
   for (const assignment of targetAssignmentList){
     mergedAssignmentList.push(new Assignment(assignment.courseSiteInfo, assignment.assignmentEntries, assignment.isRead));
@@ -171,7 +171,7 @@ function mergeIntoKadaiList(targetAssignmentList: Array<Assignment>, newAssignme
   return mergedAssignmentList;
 }
 
-function sortKadaiList(assignmentList: Array<Assignment>): Array<Assignment> {
+function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment> {
   return Array.from(assignmentList).sort((a, b) => {
     if (a.closestDueDateTimestamp > b.closestDueDateTimestamp) return 1;
     if (a.closestDueDateTimestamp < b.closestDueDateTimestamp) return -1;
@@ -194,11 +194,11 @@ export {
   createCourseIDMap,
   isLoggedIn,
   miniSakaiReady,
-  convertArrayToKadai,
-  compareAndMergeKadaiList,
+  convertArrayToAssignment,
+  compareAndMergeAssignmentList,
   updateIsReadFlag,
   useCache,
   genUniqueStr,
-  mergeIntoKadaiList,
-  sortKadaiList,
+  mergeIntoAssignmentList,
+  sortAssignmentList,
 };
