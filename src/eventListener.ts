@@ -1,6 +1,6 @@
 import { kadaiDiv, miniPandA } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
-import {CourseSiteInfo, Kadai, KadaiEntry} from "./model";
+import {CourseSiteInfo, Assignment, AssignmentEntry} from "./model";
 import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
 import {
   CPsettings,
@@ -86,7 +86,7 @@ function toggleMemoBox(): void {
 
 async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   const kadaiID = event.target.id;
-  let kadaiList: Array<Kadai>;
+  let kadaiList: Array<Assignment>;
   // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
   if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiMemoList"));
   else if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromLocalStorage("TSQuizList"));
@@ -96,13 +96,13 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   for (const kadai of kadaiList) {
     const updatedKadaiEntries = [];
     for (const kadaiEntry of kadai.kadaiEntries) {
-      if (kadaiEntry.kadaiID === kadaiID) {
+      if (kadaiEntry.assignmentID === kadaiID) {
         const isFinished = kadaiEntry.isFinished;
         let isQuiz = false;
         if (typeof kadaiEntry.isQuiz !== "undefined") isQuiz = kadaiEntry.isQuiz;
         updatedKadaiEntries.push(
-          new KadaiEntry(
-            kadaiEntry.kadaiID,
+          new AssignmentEntry(
+            kadaiEntry.assignmentID,
             kadaiEntry.assignmentTitle,
             kadaiEntry.dueDateTimestamp,
             kadaiEntry.isMemo,
@@ -115,7 +115,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
         updatedKadaiEntries.push(kadaiEntry);
       }
     }
-    updatedKadaiList.push(new Kadai(kadai.courseSiteInfo, updatedKadaiEntries, kadai.isRead));
+    updatedKadaiList.push(new Assignment(kadai.courseSiteInfo, updatedKadaiEntries, kadai.isRead));
   }
 
   if (kadaiID[0] === "m") await saveToLocalStorage("TSkadaiMemoList", updatedKadaiList);
@@ -193,12 +193,12 @@ async function addKadaiMemo(): Promise<void> {
   const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
 
   let kadaiMemoList = await loadFromLocalStorage("TSkadaiMemoList");
-  const kadaiMemoEntry = new KadaiEntry(genUniqueStr(), todoContent, todoTimestamp, true, false, false, "");
-  const kadaiMemo = new Kadai(new CourseSiteInfo(todoLecID, todoLecID), [kadaiMemoEntry], true);
+  const kadaiMemoEntry = new AssignmentEntry(genUniqueStr(), todoContent, todoTimestamp, true, false, false, "");
+  const kadaiMemo = new Assignment(new CourseSiteInfo(todoLecID, todoLecID), [kadaiMemoEntry], true);
 
   if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0) {
     kadaiMemoList = convertArrayToKadai(kadaiMemoList);
-    const idx = kadaiMemoList.findIndex((oldKadaiMemo: Kadai) => {
+    const idx = kadaiMemoList.findIndex((oldKadaiMemo: Assignment) => {
       return (oldKadaiMemo.courseSiteInfo.courseID === todoLecID);
     });
     if (idx !== -1) {
@@ -237,9 +237,9 @@ async function deleteKadaiMemo(event: any): Promise<void> {
   for (const kadaiMemo of kadaiMemoList) {
     const kadaiMemoEntries = [];
     for (const _kadaiMemoEntry of kadaiMemo.kadaiEntries) {
-      if (_kadaiMemoEntry.kadaiID !== kadaiID) kadaiMemoEntries.push(_kadaiMemoEntry);
+      if (_kadaiMemoEntry.assignmentID !== kadaiID) kadaiMemoEntries.push(_kadaiMemoEntry);
     }
-    deletedKadaiMemoList.push(new Kadai(kadaiMemo.courseSiteInfo, kadaiMemoEntries, kadaiMemo.isRead));
+    deletedKadaiMemoList.push(new Assignment(kadaiMemo.courseSiteInfo, kadaiMemoEntries, kadaiMemo.isRead));
   }
 
   // miniPandAを再描画

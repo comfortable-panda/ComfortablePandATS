@@ -1,5 +1,5 @@
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
-import { Kadai, CourseSiteInfo } from "./model";
+import { Assignment, CourseSiteInfo } from "./model";
 import {
   getCourseIDList,
   getBaseURL,
@@ -32,11 +32,11 @@ export let quizCacheInterval: number;
 export let kadaiFetchedTime: number;
 export let quizFetchedTime: number;
 export let courseIDList: Array<CourseSiteInfo>;
-export let mergedKadaiList: Array<Kadai>;
-export let mergedKadaiListNoMemo: Array<Kadai>;
+export let mergedKadaiList: Array<Assignment>;
+export let mergedKadaiListNoMemo: Array<Assignment>;
 export let CPsettings: Settings;
 
-export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Kadai>> {
+export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
   // ストレージから前回保存したkadaiListを読み込む
   const oldKadaiList = convertArrayToKadai(await loadFromLocalStorage("TSkadaiList"));
   const oldQuizList = convertArrayToKadai(await loadFromLocalStorage("TSQuizList"));

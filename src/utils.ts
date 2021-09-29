@@ -1,4 +1,4 @@
-import { Kadai, KadaiEntry, CourseSiteInfo } from "./model";
+import { Assignment, AssignmentEntry, CourseSiteInfo } from "./model";
 import { saveToLocalStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
@@ -54,13 +54,13 @@ function getSiteCourseID() {
   return courseID;
 }
 
-function updateIsReadFlag(kadaiList: Array<Kadai>): void {
+function updateIsReadFlag(kadaiList: Array<Assignment>): void {
   const courseID = getSiteCourseID();
   const updatedKadaiList = [];
   if (courseID && courseID.length >= 17) {
     for (const kadai of kadaiList) {
       if (kadai.courseSiteInfo.courseID === courseID) {
-        updatedKadaiList.push(new Kadai(kadai.courseSiteInfo, kadai.kadaiEntries, true));
+        updatedKadaiList.push(new Assignment(kadai.courseSiteInfo, kadai.kadaiEntries, true));
       } else {
         updatedKadaiList.push(kadai);
       }
@@ -77,26 +77,26 @@ function miniSakaiReady(): void {
   hamburger.textContent = "☰";
 }
 
-function convertArrayToKadai(arr: Array<any>): Array<Kadai>{
+function convertArrayToKadai(arr: Array<any>): Array<Assignment>{
   const kadaiList = [];
   for (const i of arr) {
     const kadaiEntries = [];
     for (const e of i.kadaiEntries) {
-      const entry = new KadaiEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
+      const entry = new AssignmentEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
       entry.kadaiPage = e.kadaiPage;
       if (entry.dueDateTimestamp * 1000 > nowTime) kadaiEntries.push(entry);
     }
-    kadaiList.push(new Kadai(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), kadaiEntries, i.isRead))
+    kadaiList.push(new Assignment(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), kadaiEntries, i.isRead))
   }
   return kadaiList;
 }
 
-function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Array<Kadai>): Array<Kadai>{
+function compareAndMergeKadaiList(oldKadaiList: Array<Assignment>, newKadaiList: Array<Assignment>): Array<Assignment>{
   const mergedKadaiList = [];
 
   // 最新の課題リストをもとにマージする
   for (const newKadai of newKadaiList){
-    const idx = oldKadaiList.findIndex((oldKadai: Kadai) => {
+    const idx = oldKadaiList.findIndex((oldKadai: Assignment) => {
       return (oldKadai.courseSiteInfo.courseID === newKadai.courseSiteInfo.courseID)
     });
 
@@ -107,7 +107,7 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
       newKadai.kadaiEntries.sort((a, b) => {
         return a.dueDateTimestamp - b.dueDateTimestamp;
       });
-      mergedKadaiList.push(new Kadai(newKadai.courseSiteInfo, newKadai.kadaiEntries, isRead));
+      mergedKadaiList.push(new Assignment(newKadai.courseSiteInfo, newKadai.kadaiEntries, isRead));
     }
     // 過去に保存した課題リストの中に講義IDが存在する時
     else {
@@ -120,15 +120,15 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
       for (const newKadaiEntry of newKadai.kadaiEntries){
         // 新しく取得した課題が保存された課題一覧の中にあるか探す
         const q = oldKadaiList[idx].kadaiEntries.findIndex((oldKadaiEntry) => {
-          return (oldKadaiEntry.kadaiID === newKadaiEntry.kadaiID)
+          return (oldKadaiEntry.kadaiID === newKadaiEntry.assignmentID)
         });
         // もしなければ新規課題なので未読フラグを立てる
         if (q === -1) {
           isRead = false;
           mergedKadaiEntries.push(newKadaiEntry);
         } else {
-          const entry = new KadaiEntry(
-            newKadaiEntry.kadaiID,
+          const entry = new AssignmentEntry(
+            newKadaiEntry.assignmentID,
             newKadaiEntry.assignmentTitle,
             newKadaiEntry.dueDateTimestamp,
             newKadaiEntry.isMemo,
@@ -142,31 +142,31 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Kadai>, newKadaiList: Arra
       }
       // 未読フラグ部分を変更してマージ
       mergedKadaiEntries.sort((a, b)=>{return a.dueDateTimestamp - b.dueDateTimestamp});
-      mergedKadaiList.push(new Kadai(newKadai.courseSiteInfo, mergedKadaiEntries, isRead));
+      mergedKadaiList.push(new Assignment(newKadai.courseSiteInfo, mergedKadaiEntries, isRead));
     }
   }
   return mergedKadaiList;
 }
 
-function mergeIntoKadaiList(targetKadaiList: Array<Kadai>, newKadaiList: Array<Kadai>): Array<Kadai>{
+function mergeIntoKadaiList(targetKadaiList: Array<Assignment>, newKadaiList: Array<Assignment>): Array<Assignment>{
   const mergedKadaiList = [];
   for (const kadai of targetKadaiList){
-    mergedKadaiList.push(new Kadai(kadai.courseSiteInfo, kadai.kadaiEntries, kadai.isRead));
+    mergedKadaiList.push(new Assignment(kadai.courseSiteInfo, kadai.kadaiEntries, kadai.isRead));
   }
   for (const kadaiList of newKadaiList){
-    const idx = targetKadaiList.findIndex((kadai: Kadai) => {
+    const idx = targetKadaiList.findIndex((kadai: Assignment) => {
       return kadaiList.courseSiteInfo.courseID === kadai.courseSiteInfo.courseID;
     });
     if (idx !== -1) {
       mergedKadaiList[idx].kadaiEntries = mergedKadaiList[idx].kadaiEntries.concat(kadaiList.kadaiEntries);
     } else {
-      mergedKadaiList.push(new Kadai(kadaiList.courseSiteInfo, kadaiList.kadaiEntries, true));
+      mergedKadaiList.push(new Assignment(kadaiList.courseSiteInfo, kadaiList.kadaiEntries, true));
     }
   }
   return mergedKadaiList;
 }
 
-function sortKadaiList(kadaiList: Array<Kadai>): Array<Kadai> {
+function sortKadaiList(kadaiList: Array<Assignment>): Array<Assignment> {
   return Array.from(kadaiList).sort((a, b) => {
     if (a.closestDueDateTimestamp > b.closestDueDateTimestamp) return 1;
     if (a.closestDueDateTimestamp < b.closestDueDateTimestamp) return -1;

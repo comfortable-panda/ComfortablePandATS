@@ -1,4 +1,4 @@
-import { Kadai, CourseSiteInfo } from "./model";
+import { Assignment, CourseSiteInfo } from "./model";
 import {
   createCourseIDMap,
   formatTimestamp,
@@ -43,7 +43,7 @@ function createMiniSakaiBtn(): void {
   }
 }
 
-export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
+export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
   const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
   const kadaiFetchedTimeString = kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
@@ -78,7 +78,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
         isMemo: kadai.isMemo,
         isQuiz: kadai.isQuiz,
         lectureId: item.courseSiteInfo.courseID,
-        id: kadai.kadaiID,
+        id: kadai.assignmentID,
         checked: kadaiChecked,
         href: item.getTopSite() == null ? "" : item.getTopSite()
       };
@@ -184,7 +184,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     });
 }
 
-function createMiniPandA(kadaiList: Array<Kadai>, courseSiteInfos: Array<CourseSiteInfo>): void {
+function createMiniPandA(kadaiList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
   createMiniPandAGeneralized(miniPandA, kadaiList, courseSiteInfos, false, (rendered) => {
       miniPandA.innerHTML = rendered;
       const parent = document.getElementById("pageBody");
@@ -268,7 +268,7 @@ function initState(root: Element) {
   root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
 }
 
-async function displayMiniPandA(mergedKadaiList: Array<Kadai>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
+async function displayMiniPandA(mergedKadaiList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
   createMiniPandA(mergedKadaiList, courseSiteInfos);
 }
 
@@ -284,7 +284,7 @@ function deleteNavBarNotification(): void {
   }
 }
 
-function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiList: Array<Kadai>): void {
+function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiList: Array<Assignment>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
 
@@ -293,7 +293,7 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiL
       // @ts-ignore
       const courseID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
 
-      const q = kadaiList.findIndex((kadai: Kadai) => {
+      const q = kadaiList.findIndex((kadai: Assignment) => {
         return kadai.courseSiteInfo.courseID === courseID;
       });
       if (q !== -1) {

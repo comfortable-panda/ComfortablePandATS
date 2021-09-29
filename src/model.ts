@@ -1,5 +1,5 @@
-export class KadaiEntry {
-  kadaiID: string;
+export class AssignmentEntry {
+  assignmentID: string;
   assignmentTitle: string;
   assignmentDetail?: string;
   dueDateTimestamp: number; // POSIX time
@@ -9,7 +9,7 @@ export class KadaiEntry {
   isQuiz: boolean;
 
   constructor(
-    kadaiID: string,
+    assignmentID: string,
     assignmentTitle: string,
     dueDateTimestamp: number,
     isMemo: boolean,
@@ -17,7 +17,7 @@ export class KadaiEntry {
     isQuiz: boolean,
     assignmentDetail?: string
   ) {
-    this.kadaiID = kadaiID;
+    this.assignmentID = assignmentID;
     this.assignmentTitle = assignmentTitle;
     this.assignmentDetail = assignmentDetail;
     this.dueDateTimestamp = dueDateTimestamp;
@@ -27,14 +27,14 @@ export class KadaiEntry {
   }
 }
 
-export class Kadai {
+export class Assignment {
   courseSiteInfo: CourseSiteInfo;
-  kadaiEntries: Array<KadaiEntry>;
+  kadaiEntries: Array<AssignmentEntry>;
   isRead: boolean;
 
   constructor(
     courseSiteInfo: CourseSiteInfo,
-    kadaiEntries: Array<KadaiEntry>,
+    kadaiEntries: Array<AssignmentEntry>,
     isRead: boolean
   ) {
     this.courseSiteInfo = courseSiteInfo;
