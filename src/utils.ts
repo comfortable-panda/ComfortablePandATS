@@ -54,18 +54,19 @@ function getSiteCourseID() {
   return courseID;
 }
 
-function updateIsReadFlag(kadaiList: Array<Assignment>): void {
+function updateIsReadFlag(assignmentList: Array<Assignment>): void {
   const courseID = getSiteCourseID();
-  const updatedKadaiList = [];
+  const updatedAssignmentList = [];
+  // TODO: 怪しい処理を見直す
   if (courseID && courseID.length >= 17) {
-    for (const kadai of kadaiList) {
-      if (kadai.courseSiteInfo.courseID === courseID) {
-        updatedKadaiList.push(new Assignment(kadai.courseSiteInfo, kadai.assignmentEntries, true));
+    for (const assignment of assignmentList) {
+      if (assignment.courseSiteInfo.courseID === courseID) {
+        updatedAssignmentList.push(new Assignment(assignment.courseSiteInfo, assignment.assignmentEntries, true));
       } else {
-        updatedKadaiList.push(kadai);
+        updatedAssignmentList.push(assignment);
       }
     }
-    saveToLocalStorage("TSkadaiList", updatedKadaiList);
+    saveToLocalStorage("TSkadaiList", updatedAssignmentList);
   }
 }
 
@@ -78,99 +79,100 @@ function miniSakaiReady(): void {
 }
 
 function convertArrayToKadai(arr: Array<any>): Array<Assignment>{
-  const kadaiList = [];
+  const assignmentList = [];
   for (const i of arr) {
-    const kadaiEntries = [];
+    const assignmentEntries = [];
     for (const e of i.assignmentEntries) {
       const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
-      entry.assignmentPage = e.kadaiPage;
-      if (entry.dueDateTimestamp * 1000 > nowTime) kadaiEntries.push(entry);
+      entry.assignmentPage = e.assignmentPage;
+      if (entry.dueDateTimestamp * 1000 > nowTime) assignmentEntries.push(entry);
     }
-    kadaiList.push(new Assignment(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), kadaiEntries, i.isRead))
+    assignmentList.push(new Assignment(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), assignmentEntries, i.isRead))
   }
-  return kadaiList;
+  return assignmentList;
 }
 
-function compareAndMergeKadaiList(oldKadaiList: Array<Assignment>, newKadaiList: Array<Assignment>): Array<Assignment>{
-  const mergedKadaiList = [];
+function compareAndMergeKadaiList(oldAssignmentiList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
+  const mergedAssignmentList = [];
 
   // 最新の課題リストをもとにマージする
-  for (const newKadai of newKadaiList){
-    const idx = oldKadaiList.findIndex((oldKadai: Assignment) => {
-      return (oldKadai.courseSiteInfo.courseID === newKadai.courseSiteInfo.courseID)
+  for (const newAssignment of newAssignmentList){
+    const idx = oldAssignmentiList.findIndex((oldAssignment: Assignment) => {
+      return (oldAssignment.courseSiteInfo.courseID === newAssignment.courseSiteInfo.courseID)
     });
 
     // もし過去に保存した課題リストの中に講義IDが存在しない時
     if (idx === -1) {
       // 未読フラグを立ててマージ
-      const isRead = newKadai.assignmentEntries.length === 0;
-      newKadai.assignmentEntries.sort((a, b) => {
+      const isRead = newAssignment.assignmentEntries.length === 0;
+      newAssignment.assignmentEntries.sort((a, b) => {
         return a.dueDateTimestamp - b.dueDateTimestamp;
       });
-      mergedKadaiList.push(new Assignment(newKadai.courseSiteInfo, newKadai.assignmentEntries, isRead));
+      mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, newAssignment.assignmentEntries, isRead));
     }
     // 過去に保存した課題リストの中に講義IDが存在する時
     else {
       // 未読フラグを引き継ぐ
-      let isRead = oldKadaiList[idx].isRead;
+      let isRead = oldAssignmentiList[idx].isRead;
       // 何も課題がない時は既読フラグをつける
-      if (newKadai.assignmentEntries.length === 0) isRead = true;
+      if (newAssignment.assignmentEntries.length === 0) isRead = true;
 
-      let mergedKadaiEntries = [];
-      for (const newKadaiEntry of newKadai.assignmentEntries){
+      let mergedAssignmentEntries = [];
+      for (const newAssignmentEntry of newAssignment.assignmentEntries){
         // 新しく取得した課題が保存された課題一覧の中にあるか探す
-        const oldAssignment = oldKadaiList[idx] as Assignment;
-        const q = oldAssignment.assignmentEntries.findIndex((oldKadaiEntry) => {
-          return oldKadaiEntry.assignmentID === newKadaiEntry.assignmentID;
-        });
+        const oldAssignment = oldAssignmentiList[idx] as Assignment;
+        const q = oldAssignment.assignmentEntries.findIndex((oldAssignmentEntry) => {
+          return oldAssignmentEntry.assignmentID === newAssignmentEntry.assignmentID;
+          }
+        );
         // もしなければ新規課題なので未読フラグを立てる
         if (q === -1) {
           isRead = false;
-          mergedKadaiEntries.push(newKadaiEntry);
+          mergedAssignmentEntries.push(newAssignmentEntry);
         } else {
           const entry = new AssignmentEntry(
-            newKadaiEntry.assignmentID,
-            newKadaiEntry.assignmentTitle,
-            newKadaiEntry.dueDateTimestamp,
-            newKadaiEntry.isMemo,
+            newAssignmentEntry.assignmentID,
+            newAssignmentEntry.assignmentTitle,
+            newAssignmentEntry.dueDateTimestamp,
+            newAssignmentEntry.isMemo,
             oldAssignment.assignmentEntries[q].isFinished,
-            newKadaiEntry.isQuiz,
-            newKadaiEntry.assignmentDetail
+            newAssignmentEntry.isQuiz,
+            newAssignmentEntry.assignmentDetail
           );
-          entry.assignmentPage = newKadaiEntry.assignmentPage;
-          mergedKadaiEntries.push(entry);
+          entry.assignmentPage = newAssignmentEntry.assignmentPage;
+          mergedAssignmentEntries.push(entry);
         }
       }
       // 未読フラグ部分を変更してマージ
-      mergedKadaiEntries.sort((a, b) => {return a.dueDateTimestamp - b.dueDateTimestamp});
-      mergedKadaiList.push(new Assignment(newKadai.courseSiteInfo, mergedKadaiEntries, isRead));
+      mergedAssignmentEntries.sort((a, b) => {return a.dueDateTimestamp - b.dueDateTimestamp});
+      mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, mergedAssignmentEntries, isRead));
     }
   }
-  return mergedKadaiList;
+  return mergedAssignmentList;
 }
 
-function mergeIntoKadaiList(targetKadaiList: Array<Assignment>, newKadaiList: Array<Assignment>): Array<Assignment>{
-  const mergedKadaiList = [];
-  for (const kadai of targetKadaiList){
-    mergedKadaiList.push(new Assignment(kadai.courseSiteInfo, kadai.assignmentEntries, kadai.isRead));
+function mergeIntoKadaiList(targetAssignmentList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
+  const mergedAssignmentList = [];
+  for (const assignment of targetAssignmentList){
+    mergedAssignmentList.push(new Assignment(assignment.courseSiteInfo, assignment.assignmentEntries, assignment.isRead));
   }
-  for (const kadaiList of newKadaiList){
-    const idx = targetKadaiList.findIndex((kadai: Assignment) => {
-      return kadaiList.courseSiteInfo.courseID === kadai.courseSiteInfo.courseID;
+  for (const newAssignment of newAssignmentList){
+    const idx = targetAssignmentList.findIndex((assignment: Assignment) => {
+      return newAssignment.courseSiteInfo.courseID === assignment.courseSiteInfo.courseID;
     });
 
-    const mergedAssignment = mergedKadaiList[idx] as Assignment;
+    const mergedAssignment = mergedAssignmentList[idx] as Assignment;
     if (idx !== -1) {
-      mergedAssignment.assignmentEntries = mergedAssignment.assignmentEntries.concat(kadaiList.assignmentEntries);
+      mergedAssignment.assignmentEntries = mergedAssignment.assignmentEntries.concat(newAssignment.assignmentEntries);
     } else {
-      mergedKadaiList.push(new Assignment(kadaiList.courseSiteInfo, kadaiList.assignmentEntries, true));
+      mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, newAssignment.assignmentEntries, true));
     }
   }
-  return mergedKadaiList;
+  return mergedAssignmentList;
 }
 
-function sortKadaiList(kadaiList: Array<Assignment>): Array<Assignment> {
-  return Array.from(kadaiList).sort((a, b) => {
+function sortKadaiList(assignmentList: Array<Assignment>): Array<Assignment> {
+  return Array.from(assignmentList).sort((a, b) => {
     if (a.closestDueDateTimestamp > b.closestDueDateTimestamp) return 1;
     if (a.closestDueDateTimestamp < b.closestDueDateTimestamp) return -1;
     return 0;
