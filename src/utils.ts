@@ -82,7 +82,7 @@ function convertArrayToKadai(arr: Array<any>): Array<Assignment>{
   for (const i of arr) {
     const kadaiEntries = [];
     for (const e of i.kadaiEntries) {
-      const entry = new AssignmentEntry(e.kadaiID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
+      const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
       entry.assignmentPage = e.kadaiPage;
       if (entry.dueDateTimestamp * 1000 > nowTime) kadaiEntries.push(entry);
     }
@@ -119,8 +119,9 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Assignment>, newKadaiList:
       let mergedKadaiEntries = [];
       for (const newKadaiEntry of newKadai.assignmentEntries){
         // 新しく取得した課題が保存された課題一覧の中にあるか探す
-        const q = oldKadaiList[idx].kadaiEntries.findIndex((oldKadaiEntry) => {
-          return (oldKadaiEntry.kadaiID === newKadaiEntry.assignmentID)
+        const oldAssignment = oldKadaiList[idx] as Assignment;
+        const q = oldAssignment.assignmentEntries.findIndex((oldKadaiEntry) => {
+          return oldKadaiEntry.assignmentID === newKadaiEntry.assignmentID;
         });
         // もしなければ新規課題なので未読フラグを立てる
         if (q === -1) {
@@ -132,7 +133,7 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Assignment>, newKadaiList:
             newKadaiEntry.assignmentTitle,
             newKadaiEntry.dueDateTimestamp,
             newKadaiEntry.isMemo,
-            oldKadaiList[idx].kadaiEntries[q].isFinished,
+            oldAssignment.assignmentEntries[q].isFinished,
             newKadaiEntry.isQuiz,
             newKadaiEntry.assignmentDetail
           );
@@ -141,7 +142,7 @@ function compareAndMergeKadaiList(oldKadaiList: Array<Assignment>, newKadaiList:
         }
       }
       // 未読フラグ部分を変更してマージ
-      mergedKadaiEntries.sort((a, b)=>{return a.dueDateTimestamp - b.dueDateTimestamp});
+      mergedKadaiEntries.sort((a, b) => {return a.dueDateTimestamp - b.dueDateTimestamp});
       mergedKadaiList.push(new Assignment(newKadai.courseSiteInfo, mergedKadaiEntries, isRead));
     }
   }
@@ -157,8 +158,10 @@ function mergeIntoKadaiList(targetKadaiList: Array<Assignment>, newKadaiList: Ar
     const idx = targetKadaiList.findIndex((kadai: Assignment) => {
       return kadaiList.courseSiteInfo.courseID === kadai.courseSiteInfo.courseID;
     });
+
+    const mergedAssignment = mergedKadaiList[idx] as Assignment;
     if (idx !== -1) {
-      mergedKadaiList[idx].kadaiEntries = mergedKadaiList[idx].kadaiEntries.concat(kadaiList.assignmentEntries);
+      mergedAssignment.assignmentEntries = mergedAssignment.assignmentEntries.concat(kadaiList.assignmentEntries);
     } else {
       mergedKadaiList.push(new Assignment(kadaiList.courseSiteInfo, kadaiList.assignmentEntries, true));
     }
