@@ -81,7 +81,7 @@ function convertArrayToKadai(arr: Array<any>): Array<Assignment>{
   const kadaiList = [];
   for (const i of arr) {
     const kadaiEntries = [];
-    for (const e of i.kadaiEntries) {
+    for (const e of i.assignmentEntries) {
       const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
       entry.assignmentPage = e.kadaiPage;
       if (entry.dueDateTimestamp * 1000 > nowTime) kadaiEntries.push(entry);
