@@ -3,7 +3,7 @@ import { Assignment, CourseSiteInfo } from "./model";
 import {
   getCourseIDList,
   getBaseURL,
-  getKadaiFromCourseID,
+  getAssignmentByCourseID,
   getQuizFromCourseID,
 } from "./network";
 import {
@@ -50,7 +50,7 @@ export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInf
     const pendingList = [];
     // 課題取得待ちリストに追加
     for (const i of courseSiteInfos) {
-      pendingList.push(getKadaiFromCourseID(baseURL, i.courseID));
+      pendingList.push(getAssignmentByCourseID(baseURL, i.courseID));
     }
     // 全部揃ったら取得に成功したものをnewKadaiListに入れる
     const result = await (Promise as any).allSettled(pendingList);

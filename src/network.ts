@@ -33,7 +33,7 @@ function getCourseIDList(): Array<CourseSiteInfo> {
   return result;
 }
 
-function getKadaiFromCourseID(baseURL: string, courseID: string): Promise<Assignment> {
+function getAssignmentByCourseID(baseURL: string, courseID: string): Promise<Assignment> {
   const queryURL = baseURL + "/direct/assignment/site/" + courseID + ".json";
   const request = new XMLHttpRequest();
   request.open("GET", queryURL);
@@ -49,8 +49,8 @@ function getKadaiFromCourseID(baseURL: string, courseID: string): Promise<Assign
         reject("404 kadai data not found");
       else {
         const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
-        const kadaiEntries = convJsonToKadaiEntries(res, baseURL, courseID);
-        resolve(new Assignment(courseSiteInfo, kadaiEntries, false));
+        const assignmentEntries = convJsonToAssignmentEntries(res, baseURL, courseID);
+        resolve(new Assignment(courseSiteInfo, assignmentEntries, false));
       }
     });
     request.send();
@@ -73,24 +73,24 @@ function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Assignm
       if (!res || !res.sam_pub_collection) reject("404 kadai data not found");
       else {
         const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
-        const kadaiEntries = convJsonToQuizEntries(res, baseURL, courseID);
-        resolve(new Assignment(courseSiteInfo, kadaiEntries, false));
+        const assignmentEntries = convJsonToQuizEntries(res, baseURL, courseID);
+        resolve(new Assignment(courseSiteInfo, assignmentEntries, false));
       }
     });
     request.send();
   });
 }
 
-function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
+function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
   const assignment_collection = data.assignment_collection;
   return assignment_collection
     .filter((json: any) => json.dueTime.epochSecond * 1000 >= nowTime)
     .map((json: any) => {
-      const kadaiID = json.id;
-      const kadaiTitle = json.title;
-      const kadaiDetail = json.instructions;
-      const kadaiDueEpoch = json.dueTime.epochSecond;
-      const entry = new AssignmentEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, false, false, kadaiDetail);
+      const assignmentID = json.id;
+      const assignmentTitle = json.title;
+      const assignmentDetail = json.instructions;
+      const dueDateTimestamp = json.dueTime.epochSecond;
+      const entry = new AssignmentEntry(assignmentID, assignmentTitle, dueDateTimestamp, false, false, false, assignmentDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
     });
@@ -111,4 +111,4 @@ function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteI
     });
 }
 
-export { getBaseURL, getCourseIDList, getKadaiFromCourseID, getQuizFromCourseID };
+export { getBaseURL, getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID };
