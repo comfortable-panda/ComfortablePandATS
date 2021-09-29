@@ -32,42 +32,42 @@ function toggleMiniSakai(): void {
   toggle = !toggle;
 }
 
-function toggleKadaiTab(): void {
+function toggleAssignmentTab(): void {
   // 課題一覧タブの表示・非表示をします
-  const kadaiTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".kadai-tab");
   // @ts-ignore
-  kadaiTab.style.display = "";
+  assignmentTab.style.display = "";
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "none";
   const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "";
-  const lastKadaiGetTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".kadai-time");
   // @ts-ignore
-  lastKadaiGetTime.style.display = "";
-  const lastQuizGetTime = document.querySelector(".quiz-time");
+  assignmentFetchedTime.style.display = "";
+  const quizFetchedTime = document.querySelector(".quiz-time");
   // @ts-ignore
-  lastQuizGetTime.style.display = "";
+  quizFetchedTime.style.display = "";
 }
 
 function toggleSettingsTab(): void {
   // クイズ・小テスト・試験一覧タブを表示・非表示にします
-  const kadaiTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".kadai-tab");
   // @ts-ignore
-  kadaiTab.style.display = "none";
+  assignmentTab.style.display = "none";
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "";
   const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "none";
-  const lastKadaiGetTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".kadai-time");
   // @ts-ignore
-  lastKadaiGetTime.style.display = "none";
-  const lastQuizGetTime = document.querySelector(".quiz-time");
+  assignmentFetchedTime.style.display = "none";
+  const quizFetchedTime = document.querySelector(".quiz-time");
   // @ts-ignore
-  lastQuizGetTime.style.display = "none";
+  quizFetchedTime.style.display = "none";
 }
 
 function toggleMemoBox(): void {
@@ -85,42 +85,42 @@ function toggleMemoBox(): void {
 }
 
 async function toggleKadaiFinishedFlag(event: any): Promise<void> {
-  const kadaiID = event.target.id;
-  let kadaiList: Array<Assignment>;
+  const assignmentID = event.target.id;
+  let assignmentList: Array<Assignment>;
   // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
-  if (kadaiID[0] === "m") kadaiList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
-  else if (kadaiID[0] === "q") kadaiList = convertArrayToAssignment(await loadFromLocalStorage("TSQuizList"));
-  else kadaiList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiList"));
+  if (assignmentID[0] === "m") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
+  else if (assignmentID[0] === "q") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSQuizList"));
+  else assignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiList"));
 
-  const updatedKadaiList = [];
-  for (const kadai of kadaiList) {
-    const updatedKadaiEntries = [];
-    for (const kadaiEntry of kadai.assignmentEntries) {
-      if (kadaiEntry.assignmentID === kadaiID) {
-        const isFinished = kadaiEntry.isFinished;
+  const updatedAssignmentList = [];
+  for (const assignment of assignmentList) {
+    const updatedAssignmentEntries = [];
+    for (const assignmentEntry of assignment.assignmentEntries) {
+      if (assignmentEntry.assignmentID === assignmentID) {
+        const isFinished = assignmentEntry.isFinished;
         let isQuiz = false;
-        if (typeof kadaiEntry.isQuiz !== "undefined") isQuiz = kadaiEntry.isQuiz;
-        updatedKadaiEntries.push(
+        if (typeof assignmentEntry.isQuiz !== "undefined") isQuiz = assignmentEntry.isQuiz;
+        updatedAssignmentEntries.push(
           new AssignmentEntry(
-            kadaiEntry.assignmentID,
-            kadaiEntry.assignmentTitle,
-            kadaiEntry.dueDateTimestamp,
-            kadaiEntry.isMemo,
+            assignmentEntry.assignmentID,
+            assignmentEntry.assignmentTitle,
+            assignmentEntry.dueDateTimestamp,
+            assignmentEntry.isMemo,
             !isFinished,
             isQuiz,
-            kadaiEntry.assignmentDetail
+            assignmentEntry.assignmentDetail
           )
         );
       } else {
-        updatedKadaiEntries.push(kadaiEntry);
+        updatedAssignmentEntries.push(assignmentEntry);
       }
     }
-    updatedKadaiList.push(new Assignment(kadai.courseSiteInfo, updatedKadaiEntries, kadai.isRead));
+    updatedAssignmentList.push(new Assignment(assignment.courseSiteInfo, updatedAssignmentEntries, assignment.isRead));
   }
 
-  if (kadaiID[0] === "m") await saveToLocalStorage("TSkadaiMemoList", updatedKadaiList);
-  else if (kadaiID[0] === "q") await saveToLocalStorage("TSQuizList", updatedKadaiList);
-  else await saveToLocalStorage("TSkadaiList", updatedKadaiList);
+  if (assignmentID[0] === "m") await saveToLocalStorage("TSkadaiMemoList", updatedAssignmentList);
+  else if (assignmentID[0] === "q") await saveToLocalStorage("TSQuizList", updatedAssignmentList);
+  else await saveToLocalStorage("TSkadaiList", updatedAssignmentList);
 
   // NavBarを再描画
   deleteNavBarNotification();
@@ -216,9 +216,9 @@ async function addMemo(): Promise<void> {
   }
   miniPandA.remove();
   kadaiDiv.remove();
-  const kadaiList = mergeIntoAssignmentList(mergedKadaiListNoMemo, memoList);
+  const assignmentList = mergeIntoAssignmentList(mergedKadaiListNoMemo, memoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoAssignmentList(kadaiList, quizList), courseIDList);
+  await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
   deleteNavBarNotification();
@@ -278,7 +278,7 @@ async function editFavTabMessage(): Promise<void> {
 
 export {
   toggleMiniSakai,
-  toggleKadaiTab,
+  toggleAssignmentTab,
   toggleSettingsTab,
   toggleMemoBox,
   toggleKadaiFinishedFlag,

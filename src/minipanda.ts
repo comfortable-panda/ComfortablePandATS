@@ -17,7 +17,7 @@ import {
   addMemo,
   deleteMemo,
   toggleKadaiFinishedFlag,
-  toggleKadaiTab,
+  toggleAssignmentTab,
   toggleMemoBox,
   toggleMiniSakai,
   toggleSettingsTab,
@@ -252,7 +252,7 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
 }
 
 function registerEventHandlers(root: Element) {
-  root.querySelector('#kadaiTab')?.addEventListener('click', () => toggleKadaiTab());
+  root.querySelector('#kadaiTab')?.addEventListener('click', () => toggleAssignmentTab());
   root.querySelector('#settingsTab')?.addEventListener('click', () => toggleSettingsTab());
   root.querySelectorAll('.todo-check').forEach(c => c.addEventListener('change', (e) => toggleKadaiFinishedFlag(e)));
   root.querySelector('#close_btn')?.addEventListener('click', () => toggleMiniSakai());
