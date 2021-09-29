@@ -26,8 +26,7 @@ function getCurrentShownSiteHrefs(): Array<string> {
   if (topnav == null) return new Array<string>();
   const sites = topnav.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const hrefs: Array<string> = [];
-  // @ts-ignore
-  for (const site of sites) {
+  for (const site of Array.from(sites)) {
     const href = (site.getElementsByClassName("link-container")[0] as HTMLAnchorElement).href;
     hrefs.push(href);
   }
@@ -42,8 +41,8 @@ function addBookmarkedCourseSites(baseURL: string): Promise<void> {
   const request = new XMLHttpRequest();
   request.open("GET", baseURL + "/portal/favorites/list");
   request.responseType = "json";
-  // @ts-ignore
-  document.querySelector(".organizeFavorites").addEventListener("click", editFavTabMessage);
+
+  document.querySelector(".organizeFavorites")?.addEventListener("click", editFavTabMessage);
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
       const res = request.response;

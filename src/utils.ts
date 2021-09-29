@@ -35,21 +35,19 @@ function isLoggedIn(): boolean {
   // ログインしているかどうかを返す
   const scripts = document.getElementsByTagName("script");
   let loggedIn = false;
-  // @ts-ignore
-  for (const script of scripts) {
+  for (const script of Array.from(scripts)) {
     if (script.text.match('"loggedIn": true')) loggedIn = true;
   }
   return loggedIn;
 }
 
-function getSiteCourseID() {
+function getSiteCourseID(): string | undefined {
   // 現在のページの講義IDを返す
   const url = location.href;
-  let courseID = "";
+  let courseID: string | undefined;
   const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
   if (url.match(reg)) {
-    // @ts-ignore
-    courseID = url.match(reg)[2];
+    courseID = url.match(reg)?.[2];
   }
   return courseID;
 }

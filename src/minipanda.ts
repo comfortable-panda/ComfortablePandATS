@@ -89,9 +89,9 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
 
       const appendElement = (courseName: string|undefined, elements: Array<Object>) => {
         // @ts-ignore
-        const lecName = elements.map(e => e.lectureName);
-        if (lecName.includes(courseName)){
-          const idx = lecName.indexOf(courseName);
+        const courseNameMap = elements.map(e => e.lectureName);
+        if (courseNameMap.includes(courseName)) {
+          const idx = courseNameMap.indexOf(courseName);
           // @ts-ignore
           elements[idx].entries.push(entry);
           // @ts-ignore ソートする
