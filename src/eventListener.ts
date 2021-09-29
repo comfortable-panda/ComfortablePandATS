@@ -123,9 +123,7 @@ async function toggleKadaiFinishedFlag(event: any): Promise<void> {
   else await saveToLocalStorage("TSkadaiList", updatedAssignmentList);
 
   // NavBarを再描画
-  deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(courseIDList, true, true);
-  createNavBarNotification(courseIDList, newKadaiList);
+  await reloadNavBar(courseIDList, true);
 }
 
 async function updateSettings(event: any, type: string): Promise<void> {
@@ -176,9 +174,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
   saveToLocalStorage("TSSettings", settings);
 
   // NavBarを再描画
-  deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(courseIDList, false, false);
-  createNavBarNotification(courseIDList, newKadaiList);
+  await reloadNavBar(courseIDList, true);
 }
 
 async function addMemo(): Promise<void> {
@@ -221,9 +217,7 @@ async function addMemo(): Promise<void> {
   await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
-  deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(courseIDList, false, false);
-  createNavBarNotification(courseIDList, newKadaiList);
+  await reloadNavBar(courseIDList, true);
 }
 
 async function deleteMemo(event: any): Promise<void> {
@@ -254,9 +248,10 @@ async function deleteMemo(event: any): Promise<void> {
   await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
-  deleteNavBarNotification();
-  const newAssignmentList = await loadAndMergeKadaiList(courseIDList, false, false);
-  createNavBarNotification(courseIDList, newAssignmentList);
+  // deleteNavBarNotification();
+  // const newAssignmentList = await loadAndMergeKadaiList(courseIDList, false, false);
+  // createNavBarNotification(courseIDList, newAssignmentList);
+  await reloadNavBar(courseIDList, true);
 }
 
 async function editFavTabMessage(): Promise<void> {
@@ -274,6 +269,13 @@ async function editFavTabMessage(): Promise<void> {
   } catch (e) {
     console.log("could not edit message");
   }
+}
+
+async function reloadNavBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void>{
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newAssignmentList = await loadAndMergeKadaiList(courseIDList, useCache, useCache);
+  createNavBarNotification(courseIDList, newAssignmentList);
 }
 
 export {
