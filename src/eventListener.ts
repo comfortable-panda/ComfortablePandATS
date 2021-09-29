@@ -1,4 +1,4 @@
-import { kadaiDiv, miniPandA } from "./dom";
+import { assignmentDiv, miniPandA } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import {CourseSiteInfo, Assignment, AssignmentEntry} from "./model";
 import { convertArrayToAssignment, genUniqueStr, mergeIntoAssignmentList } from "./utils";
@@ -84,7 +84,7 @@ function toggleMemoBox(): void {
   }
 }
 
-async function toggleKadaiFinishedFlag(event: any): Promise<void> {
+async function toggleFinishedFlag(event: any): Promise<void> {
   const assignmentID = event.target.id;
   let assignmentList: Array<Assignment>;
   // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
@@ -207,11 +207,11 @@ async function addMemo(): Promise<void> {
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
   }
-  while (kadaiDiv.firstChild) {
-    kadaiDiv.removeChild(kadaiDiv.firstChild);
+  while (assignmentDiv.firstChild) {
+    assignmentDiv.removeChild(assignmentDiv.firstChild);
   }
   miniPandA.remove();
-  kadaiDiv.remove();
+  assignmentDiv.remove();
   const assignmentList = mergeIntoAssignmentList(mergedKadaiListNoMemo, memoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
   await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
@@ -225,22 +225,22 @@ async function deleteMemo(event: any): Promise<void> {
   const memoList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
   const deletedMemoList = [];
   for (const memo of memoList) {
-    const kadaiMemoEntries = [];
+    const memoEntries = [];
     for (const memoEntry of memo.assignmentEntries) {
-      if (memoEntry.assignmentID !== memoID) kadaiMemoEntries.push(memoEntry);
+      if (memoEntry.assignmentID !== memoID) memoEntries.push(memoEntry);
     }
-    deletedMemoList.push(new Assignment(memo.courseSiteInfo, kadaiMemoEntries, memo.isRead));
+    deletedMemoList.push(new Assignment(memo.courseSiteInfo, memoEntries, memo.isRead));
   }
 
   // miniPandAを再描画
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
   }
-  while (kadaiDiv.firstChild) {
-    kadaiDiv.removeChild(kadaiDiv.firstChild);
+  while (assignmentDiv.firstChild) {
+    assignmentDiv.removeChild(assignmentDiv.firstChild);
   }
   miniPandA.remove();
-  kadaiDiv.remove();
+  assignmentDiv.remove();
 
   saveToLocalStorage("TSkadaiMemoList", deletedMemoList);
   const assignmentList = mergeIntoAssignmentList(mergedKadaiListNoMemo, deletedMemoList);
@@ -280,7 +280,7 @@ export {
   toggleAssignmentTab,
   toggleSettingsTab,
   toggleMemoBox,
-  toggleKadaiFinishedFlag,
+  toggleFinishedFlag,
   addMemo,
   updateSettings,
   deleteMemo,

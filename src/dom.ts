@@ -37,7 +37,7 @@ export const miniPandA = createElem("div", { id: "miniPandA" });
 miniPandA.classList.add("sidenav");
 miniPandA.classList.add("cp_tab");
 
-export const kadaiDiv = createElem("div", { className: "kadai-tab" });
+export const assignmentDiv = createElem("div", { className: "kadai-tab" });
 
 export const hamburger = createElem("div", { className: "loader" }, {"click": toggleMiniSakai});
 
