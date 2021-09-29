@@ -248,9 +248,6 @@ async function deleteMemo(event: any): Promise<void> {
   await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
-  // deleteNavBarNotification();
-  // const newAssignmentList = await loadAndMergeKadaiList(courseIDList, false, false);
-  // createNavBarNotification(courseIDList, newAssignmentList);
   await reloadNavBar(courseIDList, true);
 }
 
