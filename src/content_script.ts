@@ -37,14 +37,14 @@ export let mergedKadaiListNoMemo: Array<Assignment>;
 export let CPsettings: Settings;
 
 export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInfo>, useKadaiCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
-  // ストレージから前回保存したkadaiListを読み込む
-  const oldKadaiList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiList"));
+  // ストレージから前回保存したassignmentListを読み込む
+  const oldAssignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiList"));
   const oldQuizList = convertArrayToAssignment(await loadFromLocalStorage("TSQuizList"));
-  let newKadaiList = [];
+  let newAssignmentList = [];
   let newQuizList = [];
 
   if (useKadaiCache) {
-    newKadaiList = oldKadaiList;
+    newAssignmentList = oldAssignmentList;
   } else {
     console.log("Fetching assignments...");
     const pendingList = [];
@@ -55,15 +55,15 @@ export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInf
     // 全部揃ったら取得に成功したものをnewKadaiListに入れる
     const result = await (Promise as any).allSettled(pendingList);
     for (const k of result) {
-      if (k.status === "fulfilled") newKadaiList.push(k.value);
+      if (k.status === "fulfilled") newAssignmentList.push(k.value);
     }
     // 取得した時間を保存
     await saveToLocalStorage("TSkadaiFetchedTime", nowTime);
     kadaiFetchedTime = nowTime;
   }
   // 保存してあったものとマージする
-  mergedKadaiListNoMemo = compareAndMergeAssignmentList(oldKadaiList, newKadaiList);
-  mergedKadaiList = compareAndMergeAssignmentList(oldKadaiList, newKadaiList);
+  mergedKadaiListNoMemo = compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList);
+  mergedKadaiList = compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList);
 
   if (useQuizCache) {
     if (typeof oldQuizList !== "undefined") {
@@ -94,9 +94,9 @@ export async function loadAndMergeKadaiList(courseSiteInfos: Array<CourseSiteInf
   mergedKadaiList = mergeIntoAssignmentList(mergedKadaiList, mergedQuizList);
 
   // メモ一覧を読み込む
-  const kadaiMemoList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
+  const memoList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
   // さらにメモもマージする
-  mergedKadaiList = mergeIntoAssignmentList(mergedKadaiList, kadaiMemoList);
+  mergedKadaiList = mergeIntoAssignmentList(mergedKadaiList, memoList);
   mergedKadaiList = sortAssignmentList(mergedKadaiList);
 
   return mergedKadaiList;

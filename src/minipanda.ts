@@ -14,8 +14,8 @@ import {
   SettingsDom
 } from "./dom";
 import {
-  addKadaiMemo,
-  deleteKadaiMemo,
+  addMemo,
+  deleteMemo,
   toggleKadaiFinishedFlag,
   toggleKadaiTab,
   toggleMemoBox,
@@ -257,8 +257,8 @@ function registerEventHandlers(root: Element) {
   root.querySelectorAll('.todo-check').forEach(c => c.addEventListener('change', (e) => toggleKadaiFinishedFlag(e)));
   root.querySelector('#close_btn')?.addEventListener('click', () => toggleMiniSakai());
   root.querySelector('#plus-button')?.addEventListener('click', () => toggleMemoBox());
-  root.querySelector('#todo-add')?.addEventListener('click', () => addKadaiMemo());
-  root.querySelectorAll('.del-button').forEach(b => b.addEventListener('click', (e) => deleteKadaiMemo(e)));
+  root.querySelector('#todo-add')?.addEventListener('click', () => addMemo());
+  root.querySelectorAll('.del-button').forEach(b => b.addEventListener('click', (e) => deleteMemo(e)));
 }
 
 function initState(root: Element) {
