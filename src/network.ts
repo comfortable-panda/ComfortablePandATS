@@ -1,4 +1,4 @@
-import { Kadai, KadaiEntry, CourseSiteInfo } from "./model";
+import { Assignment, AssignmentEntry, CourseSiteInfo } from "./model";
 import { nowTime } from "./utils";
 import { CPsettings } from "./content_script";
 
@@ -33,7 +33,7 @@ function getCourseIDList(): Array<CourseSiteInfo> {
   return result;
 }
 
-function getKadaiFromCourseID(baseURL: string, courseID: string): Promise<Kadai> {
+function getAssignmentByCourseID(baseURL: string, courseID: string): Promise<Assignment> {
   const queryURL = baseURL + "/direct/assignment/site/" + courseID + ".json";
   const request = new XMLHttpRequest();
   request.open("GET", queryURL);
@@ -49,15 +49,15 @@ function getKadaiFromCourseID(baseURL: string, courseID: string): Promise<Kadai>
         reject("404 kadai data not found");
       else {
         const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
-        const kadaiEntries = convJsonToKadaiEntries(res, baseURL, courseID);
-        resolve(new Kadai(courseSiteInfo, kadaiEntries, false));
+        const assignmentEntries = convJsonToAssignmentEntries(res, baseURL, courseID);
+        resolve(new Assignment(courseSiteInfo, assignmentEntries, false));
       }
     });
     request.send();
   });
 }
 
-function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Kadai> {
+function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Assignment> {
   const queryURL = baseURL + "/direct/sam_pub/context/" + courseID + ".json";
   const request = new XMLHttpRequest();
   request.open("GET", queryURL);
@@ -73,30 +73,30 @@ function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Kadai> 
       if (!res || !res.sam_pub_collection) reject("404 kadai data not found");
       else {
         const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
-        const kadaiEntries = convJsonToQuizEntries(res, baseURL, courseID);
-        resolve(new Kadai(courseSiteInfo, kadaiEntries, false));
+        const assignmentEntries = convJsonToQuizEntries(res, baseURL, courseID);
+        resolve(new Assignment(courseSiteInfo, assignmentEntries, false));
       }
     });
     request.send();
   });
 }
 
-function convJsonToKadaiEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<KadaiEntry> {
+function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
   const assignment_collection = data.assignment_collection;
   return assignment_collection
     .filter((json: any) => json.dueTime.epochSecond * 1000 >= nowTime)
     .map((json: any) => {
-      const kadaiID = json.id;
-      const kadaiTitle = json.title;
-      const kadaiDetail = json.instructions;
-      const kadaiDueEpoch = json.dueTime.epochSecond;
-      const entry = new KadaiEntry(kadaiID, kadaiTitle, kadaiDueEpoch, false, false, false, kadaiDetail);
-      entry.kadaiPage = baseURL + "/portal/site/" + siteID;
+      const assignmentID = json.id;
+      const assignmentTitle = json.title;
+      const assignmentDetail = json.instructions;
+      const dueDateTimestamp = json.dueTime.epochSecond;
+      const entry = new AssignmentEntry(assignmentID, assignmentTitle, dueDateTimestamp, false, false, false, assignmentDetail);
+      entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
     });
 }
 
-function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<KadaiEntry> {
+function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
   return data.sam_pub_collection
     .filter((json: any) => json.dueDate >= nowTime)
     .filter((json: any) => json.startDate < nowTime)
@@ -105,10 +105,10 @@ function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteI
       const quizTitle = json.title;
       const quizDetail = "";
       const quizDueEpoch = json.dueDate / 1000;
-      const entry = new KadaiEntry(quizID, quizTitle, quizDueEpoch, false, false, true, quizDetail);
-      entry.kadaiPage = baseURL + "/portal/site/" + siteID;
+      const entry = new AssignmentEntry(quizID, quizTitle, quizDueEpoch, false, false, true, quizDetail);
+      entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
     });
 }
 
-export { getBaseURL, getCourseIDList, getKadaiFromCourseID, getQuizFromCourseID };
+export { getBaseURL, getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID };

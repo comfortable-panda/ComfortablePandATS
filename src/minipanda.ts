@@ -1,4 +1,4 @@
-import { Kadai, CourseSiteInfo } from "./model";
+import { Assignment, CourseSiteInfo } from "./model";
 import {
   createCourseIDMap,
   formatTimestamp,
@@ -14,10 +14,10 @@ import {
   SettingsDom
 } from "./dom";
 import {
-  addKadaiMemo,
-  deleteKadaiMemo,
-  toggleKadaiFinishedFlag,
-  toggleKadaiTab,
+  addMemo,
+  deleteMemo,
+  toggleFinishedFlag,
+  toggleAssignmentTab,
   toggleMemoBox,
   toggleMiniSakai,
   toggleSettingsTab,
@@ -25,8 +25,8 @@ import {
 } from "./eventListener";
 import {
   CPsettings,
-  kadaiCacheInterval,
-  kadaiFetchedTime,
+  assignmentCacheInterval,
+  assignmentFetchedTime,
   quizCacheInterval,
   quizFetchedTime,
   VERSION,
@@ -43,8 +43,8 @@ function createMiniSakaiBtn(): void {
   }
 }
 
-export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
-  const kadaiFetchedTimestamp = new Date( (typeof kadaiFetchedTime === "number")? kadaiFetchedTime : nowTime);
+export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
+  const kadaiFetchedTimestamp = new Date( (typeof assignmentFetchedTime === "number")? assignmentFetchedTime : nowTime);
   const kadaiFetchedTimeString = kadaiFetchedTimestamp.toLocaleDateString() + " " + kadaiFetchedTimestamp.getHours() + ":" + ("00" + kadaiFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + kadaiFetchedTimestamp.getSeconds()).slice(-2);
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
   const quizFetchedTimeString = quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
@@ -60,7 +60,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
   kadaiList.forEach((item) => {
     const lectureName = courseIDMap.get(item.courseSiteInfo.courseID);
     // loop over kadais
-    item.kadaiEntries.forEach((kadai) => {
+    item.assignmentEntries.forEach((kadai) => {
       const dispDue = formatTimestamp(kadai.dueDateTimestamp);
       const timeRemain = getTimeRemain((kadai.dueDateTimestamp*1000-nowTime) / 1000);
       const daysUntilDue = getDaysUntil(nowTime, kadai.dueDateTimestamp*1000);
@@ -78,7 +78,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
         isMemo: kadai.isMemo,
         isQuiz: kadai.isQuiz,
         lectureId: item.courseSiteInfo.courseID,
-        id: kadai.kadaiID,
+        id: kadai.assignmentID,
         checked: kadaiChecked,
         href: item.getTopSite() == null ? "" : item.getTopSite()
       };
@@ -184,7 +184,7 @@ export function createMiniPandAGeneralized(root: Element, kadaiList: Array<Kadai
     });
 }
 
-function createMiniPandA(kadaiList: Array<Kadai>, courseSiteInfos: Array<CourseSiteInfo>): void {
+function createMiniPandA(kadaiList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
   createMiniPandAGeneralized(miniPandA, kadaiList, courseSiteInfos, false, (rendered) => {
       miniPandA.innerHTML = rendered;
       const parent = document.getElementById("pageBody");
@@ -196,7 +196,7 @@ function createMiniPandA(kadaiList: Array<Kadai>, courseSiteInfos: Array<CourseS
 
 async function createSettingsTab(root: Element): Promise<void> {
   createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
-  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.kadaiCacheInterval ?? kadaiCacheInterval, "kadaiCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.assignmentCacheInterval ?? assignmentCacheInterval, "kadaiCacheInterval");
   createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
 
   createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
@@ -252,13 +252,13 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
 }
 
 function registerEventHandlers(root: Element) {
-  root.querySelector('#kadaiTab')?.addEventListener('click', () => toggleKadaiTab());
+  root.querySelector('#kadaiTab')?.addEventListener('click', () => toggleAssignmentTab());
   root.querySelector('#settingsTab')?.addEventListener('click', () => toggleSettingsTab());
-  root.querySelectorAll('.todo-check').forEach(c => c.addEventListener('change', (e) => toggleKadaiFinishedFlag(e)));
+  root.querySelectorAll('.todo-check').forEach(c => c.addEventListener('change', (e) => toggleFinishedFlag(e)));
   root.querySelector('#close_btn')?.addEventListener('click', () => toggleMiniSakai());
   root.querySelector('#plus-button')?.addEventListener('click', () => toggleMemoBox());
-  root.querySelector('#todo-add')?.addEventListener('click', () => addKadaiMemo());
-  root.querySelectorAll('.del-button').forEach(b => b.addEventListener('click', (e) => deleteKadaiMemo(e)));
+  root.querySelector('#todo-add')?.addEventListener('click', () => addMemo());
+  root.querySelectorAll('.del-button').forEach(b => b.addEventListener('click', (e) => deleteMemo(e)));
 }
 
 function initState(root: Element) {
@@ -268,7 +268,7 @@ function initState(root: Element) {
   root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
 }
 
-async function displayMiniPandA(mergedKadaiList: Array<Kadai>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
+async function displayMiniPandA(mergedKadaiList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
   createMiniPandA(mergedKadaiList, courseSiteInfos);
 }
 
@@ -284,7 +284,7 @@ function deleteNavBarNotification(): void {
   }
 }
 
-function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiList: Array<Kadai>): void {
+function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiList: Array<Assignment>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
 
@@ -293,7 +293,7 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, kadaiL
       // @ts-ignore
       const courseID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
 
-      const q = kadaiList.findIndex((kadai: Kadai) => {
+      const q = kadaiList.findIndex((kadai: Assignment) => {
         return kadai.courseSiteInfo.courseID === courseID;
       });
       if (q !== -1) {
