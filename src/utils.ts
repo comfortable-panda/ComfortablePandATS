@@ -35,8 +35,7 @@ function isLoggedIn(): boolean {
   // ログインしているかどうかを返す
   const scripts = document.getElementsByTagName("script");
   let loggedIn = false;
-  // @ts-ignore
-  for (const script of scripts) {
+  for (const script of Array.from(scripts)) {
     if (script.text.match('"loggedIn": true')) loggedIn = true;
   }
   return loggedIn;
