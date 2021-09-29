@@ -5,8 +5,8 @@ import { convertArrayToAssignment, genUniqueStr, mergeIntoAssignmentList } from 
 import {
   CPsettings,
   courseIDList,
-  loadAndMergeKadaiList,
-  mergedKadaiListNoMemo,
+  loadAndMergeAssignmentList,
+  mergedAssignmentListNoMemo,
 } from "./content_script";
 import { DefaultSettings, Settings } from "./settings";
 import {
@@ -212,7 +212,7 @@ async function addMemo(): Promise<void> {
   }
   miniPandA.remove();
   assignmentDiv.remove();
-  const assignmentList = mergeIntoAssignmentList(mergedKadaiListNoMemo, memoList);
+  const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, memoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
   await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
@@ -243,7 +243,7 @@ async function deleteMemo(event: any): Promise<void> {
   assignmentDiv.remove();
 
   saveToLocalStorage("TSkadaiMemoList", deletedMemoList);
-  const assignmentList = mergeIntoAssignmentList(mergedKadaiListNoMemo, deletedMemoList);
+  const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, deletedMemoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
   await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
@@ -271,7 +271,7 @@ async function editFavTabMessage(): Promise<void> {
 async function reloadNavBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void>{
   // NavBarを再描画
   deleteNavBarNotification();
-  const newAssignmentList = await loadAndMergeKadaiList(courseIDList, useCache, useCache);
+  const newAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache, useCache);
   createNavBarNotification(courseIDList, newAssignmentList);
 }
 
