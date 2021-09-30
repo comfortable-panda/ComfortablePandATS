@@ -5,6 +5,7 @@ PandAを快適にするブラウザ拡張機能です．
 - [Google Chrome](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
 - [Firefox](https://tinaxd.github.io/comfortable-panda-firefox-updates/index.html)
 - [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/njbljhcmnodocldppoiejkcmcebpmljc)
+- [Safari](https://apps.apple.com/jp/app/comfortable-panda/id1572408187?mt=12)
 
 # 使い方
 1. 拡張機能をブラウザにインストールします．
