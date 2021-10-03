@@ -86,6 +86,7 @@ function createMiniPandA(): void {
 
   const parent = document.getElementById("pageBody");
   const ref = document.getElementById("toolMenuWrap");
+  console.log("MinipandaInfo", miniPandA.style)
 
   parent?.insertBefore(miniPandA, ref);
 }
