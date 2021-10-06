@@ -132,10 +132,10 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     });
   });
 
-  const sortElements = (elements: Array<Object>) => {
+  const sortElements = (elements: Array<DisplayAssignment>) => {
     elements.sort((a, b) => {
-      // @ts-ignore
-      const timestamp = (o) => Math.min(...o.entries.map((p) => p.timestamp));
+      const timestamp = (o: DisplayAssignment) =>
+        Math.min(...o.assignmentEntries.map((p) => p.dueDateTimestamp));
       return timestamp(a) - timestamp(b);
     });
     return elements;
