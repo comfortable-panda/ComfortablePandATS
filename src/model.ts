@@ -119,12 +119,12 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
     return [day, hours, minutes];
   }
 
-  remainTimeString(): string {
+  get remainTimeString(): string {
     const timeRemain = this.getTimeRemain((this.dueDateTimestamp * 1000 - nowTime) / 1000);
     return `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
   }
 
-  dueDateString(): string {
+  get dueDateString(): string {
     const date = new Date(this.dueDateTimestamp * 1000);
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
   }
