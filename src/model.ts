@@ -95,10 +95,10 @@ export class CourseSiteInfo {
 }
 
 export class DisplayAssignmentEntry extends AssignmentEntry {
-  lectureID: string;
+  courseID: string;
   assignmentPage: string;
   constructor(
-    lectureID: string,
+    courseID: string,
     assignmentID: string,
     assignmentTitle: string,
     assignmentPage: string,
@@ -108,7 +108,7 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
     isMemo: boolean
   ) {
     super(assignmentID, assignmentTitle, dueDateTimestamp, isMemo, isFinished, isQuiz);
-    this.lectureID = lectureID;
+    this.courseID = courseID;
     this.assignmentPage = assignmentPage;
   }
 
