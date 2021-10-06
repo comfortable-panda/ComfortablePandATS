@@ -111,7 +111,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
         appendElement(courseName, otherElements);
       }
     });
-
+    console.log("success elements", successElements)
     addMemoBoxLectures.push({
       id: assignment.courseSiteInfo.courseID,
       lectureName: courseName,
