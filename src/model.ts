@@ -1,3 +1,5 @@
+import { nowTime } from "./utils";
+
 export class AssignmentEntry {
   assignmentID: string;
   assignmentTitle: string;
@@ -89,5 +91,41 @@ export class CourseSiteInfo {
   ) {
     this.courseID = courseID;
     this.courseName = courseName;
+  }
+}
+
+export class DisplayAssignmentEntry extends AssignmentEntry {
+  lectureID: string;
+  assignmentPage: string;
+  constructor(
+    lectureID: string,
+    assignmentID: string,
+    assignmentTitle: string,
+    assignmentPage: string,
+    dueDateTimestamp: number,
+    isFinished: boolean,
+    isQuiz: boolean,
+    isMemo: boolean
+  ) {
+    super(assignmentID, assignmentTitle, dueDateTimestamp, isMemo, isFinished, isQuiz);
+    this.lectureID = lectureID;
+    this.assignmentPage = assignmentPage;
+  }
+
+  private getTimeRemain(remainTimestamp: number): [number, number, number] {
+    const day = Math.floor(remainTimestamp / (3600 * 24));
+    const hours = Math.floor((remainTimestamp - day * 3600 * 24) / 3600);
+    const minutes = Math.floor((remainTimestamp - (day * 3600 * 24 + hours * 3600)) / 60);
+    return [day, hours, minutes];
+  }
+
+  remainTimeString(): string {
+    const timeRemain = this.getTimeRemain((this.dueDateTimestamp * 1000 - nowTime) / 1000);
+    return `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
+  }
+
+  dueDateString(): string {
+    const date = new Date(this.dueDateTimestamp * 1000);
+    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
   }
 }
