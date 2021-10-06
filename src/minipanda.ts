@@ -59,7 +59,6 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   // loop over lectures
   assignmentList.forEach((assignment) => {
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
-    const courseID = assignment.courseSiteInfo.courseID;
     // iterate over assignment entries
     assignment.assignmentEntries.forEach((assignmentEntry) => {
       const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.dueDateTimestamp * 1000);
