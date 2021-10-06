@@ -47,7 +47,7 @@
         <span class="q">{{titles.due24h}}</span>
     </div>
     <div class="sidenav-list sidenav-list-danger">
-        {{#dangerElements}}
+        {{#elements.danger}}
             <div id="b{{courseID}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-danger lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
@@ -67,7 +67,7 @@
                     </p>
                 {{/assignmentEntries}}
             </div>
-        {{/dangerElements}}
+        {{/elements.danger}}
     </div>
     {{/display.danger}}
 
@@ -76,7 +76,7 @@
         <span class="q">{{titles.due5d}}</span>
     </div>
     <div class="sidenav-list sidenav-list-warning">
-        {{#warningElements}}
+        {{#elements.warning}}
             <div id="b{{courseID}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-warning lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
@@ -96,7 +96,7 @@
                     </p>
                 {{/assignmentEntries}}
             </div>
-        {{/warningElements}}
+        {{/elements.warning}}
     </div>
     {{/display.warning}}
 
@@ -105,7 +105,7 @@
         <span class="q">{{titles.due14d}}</span>
     </div>
     <div class="sidenav-list sidenav-list-success">
-        {{#successElements}}
+        {{#elements.success}}
             <div id="b{{courseID}}" class="kadai-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
             <a class="lecture-success lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
@@ -125,7 +125,7 @@
                 </p>
                 {{/assignmentEntries}}
             </div>
-        {{/successElements}}
+        {{/elements.success}}
     </div>
     {{/display.success}}
 
@@ -134,7 +134,7 @@
         <span class="q">{{titles.dueOver14d}}</span>
     </div>
     <div class="sidenav-list sidenav-list-other">
-        {{#otherElements}}
+        {{#elements.other}}
             <div id="b{{courseID}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-other lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
@@ -154,7 +154,7 @@
                     </p>
                 {{/assignmentEntries}}
             </div>
-        {{/otherElements}}
+        {{/elements.other}}
     </div>
     {{/display.other}}
 

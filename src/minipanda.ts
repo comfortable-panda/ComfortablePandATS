@@ -128,10 +128,12 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     quizFetchedTime: quizFetchedTimeString,
     minipandaLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
-    dangerElements: sortElements(dangerElements),
-    warningElements: sortElements(warningElements),
-    successElements: sortElements(successElements),
-    otherElements: sortElements(otherElements),
+    elements: {
+      danger: sortElements(dangerElements),
+      warning: sortElements(warningElements),
+      success: sortElements(successElements),
+      other: sortElements(otherElements),
+    },
     display: {
       danger: dangerElements.length > 0,
       warning: warningElements.length > 0,
