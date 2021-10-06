@@ -49,21 +49,21 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
   const quizFetchedTimeString = quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
 
-  const addMemoBoxLectures: Array<Object> = [];
+  const addMemoBoxLectures: Array<CourseSiteInfo> = [];
 
   const courseIDMap = createCourseIDMap(courseSiteInfos);
   const dangerElements: Array<DisplayAssignment> = [];
   const warningElements: Array<DisplayAssignment> = [];
   const successElements: Array<DisplayAssignment> = [];
   const otherElements: Array<DisplayAssignment> = [];
-  // loop over lectures
+  // iterate over courseSite
   assignmentList.forEach((assignment) => {
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
     // iterate over assignment entries
     assignment.assignmentEntries.forEach((assignmentEntry) => {
       const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.dueDateTimestamp * 1000);
 
-      const entry = new DisplayAssignmentEntry(
+      const displayAssignmentEntry = new DisplayAssignmentEntry(
         assignment.courseSiteInfo.courseID,
         assignmentEntry.assignmentID,
         assignmentEntry.assignmentTitle,
@@ -74,23 +74,23 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
         assignmentEntry.isMemo
       );
 
-      const vars = new DisplayAssignment([entry], courseName, assignment.getTopSite());
+      const displayAssignment = new DisplayAssignment([displayAssignmentEntry], courseName, assignment.getTopSite());
 
-      const appendElement = (courseName: string | undefined, elements: Array<DisplayAssignment>) => {
+      const appendElement = (courseName: string | undefined, displayAssignments: Array<DisplayAssignment>) => {
 
-        const courseNameMap = elements.map((e) => e.courseName);
-        console.log("course map", courseNameMap)
+        const courseNameMap = displayAssignments.map((e) => e.courseName);
         if (courseNameMap.includes(courseName)) {
           const idx = courseNameMap.indexOf(courseName);
-          elements[idx].assignmentEntries.push(entry);
-          elements[idx].assignmentEntries.sort((a, b) => {
+          displayAssignments[idx].assignmentEntries.push(displayAssignmentEntry);
+          displayAssignments[idx].assignmentEntries.sort((a, b) => {
             return a.dueDateTimestamp - b.dueDateTimestamp;
           });
         } else {
-          elements.push(vars);
+          displayAssignments.push(displayAssignment);
         }
       };
 
+      // Append elements according to due date category
       if (daysUntilDue > 0 && daysUntilDue <= 1) {
         appendElement(courseName, dangerElements);
       } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
@@ -101,11 +101,10 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
         appendElement(courseName, otherElements);
       }
     });
-    console.log("success elements", successElements)
-    addMemoBoxLectures.push({
-      id: assignment.courseSiteInfo.courseID,
-      lectureName: courseName,
-    });
+
+    addMemoBoxLectures.push(
+      new CourseSiteInfo(assignment.courseSiteInfo.courseID, courseName)
+    );
   });
 
   const sortElements = (elements: Array<DisplayAssignment>) => {

@@ -84,10 +84,10 @@ export class Assignment {
 
 export class CourseSiteInfo {
   courseID: string;
-  courseName: string;
+  courseName: string | undefined;
   constructor(
     courseID: string,
-    courseName: string
+    courseName: string | undefined
   ) {
     this.courseID = courseID;
     this.courseName = courseName;
