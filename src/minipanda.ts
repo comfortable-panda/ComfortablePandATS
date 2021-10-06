@@ -152,7 +152,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       due5d: chrome.i18n.getMessage("due5d"),
       due14d: chrome.i18n.getMessage("due14d"),
       dueOver14d: chrome.i18n.getMessage("dueOver14d"),
-      relaxPandaA: chrome.i18n.getMessage("no_available_assignments"),
+      relaxPandA: chrome.i18n.getMessage("no_available_assignments"),
     },
     todoBox: {
       courseName: chrome.i18n.getMessage("todo_box_course_name"),
