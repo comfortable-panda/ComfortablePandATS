@@ -42,7 +42,7 @@
     </div>
     {{/subset}}
 
-    {{#showDanger}}
+    {{#display.danger}}
     <div class="sidenav-danger">
         <span class="q">{{titles.due24h}}</span>
     </div>
@@ -69,9 +69,9 @@
             </div>
         {{/dangerElements}}
     </div>
-    {{/showDanger}}
+    {{/display.danger}}
 
-    {{#showWarning}}
+    {{#display.warning}}
     <div class="sidenav-warning">
         <span class="q">{{titles.due5d}}</span>
     </div>
@@ -98,9 +98,9 @@
             </div>
         {{/warningElements}}
     </div>
-    {{/showWarning}}
+    {{/display.warning}}
 
-    {{#showSuccess}}
+    {{#display.success}}
     <div class="sidenav-success">
         <span class="q">{{titles.due14d}}</span>
     </div>
@@ -127,9 +127,9 @@
             </div>
         {{/successElements}}
     </div>
-    {{/showSuccess}}
+    {{/display.success}}
 
-    {{#showOther}}
+    {{#display.other}}
     <div class="sidenav-other">
         <span class="q">{{titles.dueOver14d}}</span>
     </div>
@@ -156,7 +156,7 @@
             </div>
         {{/otherElements}}
     </div>
-    {{/showOther}}
+    {{/display.other}}
 
     {{#showRelaxPandA}}
     <div class="relaxpanda">
