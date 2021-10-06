@@ -26,7 +26,10 @@ function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, 
   // 講義IDと講義名のMapを作る
   const courseIDMap = new Map<string, string>();
   for (const courseSiteInfo of courseSiteInfos) {
-    courseIDMap.set(courseSiteInfo.courseID, courseSiteInfo.courseName);
+    let courseName;
+    if (courseSiteInfo.courseName === undefined) courseName = "";
+    else courseName = courseSiteInfo.courseName;
+    courseIDMap.set(courseSiteInfo.courseID, courseName);
   }
   return courseIDMap;
 }

@@ -1,3 +1,5 @@
+import { nowTime } from "./utils";
+
 export class AssignmentEntry {
   assignmentID: string;
   assignmentTitle: string;
@@ -72,22 +74,70 @@ export class Assignment {
     return min;
   }
 
-  getTopSite(): string | null {
+  getTopSite(): string {
     for (const entry of this.assignmentEntries) {
       if (entry.assignmentPage != null) return entry.assignmentPage;
     }
-    return null;
+    return "";
   }
 }
 
 export class CourseSiteInfo {
   courseID: string;
-  courseName: string;
+  courseName: string | undefined;
   constructor(
     courseID: string,
-    courseName: string
+    courseName: string | undefined
   ) {
     this.courseID = courseID;
     this.courseName = courseName;
+  }
+}
+
+export class DisplayAssignmentEntry extends AssignmentEntry {
+  courseID: string;
+  constructor(
+    courseID: string,
+    assignmentID: string,
+    assignmentTitle: string,
+    dueDateTimestamp: number,
+    isFinished: boolean,
+    isQuiz: boolean,
+    isMemo: boolean
+  ) {
+    super(assignmentID, assignmentTitle, dueDateTimestamp, isMemo, isFinished, isQuiz);
+    this.courseID = courseID;
+  }
+
+  private getTimeRemain(remainTimestamp: number): [number, number, number] {
+    const day = Math.floor(remainTimestamp / (3600 * 24));
+    const hours = Math.floor((remainTimestamp - day * 3600 * 24) / 3600);
+    const minutes = Math.floor((remainTimestamp - (day * 3600 * 24 + hours * 3600)) / 60);
+    return [day, hours, minutes];
+  }
+
+  get remainTimeString(): string {
+    const timeRemain = this.getTimeRemain((this.dueDateTimestamp * 1000 - nowTime) / 1000);
+    return `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
+  }
+
+  get dueDateString(): string {
+    const date = new Date(this.dueDateTimestamp * 1000);
+    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
+  }
+}
+
+export class DisplayAssignment {
+  assignmentEntries: Array<DisplayAssignmentEntry>;
+  courseName: string | undefined;
+  coursePage: string;
+  constructor(
+    assignmentEntries: Array<DisplayAssignmentEntry>,
+    courseName: string | undefined,
+    coursePage: string
+  ) {
+    this.assignmentEntries = assignmentEntries;
+    this.courseName = courseName;
+    this.coursePage = coursePage;
   }
 }
