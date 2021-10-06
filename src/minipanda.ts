@@ -67,7 +67,6 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
         assignment.courseSiteInfo.courseID,
         assignmentEntry.assignmentID,
         assignmentEntry.assignmentTitle,
-        // assignment.getTopSite(),
         assignmentEntry.dueDateTimestamp,
         assignmentEntry.isFinished,
         assignmentEntry.isQuiz,
@@ -117,15 +116,17 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   };
 
   let relaxPandA = null;
-  if (assignmentList.length == 0) {
+  if (assignmentList.length === 0) {
     relaxPandA = {
       img: chrome.extension.getURL("img/relaxPanda.png"),
     };
   }
 
   const templateVars = {
-    assignmentFetchedTime: assignmentFetchedTimeString,
-    quizFetchedTime: quizFetchedTimeString,
+    fetchedTime: {
+      assignment: assignmentFetchedTimeString,
+      quiz: quizFetchedTimeString,
+    },
     minipandaLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
     subset: subset,
