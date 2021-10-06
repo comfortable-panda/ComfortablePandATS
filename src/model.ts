@@ -132,10 +132,10 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
 
 export class DisplayAssignment {
   assignmentEntries: Array<DisplayAssignmentEntry>;
-  courseName: string;
+  courseName: string | undefined;
   constructor(
     assignmentEntries: Array<DisplayAssignmentEntry>,
-    courseName: string
+    courseName: string | undefined
   ) {
     this.assignmentEntries = assignmentEntries;
     this.courseName = courseName;
