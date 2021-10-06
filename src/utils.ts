@@ -1,6 +1,5 @@
-import { Assignment, AssignmentEntry, CourseSiteInfo } from "./model";
-import { saveToLocalStorage } from "./storage";
-import {quizFetchedTime} from "./content_script";
+import {Assignment, AssignmentEntry, CourseSiteInfo} from "./model";
+import {saveToLocalStorage} from "./storage";
 
 export const nowTime = new Date().getTime();
 
@@ -11,11 +10,11 @@ function getDaysUntil(dt1: number, dt2: number): number {
   return diff;
 }
 
-// function getFetchedTimeString(timestamp: number): string {
-//   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
-//   const quizFetchedTimeString = quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
-//
-// }
+function formatTimestamp(timestamp: number | undefined): string {
+  // timestampをフォーマットする
+  const date = new Date(timestamp ? timestamp : nowTime);
+  return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2) + ":" + ("00" + date.getSeconds()).slice(-2);
+}
 
 function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
   // 講義IDと講義名のMapを作る
@@ -187,6 +186,7 @@ function genUniqueStr(): string {
 export {
   getDaysUntil,
   createCourseIDMap,
+  formatTimestamp,
   isLoggedIn,
   miniSakaiReady,
   convertArrayToAssignment,
