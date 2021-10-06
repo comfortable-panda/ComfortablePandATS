@@ -23,9 +23,9 @@
         <div class="miniSakai-memoBoxItem">
             <p>{{todoBox.courseName}}</p>
             <label><select class="todoLecName">
-                {{#addMemoBoxLectures}}
+                {{#todoBox.courseSiteList}}
                     <option id="{{courseID}}">{{courseName}}</option>
-                {{/addMemoBoxLectures}}
+                {{/todoBox.courseSiteList}}
             </select></label>
         </div>
         <div class="miniSakai-memoBoxItem">

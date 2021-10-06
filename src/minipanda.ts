@@ -49,7 +49,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
   const quizFetchedTimeString = quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
 
-  const addMemoBoxLectures: Array<CourseSiteInfo> = [];
+  const courseSiteList: Array<CourseSiteInfo> = [];
 
   const courseIDMap = createCourseIDMap(courseSiteInfos);
   const dangerElements: Array<DisplayAssignment> = [];
@@ -102,7 +102,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       }
     });
 
-    addMemoBoxLectures.push(
+    courseSiteList.push(
       new CourseSiteInfo(assignment.courseSiteInfo.courseID, courseName)
     );
   });
@@ -136,7 +136,6 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     showSuccess: successElements.length > 0,
     otherElements: sortElements(otherElements),
     showOther: otherElements.length > 0,
-    addMemoBoxLectures: addMemoBoxLectures,
     subset: subset,
     showRelaxPandA: relaxPandA,
     titles: {
@@ -155,6 +154,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       memoLabel: chrome.i18n.getMessage("todo_box_memo"),
       dueDate: chrome.i18n.getMessage("todo_box_due_date"),
       addBtnLabel: chrome.i18n.getMessage("todo_box_add"),
+      courseSiteList: courseSiteList,
     },
     badge: {
       memo: chrome.i18n.getMessage("memo"),
