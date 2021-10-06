@@ -1,9 +1,8 @@
 import {Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry} from "./model";
 import {
   createCourseIDMap,
-  formatTimestamp,
   getDaysUntil,
-  getTimeRemain,
+  formatTimestamp,
   nowTime,
 } from "./utils";
 import {
@@ -11,7 +10,7 @@ import {
   cloneElem,
   hamburger,
   miniPandA,
-  SettingsDom
+  SettingsDom,
 } from "./dom";
 import {
   addMemo,
@@ -44,10 +43,8 @@ function createMiniSakaiBtn(): void {
 }
 
 export function createMiniPandAGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
-  const assignmentFetchedTimestamp = new Date( (typeof assignmentFetchedTime === "number")? assignmentFetchedTime : nowTime);
-  const assignmentFetchedTimeString = assignmentFetchedTimestamp.toLocaleDateString() + " " + assignmentFetchedTimestamp.getHours() + ":" + ("00" + assignmentFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + assignmentFetchedTimestamp.getSeconds()).slice(-2);
-  const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
-  const quizFetchedTimeString = quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
+  const assignmentFetchedTimeString = formatTimestamp(assignmentFetchedTime);
+  const quizFetchedTimeString = formatTimestamp(quizFetchedTime);
 
   const courseSiteList: Array<CourseSiteInfo> = [];
 
@@ -152,7 +149,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       due5d: chrome.i18n.getMessage("due5d"),
       due14d: chrome.i18n.getMessage("due14d"),
       dueOver14d: chrome.i18n.getMessage("dueOver14d"),
-      relaxPandaA: chrome.i18n.getMessage("no_available_assignments"),
+      relaxPandA: chrome.i18n.getMessage("no_available_assignments"),
     },
     todoBox: {
       courseName: chrome.i18n.getMessage("todo_box_course_name"),

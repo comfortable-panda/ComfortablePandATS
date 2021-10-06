@@ -1,5 +1,5 @@
-import { Assignment, AssignmentEntry, CourseSiteInfo } from "./model";
-import { saveToLocalStorage } from "./storage";
+import {Assignment, AssignmentEntry, CourseSiteInfo} from "./model";
+import {saveToLocalStorage} from "./storage";
 
 export const nowTime = new Date().getTime();
 
@@ -10,16 +10,10 @@ function getDaysUntil(dt1: number, dt2: number): number {
   return diff;
 }
 
-function getTimeRemain(_remainTime: number): [number, number, number] {
-  const day = Math.floor(_remainTime / (3600 * 24));
-  const hours = Math.floor((_remainTime - day * 3600 * 24) / 3600);
-  const minutes = Math.floor((_remainTime - (day * 3600 * 24 + hours * 3600)) / 60);
-  return [day, hours, minutes];
-}
-
-function formatTimestamp(timestamp: number): string {
-  const _date = new Date(timestamp * 1000);
-  return _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
+function formatTimestamp(timestamp: number | undefined): string {
+  // timestampをフォーマットする
+  const date = new Date(timestamp ? timestamp : nowTime);
+  return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2) + ":" + ("00" + date.getSeconds()).slice(-2);
 }
 
 function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
@@ -180,8 +174,9 @@ function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment
   });
 }
 
-function useCache(fetchedTime: number, cacheInterval: number): boolean{
-  return (nowTime - fetchedTime) / 1000 <= cacheInterval;
+function useCache(fetchedTime: number | undefined, cacheInterval: number): boolean{
+  if (fetchedTime) return (nowTime - fetchedTime) / 1000 <= cacheInterval;
+  else return false;
 }
 
 function genUniqueStr(): string {
@@ -190,9 +185,8 @@ function genUniqueStr(): string {
 
 export {
   getDaysUntil,
-  getTimeRemain,
-  formatTimestamp,
   createCourseIDMap,
+  formatTimestamp,
   isLoggedIn,
   miniSakaiReady,
   convertArrayToAssignment,

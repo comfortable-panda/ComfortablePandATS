@@ -1,7 +1,24 @@
-function loadFromLocalStorage(key: string): Promise<any> {
+function loadFromLocalStorage(key: string, ifUndefinedType = "array"): Promise<any> {
   return new Promise(function (resolve, reject) {
     chrome.storage.local.get(key, function (items: any) {
-      if (typeof items[key] === "undefined") resolve([]);
+      if (typeof items[key] === "undefined") {
+        let res: any;
+        switch (ifUndefinedType) {
+          case "number":
+            res = 0;
+            break;
+          case "string":
+            res = "";
+            break;
+          case "undefined":
+            res = undefined;
+            break;
+          default:
+            res = [];
+            break;
+        }
+        resolve(res);
+      }
       else resolve(items[key]);
     });
   });

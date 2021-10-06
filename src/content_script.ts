@@ -29,8 +29,8 @@ export const baseURL = getBaseURL();
 export const VERSION = "1.0.0";
 export let assignmentCacheInterval: number;
 export let quizCacheInterval: number;
-export let assignmentFetchedTime: number;
-export let quizFetchedTime: number;
+export let assignmentFetchedTime: number | undefined;
+export let quizFetchedTime: number | undefined;
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
 export let mergedAssignmentListNoMemo: Array<Assignment>;
@@ -107,8 +107,8 @@ async function loadSettings() {
   assignmentCacheInterval = CPsettings.assignmentCacheInterval ?? DefaultSettings.assignmentCacheInterval;
   quizCacheInterval = CPsettings.quizCacheInterval ?? DefaultSettings.quizCacheInterval;
   CPsettings.displayCheckedKadai = CPsettings.displayCheckedKadai ?? true;
-  assignmentFetchedTime = await loadFromLocalStorage("TSkadaiFetchedTime");
-  quizFetchedTime = await loadFromLocalStorage("TSquizFetchedTime");
+  assignmentFetchedTime = await loadFromLocalStorage("TSkadaiFetchedTime", "undefined");
+  quizFetchedTime = await loadFromLocalStorage("TSquizFetchedTime", "undefined");
 }
 
 async function loadCourseIDList() {
