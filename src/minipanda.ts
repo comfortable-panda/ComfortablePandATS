@@ -62,14 +62,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     const courseID = assignment.courseSiteInfo.courseID;
     // iterate over assignment entries
     assignment.assignmentEntries.forEach((assignmentEntry) => {
-      // const dispDue = formatTimestamp(assignmentEntry.dueDateTimestamp);
-      // const timeRemain = getTimeRemain((assignmentEntry.dueDateTimestamp * 1000 - nowTime) / 1000);
       const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.dueDateTimestamp * 1000);
-
-      // const remainTimeText = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
-      // const dueDateText = `${dispDue}`;
-      // const title = `${assignmentEntry.assignmentTitle}`;
-      // const checked = assignmentEntry.isFinished;
 
       const entry = new DisplayAssignmentEntry(
         assignment.courseSiteInfo.courseID,
@@ -83,23 +76,6 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       );
 
       const vars = new DisplayAssignment([entry], courseName);
-
-      // const entry = {
-      //   timestamp: assignmentEntry.dueDateTimestamp,
-      //   date: dueDateText,
-      //   remain: remainTimeText,
-      //   title: title,
-      //   isMemo: assignmentEntry.isMemo,
-      //   isQuiz: assignmentEntry.isQuiz,
-      //   lectureId: assignment.courseSiteInfo.courseID,
-      //   id: assignmentEntry.assignmentID,
-      //   checked: checked,
-      //   href: assignment.getTopSite() == null ? "" : assignment.getTopSite(),
-      // };
-      // const vars = {
-      //   lectureName: courseName,
-      //   entries: [entry],
-      // };
 
       const appendElement = (courseName: string | undefined, elements: Array<DisplayAssignment>) => {
 
