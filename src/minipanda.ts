@@ -67,18 +67,19 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
         assignment.courseSiteInfo.courseID,
         assignmentEntry.assignmentID,
         assignmentEntry.assignmentTitle,
-        assignment.getTopSite(),
+        // assignment.getTopSite(),
         assignmentEntry.dueDateTimestamp,
         assignmentEntry.isFinished,
         assignmentEntry.isQuiz,
         assignmentEntry.isMemo
       );
 
-      const vars = new DisplayAssignment([entry], courseName);
+      const vars = new DisplayAssignment([entry], courseName, assignment.getTopSite());
 
       const appendElement = (courseName: string | undefined, elements: Array<DisplayAssignment>) => {
 
         const courseNameMap = elements.map((e) => e.courseName);
+        console.log("course map", courseNameMap)
         if (courseNameMap.includes(courseName)) {
           const idx = courseNameMap.indexOf(courseName);
           elements[idx].assignmentEntries.push(entry);

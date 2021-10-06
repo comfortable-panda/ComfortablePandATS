@@ -48,9 +48,9 @@
     </div>
     <div class="sidenav-list sidenav-list-danger">
         {{#dangerElements}}
-            {{#assignmentEntries}}
-                <div id="b{{courseID}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
-                    <a class="lecture-danger lecture-name" href="{{assignmentPage}}">{{courseName}}</a>
+            <div id="b{{courseID}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                <a class="lecture-danger lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                {{#assignmentEntries}}
                     <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
                     <p class="kadai-date">{{dueDateString}}</p>
@@ -65,9 +65,8 @@
                         {{/isQuiz}}
                         {{assignmentTitle}}
                     </p>
-
-                </div>
-            {{/assignmentEntries}}
+                {{/assignmentEntries}}
+            </div>
         {{/dangerElements}}
     </div>
     {{/showDanger}}
@@ -78,9 +77,9 @@
     </div>
     <div class="sidenav-list sidenav-list-warning">
         {{#warningElements}}
-            {{#assignmentEntries}}
-                <div id="b{{courseID}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
-                    <a class="lecture-warning lecture-name" href="{{assignmentPage}}">{{courseName}}</a>
+            <div id="b{{courseID}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                <a class="lecture-warning lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                {{#assignmentEntries}}
                     <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
                     <p class="kadai-date">{{dueDateString}}</p>
@@ -95,9 +94,8 @@
                         {{/isQuiz}}
                         {{assignmentTitle}}
                     </p>
-
-                </div>
-            {{/assignmentEntries}}
+                {{/assignmentEntries}}
+            </div>
         {{/warningElements}}
     </div>
     {{/showWarning}}
@@ -108,9 +106,9 @@
     </div>
     <div class="sidenav-list sidenav-list-success">
         {{#successElements}}
-            {{#assignmentEntries}}
             <div id="b{{courseID}}" class="kadai-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
-                <a class="lecture-success lecture-name" href="{{assignmentPage}}">{{courseName}}</a>
+            <a class="lecture-success lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                {{#assignmentEntries}}
                 <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                 <label for="{{assignmentID}}"></label>
                 <p class="kadai-date">{{dueDateString}}</p>
@@ -125,9 +123,8 @@
                     {{/isQuiz}}
                     {{assignmentTitle}}
                 </p>
-
+                {{/assignmentEntries}}
             </div>
-            {{/assignmentEntries}}
         {{/successElements}}
     </div>
     {{/showSuccess}}
@@ -138,9 +135,9 @@
     </div>
     <div class="sidenav-list sidenav-list-other">
         {{#otherElements}}
-            {{#assignmentEntries}}
-                <div id="b{{courseID}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
-                    <a class="lecture-other lecture-name" href="{{assignmentPage}}">{{courseName}}</a>
+            <div id="b{{courseID}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                <a class="lecture-other lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                {{#assignmentEntries}}
                     <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
                     <p class="kadai-date">{{dueDateString}}</p>
@@ -155,9 +152,8 @@
                         {{/isQuiz}}
                         {{assignmentTitle}}
                     </p>
-
-                </div>
-            {{/assignmentEntries}}
+                {{/assignmentEntries}}
+            </div>
         {{/otherElements}}
     </div>
     {{/showOther}}

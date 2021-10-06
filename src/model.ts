@@ -96,12 +96,10 @@ export class CourseSiteInfo {
 
 export class DisplayAssignmentEntry extends AssignmentEntry {
   courseID: string;
-  assignmentPage: string;
   constructor(
     courseID: string,
     assignmentID: string,
     assignmentTitle: string,
-    assignmentPage: string,
     dueDateTimestamp: number,
     isFinished: boolean,
     isQuiz: boolean,
@@ -109,7 +107,6 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
   ) {
     super(assignmentID, assignmentTitle, dueDateTimestamp, isMemo, isFinished, isQuiz);
     this.courseID = courseID;
-    this.assignmentPage = assignmentPage;
   }
 
   private getTimeRemain(remainTimestamp: number): [number, number, number] {
@@ -133,11 +130,14 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
 export class DisplayAssignment {
   assignmentEntries: Array<DisplayAssignmentEntry>;
   courseName: string | undefined;
+  coursePage: string;
   constructor(
     assignmentEntries: Array<DisplayAssignmentEntry>,
-    courseName: string | undefined
+    courseName: string | undefined,
+    coursePage: string
   ) {
     this.assignmentEntries = assignmentEntries;
     this.courseName = courseName;
+    this.coursePage = coursePage;
   }
 }
