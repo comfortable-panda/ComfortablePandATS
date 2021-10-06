@@ -124,7 +124,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   }
 
   const templateVars = {
-    kadaiFetchedTime: assignmentFetchedTimeString,
+    assignmentFetchedTime: assignmentFetchedTimeString,
     quizFetchedTime: quizFetchedTimeString,
     minipandaLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
@@ -139,9 +139,9 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     subset: subset,
     showRelaxPandA: relaxPandA,
     titles: {
-      kadaiTab: chrome.i18n.getMessage("tab_assignments"),
+      assignmentTab: chrome.i18n.getMessage("tab_assignments"),
       settingsTab: chrome.i18n.getMessage("tab_settings"),
-      kadaiFetchedTime: chrome.i18n.getMessage("assignment_acquisition_date"),
+      assignmentFetchedTime: chrome.i18n.getMessage("assignment_acquisition_date"),
       quizFetchedTime: chrome.i18n.getMessage("testquiz_acquisition_date"),
       due24h: chrome.i18n.getMessage("due24h"),
       due5d: chrome.i18n.getMessage("due5d"),
