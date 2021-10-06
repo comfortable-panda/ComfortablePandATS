@@ -74,11 +74,11 @@ export class Assignment {
     return min;
   }
 
-  getTopSite(): string | null {
+  getTopSite(): string {
     for (const entry of this.assignmentEntries) {
       if (entry.assignmentPage != null) return entry.assignmentPage;
     }
-    return null;
+    return "";
   }
 }
 
