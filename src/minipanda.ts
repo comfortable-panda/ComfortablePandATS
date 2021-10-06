@@ -128,6 +128,8 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     quizFetchedTime: quizFetchedTimeString,
     minipandaLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
+    subset: subset,
+    showRelaxPandA: relaxPandA,
     elements: {
       danger: sortElements(dangerElements),
       warning: sortElements(warningElements),
@@ -140,8 +142,6 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       success: successElements.length > 0,
       other: otherElements.length > 0,
     },
-    subset: subset,
-    showRelaxPandA: relaxPandA,
     titles: {
       assignmentTab: chrome.i18n.getMessage("tab_assignments"),
       settingsTab: chrome.i18n.getMessage("tab_settings"),
