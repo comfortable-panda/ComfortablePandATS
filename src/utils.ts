@@ -1,5 +1,6 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo } from "./model";
 import { saveToLocalStorage } from "./storage";
+import {quizFetchedTime} from "./content_script";
 
 export const nowTime = new Date().getTime();
 
@@ -10,17 +11,11 @@ function getDaysUntil(dt1: number, dt2: number): number {
   return diff;
 }
 
-function getTimeRemain(_remainTime: number): [number, number, number] {
-  const day = Math.floor(_remainTime / (3600 * 24));
-  const hours = Math.floor((_remainTime - day * 3600 * 24) / 3600);
-  const minutes = Math.floor((_remainTime - (day * 3600 * 24 + hours * 3600)) / 60);
-  return [day, hours, minutes];
-}
-
-function formatTimestamp(timestamp: number): string {
-  const _date = new Date(timestamp * 1000);
-  return _date.toLocaleDateString() + " " + _date.getHours() + ":" + ("00" + _date.getMinutes()).slice(-2);
-}
+// function getFetchedTimeString(timestamp: number): string {
+//   const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
+//   const quizFetchedTimeString = quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
+//
+// }
 
 function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
   // 講義IDと講義名のMapを作る
@@ -180,8 +175,9 @@ function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment
   });
 }
 
-function useCache(fetchedTime: number, cacheInterval: number): boolean{
-  return (nowTime - fetchedTime) / 1000 <= cacheInterval;
+function useCache(fetchedTime: number | undefined, cacheInterval: number): boolean{
+  if (fetchedTime) return (nowTime - fetchedTime) / 1000 <= cacheInterval;
+  else return false;
 }
 
 function genUniqueStr(): string {
@@ -190,8 +186,6 @@ function genUniqueStr(): string {
 
 export {
   getDaysUntil,
-  getTimeRemain,
-  formatTimestamp,
   createCourseIDMap,
   isLoggedIn,
   miniSakaiReady,

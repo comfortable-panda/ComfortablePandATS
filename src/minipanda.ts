@@ -1,9 +1,7 @@
 import {Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry} from "./model";
 import {
   createCourseIDMap,
-  formatTimestamp,
   getDaysUntil,
-  getTimeRemain,
   nowTime,
 } from "./utils";
 import {
@@ -11,7 +9,7 @@ import {
   cloneElem,
   hamburger,
   miniPandA,
-  SettingsDom
+  SettingsDom,
 } from "./dom";
 import {
   addMemo,
@@ -44,9 +42,9 @@ function createMiniSakaiBtn(): void {
 }
 
 export function createMiniPandAGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
-  const assignmentFetchedTimestamp = new Date( (typeof assignmentFetchedTime === "number")? assignmentFetchedTime : nowTime);
+  const assignmentFetchedTimestamp = new Date( (assignmentFetchedTime)? assignmentFetchedTime : nowTime);
   const assignmentFetchedTimeString = assignmentFetchedTimestamp.toLocaleDateString() + " " + assignmentFetchedTimestamp.getHours() + ":" + ("00" + assignmentFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + assignmentFetchedTimestamp.getSeconds()).slice(-2);
-  const quizFetchedTimestamp = new Date((typeof quizFetchedTime === "number")? quizFetchedTime : nowTime);
+  const quizFetchedTimestamp = new Date((quizFetchedTime)? quizFetchedTime : nowTime);
   const quizFetchedTimeString = quizFetchedTimestamp.toLocaleDateString() + " " + quizFetchedTimestamp.getHours() + ":" + ("00" + quizFetchedTimestamp.getMinutes()).slice(-2) + ":" + ("00" + quizFetchedTimestamp.getSeconds()).slice(-2);
 
   const courseSiteList: Array<CourseSiteInfo> = [];
