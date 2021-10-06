@@ -1,4 +1,4 @@
-import { Assignment, CourseSiteInfo } from "./model";
+import {Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry} from "./model";
 import {
   createCourseIDMap,
   formatTimestamp,
@@ -52,50 +52,64 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const addMemoBoxLectures: Array<Object> = [];
 
   const courseIDMap = createCourseIDMap(courseSiteInfos);
-  const dangerElements: Array<Object> = [];
-  const warningElements: Array<Object> = [];
-  const successElements: Array<Object> = [];
-  const otherElements: Array<Object> = [];
+  const dangerElements: Array<DisplayAssignment> = [];
+  const warningElements: Array<DisplayAssignment> = [];
+  const successElements: Array<DisplayAssignment> = [];
+  const otherElements: Array<DisplayAssignment> = [];
   // loop over lectures
   assignmentList.forEach((assignment) => {
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
+    const courseID = assignment.courseSiteInfo.courseID;
     // iterate over assignment entries
     assignment.assignmentEntries.forEach((assignmentEntry) => {
-      const dispDue = formatTimestamp(assignmentEntry.dueDateTimestamp);
-      const timeRemain = getTimeRemain((assignmentEntry.dueDateTimestamp * 1000 - nowTime) / 1000);
+      // const dispDue = formatTimestamp(assignmentEntry.dueDateTimestamp);
+      // const timeRemain = getTimeRemain((assignmentEntry.dueDateTimestamp * 1000 - nowTime) / 1000);
       const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.dueDateTimestamp * 1000);
 
-      const remainTimeText = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
-      const dueDateText = `${dispDue}`;
-      const title = `${assignmentEntry.assignmentTitle}`;
-      const checked = assignmentEntry.isFinished;
+      // const remainTimeText = `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
+      // const dueDateText = `${dispDue}`;
+      // const title = `${assignmentEntry.assignmentTitle}`;
+      // const checked = assignmentEntry.isFinished;
 
-      const entry = {
-        timestamp: assignmentEntry.dueDateTimestamp,
-        date: dueDateText,
-        remain: remainTimeText,
-        title: title,
-        isMemo: assignmentEntry.isMemo,
-        isQuiz: assignmentEntry.isQuiz,
-        lectureId: assignment.courseSiteInfo.courseID,
-        id: assignmentEntry.assignmentID,
-        checked: checked,
-        href: assignment.getTopSite() == null ? "" : assignment.getTopSite(),
-      };
-      const vars = {
-        lectureName: courseName,
-        entries: [entry],
-      };
+      const entry = new DisplayAssignmentEntry(
+        assignment.courseSiteInfo.courseID,
+        assignmentEntry.assignmentID,
+        assignmentEntry.assignmentTitle,
+        assignment.getTopSite(),
+        assignmentEntry.dueDateTimestamp,
+        assignmentEntry.isFinished,
+        assignmentEntry.isQuiz,
+        assignmentEntry.isMemo
+      );
 
-      const appendElement = (courseName: string|undefined, elements: Array<Object>) => {
-        // @ts-ignore
-        const courseNameMap = elements.map(e => e.lectureName);
+      const vars = new DisplayAssignment([entry], courseName);
+
+      // const entry = {
+      //   timestamp: assignmentEntry.dueDateTimestamp,
+      //   date: dueDateText,
+      //   remain: remainTimeText,
+      //   title: title,
+      //   isMemo: assignmentEntry.isMemo,
+      //   isQuiz: assignmentEntry.isQuiz,
+      //   lectureId: assignment.courseSiteInfo.courseID,
+      //   id: assignmentEntry.assignmentID,
+      //   checked: checked,
+      //   href: assignment.getTopSite() == null ? "" : assignment.getTopSite(),
+      // };
+      // const vars = {
+      //   lectureName: courseName,
+      //   entries: [entry],
+      // };
+
+      const appendElement = (courseName: string | undefined, elements: Array<DisplayAssignment>) => {
+
+        const courseNameMap = elements.map((e) => e.courseName);
         if (courseNameMap.includes(courseName)) {
           const idx = courseNameMap.indexOf(courseName);
-          // @ts-ignore
-          elements[idx].entries.push(entry);
-          // @ts-ignore ソートする
-          elements[idx].entries.sort((a, b) => {return a.timestamp - b.timestamp})
+          elements[idx].assignmentEntries.push(entry);
+          elements[idx].assignmentEntries.sort((a, b) => {
+            return a.dueDateTimestamp - b.dueDateTimestamp;
+          });
         } else {
           elements.push(vars);
         }
