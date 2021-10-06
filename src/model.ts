@@ -129,3 +129,15 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
   }
 }
+
+export class DisplayAssignment {
+  assignmentEntries: Array<DisplayAssignmentEntry>;
+  courseName: string;
+  constructor(
+    assignmentEntries: Array<DisplayAssignmentEntry>,
+    courseName: string
+  ) {
+    this.assignmentEntries = assignmentEntries;
+    this.courseName = courseName;
+  }
+}
