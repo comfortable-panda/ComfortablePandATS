@@ -35,49 +35,41 @@ function getCourseIDList(): Array<CourseSiteInfo> {
 
 function getAssignmentByCourseID(baseURL: string, courseID: string): Promise<Assignment> {
   const queryURL = baseURL + "/direct/assignment/site/" + courseID + ".json";
-  const request = new XMLHttpRequest();
-  request.open("GET", queryURL);
-  // キャッシュ対策
-  request.setRequestHeader("Pragma", "no-cache");
-  request.setRequestHeader("Cache-Control", "no-cache");
-  request.setRequestHeader("If-Modified-Since","Thu, 01 Jun 1970 00:00:00 GMT");
-  request.responseType = "json";
+
   return new Promise((resolve, reject) => {
-    request.addEventListener("load", (e) => {
-      const res = request.response;
-      if (!res || !res.assignment_collection)
-        reject("404 kadai data not found");
-      else {
-        const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
-        const assignmentEntries = convJsonToAssignmentEntries(res, baseURL, courseID);
-        resolve(new Assignment(courseSiteInfo, assignmentEntries, false));
-      }
-    });
-    request.send();
+    fetch(queryURL, { cache: "no-cache" })
+      .then(async (response) => {
+        if (response.ok) {
+          const res = await response.json();
+          console.log("kadai ", res)
+          const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
+          const assignmentEntries = convJsonToAssignmentEntries(res, baseURL, courseID);
+          resolve(new Assignment(courseSiteInfo, assignmentEntries, false));
+        } else {
+          reject(`Request failed: ${response.status}`);
+        }
+      })
+      .catch((err) => console.error(err)); // Error: Request failed: 404
   });
 }
 
 function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Assignment> {
   const queryURL = baseURL + "/direct/sam_pub/context/" + courseID + ".json";
-  const request = new XMLHttpRequest();
-  request.open("GET", queryURL);
-  // キャッシュ対策
-  request.setRequestHeader("Pragma", "no-cache");
-  request.setRequestHeader("Cache-Control", "no-cache");
-  request.setRequestHeader("If-Modified-Since","Thu, 01 Jun 1970 00:00:00 GMT");
-  request.responseType = "json";
 
   return new Promise((resolve, reject) => {
-    request.addEventListener("load", (e) => {
-      const res = request.response;
-      if (!res || !res.sam_pub_collection) reject("404 kadai data not found");
-      else {
-        const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
-        const assignmentEntries = convJsonToQuizEntries(res, baseURL, courseID);
-        resolve(new Assignment(courseSiteInfo, assignmentEntries, false));
-      }
-    });
-    request.send();
+    fetch(queryURL, { cache: "no-cache" })
+      .then(async (response) => {
+        if (response.ok) {
+          const res = await response.json();
+          console.log("quiz ", res)
+          const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
+          const assignmentEntries = convJsonToQuizEntries(res, baseURL, courseID);
+          resolve(new Assignment(courseSiteInfo, assignmentEntries, false));
+        } else {
+          reject(`Request failed: ${response.status}`);
+        }
+      })
+      .catch((err) => console.error(err)); // Error: Request failed: 404
   });
 }
 
@@ -89,7 +81,7 @@ function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string,
       const assignmentID = json.id;
       const assignmentTitle = json.title;
       const assignmentDetail = json.instructions;
-      const dueDateTimestamp = json.dueTime.epochSecond;
+      const dueDateTimestamp = json.dueTime.epochSecond ? json.dueTime.epochSecond : null;
       const entry = new AssignmentEntry(assignmentID, assignmentTitle, dueDateTimestamp, false, false, false, assignmentDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
@@ -98,13 +90,12 @@ function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string,
 
 function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
   return data.sam_pub_collection
-    .filter((json: any) => json.dueDate >= nowTime)
     .filter((json: any) => json.startDate < nowTime)
     .map((json: any) => {
       const quizID = "q" + json.publishedAssessmentId;
       const quizTitle = json.title;
       const quizDetail = "";
-      const quizDueEpoch = json.dueDate / 1000;
+      const quizDueEpoch = json.dueDate ? json.dueDate / 1000 : null;
       const entry = new AssignmentEntry(quizID, quizTitle, quizDueEpoch, false, false, true, quizDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;

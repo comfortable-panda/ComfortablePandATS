@@ -1,17 +1,7 @@
-import {Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry} from "./model";
-import {
-  createCourseIDMap,
-  getDaysUntil,
-  formatTimestamp,
-  nowTime,
-} from "./utils";
-import {
-  appendChildAll,
-  cloneElem,
-  hamburger,
-  miniPandA,
-  SettingsDom,
-} from "./dom";
+import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
+import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
+import { appendChildAll, cloneElem, hamburger, miniPandA, SettingsDom } from "./dom";
+import { CPsettings, assignmentFetchedTime, quizFetchedTime, VERSION } from "./content_script";
 import {
   addMemo,
   deleteMemo,
@@ -22,14 +12,6 @@ import {
   toggleSettingsTab,
   updateSettings,
 } from "./eventListener";
-import {
-  CPsettings,
-  assignmentCacheInterval,
-  assignmentFetchedTime,
-  quizCacheInterval,
-  quizFetchedTime,
-  VERSION,
-} from "./content_script";
 // @ts-ignore
 import Mustache = require("mustache");
 
@@ -54,11 +36,11 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const successElements: Array<DisplayAssignment> = [];
   const otherElements: Array<DisplayAssignment> = [];
   // iterate over courseSite
-  assignmentList.forEach((assignment) => {
+  assignmentList.forEach((assignment) => {1
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
     // iterate over assignment entries
     assignment.assignmentEntries.forEach((assignmentEntry) => {
-      const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.dueDateTimestamp * 1000);
+      const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.getDueDateTimestamp * 1000);
 
       const displayAssignmentEntry = new DisplayAssignmentEntry(
         assignment.courseSiteInfo.courseID,
@@ -79,7 +61,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
           const idx = courseNameMap.indexOf(courseName);
           displayAssignments[idx].assignmentEntries.push(displayAssignmentEntry);
           displayAssignments[idx].assignmentEntries.sort((a, b) => {
-            return a.dueDateTimestamp - b.dueDateTimestamp;
+            return a.getDueDateTimestamp - b.getDueDateTimestamp;
           });
         } else {
           displayAssignments.push(displayAssignment);
@@ -87,26 +69,28 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       };
 
       // Append elements according to due date category
-      if (daysUntilDue > 0 && daysUntilDue <= 1) {
-        appendElement(courseName, dangerElements);
-      } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
-        appendElement(courseName, warningElements);
-      } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
-        appendElement(courseName, successElements);
-      } else {
-        appendElement(courseName, otherElements);
+      switch (daysUntilDue) {
+        case "due24h":
+          appendElement(courseName, dangerElements);
+          break;
+        case "due5d":
+          appendElement(courseName, warningElements);
+          break;
+        case "due14d":
+          appendElement(courseName, successElements);
+          break;
+        case "dueOver14d":
+          appendElement(courseName, otherElements);
+          break;
       }
     });
 
-    courseSiteList.push(
-      new CourseSiteInfo(assignment.courseSiteInfo.courseID, courseName)
-    );
+    courseSiteList.push(new CourseSiteInfo(assignment.courseSiteInfo.courseID, courseName));
   });
 
   const sortElements = (elements: Array<DisplayAssignment>) => {
     elements.sort((a, b) => {
-      const timestamp = (o: DisplayAssignment) =>
-        Math.min(...o.assignmentEntries.map((p) => p.dueDateTimestamp));
+      const timestamp = (o: DisplayAssignment) => Math.min(...o.assignmentEntries.map((p) => p.getDueDateTimestamp));
       return timestamp(a) - timestamp(b);
     });
     return elements;
@@ -177,26 +161,25 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
 
 function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
   createMiniPandAGeneralized(miniPandA, assignmentList, courseSiteInfos, false, (rendered) => {
-      miniPandA.innerHTML = rendered;
-      const parent = document.getElementById("pageBody");
-      const ref = document.getElementById("toolMenuWrap");
-      parent?.insertBefore(miniPandA, ref);
-    }
-  );
+    miniPandA.innerHTML = rendered;
+    const parent = document.getElementById("pageBody");
+    const ref = document.getElementById("toolMenuWrap");
+    parent?.insertBefore(miniPandA, ref);
+  });
 }
 
 async function createSettingsTab(root: Element): Promise<void> {
-  createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
-  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.assignmentCacheInterval ?? assignmentCacheInterval, "kadaiCacheInterval");
-  createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.getDisplayCheckedKadai, "displayCheckedKadai");
+  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.getQuizCacheInterval, "quizCacheInterval");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 5]), CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 14]), CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.getTopColorDanger, "topColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 5]), CPsettings.getTopColorWarning, "topColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 14]), CPsettings.getTopColorSuccess, "topColorSuccess");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), CPsettings.getMiniColorDanger, "miniColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.getMiniColorWarning, "miniColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.getMiniColorSuccess, "miniColorSuccess");
 
   createSettingItem(root, chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
   // @ts-ignore
@@ -243,20 +226,22 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
 }
 
 function registerEventHandlers(root: Element) {
-  root.querySelector('#kadaiTab')?.addEventListener('click', () => toggleAssignmentTab());
-  root.querySelector('#settingsTab')?.addEventListener('click', () => toggleSettingsTab());
-  root.querySelectorAll('.todo-check').forEach(c => c.addEventListener('change', (e) => toggleFinishedFlag(e)));
-  root.querySelector('#close_btn')?.addEventListener('click', () => toggleMiniSakai());
-  root.querySelector('#plus-button')?.addEventListener('click', () => toggleMemoBox());
-  root.querySelector('#todo-add')?.addEventListener('click', () => addMemo());
-  root.querySelectorAll('.del-button').forEach(b => b.addEventListener('click', (e) => deleteMemo(e)));
+  root.querySelector("#kadaiTab")?.addEventListener("click", () => toggleAssignmentTab());
+  root.querySelector("#settingsTab")?.addEventListener("click", () => toggleSettingsTab());
+  root.querySelectorAll(".todo-check").forEach((c) => c.addEventListener("change", (e) => toggleFinishedFlag(e)));
+  root.querySelector("#close_btn")?.addEventListener("click", () => toggleMiniSakai());
+  root.querySelector("#plus-button")?.addEventListener("click", () => toggleMemoBox());
+  root.querySelector("#todo-add")?.addEventListener("click", () => addMemo());
+  root.querySelectorAll(".del-button").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
 }
 
 function initState(root: Element) {
   // @ts-ignore
-  root.querySelector('#kadaiTab')?.checked = true;
+  root.querySelector("#kadaiTab")?.checked = true;
   // @ts-ignore
-  root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
+  root.querySelector(".todoDue")?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`)
+    .toISOString()
+    .substr(0, 16);
 }
 
 async function displayMiniPandA(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
@@ -295,26 +280,32 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
 
-        if (daysUntilDue > 0 && daysUntilDue <= 1) {
-          defaultTab[j].classList.add("nav-danger");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-danger");
-          }
-        } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
-          defaultTab[j].classList.add("nav-warning");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
-          }
-        } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
-          defaultTab[j].classList.add("nav-safe");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
-          }
-        } else if (daysUntilDue > 14) {
-          defaultTab[j].classList.add("nav-other");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-other");
-          }
+
+        switch (daysUntilDue) {
+          case "due24h":
+            defaultTab[j].classList.add("nav-danger");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-danger");
+            }
+            break;
+          case "due5d":
+            defaultTab[j].classList.add("nav-warning");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
+            }
+            break;
+          case "due14d":
+            defaultTab[j].classList.add("nav-safe");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
+            }
+            break;
+          case "dueOver14d":
+            defaultTab[j].classList.add("nav-other");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-other");
+            }
+            break;
         }
       }
     }
@@ -341,25 +332,19 @@ function overrideCSSColor() {
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
-  overwriteborder("kadai-danger",CPsettings.miniColorDanger?? "#e85555");
-  overwriteborder("kadai-success",CPsettings.miniColorSuccess?? "#62b665");
-  overwriteborder("kadai-warning",CPsettings.miniColorWarning?? "#d7aa57");
-  overwritebackground("lecture-danger",CPsettings.miniColorDanger?? "#e85555");
-  overwritebackground("lecture-success",CPsettings.miniColorSuccess?? "#62b665");
-  overwritebackground("lecture-warning",CPsettings.miniColorWarning?? "#d7aa57");
+  overwriteborder("kadai-danger", CPsettings.getMiniColorDanger);
+  overwriteborder("kadai-success", CPsettings.getMiniColorSuccess);
+  overwriteborder("kadai-warning", CPsettings.getMiniColorWarning);
+  overwritebackground("lecture-danger", CPsettings.getMiniColorDanger);
+  overwritebackground("lecture-success", CPsettings.getMiniColorSuccess);
+  overwritebackground("lecture-warning", CPsettings.getMiniColorWarning);
 
-  overwritebackground("nav-danger",CPsettings.topColorDanger?? "#f78989");
-  overwritebackground("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
-  overwritebackground("nav-warning",CPsettings.topColorWarning?? "#fdd783");
-  overwriteborder("nav-danger",CPsettings.topColorDanger?? "#f78989");
-  overwriteborder("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
-  overwriteborder("nav-warning",CPsettings.topColorWarning?? "#fdd783");
+  overwritebackground("nav-danger", CPsettings.getTopColorDanger);
+  overwritebackground("nav-safe", CPsettings.getTopColorSuccess);
+  overwritebackground("nav-warning", CPsettings.getTopColorWarning);
+  overwriteborder("nav-danger", CPsettings.getTopColorDanger);
+  overwriteborder("nav-safe", CPsettings.getTopColorSuccess);
+  overwriteborder("nav-warning", CPsettings.getTopColorWarning);
 }
 
-export {
-  createMiniSakaiBtn,
-  createMiniPandA,
-  displayMiniPandA,
-  deleteNavBarNotification,
-  createNavBarNotification
-};
+export { createMiniSakaiBtn, createMiniPandA, displayMiniPandA, deleteNavBarNotification, createNavBarNotification };
