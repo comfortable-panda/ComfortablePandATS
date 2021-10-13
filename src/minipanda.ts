@@ -339,19 +339,19 @@ function overrideCSSColor() {
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
-  overwriteborder("kadai-danger", CPsettings.miniColorDanger ?? "#e85555");
-  overwriteborder("kadai-success", CPsettings.miniColorSuccess?? "#62b665");
-  overwriteborder("kadai-warning", CPsettings.miniColorWarning?? "#d7aa57");
-  overwritebackground("lecture-danger", CPsettings.miniColorDanger?? "#e85555");
-  overwritebackground("lecture-success", CPsettings.miniColorSuccess?? "#62b665");
-  overwritebackground("lecture-warning", CPsettings.miniColorWarning?? "#d7aa57");
+  overwriteborder("kadai-danger", CPsettings.getMiniColorDanger);
+  overwriteborder("kadai-success", CPsettings.getMiniColorSuccess);
+  overwriteborder("kadai-warning", CPsettings.getMiniColorWarning);
+  overwritebackground("lecture-danger", CPsettings.getMiniColorDanger);
+  overwritebackground("lecture-success", CPsettings.getMiniColorSuccess);
+  overwritebackground("lecture-warning", CPsettings.getMiniColorWarning);
 
-  overwritebackground("nav-danger", CPsettings.topColorDanger?? "#f78989");
-  overwritebackground("nav-safe", CPsettings.topColorSuccess?? "#8bd48d");
-  overwritebackground("nav-warning", CPsettings.topColorWarning?? "#fdd783");
-  overwriteborder("nav-danger", CPsettings.topColorDanger?? "#f78989");
-  overwriteborder("nav-safe", CPsettings.topColorSuccess?? "#8bd48d");
-  overwriteborder("nav-warning", CPsettings.topColorWarning?? "#fdd783");
+  overwritebackground("nav-danger", CPsettings.getTopColorDanger);
+  overwritebackground("nav-safe", CPsettings.getTopColorSuccess);
+  overwritebackground("nav-warning", CPsettings.getTopColorWarning);
+  overwriteborder("nav-danger", CPsettings.getTopColorDanger);
+  overwriteborder("nav-safe", CPsettings.getTopColorSuccess);
+  overwriteborder("nav-warning", CPsettings.getTopColorWarning);
 }
 
 export { createMiniSakaiBtn, createMiniPandA, displayMiniPandA, deleteNavBarNotification, createNavBarNotification };
