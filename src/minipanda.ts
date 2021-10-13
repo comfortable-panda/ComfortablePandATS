@@ -1,17 +1,6 @@
-import {Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry} from "./model";
-import {
-  createCourseIDMap,
-  getDaysUntil,
-  formatTimestamp,
-  nowTime,
-} from "./utils";
-import {
-  appendChildAll,
-  cloneElem,
-  hamburger,
-  miniPandA,
-  SettingsDom,
-} from "./dom";
+import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
+import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
+import { appendChildAll, cloneElem, hamburger, miniPandA, SettingsDom } from "./dom";
 import {
   addMemo,
   deleteMemo,
@@ -103,15 +92,12 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       }
     });
 
-    courseSiteList.push(
-      new CourseSiteInfo(assignment.courseSiteInfo.courseID, courseName)
-    );
+    courseSiteList.push(new CourseSiteInfo(assignment.courseSiteInfo.courseID, courseName));
   });
 
   const sortElements = (elements: Array<DisplayAssignment>) => {
     elements.sort((a, b) => {
-      const timestamp = (o: DisplayAssignment) =>
-        Math.min(...o.assignmentEntries.map((p) => p.getDueDateTimestamp));
+      const timestamp = (o: DisplayAssignment) => Math.min(...o.assignmentEntries.map((p) => p.getDueDateTimestamp));
       return timestamp(a) - timestamp(b);
     });
     return elements;
@@ -182,12 +168,11 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
 
 function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
   createMiniPandAGeneralized(miniPandA, assignmentList, courseSiteInfos, false, (rendered) => {
-      miniPandA.innerHTML = rendered;
-      const parent = document.getElementById("pageBody");
-      const ref = document.getElementById("toolMenuWrap");
-      parent?.insertBefore(miniPandA, ref);
-    }
-  );
+    miniPandA.innerHTML = rendered;
+    const parent = document.getElementById("pageBody");
+    const ref = document.getElementById("toolMenuWrap");
+    parent?.insertBefore(miniPandA, ref);
+  });
 }
 
 async function createSettingsTab(root: Element): Promise<void> {
@@ -248,20 +233,22 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
 }
 
 function registerEventHandlers(root: Element) {
-  root.querySelector('#kadaiTab')?.addEventListener('click', () => toggleAssignmentTab());
-  root.querySelector('#settingsTab')?.addEventListener('click', () => toggleSettingsTab());
-  root.querySelectorAll('.todo-check').forEach(c => c.addEventListener('change', (e) => toggleFinishedFlag(e)));
-  root.querySelector('#close_btn')?.addEventListener('click', () => toggleMiniSakai());
-  root.querySelector('#plus-button')?.addEventListener('click', () => toggleMemoBox());
-  root.querySelector('#todo-add')?.addEventListener('click', () => addMemo());
-  root.querySelectorAll('.del-button').forEach(b => b.addEventListener('click', (e) => deleteMemo(e)));
+  root.querySelector("#kadaiTab")?.addEventListener("click", () => toggleAssignmentTab());
+  root.querySelector("#settingsTab")?.addEventListener("click", () => toggleSettingsTab());
+  root.querySelectorAll(".todo-check").forEach((c) => c.addEventListener("change", (e) => toggleFinishedFlag(e)));
+  root.querySelector("#close_btn")?.addEventListener("click", () => toggleMiniSakai());
+  root.querySelector("#plus-button")?.addEventListener("click", () => toggleMemoBox());
+  root.querySelector("#todo-add")?.addEventListener("click", () => addMemo());
+  root.querySelectorAll(".del-button").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
 }
 
 function initState(root: Element) {
   // @ts-ignore
-  root.querySelector('#kadaiTab')?.checked = true;
+  root.querySelector("#kadaiTab")?.checked = true;
   // @ts-ignore
-  root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
+  root.querySelector(".todoDue")?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`)
+    .toISOString()
+    .substr(0, 16);
 }
 
 async function displayMiniPandA(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
@@ -352,25 +339,19 @@ function overrideCSSColor() {
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
-  overwriteborder("kadai-danger",CPsettings.miniColorDanger?? "#e85555");
-  overwriteborder("kadai-success",CPsettings.miniColorSuccess?? "#62b665");
-  overwriteborder("kadai-warning",CPsettings.miniColorWarning?? "#d7aa57");
-  overwritebackground("lecture-danger",CPsettings.miniColorDanger?? "#e85555");
-  overwritebackground("lecture-success",CPsettings.miniColorSuccess?? "#62b665");
-  overwritebackground("lecture-warning",CPsettings.miniColorWarning?? "#d7aa57");
+  overwriteborder("kadai-danger", CPsettings.miniColorDanger ?? "#e85555");
+  overwriteborder("kadai-success", CPsettings.miniColorSuccess?? "#62b665");
+  overwriteborder("kadai-warning", CPsettings.miniColorWarning?? "#d7aa57");
+  overwritebackground("lecture-danger", CPsettings.miniColorDanger?? "#e85555");
+  overwritebackground("lecture-success", CPsettings.miniColorSuccess?? "#62b665");
+  overwritebackground("lecture-warning", CPsettings.miniColorWarning?? "#d7aa57");
 
-  overwritebackground("nav-danger",CPsettings.topColorDanger?? "#f78989");
-  overwritebackground("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
-  overwritebackground("nav-warning",CPsettings.topColorWarning?? "#fdd783");
-  overwriteborder("nav-danger",CPsettings.topColorDanger?? "#f78989");
-  overwriteborder("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
-  overwriteborder("nav-warning",CPsettings.topColorWarning?? "#fdd783");
+  overwritebackground("nav-danger", CPsettings.topColorDanger?? "#f78989");
+  overwritebackground("nav-safe", CPsettings.topColorSuccess?? "#8bd48d");
+  overwritebackground("nav-warning", CPsettings.topColorWarning?? "#fdd783");
+  overwriteborder("nav-danger", CPsettings.topColorDanger?? "#f78989");
+  overwriteborder("nav-safe", CPsettings.topColorSuccess?? "#8bd48d");
+  overwriteborder("nav-warning", CPsettings.topColorWarning?? "#fdd783");
 }
 
-export {
-  createMiniSakaiBtn,
-  createMiniPandA,
-  displayMiniPandA,
-  deleteNavBarNotification,
-  createNavBarNotification
-};
+export { createMiniSakaiBtn, createMiniPandA, displayMiniPandA, deleteNavBarNotification, createNavBarNotification };

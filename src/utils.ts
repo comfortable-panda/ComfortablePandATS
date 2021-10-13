@@ -1,5 +1,5 @@
-import {Assignment, AssignmentEntry, CourseSiteInfo, DueCategory} from "./model";
-import {saveToLocalStorage} from "./storage";
+import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
+import { saveToLocalStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
 
@@ -14,7 +14,7 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
     category = "due5d";
   } else if (diff > 5 && diff <= 14) {
     category = "due14d";
-  }else if (diff > 14) {
+  } else if (diff > 14) {
     category = "dueOver14d";
   } else {
     category = "duePassed";
