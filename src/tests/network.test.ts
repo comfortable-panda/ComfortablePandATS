@@ -1,55 +1,25 @@
-/**
- * @jest-environment jsdom
- */
 import { getAssignmentByCourseID } from "../network";
+import fs from "fs";
+import {Assignment, AssignmentEntry, CourseSiteInfo} from "../model";
 
-type MockXHR = {
-  open: jest.Mock;
-  send: jest.Mock;
-  setRequestHeader: jest.Mock;
-  addEventListener: jest.Mock;
-  readyState: number;
-  responseText: string;
-}
-
-const createMockXHR = (responseJSON?: JSON, responseType?: string) => {
-  return {
-    open: jest.fn(),
-    send: jest.fn(),
-    setRequestHeader: jest.fn(),
-    addEventListener: jest.fn(),
-    readyState: 4,
-    responseType: responseType || "",
-    responseText: JSON.stringify(responseJSON || {}),
-  };
-};
 
 describe("testapi()", (): void => {
-  const oldXMLHttpRequest = window.XMLHttpRequest;
-  let mockXHR: MockXHR | null = null;
-
   beforeEach(() => {
-    mockXHR = createMockXHR();
-    // @ts-ignore
-    window.XMLHttpRequest = jest.fn(() => mockXHR);
-  });
-
-  afterEach(() => {
-    window.XMLHttpRequest = oldXMLHttpRequest;
+    //@ts-ignore
+    fetch.resetMocks();
   });
 
   test("api", async (): Promise<void> => {
-    const a = getAssignmentByCourseID("", "");
-    // @ts-ignore
-    mockXHR.responseText = JSON.stringify({ mes: "success" });
-    // @ts-ignore
-    mockXHR.addEventListener("load", () => {
-      return "w";
-    });
-    a.then((res) => {
-      console.log(res);
-      expect(res).toBe("a");
-    });
+    const jsonObject = JSON.parse(fs.readFileSync(`./src/tests/resources/assignment1.json`, 'utf8'));
+    //@ts-ignore
+    fetch.mockResponseOnce(JSON.stringify(jsonObject));
+    const a = await getAssignmentByCourseID("", "");
+    const assignmentEntry = new AssignmentEntry("sample1","Sample Assignment1",1634731200,false, false,false);
+    assignmentEntry.assignmentDetail = "--------";
+    assignmentEntry.assignmentPage = "/portal/site/";
+    const assignment = new Assignment(new CourseSiteInfo("", ""), [assignmentEntry],false)
+
+    expect(a).toEqual(assignment);
 
     // expect(await getAssignmentByCourseID("", "")).toBe("");
   });

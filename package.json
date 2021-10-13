@@ -25,11 +25,16 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.2.5",
+    "jest-fetch-mock": "^3.0.3",
     "prettier": "^2.3.1",
     "ts-jest": "^27.0.5",
     "webpack-cli": "^4.7.0"
   },
   "jest": {
+    "automock": false,
+    "setupFiles": [
+      "./src/tests/setupJest.js"
+    ],
     "moduleFileExtensions": [
       "ts",
       "js"
