@@ -1,17 +1,6 @@
-import {Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry} from "./model";
-import {
-  createCourseIDMap,
-  getDaysUntil,
-  formatTimestamp,
-  nowTime,
-} from "./utils";
-import {
-  appendChildAll,
-  cloneElem,
-  hamburger,
-  miniPandA,
-  SettingsDom,
-} from "./dom";
+import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
+import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
+import { appendChildAll, cloneElem, hamburger, miniPandA, SettingsDom } from "./dom";
 import {
   addMemo,
   deleteMemo,
@@ -54,11 +43,11 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const successElements: Array<DisplayAssignment> = [];
   const otherElements: Array<DisplayAssignment> = [];
   // iterate over courseSite
-  assignmentList.forEach((assignment) => {
+  assignmentList.forEach((assignment) => {1
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
     // iterate over assignment entries
     assignment.assignmentEntries.forEach((assignmentEntry) => {
-      const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.dueDateTimestamp * 1000);
+      const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.getDueDateTimestamp * 1000);
 
       const displayAssignmentEntry = new DisplayAssignmentEntry(
         assignment.courseSiteInfo.courseID,
@@ -79,7 +68,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
           const idx = courseNameMap.indexOf(courseName);
           displayAssignments[idx].assignmentEntries.push(displayAssignmentEntry);
           displayAssignments[idx].assignmentEntries.sort((a, b) => {
-            return a.dueDateTimestamp - b.dueDateTimestamp;
+            return a.getDueDateTimestamp - b.getDueDateTimestamp;
           });
         } else {
           displayAssignments.push(displayAssignment);
@@ -87,26 +76,28 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       };
 
       // Append elements according to due date category
-      if (daysUntilDue > 0 && daysUntilDue <= 1) {
-        appendElement(courseName, dangerElements);
-      } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
-        appendElement(courseName, warningElements);
-      } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
-        appendElement(courseName, successElements);
-      } else {
-        appendElement(courseName, otherElements);
+      switch (daysUntilDue) {
+        case "due24h":
+          appendElement(courseName, dangerElements);
+          break;
+        case "due5d":
+          appendElement(courseName, warningElements);
+          break;
+        case "due14d":
+          appendElement(courseName, successElements);
+          break;
+        case "dueOver14d":
+          appendElement(courseName, otherElements);
+          break;
       }
     });
 
-    courseSiteList.push(
-      new CourseSiteInfo(assignment.courseSiteInfo.courseID, courseName)
-    );
+    courseSiteList.push(new CourseSiteInfo(assignment.courseSiteInfo.courseID, courseName));
   });
 
   const sortElements = (elements: Array<DisplayAssignment>) => {
     elements.sort((a, b) => {
-      const timestamp = (o: DisplayAssignment) =>
-        Math.min(...o.assignmentEntries.map((p) => p.dueDateTimestamp));
+      const timestamp = (o: DisplayAssignment) => Math.min(...o.assignmentEntries.map((p) => p.getDueDateTimestamp));
       return timestamp(a) - timestamp(b);
     });
     return elements;
@@ -177,12 +168,11 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
 
 function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
   createMiniPandAGeneralized(miniPandA, assignmentList, courseSiteInfos, false, (rendered) => {
-      miniPandA.innerHTML = rendered;
-      const parent = document.getElementById("pageBody");
-      const ref = document.getElementById("toolMenuWrap");
-      parent?.insertBefore(miniPandA, ref);
-    }
-  );
+    miniPandA.innerHTML = rendered;
+    const parent = document.getElementById("pageBody");
+    const ref = document.getElementById("toolMenuWrap");
+    parent?.insertBefore(miniPandA, ref);
+  });
 }
 
 async function createSettingsTab(root: Element): Promise<void> {
@@ -243,20 +233,22 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
 }
 
 function registerEventHandlers(root: Element) {
-  root.querySelector('#kadaiTab')?.addEventListener('click', () => toggleAssignmentTab());
-  root.querySelector('#settingsTab')?.addEventListener('click', () => toggleSettingsTab());
-  root.querySelectorAll('.todo-check').forEach(c => c.addEventListener('change', (e) => toggleFinishedFlag(e)));
-  root.querySelector('#close_btn')?.addEventListener('click', () => toggleMiniSakai());
-  root.querySelector('#plus-button')?.addEventListener('click', () => toggleMemoBox());
-  root.querySelector('#todo-add')?.addEventListener('click', () => addMemo());
-  root.querySelectorAll('.del-button').forEach(b => b.addEventListener('click', (e) => deleteMemo(e)));
+  root.querySelector("#kadaiTab")?.addEventListener("click", () => toggleAssignmentTab());
+  root.querySelector("#settingsTab")?.addEventListener("click", () => toggleSettingsTab());
+  root.querySelectorAll(".todo-check").forEach((c) => c.addEventListener("change", (e) => toggleFinishedFlag(e)));
+  root.querySelector("#close_btn")?.addEventListener("click", () => toggleMiniSakai());
+  root.querySelector("#plus-button")?.addEventListener("click", () => toggleMemoBox());
+  root.querySelector("#todo-add")?.addEventListener("click", () => addMemo());
+  root.querySelectorAll(".del-button").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
 }
 
 function initState(root: Element) {
   // @ts-ignore
-  root.querySelector('#kadaiTab')?.checked = true;
+  root.querySelector("#kadaiTab")?.checked = true;
   // @ts-ignore
-  root.querySelector('.todoDue')?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`).toISOString().substr(0, 16);
+  root.querySelector(".todoDue")?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`)
+    .toISOString()
+    .substr(0, 16);
 }
 
 async function displayMiniPandA(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
@@ -295,26 +287,32 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
 
-        if (daysUntilDue > 0 && daysUntilDue <= 1) {
-          defaultTab[j].classList.add("nav-danger");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-danger");
-          }
-        } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
-          defaultTab[j].classList.add("nav-warning");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
-          }
-        } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
-          defaultTab[j].classList.add("nav-safe");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
-          }
-        } else if (daysUntilDue > 14) {
-          defaultTab[j].classList.add("nav-other");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-other");
-          }
+
+        switch (daysUntilDue) {
+          case "due24h":
+            defaultTab[j].classList.add("nav-danger");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-danger");
+            }
+            break;
+          case "due5d":
+            defaultTab[j].classList.add("nav-warning");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
+            }
+            break;
+          case "due14d":
+            defaultTab[j].classList.add("nav-safe");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
+            }
+            break;
+          case "dueOver14d":
+            defaultTab[j].classList.add("nav-other");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-other");
+            }
+            break;
         }
       }
     }
@@ -341,25 +339,19 @@ function overrideCSSColor() {
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
-  overwriteborder("kadai-danger",CPsettings.miniColorDanger?? "#e85555");
-  overwriteborder("kadai-success",CPsettings.miniColorSuccess?? "#62b665");
-  overwriteborder("kadai-warning",CPsettings.miniColorWarning?? "#d7aa57");
-  overwritebackground("lecture-danger",CPsettings.miniColorDanger?? "#e85555");
-  overwritebackground("lecture-success",CPsettings.miniColorSuccess?? "#62b665");
-  overwritebackground("lecture-warning",CPsettings.miniColorWarning?? "#d7aa57");
+  overwriteborder("kadai-danger", CPsettings.miniColorDanger ?? "#e85555");
+  overwriteborder("kadai-success", CPsettings.miniColorSuccess?? "#62b665");
+  overwriteborder("kadai-warning", CPsettings.miniColorWarning?? "#d7aa57");
+  overwritebackground("lecture-danger", CPsettings.miniColorDanger?? "#e85555");
+  overwritebackground("lecture-success", CPsettings.miniColorSuccess?? "#62b665");
+  overwritebackground("lecture-warning", CPsettings.miniColorWarning?? "#d7aa57");
 
-  overwritebackground("nav-danger",CPsettings.topColorDanger?? "#f78989");
-  overwritebackground("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
-  overwritebackground("nav-warning",CPsettings.topColorWarning?? "#fdd783");
-  overwriteborder("nav-danger",CPsettings.topColorDanger?? "#f78989");
-  overwriteborder("nav-safe",CPsettings.topColorSuccess?? "#8bd48d");
-  overwriteborder("nav-warning",CPsettings.topColorWarning?? "#fdd783");
+  overwritebackground("nav-danger", CPsettings.topColorDanger?? "#f78989");
+  overwritebackground("nav-safe", CPsettings.topColorSuccess?? "#8bd48d");
+  overwritebackground("nav-warning", CPsettings.topColorWarning?? "#fdd783");
+  overwriteborder("nav-danger", CPsettings.topColorDanger?? "#f78989");
+  overwriteborder("nav-safe", CPsettings.topColorSuccess?? "#8bd48d");
+  overwriteborder("nav-warning", CPsettings.topColorWarning?? "#fdd783");
 }
 
-export {
-  createMiniSakaiBtn,
-  createMiniPandA,
-  displayMiniPandA,
-  deleteNavBarNotification,
-  createNavBarNotification
-};
+export { createMiniSakaiBtn, createMiniPandA, displayMiniPandA, deleteNavBarNotification, createNavBarNotification };

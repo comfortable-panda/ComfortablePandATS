@@ -1,10 +1,12 @@
 import { nowTime } from "./utils";
 
+export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
+
 export class AssignmentEntry {
   assignmentID: string;
   assignmentTitle: string;
   assignmentDetail?: string;
-  dueDateTimestamp: number; // POSIX time
+  dueDateTimestamp: number | null;
   isMemo: boolean;
   isFinished: boolean;
   assignmentPage?: string;
@@ -13,7 +15,7 @@ export class AssignmentEntry {
   constructor(
     assignmentID: string,
     assignmentTitle: string,
-    dueDateTimestamp: number,
+    dueDateTimestamp: number | null,
     isMemo: boolean,
     isFinished: boolean,
     isQuiz: boolean,
@@ -26,6 +28,10 @@ export class AssignmentEntry {
     this.isMemo = isMemo;
     this.isFinished = isFinished;
     this.isQuiz = isQuiz;
+  }
+
+  get getDueDateTimestamp(): number {
+    return this.dueDateTimestamp ? this.dueDateTimestamp : 9999999999;
   }
 }
 
@@ -46,10 +52,10 @@ export class Assignment {
 
   get closestDueDateTimestamp(): number {
     if (this.assignmentEntries.length == 0) return -1;
-    let min = this.assignmentEntries[0].dueDateTimestamp;
+    let min = this.assignmentEntries[0].getDueDateTimestamp;
     for (const entry of this.assignmentEntries) {
-      if (min > entry.dueDateTimestamp) {
-        min = entry.dueDateTimestamp;
+      if (min > entry.getDueDateTimestamp) {
+        min = entry.getDueDateTimestamp;
       }
     }
     return min;
@@ -65,8 +71,8 @@ export class Assignment {
         excludeCount++;
         continue;
       }
-      if (min > entry.dueDateTimestamp) {
-        min = entry.dueDateTimestamp;
+      if (min > entry.getDueDateTimestamp) {
+        min = entry.getDueDateTimestamp;
       }
     }
     if (excludeCount === this.assignmentEntries.length) min = -1;
@@ -100,7 +106,7 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
     courseID: string,
     assignmentID: string,
     assignmentTitle: string,
-    dueDateTimestamp: number,
+    dueDateTimestamp: number | null,
     isFinished: boolean,
     isQuiz: boolean,
     isMemo: boolean
@@ -117,11 +123,13 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
   }
 
   get remainTimeString(): string {
+    if (!this.dueDateTimestamp) return "締め切り未設定";
     const timeRemain = this.getTimeRemain((this.dueDateTimestamp * 1000 - nowTime) / 1000);
     return `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
   }
 
   get dueDateString(): string {
+    if (!this.dueDateTimestamp) return "----/--/--";
     const date = new Date(this.dueDateTimestamp * 1000);
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
   }

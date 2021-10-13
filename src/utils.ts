@@ -1,13 +1,25 @@
-import {Assignment, AssignmentEntry, CourseSiteInfo} from "./model";
-import {saveToLocalStorage} from "./storage";
+import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
+import { saveToLocalStorage } from "./storage";
 
 export const nowTime = new Date().getTime();
 
-function getDaysUntil(dt1: number, dt2: number): number {
+function getDaysUntil(dt1: number, dt2: number): DueCategory {
   // 締め切りまでの日数を計算します
   let diff = (dt2 - dt1) / 1000;
   diff /= 3600 * 24;
-  return diff;
+  let category: DueCategory;
+  if (diff > 0 && diff <= 1) {
+    category = "due24h";
+  } else if (diff > 1 && diff <= 5) {
+    category = "due5d";
+  } else if (diff > 5 && diff <= 14) {
+    category = "due14d";
+  } else if (diff > 14) {
+    category = "dueOver14d";
+  } else {
+    category = "duePassed";
+  }
+  return category;
 }
 
 function formatTimestamp(timestamp: number | undefined): string {
@@ -80,7 +92,7 @@ function convertArrayToAssignment(arr: Array<any>): Array<Assignment>{
     for (const e of i.assignmentEntries) {
       const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
       entry.assignmentPage = e.assignmentPage;
-      if (entry.dueDateTimestamp * 1000 > nowTime) assignmentEntries.push(entry);
+      if (entry.getDueDateTimestamp * 1000 > nowTime) assignmentEntries.push(entry);
     }
     assignmentList.push(new Assignment(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), assignmentEntries, i.isRead))
   }
@@ -101,7 +113,7 @@ function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, ne
       // 未読フラグを立ててマージ
       const isRead = newAssignment.assignmentEntries.length === 0;
       newAssignment.assignmentEntries.sort((a, b) => {
-        return a.dueDateTimestamp - b.dueDateTimestamp;
+        return a.getDueDateTimestamp - b.getDueDateTimestamp;
       });
       mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, newAssignment.assignmentEntries, isRead));
     }
@@ -118,8 +130,7 @@ function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, ne
         const oldAssignment = oldAssignmentiList[idx] as Assignment;
         const q = oldAssignment.assignmentEntries.findIndex((oldAssignmentEntry) => {
           return oldAssignmentEntry.assignmentID === newAssignmentEntry.assignmentID;
-          }
-        );
+        });
         // もしなければ新規課題なので未読フラグを立てる
         if (q === -1) {
           isRead = false;
@@ -139,7 +150,7 @@ function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, ne
         }
       }
       // 未読フラグ部分を変更してマージ
-      mergedAssignmentEntries.sort((a, b) => {return a.dueDateTimestamp - b.dueDateTimestamp});
+      mergedAssignmentEntries.sort((a, b) => {return a.getDueDateTimestamp - b.getDueDateTimestamp});
       mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, mergedAssignmentEntries, isRead));
     }
   }

@@ -81,7 +81,7 @@ function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string,
       const assignmentID = json.id;
       const assignmentTitle = json.title;
       const assignmentDetail = json.instructions;
-      const dueDateTimestamp = json.dueTime.epochSecond;
+      const dueDateTimestamp = json.dueTime.epochSecond ? json.dueTime.epochSecond : null;
       const entry = new AssignmentEntry(assignmentID, assignmentTitle, dueDateTimestamp, false, false, false, assignmentDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
@@ -95,7 +95,7 @@ function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteI
       const quizID = "q" + json.publishedAssessmentId;
       const quizTitle = json.title;
       const quizDetail = "";
-      const quizDueEpoch = json.dueDate ? json.dueDate / 1000 : 4070876400;
+      const quizDueEpoch = json.dueDate ? json.dueDate / 1000 : null;
       const entry = new AssignmentEntry(quizID, quizTitle, quizDueEpoch, false, false, true, quizDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
