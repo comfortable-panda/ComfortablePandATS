@@ -1,6 +1,7 @@
 import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
 import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
 import { appendChildAll, cloneElem, hamburger, miniPandA, SettingsDom } from "./dom";
+import { CPsettings, assignmentFetchedTime, quizFetchedTime, VERSION } from "./content_script";
 import {
   addMemo,
   deleteMemo,
@@ -11,14 +12,6 @@ import {
   toggleSettingsTab,
   updateSettings,
 } from "./eventListener";
-import {
-  CPsettings,
-  assignmentCacheInterval,
-  assignmentFetchedTime,
-  quizCacheInterval,
-  quizFetchedTime,
-  VERSION,
-} from "./content_script";
 // @ts-ignore
 import Mustache = require("mustache");
 
@@ -176,17 +169,17 @@ function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Arr
 }
 
 async function createSettingsTab(root: Element): Promise<void> {
-  createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.displayCheckedKadai ?? true, "displayCheckedKadai");
-  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.assignmentCacheInterval ?? assignmentCacheInterval, "kadaiCacheInterval");
-  createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.quizCacheInterval ?? quizCacheInterval, "quizCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.getDisplayCheckedKadai, "displayCheckedKadai");
+  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.getQuizCacheInterval, "quizCacheInterval");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.topColorDanger ?? "#f78989", "topColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 5]), CPsettings.topColorWarning ?? "#fdd783", "topColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 14]), CPsettings.topColorSuccess ?? "#8bd48d", "topColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.getTopColorDanger, "topColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 5]), CPsettings.getTopColorWarning, "topColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 14]), CPsettings.getTopColorSuccess, "topColorSuccess");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), CPsettings.miniColorDanger ?? "#e85555", "miniColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.miniColorWarning ?? "#d7aa57", "miniColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.miniColorSuccess ?? "#62b665", "miniColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), CPsettings.getMiniColorDanger, "miniColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.getMiniColorWarning, "miniColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.getMiniColorSuccess, "miniColorSuccess");
 
   createSettingItem(root, chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
   // @ts-ignore
@@ -339,19 +332,19 @@ function overrideCSSColor() {
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
-  overwriteborder("kadai-danger", CPsettings.miniColorDanger ?? "#e85555");
-  overwriteborder("kadai-success", CPsettings.miniColorSuccess?? "#62b665");
-  overwriteborder("kadai-warning", CPsettings.miniColorWarning?? "#d7aa57");
-  overwritebackground("lecture-danger", CPsettings.miniColorDanger?? "#e85555");
-  overwritebackground("lecture-success", CPsettings.miniColorSuccess?? "#62b665");
-  overwritebackground("lecture-warning", CPsettings.miniColorWarning?? "#d7aa57");
+  overwriteborder("kadai-danger", CPsettings.getMiniColorDanger);
+  overwriteborder("kadai-success", CPsettings.getMiniColorSuccess);
+  overwriteborder("kadai-warning", CPsettings.getMiniColorWarning);
+  overwritebackground("lecture-danger", CPsettings.getMiniColorDanger);
+  overwritebackground("lecture-success", CPsettings.getMiniColorSuccess);
+  overwritebackground("lecture-warning", CPsettings.getMiniColorWarning);
 
-  overwritebackground("nav-danger", CPsettings.topColorDanger?? "#f78989");
-  overwritebackground("nav-safe", CPsettings.topColorSuccess?? "#8bd48d");
-  overwritebackground("nav-warning", CPsettings.topColorWarning?? "#fdd783");
-  overwriteborder("nav-danger", CPsettings.topColorDanger?? "#f78989");
-  overwriteborder("nav-safe", CPsettings.topColorSuccess?? "#8bd48d");
-  overwriteborder("nav-warning", CPsettings.topColorWarning?? "#fdd783");
+  overwritebackground("nav-danger", CPsettings.getTopColorDanger);
+  overwritebackground("nav-safe", CPsettings.getTopColorSuccess);
+  overwritebackground("nav-warning", CPsettings.getTopColorWarning);
+  overwriteborder("nav-danger", CPsettings.getTopColorDanger);
+  overwriteborder("nav-safe", CPsettings.getTopColorSuccess);
+  overwriteborder("nav-warning", CPsettings.getTopColorWarning);
 }
 
 export { createMiniSakaiBtn, createMiniPandA, displayMiniPandA, deleteNavBarNotification, createNavBarNotification };

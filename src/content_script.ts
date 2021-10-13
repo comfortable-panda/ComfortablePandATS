@@ -14,7 +14,7 @@ import {
 import { addBookmarkedCourseSites } from "./bookmark";
 import {
   compareAndMergeAssignmentList,
-  convertArrayToAssignment,
+  convertArrayToAssignment, convertArrayToSettings,
   isLoggedIn,
   mergeIntoAssignmentList,
   miniSakaiReady,
@@ -103,10 +103,11 @@ export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSi
 }
 
 async function loadSettings() {
-  CPsettings = await loadFromLocalStorage("TSSettings");
-  assignmentCacheInterval = CPsettings.assignmentCacheInterval ?? DefaultSettings.assignmentCacheInterval;
-  quizCacheInterval = CPsettings.quizCacheInterval ?? DefaultSettings.quizCacheInterval;
-  CPsettings.displayCheckedKadai = CPsettings.displayCheckedKadai ?? true;
+  const settings = await loadFromLocalStorage("TSSettings");
+  CPsettings = convertArrayToSettings(settings);
+  assignmentCacheInterval = CPsettings.getAssignmentCacheInterval;
+  quizCacheInterval = CPsettings.getQuizCacheInterval;
+  CPsettings.displayCheckedKadai = CPsettings.getDisplayCheckedKadai;
   assignmentFetchedTime = await loadFromLocalStorage("TSkadaiFetchedTime", "undefined");
   quizFetchedTime = await loadFromLocalStorage("TSquizFetchedTime", "undefined");
 }

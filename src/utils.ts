@@ -1,5 +1,6 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
 import { saveToLocalStorage } from "./storage";
+import {Settings} from "./settings";
 
 export const nowTime = new Date().getTime();
 
@@ -83,6 +84,20 @@ function miniSakaiReady(): void {
   hamburger.className = "";
   hamburger.id = "hamburger";
   hamburger.textContent = "☰";
+}
+
+function convertArrayToSettings(arr: any): Settings {
+  const settings = new Settings();
+  settings.assignmentCacheInterval = arr.assignmentCacheInterval;
+  settings.quizCacheInterval = arr.quizCacheInterval;
+  settings.displayCheckedKadai = arr.displayCheckedKadai;
+  settings.topColorDanger = arr.topColorDanger;
+  settings.topColorWarning = arr.topColorWarning;
+  settings.topColorSuccess = arr.topColorSuccess;
+  settings.miniColorDanger = arr.miniColorDanger;
+  settings.miniColorWarning = arr.miniColorWarning;
+  settings.miniColorSuccess = arr.miniColorSuccess;
+  return settings;
 }
 
 function convertArrayToAssignment(arr: Array<any>): Array<Assignment>{
@@ -200,6 +215,7 @@ export {
   formatTimestamp,
   isLoggedIn,
   miniSakaiReady,
+  convertArrayToSettings,
   convertArrayToAssignment,
   compareAndMergeAssignmentList,
   updateIsReadFlag,
