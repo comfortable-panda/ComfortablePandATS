@@ -1,6 +1,7 @@
 import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
 import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
 import { appendChildAll, cloneElem, hamburger, miniPandA, SettingsDom } from "./dom";
+import { CPsettings, assignmentFetchedTime, quizFetchedTime, VERSION } from "./content_script";
 import {
   addMemo,
   deleteMemo,
@@ -11,14 +12,6 @@ import {
   toggleSettingsTab,
   updateSettings,
 } from "./eventListener";
-import {
-  CPsettings,
-  assignmentCacheInterval,
-  assignmentFetchedTime,
-  quizCacheInterval,
-  quizFetchedTime,
-  VERSION,
-} from "./content_script";
 // @ts-ignore
 import Mustache = require("mustache");
 
@@ -176,7 +169,6 @@ function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Arr
 }
 
 async function createSettingsTab(root: Element): Promise<void> {
-  console.log("assign interval", CPsettings.getAssignmentCacheInterval, CPsettings.assignmentCacheInterval)
   createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.getDisplayCheckedKadai, "displayCheckedKadai");
   createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
   createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.getQuizCacheInterval, "quizCacheInterval");
