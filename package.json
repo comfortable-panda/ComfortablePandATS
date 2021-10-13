@@ -4,7 +4,7 @@
   "description": "Comfortable Sakai is a browser extension for managing assignments and quizzes on Sakai LMS.",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "tsc": "tsc",
     "build": "webpack"
   },
@@ -15,16 +15,40 @@
     "copy-webpack-plugin": "^9.0.0",
     "mustache": "^4.2.0",
     "ts-loader": "^9.2.2",
-    "typescript": "^4.3.2",
     "webpack": "^5.38.1"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.2.5",
+    "jest-fetch-mock": "^3.0.3",
     "prettier": "^2.3.1",
+    "ts-jest": "^27.0.5",
     "webpack-cli": "^4.7.0"
+  },
+  "jest": {
+    "automock": false,
+    "setupFiles": [
+      "./src/tests/setupJest.js"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "testMatch": [
+      "**/tests/**/*.test.ts"
+    ]
   }
 }
