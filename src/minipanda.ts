@@ -58,7 +58,8 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
     // iterate over assignment entries
     assignment.assignmentEntries.forEach((assignmentEntry) => {
-      const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.dueDateTimestamp * 1000);
+      const dueDateTimestamp = assignmentEntry.dueDateTimestamp ? assignmentEntry.dueDateTimestamp * 1000 : null;
+      const daysUntilDue = getDaysUntil(nowTime, dueDateTimestamp);
 
       const displayAssignmentEntry = new DisplayAssignmentEntry(
         assignment.courseSiteInfo.courseID,
@@ -87,14 +88,19 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       };
 
       // Append elements according to due date category
-      if (daysUntilDue > 0 && daysUntilDue <= 1) {
-        appendElement(courseName, dangerElements);
-      } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
-        appendElement(courseName, warningElements);
-      } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
-        appendElement(courseName, successElements);
-      } else {
-        appendElement(courseName, otherElements);
+      switch (daysUntilDue){
+        case "due24h":
+          appendElement(courseName, dangerElements);
+          break;
+        case "due5d":
+          appendElement(courseName, warningElements);
+          break;
+        case "due14d":
+          appendElement(courseName, successElements);
+          break;
+        case "dueOver14d":
+          appendElement(courseName, otherElements);
+          break;
       }
     });
 

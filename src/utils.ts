@@ -1,13 +1,29 @@
-import {Assignment, AssignmentEntry, CourseSiteInfo} from "./model";
+import {Assignment, AssignmentEntry, CourseSiteInfo, DueCategory} from "./model";
 import {saveToLocalStorage} from "./storage";
 
 export const nowTime = new Date().getTime();
 
-function getDaysUntil(dt1: number, dt2: number): number {
+function getDaysUntil(dt1: number | null, dt2: number | null): DueCategory {
   // 締め切りまでの日数を計算します
-  let diff = (dt2 - dt1) / 1000;
-  diff /= 3600 * 24;
-  return diff;
+  let diff: number;
+  if (dt1 && dt2) {
+    diff = (dt2 - dt1) / 1000;
+    diff /= 3600 * 24;
+  } else {
+    diff = -1;
+  }
+  let category: DueCategory;
+
+  if (diff > 0 && diff <= 1) {
+    category = "due24h";
+  } else if (diff > 1 && diff <= 5) {
+    category = "due5d";
+  } else if (diff > 5 && diff <= 14) {
+    category = "due14d";
+  } else {
+    category = "dueOver14d";
+  }
+  return category;
 }
 
 function formatTimestamp(timestamp: number | undefined): string {

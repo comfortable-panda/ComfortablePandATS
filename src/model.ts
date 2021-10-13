@@ -1,10 +1,12 @@
 import { nowTime } from "./utils";
 
+export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d";
+
 export class AssignmentEntry {
   assignmentID: string;
   assignmentTitle: string;
   assignmentDetail?: string;
-  dueDateTimestamp: number; // POSIX time
+  dueDateTimestamp: number | null;
   isMemo: boolean;
   isFinished: boolean;
   assignmentPage?: string;
@@ -13,7 +15,7 @@ export class AssignmentEntry {
   constructor(
     assignmentID: string,
     assignmentTitle: string,
-    dueDateTimestamp: number,
+    dueDateTimestamp: number | null,
     isMemo: boolean,
     isFinished: boolean,
     isQuiz: boolean,
@@ -46,12 +48,14 @@ export class Assignment {
 
   get closestDueDateTimestamp(): number {
     if (this.assignmentEntries.length == 0) return -1;
-    let min = this.assignmentEntries[0].dueDateTimestamp;
+    let min = 99999999999999;
     for (const entry of this.assignmentEntries) {
+      if (!entry.dueDateTimestamp) return -1;
       if (min > entry.dueDateTimestamp) {
         min = entry.dueDateTimestamp;
       }
     }
+    if (min === 99999999999999) min = -1;
     return min;
   }
 
@@ -65,6 +69,7 @@ export class Assignment {
         excludeCount++;
         continue;
       }
+      if (!entry.dueDateTimestamp) return -1;
       if (min > entry.dueDateTimestamp) {
         min = entry.dueDateTimestamp;
       }
@@ -100,7 +105,7 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
     courseID: string,
     assignmentID: string,
     assignmentTitle: string,
-    dueDateTimestamp: number,
+    dueDateTimestamp: number | null,
     isFinished: boolean,
     isQuiz: boolean,
     isMemo: boolean
@@ -117,11 +122,13 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
   }
 
   get remainTimeString(): string {
+    if (!this.dueDateTimestamp) return "締め切り未設定";
     const timeRemain = this.getTimeRemain((this.dueDateTimestamp * 1000 - nowTime) / 1000);
     return `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
   }
 
   get dueDateString(): string {
+    if (!this.dueDateTimestamp) return "----/--/--";
     const date = new Date(this.dueDateTimestamp * 1000);
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
   }

@@ -95,7 +95,7 @@ function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteI
       const quizID = "q" + json.publishedAssessmentId;
       const quizTitle = json.title;
       const quizDetail = "";
-      const quizDueEpoch = json.dueDate ? json.dueDate / 1000 : 4070876400;
+      const quizDueEpoch = json.dueDate ? json.dueDate / 1000 : null;
       const entry = new AssignmentEntry(quizID, quizTitle, quizDueEpoch, false, false, true, quizDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
