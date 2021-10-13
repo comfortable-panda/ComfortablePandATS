@@ -14,8 +14,10 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
     category = "due5d";
   } else if (diff > 5 && diff <= 14) {
     category = "due14d";
-  } else {
+  }else if (diff > 14) {
     category = "dueOver14d";
+  } else {
+    category = "duePassed";
   }
   return category;
 }

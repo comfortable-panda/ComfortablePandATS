@@ -1,6 +1,6 @@
 import { nowTime } from "./utils";
 
-export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d";
+export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
 
 export class AssignmentEntry {
   assignmentID: string;
