@@ -54,12 +54,11 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const successElements: Array<DisplayAssignment> = [];
   const otherElements: Array<DisplayAssignment> = [];
   // iterate over courseSite
-  assignmentList.forEach((assignment) => {
+  assignmentList.forEach((assignment) => {1
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
     // iterate over assignment entries
     assignment.assignmentEntries.forEach((assignmentEntry) => {
-      const dueDateTimestamp = assignmentEntry.dueDateTimestamp ? assignmentEntry.dueDateTimestamp * 1000 : null;
-      const daysUntilDue = getDaysUntil(nowTime, dueDateTimestamp);
+      const daysUntilDue = getDaysUntil(nowTime, assignmentEntry.getDueDateTimestamp * 1000);
 
       const displayAssignmentEntry = new DisplayAssignmentEntry(
         assignment.courseSiteInfo.courseID,
@@ -80,7 +79,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
           const idx = courseNameMap.indexOf(courseName);
           displayAssignments[idx].assignmentEntries.push(displayAssignmentEntry);
           displayAssignments[idx].assignmentEntries.sort((a, b) => {
-            return a.dueDateTimestamp - b.dueDateTimestamp;
+            return a.getDueDateTimestamp - b.getDueDateTimestamp;
           });
         } else {
           displayAssignments.push(displayAssignment);
@@ -88,7 +87,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       };
 
       // Append elements according to due date category
-      switch (daysUntilDue){
+      switch (daysUntilDue) {
         case "due24h":
           appendElement(courseName, dangerElements);
           break;
@@ -112,7 +111,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const sortElements = (elements: Array<DisplayAssignment>) => {
     elements.sort((a, b) => {
       const timestamp = (o: DisplayAssignment) =>
-        Math.min(...o.assignmentEntries.map((p) => p.dueDateTimestamp));
+        Math.min(...o.assignmentEntries.map((p) => p.getDueDateTimestamp));
       return timestamp(a) - timestamp(b);
     });
     return elements;
@@ -301,26 +300,32 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
 
-        if (daysUntilDue > 0 && daysUntilDue <= 1) {
-          defaultTab[j].classList.add("nav-danger");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-danger");
-          }
-        } else if (daysUntilDue > 1 && daysUntilDue <= 5) {
-          defaultTab[j].classList.add("nav-warning");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
-          }
-        } else if (daysUntilDue > 5 && daysUntilDue <= 14) {
-          defaultTab[j].classList.add("nav-safe");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
-          }
-        } else if (daysUntilDue > 14) {
-          defaultTab[j].classList.add("nav-other");
-          for (let i = 0; i < aTagCount; i++) {
-            defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-other");
-          }
+
+        switch (daysUntilDue) {
+          case "due24h":
+            defaultTab[j].classList.add("nav-danger");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-danger");
+            }
+            break;
+          case "due5d":
+            defaultTab[j].classList.add("nav-warning");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
+            }
+            break;
+          case "due14d":
+            defaultTab[j].classList.add("nav-safe");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
+            }
+            break;
+          case "dueOver14d":
+            defaultTab[j].classList.add("nav-other");
+            for (let i = 0; i < aTagCount; i++) {
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-other");
+            }
+            break;
         }
       }
     }

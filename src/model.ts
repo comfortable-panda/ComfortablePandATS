@@ -29,6 +29,10 @@ export class AssignmentEntry {
     this.isFinished = isFinished;
     this.isQuiz = isQuiz;
   }
+
+  get getDueDateTimestamp(): number {
+    return this.dueDateTimestamp ? this.dueDateTimestamp : 9999999999;
+  }
 }
 
 export class Assignment {
@@ -48,14 +52,12 @@ export class Assignment {
 
   get closestDueDateTimestamp(): number {
     if (this.assignmentEntries.length == 0) return -1;
-    let min = 99999999999999;
+    let min = this.assignmentEntries[0].getDueDateTimestamp;
     for (const entry of this.assignmentEntries) {
-      if (!entry.dueDateTimestamp) return -1;
-      if (min > entry.dueDateTimestamp) {
-        min = entry.dueDateTimestamp;
+      if (min > entry.getDueDateTimestamp) {
+        min = entry.getDueDateTimestamp;
       }
     }
-    if (min === 99999999999999) min = -1;
     return min;
   }
 
@@ -69,9 +71,8 @@ export class Assignment {
         excludeCount++;
         continue;
       }
-      if (!entry.dueDateTimestamp) return -1;
-      if (min > entry.dueDateTimestamp) {
-        min = entry.dueDateTimestamp;
+      if (min > entry.getDueDateTimestamp) {
+        min = entry.getDueDateTimestamp;
       }
     }
     if (excludeCount === this.assignmentEntries.length) min = -1;

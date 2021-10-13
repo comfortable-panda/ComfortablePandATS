@@ -81,7 +81,7 @@ function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string,
       const assignmentID = json.id;
       const assignmentTitle = json.title;
       const assignmentDetail = json.instructions;
-      const dueDateTimestamp = json.dueTime.epochSecond;
+      const dueDateTimestamp = json.dueTime.epochSecond ? json.dueTime.epochSecond : null;
       const entry = new AssignmentEntry(assignmentID, assignmentTitle, dueDateTimestamp, false, false, false, assignmentDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
