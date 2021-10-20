@@ -30,5 +30,13 @@
   "due5d": {"message": "締め切り５日以内"},
   "due14d": {"message": "締め切り１４日以内"},
   "dueOver14d": {"message": "その他"},
-  "no_available_assignments": {"message": "表示できる課題はないよ"}
+  "no_available_assignments": {"message": "表示できる課題はないよ"},
+  "remain_time": { "message": "あと$days$日$hours$時間$minutes$分",
+    "placeholders": {
+      "days": { "content": "$1" },
+      "hours": { "content": "$2" },
+      "minutes": { "content": "$3" }
+    }
+  },
+  "due_not_set": {"message": "締め切り日未設定"}
 }

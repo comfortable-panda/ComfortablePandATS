@@ -123,9 +123,9 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
   }
 
   get remainTimeString(): string {
-    if (!this.dueDateTimestamp) return "締め切り未設定";
+    if (!this.dueDateTimestamp) return chrome.i18n.getMessage("due_not_set");
     const timeRemain = this.getTimeRemain((this.dueDateTimestamp * 1000 - nowTime) / 1000);
-    return `あと${timeRemain[0]}日${timeRemain[1]}時間${timeRemain[2]}分`;
+    return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
   }
 
   get dueDateString(): string {
