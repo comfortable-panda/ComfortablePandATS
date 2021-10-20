@@ -30,5 +30,13 @@
   "due5d": {"message": "Due within 5days"},
   "due14d": {"message": "Due within 14days"},
   "dueOver14d": {"message": "Others"},
-  "no_available_assignments": {"message": "There are no available assignments :)"}
+  "no_available_assignments": {"message": "There are no available assignments :)"},
+  "remain_time": { "message": "$days$d, $hours$hr, $minutes$min left.",
+    "placeholders": {
+      "days": { "content": "$1" },
+      "hours": { "content": "$2" },
+      "minutes": { "content": "$3" }
+    }
+  },
+  "due_not_set": {"message": "Due date not set."}
 }
