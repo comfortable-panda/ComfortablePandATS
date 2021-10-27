@@ -267,10 +267,15 @@
     word-break: break-word;
 }
 
-#hamburger {
+.hamburgerDiv {
     font-size: 25px;
     cursor: pointer;
     padding-left: 15px;
+}
+
+.hamburgerIcon {
+    width: 23px;
+    padding-bottom: 5px;
 }
 
 .logo {
