@@ -34,10 +34,10 @@ export class Settings {
     return this.miniColorDanger ? this.miniColorDanger : DefaultSettings.miniColorDanger;
   }
   get getMiniColorWarning(): string {
-    return this.topColorWarning ? this.topColorWarning : DefaultSettings.topColorWarning;
+    return this.miniColorWarning ? this.miniColorWarning : DefaultSettings.miniColorWarning;
   }
   get getMiniColorSuccess(): string {
-    return this.topColorSuccess ? this.topColorSuccess : DefaultSettings.topColorSuccess;
+    return this.miniColorWarning ? this.miniColorWarning : DefaultSettings.miniColorSuccess;
   }
 }
 
