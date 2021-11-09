@@ -1,5 +1,14 @@
 # ComfortablePandATS
-A browser extention that makes PandA life comfortable
+A Web browser extention that makes PandA life comfortable.  
+**ONLY AVAILABLE IN PandA**. Use [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai) for other Sakai LMS.
+
+### Readme
+English | [Japanese](https://github.com/comfortable-panda/ComfortablePandATS/blob/master/README.md)
+
+### Comfortable Sakai Project
+This is a project to re-create Comfortable PandA to work with other Sakai LMS websites, and to contribute to Sakai Community.
+Developing in the repository of Kyoto University.
+[Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai)
 
 # Installation links
 - [Google Chrome](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
@@ -48,8 +57,16 @@ You can add your custom assignment to miniPandA with PLUS button located on the 
 
 Also check box is available for you to distinguish completed assignments from working assignments.
 
+# Cache
+In order to reduce the network load on PandA, we have implemented a cache function for getting assignments and quizzes.
+The default cache interval is as follows
+- Assignment fetching --- 2 minutes
+- Quiz fetching --- 10 minutes  
+
+The cache time can be changed in the configuration.
+
 # Screenshot
-![](https://user-images.githubusercontent.com/41512077/90533356-5504e080-e1b3-11ea-8065-bc10ec624ddf.png)
+![](https://user-images.githubusercontent.com/41512077/140854635-974aee4b-fea3-4051-8956-ac696d1648ec.png)
 
 # Update Log
 - 2020/05/20 v0.9.0 Prototype release
@@ -78,6 +95,7 @@ Also check box is available for you to distinguish completed assignments from wo
 - 2021/05/16 v3.4.0 Add setting tab.
 - 2021/05/16 v3.4.1 Fixed minor bugs.
 - 2021/05/17 v3.5.0 Support for color universal design.
+- 2021/05/17 v3.5.2 Color code assignments with due date more than 14days
 
 # License
 Apache-2.0 License

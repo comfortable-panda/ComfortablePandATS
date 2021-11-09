@@ -50,7 +50,7 @@ PandAへの負荷を軽減するために課題・クイズ取得にキャッシ
 
 
 # Screenshot
-![](https://user-images.githubusercontent.com/41512077/90533356-5504e080-e1b3-11ea-8065-bc10ec624ddf.png)
+![](https://user-images.githubusercontent.com/41512077/140854635-974aee4b-fea3-4051-8956-ac696d1648ec.png)
 
 # 更新履歴
 - 2020/05/20 v0.9.0 Prototype release
