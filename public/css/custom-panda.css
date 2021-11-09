@@ -335,8 +335,8 @@
 .todo-check:checked + label:after {
     content: '';
     position: absolute;
-    left: 2.5px;
-    top: 7px;
+    left: 8px;
+    top: 12px;
     background: white;
     width: 2px;
     height: 2px;

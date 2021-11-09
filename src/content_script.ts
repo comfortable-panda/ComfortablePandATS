@@ -1,5 +1,5 @@
 import { loadFromStorage, saveToStorage } from "./storage";
-import { Kadai, KadaiEntry, LectureInfo } from "./kadai";
+import { Kadai, LectureInfo } from "./kadai";
 import { fetchLectureIDs, getKadaiOfLectureID, getQuizOfLectureID } from "./network";
 import {
   createHanburgerButton,
