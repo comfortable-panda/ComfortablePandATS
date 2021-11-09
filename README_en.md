@@ -1,6 +1,6 @@
 # ComfortablePandATS
 A Web browser extention that makes PandA life comfortable.  
-**ONLY AVAILABLE IN PandA**. Use [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai) for other Sakai LMS.
+**ONLY WORKS IN PandA**. Use [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai) for other Sakai LMS.
 
 ## Readme
 English | [Japanese](https://github.com/comfortable-panda/ComfortablePandATS/blob/master/README.md)
@@ -11,20 +11,22 @@ Developing in the repository of Kyoto University.
 [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai)
 
 # Installation links
-**ONLY AVAILABLE IN PandA**. Use [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai) for other Sakai LMS.  
+**ONLY WORKS IN PandA**. Use [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai) for other Sakai LMS.  
 - [Google Chrome Store](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
 - [Firefox](https://tinaxd.github.io/comfortable-panda-firefox-updates/index.html)
 - [Microsoft Edge Store](https://microsoftedge.microsoft.com/addons/detail/njbljhcmnodocldppoiejkcmcebpmljc)
 
 
 # Manual installation(not recommended)
-1. Go to `chrome://extensions/` on your Google Chrome
-1. Enable **developer mode**.
-1. Click **LOAD UNPACKED** button on upper left hand corner.
-1. Select this folder(comfortable-panda) and install.
-1. You are all set:)
+1. Download latest version of `Comfortable-PandA.zip` from [HERE](https://github.com/comfortable-panda/ComfortablePandATS/releases/tag/v3.5.2).
+2. Unzip `Comfortable-PandA.zip`.
+3. Go to `chrome://extensions/` on your Google Chrome.
+4. Enable **developer mode**.
+5. Click **LOAD UNPACKED** button on upper left corner.
+6. Select the folder you unzipped and install.
+7. You are ready to use :)
 
-# How to compile
+# How to compile from source code
 Run
 ```
 npx webpack
@@ -37,8 +39,8 @@ in the root directory of cloned repository.
 1. Done. Your upper tab color is changed and ☰ icon is displayed.
 
 # Features
-## Tab coloring
-Colors lecture tab according to due date.
+## Color-coded course site tabs
+Colors course site tabs according to the assignment due date.
 - ![#f03c15](https://via.placeholder.com/15/e85555/000000?text=+)
   Due date <= 1 Day ahead
 - ![#f03c15](https://via.placeholder.com/15/d7aa57/000000?text=+)
@@ -58,7 +60,7 @@ You can add your custom assignment to miniPandA with PLUS button located on the 
 
 Also check box is available for you to distinguish completed assignments from working assignments.
 
-# Cache
+## Cache
 In order to reduce the network load on PandA, we have implemented a cache function for getting assignments and quizzes.
 The default cache interval is as follows
 - Assignment fetching --- 2 minutes

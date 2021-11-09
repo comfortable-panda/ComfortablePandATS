@@ -1,10 +1,10 @@
 # ComfortablePandATS
 PandAを快適にするブラウザ拡張機能です．
 
-### Readme
+## Readme
 [English](https://github.com/comfortable-panda/ComfortablePandATS/blob/master/README_en.md) | Japanese
 
-### Comfortable Sakai
+## Comfortable Sakai
 Comfortable PandAをその他のSakai LMSでも動作するように改良し，Sakai Communityへコントリビュートするプロジェクトです.
 京都大学のレポジトリで開発しています．  
 [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai)
@@ -15,6 +15,14 @@ Comfortable PandAをその他のSakai LMSでも動作するように改良し，
 - [Firefox](https://tinaxd.github.io/comfortable-panda-firefox-updates/index.html)
 - [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/njbljhcmnodocldppoiejkcmcebpmljc)
 - [Safari](https://apps.apple.com/jp/app/comfortable-panda/id1572408187?mt=12)
+
+# 手動でのインストール方法
+1. [ここ](https://github.com/comfortable-panda/ComfortablePandATS/releases/tag/v3.5.2) から最新の`Comfortable-PandA.zip`をダウンロードします．
+2. `Comfortable-PandA.zip`を展開します． 
+3. Chromeで `chrome://extensions/` を開きます.
+4. 右上の**デベロッパー　モード**を有効化してください.
+5. 左上の**パッケージ化されていない拡張機能を読み込む**ボタンをクリックします.
+6. 展開したフォルダーを選択し，インストールします.
 
 # 使い方
 1. ダウンロードリンクから，拡張機能をブラウザにインストールします．
@@ -41,7 +49,7 @@ Comfortable PandAをその他のSakai LMSでも動作するように改良し，
 また，メモ機能を使うことでminiPandA上に課題メモを追加することができます．
 
 
-# キャッシュ機能
+## キャッシュ機能
 PandAへの負荷を軽減するために課題・クイズ取得にキャッシュ機能を導入しています．
 デフォルトのキャッシュ間隔は以下のとおりです．
 - 課題取得---2分間
