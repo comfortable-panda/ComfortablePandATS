@@ -1,9 +1,9 @@
 # Comfortable Sakai
 A Web browser Extension for improving UX of Sakai LMS.
 
-# 動作保証
-- Sakai 20, 21(安定)
-- Sakai 12(β版)
+# Supported Sakai LMS versions
+- Sakai 20, 21(Stable)
+- Sakai 12(Unverified)
 
 
 # Features
@@ -35,6 +35,11 @@ The default cache interval is as follows
 - Quiz fetching --- 10 minutes
 
 The cache time can be changed in the configuration.
+
+# Screenshot
+![](https://user-images.githubusercontent.com/41512077/140854635-974aee4b-fea3-4051-8956-ac696d1648ec.png)
+
+
 
 # How to compile from source code
 Run
