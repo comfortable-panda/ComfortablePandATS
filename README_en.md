@@ -2,22 +2,23 @@
 A Web browser extention that makes PandA life comfortable.  
 **ONLY AVAILABLE IN PandA**. Use [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai) for other Sakai LMS.
 
-### Readme
+## Readme
 English | [Japanese](https://github.com/comfortable-panda/ComfortablePandATS/blob/master/README.md)
 
-### Comfortable Sakai Project
+## Comfortable Sakai Project
 This is a project to re-create Comfortable PandA to work with other Sakai LMS websites, and to contribute to Sakai Community.
 Developing in the repository of Kyoto University.
 [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai)
 
 # Installation links
-- [Google Chrome](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
+**ONLY AVAILABLE IN PandA**. Use [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai) for other Sakai LMS.  
+- [Google Chrome Store](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
 - [Firefox](https://tinaxd.github.io/comfortable-panda-firefox-updates/index.html)
-- [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/njbljhcmnodocldppoiejkcmcebpmljc)
+- [Microsoft Edge Store](https://microsoftedge.microsoft.com/addons/detail/njbljhcmnodocldppoiejkcmcebpmljc)
 
 
 # Manual installation(not recommended)
-1. Go to `chrome://extensions/` on your GoogleChrome
+1. Go to `chrome://extensions/` on your Google Chrome
 1. Enable **developer mode**.
 1. Click **LOAD UNPACKED** button on upper left hand corner.
 1. Select this folder(comfortable-panda) and install.
