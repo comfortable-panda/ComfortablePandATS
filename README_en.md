@@ -26,13 +26,6 @@ Developing in the repository of Kyoto University.
 6. Select the folder you unzipped and install.
 7. You are ready to use :)
 
-# How to compile from source code
-Run
-```
-npx webpack
-```
-in the root directory of cloned repository.
-
 # Usage
 1. Login to PandA
 1. Proceed to main page.
@@ -99,6 +92,13 @@ The cache time can be changed in the configuration.
 - 2021/05/16 v3.4.1 Fixed minor bugs.
 - 2021/05/17 v3.5.0 Support for color universal design.
 - 2021/05/17 v3.5.2 Color code assignments with due date more than 14days
+
+# How to compile from source code
+Run
+```
+npx webpack
+```
+in the root directory of cloned repository.
 
 # License
 Apache-2.0 License
