@@ -1,6 +1,15 @@
 # ComfortablePandATS
 PandAを快適にするブラウザ拡張機能です．
 
+### Readme
+[English](https://github.com/comfortable-panda/ComfortablePandATS/blob/master/README_en.md) | Japanese
+
+### Comfortable Sakai
+Comfortable PandAをその他のSakai LMSでも動作するように改良し，Sakai Communityへコントリビュートするプロジェクトです.
+京都大学のレポジトリで開発しています．  
+[Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai)
+
+
 # ダウンロードリンク
 - [Google Chrome](https://chrome.google.com/webstore/detail/comfortable-panda/cecjhdkagakhonnmddjgncmdldmppnoe)
 - [Firefox](https://tinaxd.github.io/comfortable-panda-firefox-updates/index.html)
@@ -8,7 +17,7 @@ PandAを快適にするブラウザ拡張機能です．
 - [Safari](https://apps.apple.com/jp/app/comfortable-panda/id1572408187?mt=12)
 
 # 使い方
-1. 拡張機能をブラウザにインストールします．
+1. ダウンロードリンクから，拡張機能をブラウザにインストールします．
 1. PandAにログインします．
 1. PandAの右上に☰ボタンが追加されていたら導入成功です．
 
