@@ -1,6 +1,6 @@
 {
   "name": "comfortable-sakai",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Comfortable Sakai is a browser extension for managing assignments and quizzes on Sakai LMS.",
   "main": "index.ts",
   "scripts": {
@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "build": "webpack"
   },
-  "author": "das08(Kyoto University)",
+  "author": "Kazuki Takeda, Shoji Kajita(Kyoto University)",
   "license": "Apache-2.0",
   "dependencies": {
     "@types/chrome": "^0.0.144",
