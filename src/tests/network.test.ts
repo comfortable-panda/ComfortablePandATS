@@ -14,7 +14,7 @@ describe("testapi()", (): void => {
     //@ts-ignore
     fetch.mockResponseOnce(JSON.stringify(jsonObject));
     const a = await getAssignmentByCourseID("", "");
-    const assignmentEntry = new AssignmentEntry("sample1","Sample Assignment1",1634731200,false, false,false);
+    const assignmentEntry = new AssignmentEntry("sample1","Sample Assignment1",1668006000,false, false,false);
     assignmentEntry.assignmentDetail = "--------";
     assignmentEntry.assignmentPage = "/portal/site/";
     const assignment = new Assignment(new CourseSiteInfo("", ""), [assignmentEntry],false)
