@@ -36,7 +36,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const successElements: Array<DisplayAssignment> = [];
   const otherElements: Array<DisplayAssignment> = [];
   // iterate over courseSite
-  assignmentList.forEach((assignment) => {1
+  assignmentList.forEach((assignment) => {
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
     // iterate over assignment entries
     assignment.assignmentEntries.forEach((assignmentEntry) => {
@@ -97,7 +97,13 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   };
 
   let relaxPandA = null;
-  if (assignmentList.length === 0) {
+  let assignmentCnt = 0;
+  if (assignmentList.length !== 0) {
+    for (const assignment of assignmentList){
+      assignmentCnt += assignment.assignmentEntries.length;
+    }
+  }
+  if (assignmentList.length === 0 || assignmentCnt === 0) {
     relaxPandA = {
       img: chrome.extension.getURL("img/relaxPanda.png"),
     };
