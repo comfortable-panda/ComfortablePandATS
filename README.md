@@ -18,11 +18,11 @@ A Web browser Extension for improving UX of Sakai LMS.
 ## Color-coded course site tabs
 Colors course site tabs according to the assignment due date.
 - ![#f03c15](https://via.placeholder.com/15/e85555/000000?text=+)
-  Due date <= 1 Day ahead
+  Due date within 1 Day
 - ![#f03c15](https://via.placeholder.com/15/d7aa57/000000?text=+)
-  Due date <= 5 Days ahead
+  Due date within 5 Days
 - ![#f03c15](https://via.placeholder.com/15/62b665/000000?text=+)
-  Due date <= 14 Days ahead
+  Due date within 14 Days
 
 ## Notification Badge
 Tells your unchecked latest assignments.
