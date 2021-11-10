@@ -19,8 +19,7 @@ export class Settings {
     return this.quizCacheInterval ? this.quizCacheInterval : DefaultSettings.quizCacheInterval;
   }
   get getDisplayCheckedKadai(): boolean {
-    // return this.displayCheckedKadai ? this.displayCheckedKadai : DefaultSettings.displayCheckedKadai;
-    return <boolean>this.displayCheckedKadai;
+    return this.displayCheckedKadai !== undefined ? this.displayCheckedKadai : DefaultSettings.displayCheckedKadai;
   }
   get getTopColorDanger(): string {
     return this.topColorDanger ? this.topColorDanger : DefaultSettings.topColorDanger;
