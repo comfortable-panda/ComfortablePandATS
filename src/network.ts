@@ -1,7 +1,5 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo } from "./model";
 import { nowTime } from "./utils";
-import { CPsettings } from "./content_script";
-
 
 function getBaseURL(): string {
   let baseURL = "";
@@ -41,7 +39,6 @@ function getAssignmentByCourseID(baseURL: string, courseID: string): Promise<Ass
       .then(async (response) => {
         if (response.ok) {
           const res = await response.json();
-          console.log("kadai ", res)
           const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
           const assignmentEntries = convJsonToAssignmentEntries(res, baseURL, courseID);
           resolve(new Assignment(courseSiteInfo, assignmentEntries, false));
@@ -61,7 +58,6 @@ function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Assignm
       .then(async (response) => {
         if (response.ok) {
           const res = await response.json();
-          console.log("quiz ", res)
           const courseSiteInfo = new CourseSiteInfo(courseID, courseID); // TODO: lectureName
           const assignmentEntries = convJsonToQuizEntries(res, baseURL, courseID);
           resolve(new Assignment(courseSiteInfo, assignmentEntries, false));

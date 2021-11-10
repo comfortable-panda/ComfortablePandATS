@@ -1,7 +1,8 @@
 function loadFromLocalStorage(key: string, ifUndefinedType = "array"): Promise<any> {
+  const hostName = window.location.hostname;
   return new Promise(function (resolve, reject) {
-    chrome.storage.local.get(key, function (items: any) {
-      if (typeof items[key] === "undefined") {
+    chrome.storage.local.get(hostName, function (items: any) {
+      if (typeof items[hostName] === "undefined" || typeof items[hostName][key] === "undefined") {
         let res: any;
         switch (ifUndefinedType) {
           case "number":
@@ -19,17 +20,24 @@ function loadFromLocalStorage(key: string, ifUndefinedType = "array"): Promise<a
         }
         resolve(res);
       }
-      else resolve(items[key]);
+      else resolve(items[hostName][key]);
     });
   });
 }
 
 function saveToLocalStorage(key: string, value: any): Promise<any> {
+  const hostName = window.location.hostname;
   const entity: { [key: string]: [value: any] } = {};
   entity[key] = value;
   return new Promise(function (resolve, reject) {
-    chrome.storage.local.set(entity, () => {
-      resolve("saved");
+    chrome.storage.local.get(hostName, function (items: any) {
+      if (typeof items[hostName] === "undefined") {
+        items[hostName] = {};
+      }
+      items[hostName][key] = value;
+      chrome.storage.local.set({ [hostName]: items[hostName] }, () => {
+        resolve("saved");
+      });
     });
   });
 }

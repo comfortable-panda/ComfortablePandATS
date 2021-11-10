@@ -19,7 +19,8 @@ export class Settings {
     return this.quizCacheInterval ? this.quizCacheInterval : DefaultSettings.quizCacheInterval;
   }
   get getDisplayCheckedKadai(): boolean {
-    return this.displayCheckedKadai ? this.displayCheckedKadai : DefaultSettings.displayCheckedKadai;
+    // return this.displayCheckedKadai ? this.displayCheckedKadai : DefaultSettings.displayCheckedKadai;
+    return <boolean>this.displayCheckedKadai;
   }
   get getTopColorDanger(): string {
     return this.topColorDanger ? this.topColorDanger : DefaultSettings.topColorDanger;
@@ -37,7 +38,7 @@ export class Settings {
     return this.miniColorWarning ? this.miniColorWarning : DefaultSettings.miniColorWarning;
   }
   get getMiniColorSuccess(): string {
-    return this.miniColorWarning ? this.miniColorWarning : DefaultSettings.miniColorSuccess;
+    return this.miniColorSuccess ? this.miniColorSuccess : DefaultSettings.miniColorSuccess;
   }
 }
 
