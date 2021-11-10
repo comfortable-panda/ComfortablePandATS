@@ -33,7 +33,8 @@ Colors course site tabs according to the assignment due date.
   Due date within 14 Days
 
 ## Notification Badge
-Tells your unchecked latest assignments.
+Tells your unchecked latest assignments.  
+Notification badge will appear in the upper left-hand side of a course site tab.
 
 If you open a course site with the notification badge on, the badge will disappear.
 
@@ -45,16 +46,15 @@ You can add your custom assignment to miniSakai as `memo` with PLUS button locat
 Also check box is available for you to distinguish completed assignments from working assignments.
 
 ## Cache
-In order to reduce the network load on PandA, we have implemented a cache function for getting assignments and quizzes.
+In order to reduce the network load on Sakai LMS, we have implemented a cache function for getting assignments and quizzes from REST API.
 The default cache interval is as follows
 - Assignment fetching --- 2 minutes
 - Quiz fetching --- 10 minutes
 
-The cache time can be changed in the configuration.
+The cache time can be changed in the configuration tab in `miniSakai`.
 
 # Screenshot
 ![](https://user-images.githubusercontent.com/41512077/140854635-974aee4b-fea3-4051-8956-ac696d1648ec.png)
-
 
 
 # How to compile from source code
