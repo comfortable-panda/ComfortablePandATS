@@ -6,12 +6,20 @@ A Web browser Extension for improving UX of Sakai LMS.
 - Sakai 12(Unverified)
 
 # How to install Comfortable Sakai
-1. Download latest version of `Comfortable-Sakai.zip` from [HERE]().
+## Google Chrome
+1. Download latest version of `Comfortable-Sakai.zip` from [HERE](https://github.com/kyoto-u/comfortable-sakai/releases/tag/v1.1.0).
 2. Unzip `Comfortable-Sakai.zip`.
 3. Go to `chrome://extensions/` on your Google Chrome.
 4. Enable **developer mode**.
 5. Click **LOAD UNPACKED** button on upper left corner.
 6. Select the folder you unzipped and install.
+7. You are now ready to use :) Log in to your Sakai LMS website!
+
+## Firefox
+1. Download latest version of `Comfortable-Sakai.zip` from [HERE](https://github.com/kyoto-u/comfortable-sakai/releases/tag/v1.1.0).
+3. Go to `about:debugging#/runtime/this-firefox` on your Firefox.
+5. Click **Load Temporary Add-on...** button in `Temporary Extensions` section.
+6. Select the zip file you downloaded and install.
 7. You are now ready to use :) Log in to your Sakai LMS website!
 
 # Features
