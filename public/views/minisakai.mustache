@@ -159,13 +159,13 @@
     {{/display.other}}
 
     {{#display.lateSubmit}}
-        <div class="sidenav-other">
+        <div class="sidenav-late">
             <span class="q">{{titles.duePassed}}</span>
         </div>
-        <div class="sidenav-list sidenav-list-other">
+        <div class="sidenav-list sidenav-list-late">
             {{#elements.lateSubmit}}
-                <div id="b{{courseID}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
-                    <a class="lecture-other lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                <div id="b{{courseID}}" class="kadai-late" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                    <a class="lecture-late lecture-name" href="{{coursePage}}">{{courseName}}</a>
                     {{#assignmentEntries}}
                         <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                         <label for="{{assignmentID}}"></label>

@@ -127,7 +127,8 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
 
   get remainTimeString(): string {
     let timestamp = this.dueDateTimestamp;
-    // if (CPsettings.getDisplayLateSubmitAssignment) timestamp = this.closeDateTimestamp;
+    // @ts-ignore
+    if (CPsettings.getDisplayLateSubmitAssignment && this.dueDateTimestamp * 1000 < nowTime) timestamp = this.closeDateTimestamp;
     if (!timestamp) return chrome.i18n.getMessage("due_not_set");
     const timeRemain = this.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
     return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
@@ -135,7 +136,8 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
 
   get dueDateString(): string {
     let timestamp = this.dueDateTimestamp;
-    // if (CPsettings.getDisplayLateSubmitAssignment) timestamp = this.closeDateTimestamp;
+    // @ts-ignore
+    if (CPsettings.getDisplayLateSubmitAssignment && this.dueDateTimestamp * 1000 < nowTime) timestamp = this.closeDateTimestamp;
     if (!timestamp) return "----/--/--";
     const date = new Date(timestamp * 1000);
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);

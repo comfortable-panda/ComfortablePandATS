@@ -104,6 +104,15 @@
     border-radius: 5px;
 }
 
+.sidenav-late {
+    position: relative;
+    padding: 0.1em 0.5em;
+    border-left: solid 6px #212121;
+    border-bottom: solid 2px #212121;
+    background: #dad6d6;
+    border-radius: 5px;
+}
+
 .sidenav-list {
     padding: 20px 8px 8px 8px;
     text-decoration: none;
@@ -208,6 +217,28 @@
     border-radius: 20px 20px 20px 20px;
 }
 
+.sidenav-list .lecture-late {
+    font-size: 12px;
+    font-weight: 400 !important;
+    color: #f7f7f7;
+    width: max-content;
+    padding: 3px 10px;
+    margin: -12px 0 0 -5px;
+    background: #212121;
+    border-radius: 20px 20px 20px 20px;
+}
+
+.sidenav-list .lecture-late:hover {
+    font-size: 12px;
+    font-weight: 400 !important;
+    color: #f7f7f7;
+    width: max-content;
+    padding: 3px 10px;
+    margin: -12px 0 0 -5px;
+    background: #212121;
+    border-radius: 20px 20px 20px 20px;
+}
+
 .sidenav-list p {
     list-style-type: initial;
     font-size: 14px;
@@ -250,6 +281,15 @@
     border-left: solid 2px #777777;
     border-bottom: solid 2px #777777;
     border-right: solid 2px #777777;
+    border-radius: 10px 10px 10px 10px;
+    margin-bottom: 20px;
+}
+
+.kadai-late {
+    border-top: solid 2px #212121;
+    border-left: solid 2px #212121;
+    border-bottom: solid 2px #212121;
+    border-right: solid 2px #212121;
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
 }
@@ -461,6 +501,12 @@
 .add-badge-quiz {
     color: #fff;
     background-color: #ef2410;
+}
+
+.add-badge-late {
+    margin-right: 0;
+    color: #fff;
+    background-color: #ff6a00;
 }
 
 .del-button {
