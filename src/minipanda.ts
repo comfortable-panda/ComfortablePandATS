@@ -57,7 +57,6 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       const displayAssignment = new DisplayAssignment([displayAssignmentEntry], courseName, assignment.getTopSite());
 
       const appendElement = (courseName: string | undefined, displayAssignments: Array<DisplayAssignment>) => {
-
         const courseNameMap = displayAssignments.map((e) => e.courseName);
         if (courseNameMap.includes(courseName)) {
           const idx = courseNameMap.indexOf(courseName);
@@ -107,7 +106,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   let relaxPandA = null;
   let assignmentCnt = 0;
   if (assignmentList.length !== 0) {
-    for (const assignment of assignmentList){
+    for (const assignment of assignmentList) {
       assignmentCnt += assignment.assignmentEntries.length;
     }
   }
@@ -218,7 +217,7 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
 
   let settingItem;
   const span = SettingsDom.span.cloneNode(true);
-  switch (typeof value){
+  switch (typeof value) {
     case "boolean":
       label.classList.add("switch");
       settingItem = cloneElem(SettingsDom.toggleBtn, {checked: value, id: id}, {"change": function (res: any) { updateSettings(res, "check");}});
@@ -268,7 +267,7 @@ async function displayMiniPandA(mergedAssignmentList: Array<Assignment>, courseS
 
 function deleteNavBarNotification(): void {
   const classlist = ["red-badge", "nav-danger", "nav-warning", "nav-safe"];
-  for (const c of classlist){
+  for (const c of classlist) {
     const q = document.querySelectorAll(`.${c}`);
     // @ts-ignore
     for (const _ of q) {
@@ -297,7 +296,6 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
         }
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
-
 
         switch (daysUntilDue) {
           case "due24h":

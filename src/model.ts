@@ -57,12 +57,11 @@ export class Assignment {
     if (this.assignmentEntries.length == 0) return -1;
     let min = 99999999999999;
     for (const entry of this.assignmentEntries) {
-      if (min > entry.getDueDateTimestamp && entry.getDueDateTimestamp*1000 >= nowTime) {
+      if (min > entry.getDueDateTimestamp && entry.getDueDateTimestamp * 1000 >= nowTime) {
         min = entry.getDueDateTimestamp;
       }
     }
     if (min === 99999999999999) min = -1;
-    console.log(min, nowTime)
     return min;
   }
 
@@ -76,7 +75,7 @@ export class Assignment {
         excludeCount++;
         continue;
       }
-      if (min > entry.getDueDateTimestamp && entry.getDueDateTimestamp*1000 >= nowTime) {
+      if (min > entry.getDueDateTimestamp && entry.getDueDateTimestamp * 1000 >= nowTime) {
         min = entry.getDueDateTimestamp;
       }
     }
