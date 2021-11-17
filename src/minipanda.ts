@@ -35,6 +35,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const warningElements: Array<DisplayAssignment> = [];
   const successElements: Array<DisplayAssignment> = [];
   const otherElements: Array<DisplayAssignment> = [];
+  const lateSubmitElements: Array<DisplayAssignment> = [];
   // iterate over courseSite
   assignmentList.forEach((assignment) => {
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
@@ -83,6 +84,12 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
         case "dueOver14d":
           appendElement(courseName, otherElements);
           break;
+        case "duePassed":
+          console.log("passed", displayAssignmentEntry);
+          if (CPsettings.getDisplayLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
+            appendElement(courseName, lateSubmitElements);
+          }
+          break;
       }
     });
 
@@ -124,12 +131,14 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       warning: sortElements(warningElements),
       success: sortElements(successElements),
       other: sortElements(otherElements),
+      lateSubmit: sortElements(lateSubmitElements),
     },
     display: {
       danger: dangerElements.length > 0,
       warning: warningElements.length > 0,
       success: successElements.length > 0,
       other: otherElements.length > 0,
+      lateSubmit: lateSubmitElements.length > 0,
     },
     titles: {
       assignmentTab: chrome.i18n.getMessage("tab_assignments"),
@@ -140,6 +149,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       due5d: chrome.i18n.getMessage("due5d"),
       due14d: chrome.i18n.getMessage("due14d"),
       dueOver14d: chrome.i18n.getMessage("dueOver14d"),
+      duePassed: chrome.i18n.getMessage("duePassed"),
       relaxPandA: chrome.i18n.getMessage("no_available_assignments"),
     },
     todoBox: {

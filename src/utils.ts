@@ -108,9 +108,9 @@ function convertArrayToAssignment(arr: Array<any>): Array<Assignment>{
   for (const i of arr) {
     const assignmentEntries = [];
     for (const e of i.assignmentEntries) {
-      const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
+      const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.closeDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
       entry.assignmentPage = e.assignmentPage;
-      if (entry.getDueDateTimestamp * 1000 > nowTime) assignmentEntries.push(entry);
+      if (entry.getCloseDateTimestamp * 1000 > nowTime) assignmentEntries.push(entry);
     }
     assignmentList.push(new Assignment(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), assignmentEntries, i.isRead))
   }
