@@ -35,6 +35,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   const warningElements: Array<DisplayAssignment> = [];
   const successElements: Array<DisplayAssignment> = [];
   const otherElements: Array<DisplayAssignment> = [];
+  const lateSubmitElements: Array<DisplayAssignment> = [];
   // iterate over courseSite
   assignmentList.forEach((assignment) => {
     const courseName = courseIDMap.get(assignment.courseSiteInfo.courseID);
@@ -47,6 +48,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
         assignmentEntry.assignmentID,
         assignmentEntry.assignmentTitle,
         assignmentEntry.dueDateTimestamp,
+        assignmentEntry.closeDateTimestamp,
         assignmentEntry.isFinished,
         assignmentEntry.isQuiz,
         assignmentEntry.isMemo
@@ -55,7 +57,6 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       const displayAssignment = new DisplayAssignment([displayAssignmentEntry], courseName, assignment.getTopSite());
 
       const appendElement = (courseName: string | undefined, displayAssignments: Array<DisplayAssignment>) => {
-
         const courseNameMap = displayAssignments.map((e) => e.courseName);
         if (courseNameMap.includes(courseName)) {
           const idx = courseNameMap.indexOf(courseName);
@@ -82,6 +83,12 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
         case "dueOver14d":
           appendElement(courseName, otherElements);
           break;
+        case "duePassed":
+          console.log("passed", displayAssignmentEntry);
+          if (CPsettings.getDisplayLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
+            appendElement(courseName, lateSubmitElements);
+          }
+          break;
       }
     });
 
@@ -99,7 +106,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
   let relaxPandA = null;
   let assignmentCnt = 0;
   if (assignmentList.length !== 0) {
-    for (const assignment of assignmentList){
+    for (const assignment of assignmentList) {
       assignmentCnt += assignment.assignmentEntries.length;
     }
   }
@@ -123,12 +130,14 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       warning: sortElements(warningElements),
       success: sortElements(successElements),
       other: sortElements(otherElements),
+      lateSubmit: sortElements(lateSubmitElements),
     },
     display: {
       danger: dangerElements.length > 0,
       warning: warningElements.length > 0,
       success: successElements.length > 0,
       other: otherElements.length > 0,
+      lateSubmit: lateSubmitElements.length > 0,
     },
     titles: {
       assignmentTab: chrome.i18n.getMessage("tab_assignments"),
@@ -139,6 +148,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       due5d: chrome.i18n.getMessage("due5d"),
       due14d: chrome.i18n.getMessage("due14d"),
       dueOver14d: chrome.i18n.getMessage("dueOver14d"),
+      duePassed: chrome.i18n.getMessage("duePassed"),
       relaxPandA: chrome.i18n.getMessage("no_available_assignments"),
     },
     todoBox: {
@@ -176,6 +186,7 @@ function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Arr
 
 async function createSettingsTab(root: Element): Promise<void> {
   createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.getDisplayCheckedKadai, "displayCheckedKadai");
+  createSettingItem(root, chrome.i18n.getMessage('settings_display_late_submit_assignment'), CPsettings.getDisplayLateSubmitAssignment, "displayLateSubmitAssignment");
   createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
   createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.getQuizCacheInterval, "quizCacheInterval");
 
@@ -206,7 +217,7 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
 
   let settingItem;
   const span = SettingsDom.span.cloneNode(true);
-  switch (typeof value){
+  switch (typeof value) {
     case "boolean":
       label.classList.add("switch");
       settingItem = cloneElem(SettingsDom.toggleBtn, {checked: value, id: id}, {"change": function (res: any) { updateSettings(res, "check");}});
@@ -256,7 +267,7 @@ async function displayMiniPandA(mergedAssignmentList: Array<Assignment>, courseS
 
 function deleteNavBarNotification(): void {
   const classlist = ["red-badge", "nav-danger", "nav-warning", "nav-safe"];
-  for (const c of classlist){
+  for (const c of classlist) {
     const q = document.querySelectorAll(`.${c}`);
     // @ts-ignore
     for (const _ of q) {
@@ -285,7 +296,6 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
         }
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
-
 
         switch (daysUntilDue) {
           case "due24h":

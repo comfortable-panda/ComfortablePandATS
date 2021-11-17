@@ -11,6 +11,7 @@
   "settings_assignment_cache": {"message": "課題キャッシュ時間 [秒]"},
   "settings_quizzes_cache": {"message": "クイズキャッシュ時間 [秒]"},
   "settings_color_checked_item": {"message": "チェック済の課題も色付けする"},
+  "settings_display_late_submit_assignment": {"message": "遅延提出可能な課題を表示する"},
   "settings_reset_colors": {"message": "デフォルト色に戻す"},
   "settings_colors_hour": { "message": "カラー #$color$ 締切$time$時間前",
     "placeholders": {
@@ -29,6 +30,7 @@
   "due24h": {"message": "締め切り２４時間以内"},
   "due5d": {"message": "締め切り５日以内"},
   "due14d": {"message": "締め切り１４日以内"},
+  "duePassed": {"message": "遅延提出可能"},
   "dueOver14d": {"message": "その他"},
   "no_available_assignments": {"message": "表示できる課題はないよ"},
   "remain_time": { "message": "あと$days$日$hours$時間$minutes$分",

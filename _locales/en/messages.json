@@ -11,6 +11,7 @@
   "settings_assignment_cache": {"message": "Assignment Cache [s]"},
   "settings_quizzes_cache": {"message": "Test&Quizzes Cache [s]"},
   "settings_color_checked_item": {"message": "Color course tabs including checked items"},
+  "settings_display_late_submit_assignment": {"message": "Show assignments that can be submitted late"},
   "settings_reset_colors": {"message": "Reset to default colors"},
   "settings_colors_hour": { "message": "Color #$color$ $time$ hours before due",
     "placeholders": {
@@ -29,6 +30,7 @@
   "due24h": {"message": "Due within 24hrs"},
   "due5d": {"message": "Due within 5days"},
   "due14d": {"message": "Due within 14days"},
+  "duePassed": {"message": "Late submission possible"},
   "dueOver14d": {"message": "Others"},
   "no_available_assignments": {"message": "There are no available assignments :)"},
   "remain_time": { "message": "$days$d, $hours$hr, $minutes$min left.",

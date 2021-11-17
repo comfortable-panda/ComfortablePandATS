@@ -158,6 +158,35 @@
     </div>
     {{/display.other}}
 
+    {{#display.lateSubmit}}
+        <div class="sidenav-late">
+            <span class="q">{{titles.duePassed}}</span>
+        </div>
+        <div class="sidenav-list sidenav-list-late">
+            {{#elements.lateSubmit}}
+                <div id="b{{courseID}}" class="kadai-late" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                    <a class="lecture-late lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                    {{#assignmentEntries}}
+                        <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                        <label for="{{assignmentID}}"></label>
+                        <p class="kadai-date">{{dueDateString}}</p>
+                        <span class="time-remain">{{remainTimeString}}</span>
+                        <p class="kadai-title">
+                            {{#isMemo}}
+                                <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                                <span class="del-button" id="{{assignmentID}}">×</span>
+                            {{/isMemo}}
+                            {{#isQuiz}}
+                                <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                            {{/isQuiz}}
+                            {{assignmentTitle}}
+                        </p>
+                    {{/assignmentEntries}}
+                </div>
+            {{/elements.lateSubmit}}
+        </div>
+    {{/display.lateSubmit}}
+
     {{#showRelaxPandA}}
     <div class="relaxpanda">
         <p class="relaxpanda-p">{{titles.relaxPandA}}</p>

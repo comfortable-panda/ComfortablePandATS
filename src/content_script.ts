@@ -1,20 +1,12 @@
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
-import {
-  getCourseIDList,
-  getBaseURL,
-  getAssignmentByCourseID,
-  getQuizFromCourseID,
-} from "./network";
-import {
-  createMiniSakaiBtn,
-  createNavBarNotification,
-  displayMiniPandA,
-} from "./minipanda";
+import { getCourseIDList, getBaseURL, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
+import { createMiniSakaiBtn, createNavBarNotification, displayMiniPandA } from "./minipanda";
 import { addBookmarkedCourseSites } from "./bookmark";
 import {
   compareAndMergeAssignmentList,
-  convertArrayToAssignment, convertArrayToSettings,
+  convertArrayToAssignment,
+  convertArrayToSettings,
   isLoggedIn,
   mergeIntoAssignmentList,
   miniSakaiReady,
@@ -23,7 +15,7 @@ import {
   updateIsReadFlag,
   useCache,
 } from "./utils";
-import { DefaultSettings, Settings } from "./settings";
+import { Settings } from "./settings";
 
 export const baseURL = getBaseURL();
 export const VERSION = "1.0.0";

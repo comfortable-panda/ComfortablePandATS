@@ -1,14 +1,7 @@
-import { Assignment, CourseSiteInfo } from './model';
-import { loadFromLocalStorage } from './storage'
-import {
-  convertArrayToAssignment,
-  mergeIntoAssignmentList,
-  sortAssignmentList
-} from "./utils";
-import {
-  courseIDList
-} from "./content_script"
-import { createMiniPandAGeneralized } from "./minipanda"
+import { Assignment, CourseSiteInfo } from "./model";
+import { loadFromLocalStorage } from "./storage";
+import { convertArrayToAssignment, mergeIntoAssignmentList, sortAssignmentList } from "./utils";
+import { createMiniPandAGeneralized } from "./minipanda";
 
 const subpandaRoot = document.querySelector("#subpanda");
 

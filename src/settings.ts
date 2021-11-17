@@ -2,6 +2,7 @@ export class Settings {
   assignmentCacheInterval?: number;
   quizCacheInterval?: number;
   displayCheckedKadai?: boolean;
+  displayLateSubmitAssignment?: boolean;
   topColorDanger?: string;
   topColorWarning?: string;
   topColorSuccess?: string;
@@ -20,6 +21,9 @@ export class Settings {
   }
   get getDisplayCheckedKadai(): boolean {
     return this.displayCheckedKadai !== undefined ? this.displayCheckedKadai : DefaultSettings.displayCheckedKadai;
+  }
+  get getDisplayLateSubmitAssignment(): boolean {
+    return this.displayLateSubmitAssignment !== undefined ? this.displayLateSubmitAssignment : DefaultSettings.displayLateSubmitAssignment;
   }
   get getTopColorDanger(): string {
     return this.topColorDanger ? this.topColorDanger : DefaultSettings.topColorDanger;
@@ -45,6 +49,7 @@ export class DefaultSettings extends Settings {
   static assignmentCacheInterval = 120;
   static quizCacheInterval = 600;
   static displayCheckedKadai = true;
+  static displayLateSubmitAssignment = false;
   static topColorDanger = "#f78989";
   static topColorWarning = "#fdd783";
   static topColorSuccess = "#8bd48d";

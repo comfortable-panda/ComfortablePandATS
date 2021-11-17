@@ -18,9 +18,7 @@ function getCourseIDList(): Array<CourseSiteInfo> {
   const result = [];
   for (const elem of elements) {
     const lectureInfo = new CourseSiteInfo("", ""); // tabTypeはPandAのトップバーに存在するかしないか
-    const lecture = elem
-      .getElementsByTagName("div")[0]
-      .getElementsByTagName("a")[0];
+    const lecture = elem.getElementsByTagName("div")[0].getElementsByTagName("a")[0];
     const m = lecture.href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)");
     if (m && m[2][0] !== "~") {
       lectureInfo.courseID = m[2];
@@ -72,13 +70,14 @@ function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Assignm
 function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
   const assignment_collection = data.assignment_collection;
   return assignment_collection
-    .filter((json: any) => json.dueTime.epochSecond * 1000 >= nowTime)
+    .filter((json: any) => json.closeTime.epochSecond * 1000 >= nowTime)
     .map((json: any) => {
       const assignmentID = json.id;
       const assignmentTitle = json.title;
       const assignmentDetail = json.instructions;
       const dueDateTimestamp = json.dueTime.epochSecond ? json.dueTime.epochSecond : null;
-      const entry = new AssignmentEntry(assignmentID, assignmentTitle, dueDateTimestamp, false, false, false, assignmentDetail);
+      const closeDateTimestamp = json.closeTime.epochSecond ? json.closeTime.epochSecond : null;
+      const entry = new AssignmentEntry(assignmentID, assignmentTitle, dueDateTimestamp, closeDateTimestamp, false, false, false, assignmentDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
     });
@@ -92,7 +91,7 @@ function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteI
       const quizTitle = json.title;
       const quizDetail = "";
       const quizDueEpoch = json.dueDate ? json.dueDate / 1000 : null;
-      const entry = new AssignmentEntry(quizID, quizTitle, quizDueEpoch, false, false, true, quizDetail);
+      const entry = new AssignmentEntry(quizID, quizTitle, quizDueEpoch, quizDueEpoch, false, false, true, quizDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
     });
