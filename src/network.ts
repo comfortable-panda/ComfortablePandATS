@@ -70,13 +70,13 @@ function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Assignm
 function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
   const assignment_collection = data.assignment_collection;
   return assignment_collection
-    .filter((json: any) => json.dueTime.epochSecond * 1000 >= nowTime)
+    .filter((json: any) => json.closeTime.epochSecond * 1000 >= nowTime)
     .map((json: any) => {
       const assignmentID = json.id;
       const assignmentTitle = json.title;
       const assignmentDetail = json.instructions;
-      const dueDateTimestamp = json.closeTime.epochSecond ? json.closeTime.epochSecond : null;
-      const closeDateTimestamp = json.dueTime.epochSecond ? json.dueTime.epochSecond : null;
+      const dueDateTimestamp = json.dueTime.epochSecond ? json.dueTime.epochSecond : null;
+      const closeDateTimestamp = json.closeTime.epochSecond ? json.closeTime.epochSecond : null;
       const entry = new AssignmentEntry(assignmentID, assignmentTitle, dueDateTimestamp, closeDateTimestamp, false, false, false, assignmentDetail);
       entry.assignmentPage = baseURL + "/portal/site/" + siteID;
       return entry;
