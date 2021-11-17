@@ -93,6 +93,7 @@ function convertArrayToSettings(arr: any): Settings {
   settings.assignmentCacheInterval = arr.assignmentCacheInterval;
   settings.quizCacheInterval = arr.quizCacheInterval;
   settings.displayCheckedKadai = arr.displayCheckedKadai;
+  settings.displayLateSubmitAssignment = arr.displayLateSubmitAssignment;
   settings.topColorDanger = arr.topColorDanger;
   settings.topColorWarning = arr.topColorWarning;
   settings.topColorSuccess = arr.topColorSuccess;

@@ -176,6 +176,7 @@ function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Arr
 
 async function createSettingsTab(root: Element): Promise<void> {
   createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.getDisplayCheckedKadai, "displayCheckedKadai");
+  createSettingItem(root, chrome.i18n.getMessage('settings_display_late_submit_assignment'), CPsettings.getDisplayLateSubmitAssignment, "displayLateSubmitAssignment");
   createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
   createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.getQuizCacheInterval, "quizCacheInterval");
 
