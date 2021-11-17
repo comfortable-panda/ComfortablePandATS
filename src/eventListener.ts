@@ -105,6 +105,7 @@ async function toggleFinishedFlag(event: any): Promise<void> {
             assignmentEntry.assignmentID,
             assignmentEntry.assignmentTitle,
             assignmentEntry.dueDateTimestamp,
+            assignmentEntry.closeDateTimestamp,
             assignmentEntry.isMemo,
             !isFinished,
             isQuiz,
@@ -185,7 +186,7 @@ async function addMemo(): Promise<void> {
   const memoDueDateTimestamp = new Date(document.querySelector(".todoDue").value).getTime() / 1000;
 
   let memoList = await loadFromLocalStorage("TSkadaiMemoList");
-  const memoEntry = new AssignmentEntry(genUniqueStr(), memoTitle, memoDueDateTimestamp, true, false, false, "");
+  const memoEntry = new AssignmentEntry(genUniqueStr(), memoTitle, memoDueDateTimestamp, memoDueDateTimestamp, true, false, false, "");
   const memo = new Assignment(new CourseSiteInfo(courseID, courseID), [memoEntry], true);
 
   if (typeof memoList !== "undefined" && memoList.length > 0) {

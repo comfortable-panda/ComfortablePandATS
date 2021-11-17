@@ -1,4 +1,5 @@
 import { nowTime } from "./utils";
+import { CPsettings } from "./content_script";
 
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
 
@@ -7,6 +8,7 @@ export class AssignmentEntry {
   assignmentTitle: string;
   assignmentDetail?: string;
   dueDateTimestamp: number | null;
+  closeDateTimestamp: number | null;
   isMemo: boolean;
   isFinished: boolean;
   assignmentPage?: string;
@@ -16,6 +18,7 @@ export class AssignmentEntry {
     assignmentID: string,
     assignmentTitle: string,
     dueDateTimestamp: number | null,
+    closeDateTimestamp: number | null,
     isMemo: boolean,
     isFinished: boolean,
     isQuiz: boolean,
@@ -25,6 +28,7 @@ export class AssignmentEntry {
     this.assignmentTitle = assignmentTitle;
     this.assignmentDetail = assignmentDetail;
     this.dueDateTimestamp = dueDateTimestamp;
+    this.closeDateTimestamp = closeDateTimestamp;
     this.isMemo = isMemo;
     this.isFinished = isFinished;
     this.isQuiz = isQuiz;
@@ -33,6 +37,9 @@ export class AssignmentEntry {
   get getDueDateTimestamp(): number {
     return this.dueDateTimestamp ? this.dueDateTimestamp : 9999999999;
   }
+  get getCloseDateTimestamp(): number {
+    return this.closeDateTimestamp ? this.closeDateTimestamp : 9999999999;
+  }
 }
 
 export class Assignment {
@@ -40,11 +47,7 @@ export class Assignment {
   assignmentEntries: Array<AssignmentEntry>;
   isRead: boolean;
 
-  constructor(
-    courseSiteInfo: CourseSiteInfo,
-    assignmentEntries: Array<AssignmentEntry>,
-    isRead: boolean
-  ) {
+  constructor(courseSiteInfo: CourseSiteInfo, assignmentEntries: Array<AssignmentEntry>, isRead: boolean) {
     this.courseSiteInfo = courseSiteInfo;
     this.assignmentEntries = assignmentEntries;
     this.isRead = isRead;
@@ -91,10 +94,7 @@ export class Assignment {
 export class CourseSiteInfo {
   courseID: string;
   courseName: string | undefined;
-  constructor(
-    courseID: string,
-    courseName: string | undefined
-  ) {
+  constructor(courseID: string, courseName: string | undefined) {
     this.courseID = courseID;
     this.courseName = courseName;
   }
@@ -107,11 +107,12 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
     assignmentID: string,
     assignmentTitle: string,
     dueDateTimestamp: number | null,
+    closeDateTimestamp: number | null,
     isFinished: boolean,
     isQuiz: boolean,
     isMemo: boolean
   ) {
-    super(assignmentID, assignmentTitle, dueDateTimestamp, isMemo, isFinished, isQuiz);
+    super(assignmentID, assignmentTitle, dueDateTimestamp, closeDateTimestamp, isMemo, isFinished, isQuiz);
     this.courseID = courseID;
   }
 
@@ -123,14 +124,18 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
   }
 
   get remainTimeString(): string {
-    if (!this.dueDateTimestamp) return chrome.i18n.getMessage("due_not_set");
-    const timeRemain = this.getTimeRemain((this.dueDateTimestamp * 1000 - nowTime) / 1000);
+    let timestamp = this.dueDateTimestamp;
+    if (CPsettings.getDisplayLateSubmitAssignment) timestamp = this.closeDateTimestamp;
+    if (!timestamp) return chrome.i18n.getMessage("due_not_set");
+    const timeRemain = this.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
     return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
   }
 
   get dueDateString(): string {
-    if (!this.dueDateTimestamp) return "----/--/--";
-    const date = new Date(this.dueDateTimestamp * 1000);
+    let timestamp = this.dueDateTimestamp;
+    if (CPsettings.getDisplayLateSubmitAssignment) timestamp = this.closeDateTimestamp;
+    if (!timestamp) return "----/--/--";
+    const date = new Date(timestamp * 1000);
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
   }
 }
@@ -139,11 +144,7 @@ export class DisplayAssignment {
   assignmentEntries: Array<DisplayAssignmentEntry>;
   courseName: string | undefined;
   coursePage: string;
-  constructor(
-    assignmentEntries: Array<DisplayAssignmentEntry>,
-    courseName: string | undefined,
-    coursePage: string
-  ) {
+  constructor(assignmentEntries: Array<DisplayAssignmentEntry>, courseName: string | undefined, coursePage: string) {
     this.assignmentEntries = assignmentEntries;
     this.courseName = courseName;
     this.coursePage = coursePage;

@@ -47,6 +47,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
         assignmentEntry.assignmentID,
         assignmentEntry.assignmentTitle,
         assignmentEntry.dueDateTimestamp,
+        assignmentEntry.closeDateTimestamp,
         assignmentEntry.isFinished,
         assignmentEntry.isQuiz,
         assignmentEntry.isMemo

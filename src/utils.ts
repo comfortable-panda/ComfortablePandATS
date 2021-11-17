@@ -1,6 +1,6 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
 import { saveToLocalStorage } from "./storage";
-import {Settings} from "./settings";
+import { Settings } from "./settings";
 
 export const nowTime = new Date().getTime();
 
@@ -158,6 +158,7 @@ function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, ne
             newAssignmentEntry.assignmentID,
             newAssignmentEntry.assignmentTitle,
             newAssignmentEntry.dueDateTimestamp,
+            newAssignmentEntry.closeDateTimestamp,
             newAssignmentEntry.isMemo,
             oldAssignment.assignmentEntries[q].isFinished,
             newAssignmentEntry.isQuiz,
