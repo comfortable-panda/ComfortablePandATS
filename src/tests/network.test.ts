@@ -1,7 +1,9 @@
+/**
+ * @jest-environment jsdom
+ */
 import { getAssignmentByCourseID } from "../network";
 import fs from "fs";
-import {Assignment, AssignmentEntry, CourseSiteInfo} from "../model";
-
+import { Assignment, AssignmentEntry, CourseSiteInfo } from "../model";
 
 describe("testapi()", (): void => {
   beforeEach(() => {
