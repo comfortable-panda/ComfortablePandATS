@@ -15,7 +15,7 @@ import {
   updateIsReadFlag,
   useCache,
 } from "./utils";
-import { Settings } from "./settings";
+import { Settings, loadSettings } from "./settings";
 
 export const baseURL = getBaseURL();
 export const VERSION = "1.0.0";
@@ -94,9 +94,8 @@ export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSi
   return mergedAssignmentList;
 }
 
-async function loadSettings() {
-  const settings = await loadFromLocalStorage("TSSettings");
-  CPsettings = convertArrayToSettings(settings);
+async function loadConfigs() {
+  CPsettings = await loadSettings();
   assignmentCacheInterval = CPsettings.getAssignmentCacheInterval;
   quizCacheInterval = CPsettings.getQuizCacheInterval;
   CPsettings.displayCheckedKadai = CPsettings.getDisplayCheckedKadai;
@@ -112,7 +111,7 @@ async function loadCourseIDList() {
 async function main() {
   if (isLoggedIn()) {
     createMiniSakaiBtn();
-    await loadSettings();
+    await loadConfigs();
     await loadCourseIDList();
     mergedAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache(assignmentFetchedTime, assignmentCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
     await addBookmarkedCourseSites(baseURL);

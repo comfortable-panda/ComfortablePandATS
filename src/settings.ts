@@ -1,3 +1,6 @@
+import { loadFromLocalStorage } from "./storage";
+import { convertArrayToSettings } from "./utils";
+
 export class Settings {
   assignmentCacheInterval?: number;
   quizCacheInterval?: number;
@@ -57,3 +60,14 @@ export class DefaultSettings extends Settings {
   static miniColorWarning = "#d7aa57";
   static miniColorSuccess = "#62b665";
 }
+
+export async function loadSettings(): Promise<Settings>{
+  const settingsArr = await loadFromLocalStorage("TSSettings");
+  const CPsettings = convertArrayToSettings(settingsArr);
+  CPsettings.displayCheckedKadai = CPsettings.getDisplayCheckedKadai;
+  return CPsettings;
+}
+
+// export function load2(): Settings{
+//   return Promise.resolve(loadSettings());
+// }
