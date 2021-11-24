@@ -84,7 +84,6 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
           appendElement(courseName, otherElements);
           break;
         case "duePassed":
-          console.log("passed", displayAssignmentEntry);
           if (CPsettings.getDisplayLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
             appendElement(courseName, lateSubmitElements);
           }

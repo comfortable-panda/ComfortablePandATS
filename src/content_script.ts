@@ -6,7 +6,6 @@ import { addBookmarkedCourseSites } from "./bookmark";
 import {
   compareAndMergeAssignmentList,
   convertArrayToAssignment,
-  convertArrayToSettings,
   isLoggedIn,
   mergeIntoAssignmentList,
   miniSakaiReady,
