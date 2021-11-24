@@ -1,7 +1,7 @@
 {
-  "name": "comfortable-sakai",
-  "version": "1.1.0",
-  "description": "Comfortable Sakai is a browser extension for managing assignments and quizzes on Sakai LMS.",
+  "name": "comfortable-panda",
+  "version": "4.0.0",
+  "description": "Comfortable PandA is a browser extension for managing assignments and quizzes on PandA.",
   "main": "index.ts",
   "scripts": {
     "test": "jest",
