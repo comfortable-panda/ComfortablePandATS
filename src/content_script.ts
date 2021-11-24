@@ -17,7 +17,7 @@ import {
 import { Settings, loadSettings } from "./settings";
 
 export const baseURL = getBaseURL();
-export const VERSION = "1.0.0";
+export const VERSION = chrome.runtime.getManifest().version;
 export let assignmentCacheInterval: number;
 export let quizCacheInterval: number;
 export let assignmentFetchedTime: number | undefined;
