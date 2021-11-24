@@ -169,8 +169,8 @@
                     {{#assignmentEntries}}
                         <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                         <label for="{{assignmentID}}"></label>
-                        <p class="kadai-date">{{dueDateString}}</p>
-                        <span class="time-remain">{{remainTimeString}}</span>
+                        <p class="kadai-date">{{dueCloseDateString}}</p>
+                        <span class="time-remain">{{remainCloseTimeString}}</span>
                         <p class="kadai-title">
                             {{#isMemo}}
                                 <span class="add-badge add-badge-success">{{badge.memo}}</span>
