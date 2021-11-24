@@ -1,5 +1,4 @@
 import { nowTime } from "./utils";
-import { CPsettings } from "./content_script";
 
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
 
@@ -125,18 +124,28 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
   }
 
   get remainTimeString(): string {
-    let timestamp = this.dueDateTimestamp;
-    // @ts-ignore
-    if (CPsettings.getDisplayLateSubmitAssignment && this.dueDateTimestamp * 1000 < nowTime) timestamp = this.closeDateTimestamp;
+    const timestamp = this.dueDateTimestamp;
+    if (!timestamp) return chrome.i18n.getMessage("due_not_set");
+    const timeRemain = this.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
+    return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
+  }
+
+  get remainCloseTimeString(): string {
+    const timestamp = this.closeDateTimestamp;
     if (!timestamp) return chrome.i18n.getMessage("due_not_set");
     const timeRemain = this.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
     return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
   }
 
   get dueDateString(): string {
-    let timestamp = this.dueDateTimestamp;
-    // @ts-ignore
-    if (CPsettings.getDisplayLateSubmitAssignment && this.dueDateTimestamp * 1000 < nowTime) timestamp = this.closeDateTimestamp;
+    const timestamp = this.dueDateTimestamp;
+    if (!timestamp) return "----/--/--";
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
+  }
+
+  get dueCloseDateString(): string {
+    const timestamp = this.closeDateTimestamp;
     if (!timestamp) return "----/--/--";
     const date = new Date(timestamp * 1000);
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);

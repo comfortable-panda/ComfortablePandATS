@@ -84,7 +84,6 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
           appendElement(courseName, otherElements);
           break;
         case "duePassed":
-          console.log("passed", displayAssignmentEntry);
           if (CPsettings.getDisplayLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
             appendElement(courseName, lateSubmitElements);
           }
@@ -95,9 +94,14 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     courseSiteList.push(new CourseSiteInfo(assignment.courseSiteInfo.courseID, courseName));
   });
 
-  const sortElements = (elements: Array<DisplayAssignment>) => {
+  const sortElements = (elements: Array<DisplayAssignment>, isLateSubmission = false) => {
     elements.sort((a, b) => {
-      const timestamp = (o: DisplayAssignment) => Math.min(...o.assignmentEntries.map((p) => p.getDueDateTimestamp));
+      let timestamp;
+      if (isLateSubmission) {
+        timestamp = (o: DisplayAssignment) => Math.min(...o.assignmentEntries.map((p) => p.getCloseDateTimestamp));
+      } else {
+        timestamp = (o: DisplayAssignment) => Math.min(...o.assignmentEntries.map((p) => p.getDueDateTimestamp));
+      }
       return timestamp(a) - timestamp(b);
     });
     return elements;
@@ -130,7 +134,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       warning: sortElements(warningElements),
       success: sortElements(successElements),
       other: sortElements(otherElements),
-      lateSubmit: sortElements(lateSubmitElements),
+      lateSubmit: sortElements(lateSubmitElements, true),
     },
     display: {
       danger: dangerElements.length > 0,
