@@ -26,21 +26,23 @@ function getCurrentShownSiteHrefs(): Array<string> {
   if (topnav == null) return new Array<string>();
   const sites = topnav.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const hrefs: Array<string> = [];
-  sites.forEach(site => hrefs.push((site.childNodes[1] as HTMLAnchorElement).href)) // TODO: gabagaba
-  if (hrefs.length < 2) return hrefs;
-  return hrefs.slice(1); // omit "Home"
+  for (const site of Array.from(sites)) {
+    const href = (site.getElementsByClassName("link-container")[0] as HTMLAnchorElement).href;
+    hrefs.push(href);
+  }
+  return hrefs;
 }
 
 // お気に入り上限を超えた講義を topbar に追加する
 // ネットワーク通信を行うので注意
-function addMissingBookmarkedLectures(): Promise<void> {
+function addBookmarkedCourseSites(baseURL: string): Promise<void> {
   const topnav = document.querySelector("#topnav");
   if (topnav == null) return new Promise((resolve, reject) => resolve());
   const request = new XMLHttpRequest();
-  request.open("GET", "https://panda.ecs.kyoto-u.ac.jp/portal/favorites/list");
+  request.open("GET", baseURL + "/portal/favorites/list");
   request.responseType = "json";
-  // @ts-ignore
-  document.querySelector(".organizeFavorites").addEventListener("click", editFavTabMessage);
+
+  document.querySelector(".organizeFavorites")?.addEventListener("click", editFavTabMessage);
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
       const res = request.response;
@@ -61,7 +63,7 @@ function addMissingBookmarkedLectures(): Promise<void> {
         const title = siteInfo.title;
 
         // skip if the site is already shown
-        if (currentlyShownSites.find(c => c == href) != null) continue;
+        if (currentlyShownSites.find((c) => c == href) != null) continue;
 
         const li = document.createElement("li");
         li.classList.add("Mrphs-sitesNav__menuitem");
@@ -81,4 +83,4 @@ function addMissingBookmarkedLectures(): Promise<void> {
   });
 }
 
-export { addMissingBookmarkedLectures };
+export { addBookmarkedCourseSites };

@@ -34,7 +34,7 @@
 }
 
 .sidenav {
-    height: 90vh;
+    height: 95vh;
     width: 0;
     position: absolute;
     z-index: 1;
@@ -100,6 +100,15 @@
     padding: 0.1em 0.5em;
     border-left: solid 6px #777777;
     border-bottom: solid 2px #777777;
+    background: #dad6d6;
+    border-radius: 5px;
+}
+
+.sidenav-late {
+    position: relative;
+    padding: 0.1em 0.5em;
+    border-left: solid 6px #212121;
+    border-bottom: solid 2px #212121;
     background: #dad6d6;
     border-radius: 5px;
 }
@@ -208,6 +217,28 @@
     border-radius: 20px 20px 20px 20px;
 }
 
+.sidenav-list .lecture-late {
+    font-size: 12px;
+    font-weight: 400 !important;
+    color: #f7f7f7;
+    width: max-content;
+    padding: 3px 10px;
+    margin: -12px 0 0 -5px;
+    background: #212121;
+    border-radius: 20px 20px 20px 20px;
+}
+
+.sidenav-list .lecture-late:hover {
+    font-size: 12px;
+    font-weight: 400 !important;
+    color: #f7f7f7;
+    width: max-content;
+    padding: 3px 10px;
+    margin: -12px 0 0 -5px;
+    background: #212121;
+    border-radius: 20px 20px 20px 20px;
+}
+
 .sidenav-list p {
     list-style-type: initial;
     font-size: 14px;
@@ -254,6 +285,15 @@
     margin-bottom: 20px;
 }
 
+.kadai-late {
+    border-top: solid 2px #212121;
+    border-left: solid 2px #212121;
+    border-bottom: solid 2px #212121;
+    border-right: solid 2px #212121;
+    border-radius: 10px 10px 10px 10px;
+    margin-bottom: 20px;
+}
+
 .kadai-date {
     font-size: 12px !important;
     font-weight: bold;
@@ -267,10 +307,15 @@
     word-break: break-word;
 }
 
-#hamburger {
+.hamburgerDiv {
     font-size: 25px;
     cursor: pointer;
     padding-left: 15px;
+}
+
+.hamburgerIcon {
+    width: 23px;
+    padding-bottom: 5px;
 }
 
 .logo {
@@ -379,7 +424,7 @@
 .cp_tab > label {
     position: relative;
     display: inline-block;
-    padding: 10px;
+    padding: 10px 15px;
     cursor: pointer;
     border-bottom: 0;
     border-radius: 6px 6px 0 0;
@@ -389,6 +434,8 @@
 .cp_tab > input:checked + label {
     margin-bottom: -1px;
     border-color: #a5a5a5;
+    padding-left: 15px;
+    padding-right: 15px;
     border-bottom: 1px solid #b0b0b0;
     border-radius: 6px 6px 0 0;
     background-color: #6483d3;
@@ -456,6 +503,12 @@
     background-color: #ef2410;
 }
 
+.add-badge-late {
+    margin-right: 0;
+    color: #fff;
+    background-color: #ff6a00;
+}
+
 .del-button {
     color: #c61212;
     position: relative;
@@ -470,12 +523,12 @@
     cursor: pointer;
 }
 
-.plus-button {
-    margin-left: 45px;
+#plus-button {
+    margin-left: 15px;
     margin-bottom: 2px;
     border: none;
     display: inline-block;
-    padding: 2px 8px;
+    padding: 6px 8px;
     vertical-align: middle;
     overflow: hidden;
     text-decoration: none;
@@ -483,7 +536,6 @@
     background-color: #009688 !important;
     text-align: center;
     cursor: pointer;
-    white-space: nowrap;
     font-size: 24px !important;
     border-radius: 50%;
 }
@@ -496,6 +548,10 @@
     border: inset;
     font-weight: bold;
     color: #464646;
+}
+
+.kadai-time-text {
+    margin-bottom: 0;
 }
 
 .quiz-time {
@@ -530,9 +586,6 @@
 }
 
 .loader {
-    /*right: 5px;*/
-    /*bottom: -62px;*/
-    /*margin: 60px auto;*/
     font-size: 11px;
     margin-left: 15px;
     text-indent: -9999em;
@@ -597,19 +650,27 @@
 }
 
 .cp-settings-text {
-    display:inline;
+    display: list-item;
+    flex-direction: column;
 }
 
 .cp-settings-inputbox {
-    margin-left: 10px;
     width: 65px;
+}
+
+.miniSakai-memoBoxItem {
+    padding-top: 5px;
+    display: block;
+    flex-direction: column;
+    font-weight: bold;
+    color: rgb(70, 70, 70);
 }
 
 .switch {
     position: relative;
-    display: -webkit-inline-box;
+    display: inline-flex;
     width: 60px;
-    height: 34px;
+    height: 20px;
 }
 
 .switch input {
@@ -621,6 +682,7 @@
 .slider {
     cursor: pointer;
     text-indent: -9999px;
+    margin-left: -15px;
     width: 40px;
     height: 20px;
     background: grey;

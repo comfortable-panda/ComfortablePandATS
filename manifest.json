@@ -1,20 +1,16 @@
 {
-  "name": "Comfortable PandA",
-  "description": "Makes our PandA life more comfortable!",
-  "version": "3.5.2",
+  "name": "Comfortable Sakai",
+  "description": "__MSG_EXTENSION_DESCRIPTION__",
+  "version": "1.1.0",
   "manifest_version": 2,
+  "default_locale": "en",
   "icons": {
     "16": "img/icon16.png",
     "48": "img/icon48.png",
     "128": "img/icon128.png"
   },
   "browser_action": {
-    "default_icon": {
-      "16": "img/icon16.png",
-      "24": "img/icon24.png",
-      "32": "img/icon32.png"
-    },
-    "default_title": "Comfortable PandA",
+    "default_title": "Comfortable Sakai",
     "default_popup": "popup.html"
   },
   "content_scripts": [
@@ -25,7 +21,7 @@
       "css": [
         "css/custom-panda.css"
       ],
-      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*"]
+      "matches": ["http://*/*", "https://*/*"]
     }
   ],
   "background": {
@@ -40,6 +36,8 @@
   "web_accessible_resources": [
     "css/custom-panda.css",
     "img/logo.png",
-    "img/relaxPanda.png"
+    "img/relaxPanda.png",
+    "img/miniSakaiBtn.png",
+    "views/minisakai.mustache"
   ]
 }
