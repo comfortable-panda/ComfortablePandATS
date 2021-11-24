@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "build": "webpack"
   },
-  "author": "Kazuki Takeda, Shoji Kajita(Kyoto University)",
+  "author": "das08, tinaxd, tetete, arakistic",
   "license": "Apache-2.0",
   "dependencies": {
     "@types/chrome": "^0.0.144",

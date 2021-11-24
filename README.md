@@ -89,11 +89,22 @@ PandAへの負荷を軽減するために課題・クイズ取得にキャッシ
 - 2021/05/16 v3.4.3 小さなバグを修正。
 - 2021/05/17 v3.5.0 カラーユニバーサルデザインに対応
 - 2021/05/17 v3.5.2 締切が14日以上の課題も色付けするように
+- 2021/11/24 v4.0.0 [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai) を移植。
+
 
 # コンパイル方法
-Run
+- 初回実行時
+```
+npm install
+```
+- Run
 ```
 npx webpack
+```
+
+# テスト実行方法
+```
+npm test
 ```
 
 # License

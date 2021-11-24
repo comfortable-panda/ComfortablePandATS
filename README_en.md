@@ -92,13 +92,25 @@ The cache time can be changed in the configuration.
 - 2021/05/16 v3.4.1 Fixed minor bugs.
 - 2021/05/17 v3.5.0 Support for color universal design.
 - 2021/05/17 v3.5.2 Color code assignments with due date more than 14days
+- 2021/11/24 v4.0.0 Merged [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai).
 
 # How to compile from source code
-Run
+- Run
+```
+npm install
+```  
+for the first time.  
+
+- Then Run
 ```
 npx webpack
 ```
 in the root directory of cloned repository.
+
+# How to run tests
+```
+npm test
+```
 
 # License
 Apache-2.0 License
