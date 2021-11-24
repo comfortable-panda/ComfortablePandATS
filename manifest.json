@@ -1,7 +1,7 @@
 {
-  "name": "Comfortable Sakai",
+  "name": "Comfortable PandA",
   "description": "__MSG_EXTENSION_DESCRIPTION__",
-  "version": "1.1.0",
+  "version": "4.0.0",
   "manifest_version": 2,
   "default_locale": "en",
   "icons": {
@@ -10,7 +10,7 @@
     "128": "img/icon128.png"
   },
   "browser_action": {
-    "default_title": "Comfortable Sakai",
+    "default_title": "Comfortable PandA",
     "default_popup": "popup.html"
   },
   "content_scripts": [
@@ -21,7 +21,7 @@
       "css": [
         "css/custom-panda.css"
       ],
-      "matches": ["http://*/*", "https://*/*"]
+      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*"]
     }
   ],
   "background": {
