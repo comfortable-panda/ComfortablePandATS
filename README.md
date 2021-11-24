@@ -1,5 +1,6 @@
 # Comfortable Sakai
-A Web browser Extension for improving UX of Sakai LMS.
+A Web browser Extension for improving UX of Sakai LMS.  
+Originated from [Comfortable PandA](https://github.com/comfortable-panda/ComfortablePandATS) for Kyoto Univ.
 
 # Supported Sakai LMS versions
 - Sakai 20, 21(Stable)
