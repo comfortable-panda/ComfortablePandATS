@@ -1,0 +1,201 @@
+<img class="logo" alt="logo" src="{{minipandaLogo}}">
+<p class="cp-version">Version {{VERSION}}</p>
+{{^subset}}
+<a id="close_btn" class="closebtn q" href="#">x</a>
+<input id="kadaiTab" type="radio" name="cp_tab">
+<label for="kadaiTab"> {{titles.assignmentTab}} </label>
+<input id="settingsTab" type="radio" name="cp_tab">
+<label for="settingsTab"> {{titles.settingsTab}} </label>
+<button id="plus-button">+</button>
+{{/subset}}
+<div class="kadai-time">
+    <p class="kadai-time-text">{{titles.assignmentFetchedTime}}</p>
+    <p class="kadai-time-text">{{fetchedTime.assignment}}</p>
+</div>
+<div class="quiz-time">
+    <p class="kadai-time-text">{{titles.quizFetchedTime}}</p>
+    <p class="kadai-time-text">{{fetchedTime.assignment}}</p>
+</div>
+
+<div class="kadai-tab">
+    {{^subset}}
+    <div class="settingsBox addMemoBox" style="display: none;">
+        <div class="miniSakai-memoBoxItem">
+            <p>{{todoBox.courseName}}</p>
+            <label><select class="todoLecName">
+                {{#todoBox.courseSiteList}}
+                    <option id="{{courseID}}">{{courseName}}</option>
+                {{/todoBox.courseSiteList}}
+            </select></label>
+        </div>
+        <div class="miniSakai-memoBoxItem">
+            <p>{{todoBox.memoLabel}}</p>
+            <label><input type="text" class="todoContent"></label>
+        </div>
+        <div class="miniSakai-memoBoxItem">
+            <p>{{todoBox.dueDate}}</p>
+            <label><input type="datetime-local" class="todoDue"></label>
+        </div>
+        <div class="miniSakai-memoBoxItem">
+            <button type="submit" id="todo-add">{{todoBox.addBtnLabel}}</button>
+        </div>
+    </div>
+    {{/subset}}
+
+    {{#display.danger}}
+    <div class="sidenav-danger">
+        <span class="q">{{titles.due24h}}</span>
+    </div>
+    <div class="sidenav-list sidenav-list-danger">
+        {{#elements.danger}}
+            <div id="b{{courseID}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                <a class="lecture-danger lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                {{#assignmentEntries}}
+                    <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                    <label for="{{assignmentID}}"></label>
+                    <p class="kadai-date">{{dueDateString}}</p>
+                    <span class="time-remain">{{remainTimeString}}</span>
+                    <p class="kadai-title">
+                        {{#isMemo}}
+                            <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                            <span class="del-button" id="{{assignmentID}}">×</span>
+                        {{/isMemo}}
+                        {{#isQuiz}}
+                            <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                        {{/isQuiz}}
+                        {{assignmentTitle}}
+                    </p>
+                {{/assignmentEntries}}
+            </div>
+        {{/elements.danger}}
+    </div>
+    {{/display.danger}}
+
+    {{#display.warning}}
+    <div class="sidenav-warning">
+        <span class="q">{{titles.due5d}}</span>
+    </div>
+    <div class="sidenav-list sidenav-list-warning">
+        {{#elements.warning}}
+            <div id="b{{courseID}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                <a class="lecture-warning lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                {{#assignmentEntries}}
+                    <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                    <label for="{{assignmentID}}"></label>
+                    <p class="kadai-date">{{dueDateString}}</p>
+                    <span class="time-remain">{{remainTimeString}}</span>
+                    <p class="kadai-title">
+                        {{#isMemo}}
+                            <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                            <span class="del-button" id="{{assignmentID}}">×</span>
+                        {{/isMemo}}
+                        {{#isQuiz}}
+                            <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                        {{/isQuiz}}
+                        {{assignmentTitle}}
+                    </p>
+                {{/assignmentEntries}}
+            </div>
+        {{/elements.warning}}
+    </div>
+    {{/display.warning}}
+
+    {{#display.success}}
+    <div class="sidenav-success">
+        <span class="q">{{titles.due14d}}</span>
+    </div>
+    <div class="sidenav-list sidenav-list-success">
+        {{#elements.success}}
+            <div id="b{{courseID}}" class="kadai-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            <a class="lecture-success lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                {{#assignmentEntries}}
+                <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                <label for="{{assignmentID}}"></label>
+                <p class="kadai-date">{{dueDateString}}</p>
+                <span class="time-remain">{{remainTimeString}}</span>
+                <p class="kadai-title">
+                    {{#isMemo}}
+                        <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                        <span class="del-button" id="{{assignmentID}}">×</span>
+                    {{/isMemo}}
+                    {{#isQuiz}}
+                        <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                    {{/isQuiz}}
+                    {{assignmentTitle}}
+                </p>
+                {{/assignmentEntries}}
+            </div>
+        {{/elements.success}}
+    </div>
+    {{/display.success}}
+
+    {{#display.other}}
+    <div class="sidenav-other">
+        <span class="q">{{titles.dueOver14d}}</span>
+    </div>
+    <div class="sidenav-list sidenav-list-other">
+        {{#elements.other}}
+            <div id="b{{courseID}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                <a class="lecture-other lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                {{#assignmentEntries}}
+                    <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                    <label for="{{assignmentID}}"></label>
+                    <p class="kadai-date">{{dueDateString}}</p>
+                    <span class="time-remain">{{remainTimeString}}</span>
+                    <p class="kadai-title">
+                        {{#isMemo}}
+                            <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                            <span class="del-button" id="{{assignmentID}}">×</span>
+                        {{/isMemo}}
+                        {{#isQuiz}}
+                            <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                        {{/isQuiz}}
+                        {{assignmentTitle}}
+                    </p>
+                {{/assignmentEntries}}
+            </div>
+        {{/elements.other}}
+    </div>
+    {{/display.other}}
+
+    {{#display.lateSubmit}}
+        <div class="sidenav-late">
+            <span class="q">{{titles.duePassed}}</span>
+        </div>
+        <div class="sidenav-list sidenav-list-late">
+            {{#elements.lateSubmit}}
+                <div id="b{{courseID}}" class="kadai-late" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                    <a class="lecture-late lecture-name" href="{{coursePage}}">{{courseName}}</a>
+                    {{#assignmentEntries}}
+                        <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                        <label for="{{assignmentID}}"></label>
+                        <p class="kadai-date">{{dueCloseDateString}}</p>
+                        <span class="time-remain">{{remainCloseTimeString}}</span>
+                        <p class="kadai-title">
+                            {{#isMemo}}
+                                <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                                <span class="del-button" id="{{assignmentID}}">×</span>
+                            {{/isMemo}}
+                            {{#isQuiz}}
+                                <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                            {{/isQuiz}}
+                            {{assignmentTitle}}
+                        </p>
+                    {{/assignmentEntries}}
+                </div>
+            {{/elements.lateSubmit}}
+        </div>
+    {{/display.lateSubmit}}
+
+    {{#showRelaxPandA}}
+    <div class="relaxpanda">
+        <p class="relaxpanda-p">{{titles.relaxPandA}}</p>
+        <img alt="logo" class="relaxpanda-img" src="{{img}}">
+    </div>
+    {{/showRelaxPandA}}
+</div>
+
+{{^subset}}
+<div class="settings-tab" style="">
+</div>
+{{/subset}}

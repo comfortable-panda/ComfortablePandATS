@@ -1,5 +1,4 @@
-import { toggleMiniPandA } from "./eventListener";
-
+import { toggleMiniSakai } from "./eventListener";
 
 function addAttributes(elem: any, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?:any)=>void|Promise<void> }): any{
   for (const key in dict) {
@@ -38,30 +37,9 @@ export const miniPandA = createElem("div", { id: "miniPandA" });
 miniPandA.classList.add("sidenav");
 miniPandA.classList.add("cp_tab");
 
-export const subPandA = createElem("div", { id: "subPandA" });
+export const assignmentDiv = createElem("div", { className: "kadai-tab" });
 
-export const kadaiDiv = createElem("div", { className: "kadai-tab" });
-export const settingsDiv = createElem("div", { className: "settings-tab" });
-
-export const hamburger = createElem("div", { className: "loader" }, {"click": toggleMiniPandA});
-
-// eslint-disable-next-line @typescript-eslint/no-namespace
-namespace KadaiEntryDom {
-  export const checkbox = createElem("input", { type: "checkbox", className: "todo-check" });
-  export const label = createElem("label");
-  export const title = createElem("p", { className: "kadai-title" });
-  export const dueDate = createElem("p", { className: "kadai-date" });
-  export const remainTime = createElem("span", { className: "time-remain" });
-}
-
-// eslint-disable-next-line @typescript-eslint/no-namespace
-namespace DueGroupDom {
-  export const header = createElem("div");
-  export const headerTitle = createElem("span", { className: "q" });
-  export const container = createElem("div", { className: "sidenav-list" });
-  export const body = createElem("div");
-  export const lectureName = createElem("a");
-}
+export const hamburger = createElem("div", { className: "loader" }, {"click": toggleMiniSakai});
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace SettingsDom {
@@ -76,4 +54,4 @@ namespace SettingsDom {
   export const span = createElem("span", { className: "slider round" });
 }
 
-export { KadaiEntryDom, DueGroupDom, SettingsDom, addAttributes, createElem, cloneElem, appendChildAll };
+export { SettingsDom, addAttributes, createElem, cloneElem, appendChildAll };

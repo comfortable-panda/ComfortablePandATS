@@ -1,22 +1,24 @@
-import { kadaiDiv, miniPandA } from "./dom";
-import { loadFromStorage, saveToStorage } from "./storage";
-import { Kadai, KadaiEntry } from "./kadai";
-import { convertArrayToKadai, genUniqueStr, mergeIntoKadaiList } from "./utils";
+import { assignmentDiv, miniPandA } from "./dom";
+import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
+import {CourseSiteInfo, Assignment, AssignmentEntry} from "./model";
+import { convertArrayToAssignment, genUniqueStr, mergeIntoAssignmentList } from "./utils";
 import {
   CPsettings,
-  kadaiCacheInterval,
-  lectureIDList,
-  loadAndMergeKadaiList,
-  mergedKadaiListNoMemo,
-  quizCacheInterval,
+  courseIDList,
+  loadAndMergeAssignmentList,
+  mergedAssignmentListNoMemo,
 } from "./content_script";
 import { DefaultSettings, Settings } from "./settings";
-import { createNavBarNotification, deleteNavBarNotification, displayMiniPandA } from "./minipanda";
+import {
+  createNavBarNotification,
+  deleteNavBarNotification,
+  displayMiniPandA,
+} from "./minipanda";
 
 let toggle = false;
 
-function toggleMiniPandA(): void {
-  // miniPandAを表示・非表示にします
+function toggleMiniSakai(): void {
+  // miniSakaiを表示・非表示にします
   if (toggle) {
     miniPandA.style.width = "0px";
     document.getElementById("cover")?.remove();
@@ -25,47 +27,47 @@ function toggleMiniPandA(): void {
     const cover = document.createElement("div");
     cover.id = "cover";
     document.getElementsByTagName("body")[0].appendChild(cover);
-    cover.onclick = toggleMiniPandA;
+    cover.onclick = toggleMiniSakai;
   }
   toggle = !toggle;
 }
 
-function toggleKadaiTab(): void {
+function toggleAssignmentTab(): void {
   // 課題一覧タブの表示・非表示をします
-  const kadaiTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".kadai-tab");
   // @ts-ignore
-  kadaiTab.style.display = "";
+  assignmentTab.style.display = "";
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "none";
-  const addMemoButton = document.querySelector(".plus-button");
+  const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "";
-  const lastKadaiGetTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".kadai-time");
   // @ts-ignore
-  lastKadaiGetTime.style.display = "";
-  const lastQuizGetTime = document.querySelector(".quiz-time");
+  assignmentFetchedTime.style.display = "";
+  const quizFetchedTime = document.querySelector(".quiz-time");
   // @ts-ignore
-  lastQuizGetTime.style.display = "";
+  quizFetchedTime.style.display = "";
 }
 
 function toggleSettingsTab(): void {
   // クイズ・小テスト・試験一覧タブを表示・非表示にします
-  const kadaiTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".kadai-tab");
   // @ts-ignore
-  kadaiTab.style.display = "none";
+  assignmentTab.style.display = "none";
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "";
-  const addMemoButton = document.querySelector(".plus-button");
+  const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "none";
-  const lastKadaiGetTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".kadai-time");
   // @ts-ignore
-  lastKadaiGetTime.style.display = "none";
-  const lastQuizGetTime = document.querySelector(".quiz-time");
+  assignmentFetchedTime.style.display = "none";
+  const quizFetchedTime = document.querySelector(".quiz-time");
   // @ts-ignore
-  lastQuizGetTime.style.display = "none";
+  quizFetchedTime.style.display = "none";
 }
 
 function toggleMemoBox(): void {
@@ -82,47 +84,47 @@ function toggleMemoBox(): void {
   }
 }
 
-async function toggleKadaiFinishedFlag(event: any): Promise<void> {
-  const kadaiID = event.target.id;
-  let kadaiList: Array<Kadai>;
+async function toggleFinishedFlag(event: any): Promise<void> {
+  const assignmentID = event.target.id;
+  let assignmentList: Array<Assignment>;
   // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
-  if (kadaiID[0] === "m") kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
-  else if (kadaiID[0] === "q") kadaiList = convertArrayToKadai(await loadFromStorage("TSQuizList"));
-  else kadaiList = convertArrayToKadai(await loadFromStorage("TSkadaiList"));
+  if (assignmentID[0] === "m") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
+  else if (assignmentID[0] === "q") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSQuizList"));
+  else assignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiList"));
 
-  const updatedKadaiList = [];
-  for (const kadai of kadaiList) {
-    const updatedKadaiEntries = [];
-    for (const kadaiEntry of kadai.kadaiEntries) {
-      if (kadaiEntry.kadaiID === kadaiID) {
-        const isFinished = kadaiEntry.isFinished;
+  const updatedAssignmentList = [];
+  for (const assignment of assignmentList) {
+    const updatedAssignmentEntries = [];
+    for (const assignmentEntry of assignment.assignmentEntries) {
+      if (assignmentEntry.assignmentID === assignmentID) {
+        const isFinished = assignmentEntry.isFinished;
         let isQuiz = false;
-        if (typeof kadaiEntry.isQuiz !== "undefined") isQuiz = kadaiEntry.isQuiz;
-        updatedKadaiEntries.push(
-          new KadaiEntry(
-            kadaiEntry.kadaiID,
-            kadaiEntry.assignmentTitle,
-            kadaiEntry.dueDateTimestamp,
-            kadaiEntry.isMemo,
+        if (typeof assignmentEntry.isQuiz !== "undefined") isQuiz = assignmentEntry.isQuiz;
+        updatedAssignmentEntries.push(
+          new AssignmentEntry(
+            assignmentEntry.assignmentID,
+            assignmentEntry.assignmentTitle,
+            assignmentEntry.dueDateTimestamp,
+            assignmentEntry.closeDateTimestamp,
+            assignmentEntry.isMemo,
             !isFinished,
             isQuiz,
-            kadaiEntry.assignmentDetail
+            assignmentEntry.assignmentDetail
           )
         );
       } else {
-        updatedKadaiEntries.push(kadaiEntry);
+        updatedAssignmentEntries.push(assignmentEntry);
       }
     }
-    updatedKadaiList.push(new Kadai(kadai.lectureID, kadai.lectureName, updatedKadaiEntries, kadai.isRead));
+    updatedAssignmentList.push(new Assignment(assignment.courseSiteInfo, updatedAssignmentEntries, assignment.isRead));
   }
-  if (kadaiID[0] === "m") saveToStorage("TSkadaiMemoList", updatedKadaiList);
-  else if (kadaiID[0] === "q") saveToStorage("TSQuizList", updatedKadaiList);
-  else saveToStorage("TSkadaiList", updatedKadaiList);
+
+  if (assignmentID[0] === "m") await saveToLocalStorage("TSkadaiMemoList", updatedAssignmentList);
+  else if (assignmentID[0] === "q") await saveToLocalStorage("TSQuizList", updatedAssignmentList);
+  else await saveToLocalStorage("TSkadaiList", updatedAssignmentList);
 
   // NavBarを再描画
-  deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
-  createNavBarNotification(lectureIDList, newKadaiList);
+  await reloadNavBar(courseIDList, true);
 }
 
 async function updateSettings(event: any, type: string): Promise<void> {
@@ -141,7 +143,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
   }
 
   const settings = new Settings();
-  const oldSettings = await loadFromStorage("TSSettings");
+  const oldSettings = await loadFromLocalStorage("TSSettings");
   for (const i in DefaultSettings){
     // @ts-ignore
     settings[i] = oldSettings[i] ?? DefaultSettings[i];
@@ -170,94 +172,84 @@ async function updateSettings(event: any, type: string): Promise<void> {
     CPsettings[settingsID] = settingsValue;
   }
 
-  saveToStorage("TSSettings", settings);
+  saveToLocalStorage("TSSettings", settings);
 
   // NavBarを再描画
-  deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
-  createNavBarNotification(lectureIDList, newKadaiList);
+  await reloadNavBar(courseIDList, true);
 }
 
-async function addKadaiMemo(): Promise<void> {
+async function addMemo(): Promise<void> {
+  const selectedIdx = (document.querySelector(".todoLecName") as HTMLSelectElement).selectedIndex;
+  const courseID = (document.querySelector(".todoLecName") as HTMLSelectElement).options[selectedIdx].id;
+  const memoTitle = (document.querySelector(".todoContent") as HTMLInputElement).value;
   // @ts-ignore
-  const selectedIdx = document.querySelector(".todoLecName").selectedIndex;
-  // @ts-ignore
-  const todoLecID = document.querySelector(".todoLecName").options[selectedIdx].id;
-  // @ts-ignore
-  const todoContent = document.querySelector(".todoContent").value;
-  // @ts-ignore
-  const todoDue = document.querySelector(".todoDue").value;
-  const todoTimestamp = new Date(`${todoDue}`).getTime() / 1000;
+  const memoDueDateTimestamp = new Date(document.querySelector(".todoDue").value).getTime() / 1000;
 
-  let kadaiMemoList = await loadFromStorage("TSkadaiMemoList");
-  const kadaiMemoEntry = new KadaiEntry(genUniqueStr(), todoContent, todoTimestamp, true, false, false, "");
-  const kadaiMemo = new Kadai(todoLecID, todoLecID, [kadaiMemoEntry], true);
+  let memoList = await loadFromLocalStorage("TSkadaiMemoList");
+  const memoEntry = new AssignmentEntry(genUniqueStr(), memoTitle, memoDueDateTimestamp, memoDueDateTimestamp, true, false, false, "");
+  const memo = new Assignment(new CourseSiteInfo(courseID, courseID), [memoEntry], true);
 
-  if (typeof kadaiMemoList !== "undefined" && kadaiMemoList.length > 0) {
-    kadaiMemoList = convertArrayToKadai(kadaiMemoList);
-    const idx = kadaiMemoList.findIndex((oldKadaiMemo: Kadai) => {
-      return (oldKadaiMemo.lectureID === todoLecID);
+  if (typeof memoList !== "undefined" && memoList.length > 0) {
+    memoList = convertArrayToAssignment(memoList);
+    const idx = memoList.findIndex((oldMemo: Assignment) => {
+      return (oldMemo.courseSiteInfo.courseID === courseID);
     });
     if (idx !== -1) {
-      kadaiMemoList[idx].kadaiEntries.push(kadaiMemoEntry);
+      memoList[idx].assignmentEntries.push(memoEntry);
     } else {
-      kadaiMemoList.push(kadaiMemo);
+      memoList.push(memo);
     }
   } else {
-    kadaiMemoList = [kadaiMemo];
+    memoList = [memo];
   }
-  saveToStorage("TSkadaiMemoList", kadaiMemoList);
+  saveToLocalStorage("TSkadaiMemoList", memoList);
 
   // miniPandAを再描画
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
   }
-  while (kadaiDiv.firstChild) {
-    kadaiDiv.removeChild(kadaiDiv.firstChild);
+  while (assignmentDiv.firstChild) {
+    assignmentDiv.removeChild(assignmentDiv.firstChild);
   }
   miniPandA.remove();
-  kadaiDiv.remove();
-  const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, kadaiMemoList);
-  const quizList = await loadFromStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+  assignmentDiv.remove();
+  const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, memoList);
+  const quizList = await loadFromLocalStorage("TSQuizList");
+  await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
-  deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
-  createNavBarNotification(lectureIDList, newKadaiList);
+  await reloadNavBar(courseIDList, true);
 }
 
-async function deleteKadaiMemo(event: any): Promise<void> {
-  const kadaiID = event.target.id;
-  const kadaiMemoList = convertArrayToKadai(await loadFromStorage("TSkadaiMemoList"));
-  const deletedKadaiMemoList = [];
-  for (const kadaiMemo of kadaiMemoList) {
-    const kadaiMemoEntries = [];
-    for (const _kadaiMemoEntry of kadaiMemo.kadaiEntries) {
-      if (_kadaiMemoEntry.kadaiID !== kadaiID) kadaiMemoEntries.push(_kadaiMemoEntry);
+async function deleteMemo(event: any): Promise<void> {
+  const memoID = event.target.id;
+  const memoList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
+  const deletedMemoList = [];
+  for (const memo of memoList) {
+    const memoEntries = [];
+    for (const memoEntry of memo.assignmentEntries) {
+      if (memoEntry.assignmentID !== memoID) memoEntries.push(memoEntry);
     }
-    deletedKadaiMemoList.push(new Kadai(kadaiMemo.lectureID, kadaiMemo.lectureName, kadaiMemoEntries, kadaiMemo.isRead));
+    deletedMemoList.push(new Assignment(memo.courseSiteInfo, memoEntries, memo.isRead));
   }
 
   // miniPandAを再描画
   while (miniPandA.firstChild) {
     miniPandA.removeChild(miniPandA.firstChild);
   }
-  while (kadaiDiv.firstChild) {
-    kadaiDiv.removeChild(kadaiDiv.firstChild);
+  while (assignmentDiv.firstChild) {
+    assignmentDiv.removeChild(assignmentDiv.firstChild);
   }
   miniPandA.remove();
-  kadaiDiv.remove();
+  assignmentDiv.remove();
 
-  saveToStorage("TSkadaiMemoList", deletedKadaiMemoList);
-  const kadaiList = mergeIntoKadaiList(mergedKadaiListNoMemo, deletedKadaiMemoList);
-  const quizList = await loadFromStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoKadaiList(kadaiList, quizList), lectureIDList);
+  saveToLocalStorage("TSkadaiMemoList", deletedMemoList);
+  const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, deletedMemoList);
+  const quizList = await loadFromLocalStorage("TSQuizList");
+  await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
-  deleteNavBarNotification();
-  const newKadaiList = await loadAndMergeKadaiList(lectureIDList, false, false);
-  createNavBarNotification(lectureIDList, newKadaiList);
+  await reloadNavBar(courseIDList, true);
 }
 
 async function editFavTabMessage(): Promise<void> {
@@ -277,14 +269,21 @@ async function editFavTabMessage(): Promise<void> {
   }
 }
 
+async function reloadNavBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void>{
+  // NavBarを再描画
+  deleteNavBarNotification();
+  const newAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache, useCache);
+  createNavBarNotification(courseIDList, newAssignmentList);
+}
+
 export {
-  toggleMiniPandA,
-  toggleKadaiTab,
+  toggleMiniSakai,
+  toggleAssignmentTab,
   toggleSettingsTab,
   toggleMemoBox,
-  toggleKadaiFinishedFlag,
-  addKadaiMemo,
+  toggleFinishedFlag,
+  addMemo,
   updateSettings,
-  deleteKadaiMemo,
+  deleteMemo,
   editFavTabMessage,
 };

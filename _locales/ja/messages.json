@@ -1,0 +1,44 @@
+{
+  "EXTENSION_DESCRIPTION": {"message":"Comfortable SakaiはSakai LMS上の課題やクイズを管理するためのブラウザ拡張機能です。"},
+  "tab_assignments": {"message": "課題一覧"},
+  "tab_settings": {"message": "詳細設定"},
+  "todo_box_course_name": {"message": "講義名"},
+  "todo_box_memo": {"message": "メモ内容"},
+  "todo_box_due_date": {"message": "期限"},
+  "todo_box_add": {"message": "メモを追加"},
+  "quiz": {"message": "クイズ"},
+  "memo": {"message": "メモ"},
+  "settings_assignment_cache": {"message": "課題キャッシュ時間 [秒]"},
+  "settings_quizzes_cache": {"message": "クイズキャッシュ時間 [秒]"},
+  "settings_color_checked_item": {"message": "チェック済の課題も色付けする"},
+  "settings_display_late_submit_assignment": {"message": "遅延提出可能な課題を表示する"},
+  "settings_reset_colors": {"message": "デフォルト色に戻す"},
+  "settings_colors_hour": { "message": "カラー #$color$ 締切$time$時間前",
+    "placeholders": {
+      "color": { "content": "$1" },
+      "time": { "content": "$2" }
+    }
+  },
+  "settings_colors_day": { "message": "カラー #$color$ 締切$time$日前",
+    "placeholders": {
+      "color": { "content": "$1" },
+      "time": { "content": "$2" }
+    }
+  },
+  "assignment_acquisition_date": {"message": "課題取得日時: "},
+  "testquiz_acquisition_date": {"message": "クイズ取得日時: "},
+  "due24h": {"message": "締め切り２４時間以内"},
+  "due5d": {"message": "締め切り５日以内"},
+  "due14d": {"message": "締め切り１４日以内"},
+  "duePassed": {"message": "遅延提出可能"},
+  "dueOver14d": {"message": "その他"},
+  "no_available_assignments": {"message": "表示できる課題はないよ"},
+  "remain_time": { "message": "あと$days$日$hours$時間$minutes$分",
+    "placeholders": {
+      "days": { "content": "$1" },
+      "hours": { "content": "$2" },
+      "minutes": { "content": "$3" }
+    }
+  },
+  "due_not_set": {"message": "締め切り日未設定"}
+}
