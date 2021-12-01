@@ -48,7 +48,7 @@
     </div>
     <div class="sidenav-list sidenav-list-danger">
         {{#elements.danger}}
-            <div id="b{{courseID}}" class="kadai-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            <div id="b{{courseID}}" class="assignment-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-danger lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
                     <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
@@ -77,7 +77,7 @@
     </div>
     <div class="sidenav-list sidenav-list-warning">
         {{#elements.warning}}
-            <div id="b{{courseID}}" class="kadai-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            <div id="b{{courseID}}" class="assignment-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-warning lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
                     <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
@@ -106,7 +106,7 @@
     </div>
     <div class="sidenav-list sidenav-list-success">
         {{#elements.success}}
-            <div id="b{{courseID}}" class="kadai-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            <div id="b{{courseID}}" class="assignment-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
             <a class="lecture-success lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
                 <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>

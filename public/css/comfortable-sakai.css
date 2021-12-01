@@ -1,19 +1,19 @@
-.nav-danger {
+.cs-tab-danger {
     background: #f78989 !important;
     border: 0px solid #f78989 !important;
 }
 
-.nav-warning {
+.cs-tab-warning {
     background: #fdd783 !important;
     border: 0px solid #fdd783 !important;
 }
 
-.nav-safe {
+.cs-tab-safe {
     background: #8bd48d !important;
     border: 0px solid #8bd48d !important;
 }
 
-.nav-other {
+.cs-tab-other {
     background: #adadad !important;
     border: 0px solid #adadad !important;
 }
@@ -249,7 +249,7 @@
     display: inline-block;
 }
 
-.kadai-danger {
+.assignment-danger {
     border-top: solid 2px #e85555;
     border-left: solid 2px #e85555;
     border-bottom: solid 2px #e85555;
@@ -258,7 +258,7 @@
     margin-bottom: 20px;
 }
 
-.kadai-warning {
+.assignment-warning {
     border-top: solid 2px #d7aa57;
     border-left: solid 2px #d7aa57;
     border-bottom: solid 2px #d7aa57;
@@ -267,7 +267,7 @@
     margin-bottom: 20px;
 }
 
-.kadai-success {
+.assignment-success {
     border-top: solid 2px #62b665;
     border-left: solid 2px #62b665;
     border-bottom: solid 2px #62b665;
