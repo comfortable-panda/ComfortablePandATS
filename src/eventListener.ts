@@ -46,7 +46,7 @@ function toggleAssignmentTab(): void {
   const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
   // @ts-ignore
   assignmentFetchedTime.style.display = "";
-  const quizFetchedTime = document.querySelector(".quiz-time");
+  const quizFetchedTime = document.querySelector(".cs-quiz-time");
   // @ts-ignore
   quizFetchedTime.style.display = "";
 }
@@ -65,7 +65,7 @@ function toggleSettingsTab(): void {
   const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
   // @ts-ignore
   assignmentFetchedTime.style.display = "none";
-  const quizFetchedTime = document.querySelector(".quiz-time");
+  const quizFetchedTime = document.querySelector(".cs-quiz-time");
   // @ts-ignore
   quizFetchedTime.style.display = "none";
 }

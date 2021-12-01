@@ -39,7 +39,7 @@ span {
     font-size: small;
 }
 
-.quiz-time {
+.cs-quiz-time {
     font-family: "Open Sans", sans-serif;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -58,7 +58,7 @@ span {
     position: unset;
 }
 
-.cp-version{
+.cs-version{
     font-family: "Open  Sans", sans-serif;
     padding-left: 5px;
     font-weight: bold;

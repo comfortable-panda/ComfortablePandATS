@@ -552,7 +552,7 @@
     margin-bottom: 0;
 }
 
-.quiz-time {
+.cs-quiz-time {
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -562,13 +562,13 @@
     color: #464646;
 }
 
-.relaxpanda-img {
+.cs-noassignment-img {
     width: 150px;
     margin-top: 50px;
     margin-left: 70px;
 }
 
-.relaxpanda-p {
+.cs-noassignment-p {
     color: gray;
     font-family: serif;
     font-size: 17px;
@@ -577,13 +577,13 @@
     padding-top: 20px;
 }
 
-.loader, .loader:after {
+.cs-loading, .cs-loading:after {
     border-radius: 50%;
     width: 25px;
     height: 25px;
 }
 
-.loader {
+.cs-loading {
     font-size: 11px;
     margin-left: 15px;
     text-indent: -9999em;
@@ -637,7 +637,7 @@
     border-image: initial;
 }
 
-.cp-version{
+.cs-version{
     padding-left: 5px;
     font-weight: bold;
 }

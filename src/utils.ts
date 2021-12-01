@@ -80,7 +80,7 @@ function updateIsReadFlag(assignmentList: Array<Assignment>): void {
 
 function miniSakaiReady(): void {
   // ロード表示を切り替えて3本線表示にする
-  const loadingIcon = document.getElementsByClassName("loader")[0];
+  const loadingIcon = document.getElementsByClassName("cs-loading")[0];
   const hamburgerIcon = document.createElement("img");
   hamburgerIcon.src = chrome.extension.getURL("img/miniSakaiBtn.png");
   hamburgerIcon.className = "hamburgerIcon";

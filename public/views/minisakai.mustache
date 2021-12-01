@@ -1,5 +1,5 @@
 <img class="logo" alt="logo" src="{{minipandaLogo}}">
-<p class="cp-version">Version {{VERSION}}</p>
+<p class="cs-version">Version {{VERSION}}</p>
 {{^subset}}
 <a id="close_btn" class="closebtn q" href="#">x</a>
 <input id="kadaiTab" type="radio" name="cp_tab">
@@ -12,7 +12,7 @@
     <p class="cs-assignment-time-text">{{titles.assignmentFetchedTime}}</p>
     <p class="cs-assignment-time-text">{{fetchedTime.assignment}}</p>
 </div>
-<div class="quiz-time">
+<div class="cs-quiz-time">
     <p class="cs-assignment-time-text">{{titles.quizFetchedTime}}</p>
     <p class="cs-assignment-time-text">{{fetchedTime.assignment}}</p>
 </div>
@@ -188,9 +188,9 @@
     {{/display.lateSubmit}}
 
     {{#showRelaxPandA}}
-    <div class="relaxpanda">
-        <p class="relaxpanda-p">{{titles.relaxPandA}}</p>
-        <img alt="logo" class="relaxpanda-img" src="{{img}}">
+    <div>
+        <p class="cs-noassignment-p">{{titles.relaxPandA}}</p>
+        <img alt="logo" class="cs-noassignment-img" src="{{img}}">
     </div>
     {{/showRelaxPandA}}
 </div>
