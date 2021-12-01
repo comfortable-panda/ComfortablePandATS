@@ -43,7 +43,7 @@ function toggleAssignmentTab(): void {
   const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "";
-  const assignmentFetchedTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
   // @ts-ignore
   assignmentFetchedTime.style.display = "";
   const quizFetchedTime = document.querySelector(".quiz-time");
@@ -62,7 +62,7 @@ function toggleSettingsTab(): void {
   const addMemoButton = document.querySelector("#plus-button");
   // @ts-ignore
   addMemoButton.style.display = "none";
-  const assignmentFetchedTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
   // @ts-ignore
   assignmentFetchedTime.style.display = "none";
   const quizFetchedTime = document.querySelector(".quiz-time");

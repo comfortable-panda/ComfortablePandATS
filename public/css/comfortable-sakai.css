@@ -300,7 +300,7 @@
     color: #b01011
 }
 
-.kadai-title {
+.cs-assignment-title {
     font-size: 12px !important;
     color: #524e4e;
     padding-left: 20px;
@@ -401,8 +401,6 @@
     padding: 0;
     border: none;
     border-radius: 0;
-    /*outline: antiquewhite;*/
-    /*background: salmon;*/
     -webkit-appearance: none;
     appearance: none;
     display: none;
@@ -540,7 +538,7 @@
     border-radius: 50%;
 }
 
-.kadai-time {
+.cs-assignment-time {
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -550,7 +548,7 @@
     color: #464646;
 }
 
-.kadai-time-text {
+.cs-assignment-time-text {
     margin-bottom: 0;
 }
 

@@ -10,7 +10,7 @@ span {
     font-family: "Open Sans", sans-serif;
 }
 
-.kadai-title {
+.cs-assignment-title {
     font-family: "Open Sans", sans-serif;
     font-size: 12px !important;
     color: #524e4e;
@@ -23,12 +23,11 @@ span {
     font-weight: bold;
     color: #b01011
 }
-/* .kadai-tab {
-} */
+
 .sp{
     margin: 10px;
 }
-.kadai-time {
+.cs-assignment-time {
     font-family: "Open Sans", sans-serif;
     padding-top: 5px;
     padding-bottom: 5px;
