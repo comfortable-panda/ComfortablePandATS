@@ -245,11 +245,11 @@
     margin: 5px;
 }
 
-.sidenav-list .kadai-date {
+.sidenav-list .cs-assignment-date {
     display: inline-block;
 }
 
-.assignment-danger {
+.cs-assignment-danger {
     border-top: solid 2px #e85555;
     border-left: solid 2px #e85555;
     border-bottom: solid 2px #e85555;
@@ -258,7 +258,7 @@
     margin-bottom: 20px;
 }
 
-.assignment-warning {
+.cs-assignment-warning {
     border-top: solid 2px #d7aa57;
     border-left: solid 2px #d7aa57;
     border-bottom: solid 2px #d7aa57;
@@ -267,7 +267,7 @@
     margin-bottom: 20px;
 }
 
-.assignment-success {
+.cs-assignment-success {
     border-top: solid 2px #62b665;
     border-left: solid 2px #62b665;
     border-bottom: solid 2px #62b665;
@@ -276,7 +276,7 @@
     margin-bottom: 20px;
 }
 
-.kadai-other {
+.cs-assignment-other {
     border-top: solid 2px #777777;
     border-left: solid 2px #777777;
     border-bottom: solid 2px #777777;
@@ -285,7 +285,7 @@
     margin-bottom: 20px;
 }
 
-.kadai-late {
+.cs-assignment-late {
     border-top: solid 2px #212121;
     border-left: solid 2px #212121;
     border-bottom: solid 2px #212121;
@@ -294,7 +294,7 @@
     margin-bottom: 20px;
 }
 
-.kadai-date {
+.cs-assignment-date {
     font-size: 12px !important;
     font-weight: bold;
     color: #b01011

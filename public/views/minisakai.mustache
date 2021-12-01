@@ -48,12 +48,12 @@
     </div>
     <div class="sidenav-list sidenav-list-danger">
         {{#elements.danger}}
-            <div id="b{{courseID}}" class="assignment-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            <div id="b{{courseID}}" class="cs-assignment-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-danger lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
                     <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
-                    <p class="kadai-date">{{dueDateString}}</p>
+                    <p class="cs-assignment-date">{{dueDateString}}</p>
                     <span class="time-remain">{{remainTimeString}}</span>
                     <p class="kadai-title">
                         {{#isMemo}}
@@ -77,12 +77,12 @@
     </div>
     <div class="sidenav-list sidenav-list-warning">
         {{#elements.warning}}
-            <div id="b{{courseID}}" class="assignment-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            <div id="b{{courseID}}" class="cs-assignment-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-warning lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
                     <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
-                    <p class="kadai-date">{{dueDateString}}</p>
+                    <p class="cs-assignment-date">{{dueDateString}}</p>
                     <span class="time-remain">{{remainTimeString}}</span>
                     <p class="kadai-title">
                         {{#isMemo}}
@@ -106,12 +106,12 @@
     </div>
     <div class="sidenav-list sidenav-list-success">
         {{#elements.success}}
-            <div id="b{{courseID}}" class="assignment-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            <div id="b{{courseID}}" class="cs-assignment-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
             <a class="lecture-success lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
                 <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                 <label for="{{assignmentID}}"></label>
-                <p class="kadai-date">{{dueDateString}}</p>
+                <p class="cs-assignment-date">{{dueDateString}}</p>
                 <span class="time-remain">{{remainTimeString}}</span>
                 <p class="kadai-title">
                     {{#isMemo}}
@@ -135,12 +135,12 @@
     </div>
     <div class="sidenav-list sidenav-list-other">
         {{#elements.other}}
-            <div id="b{{courseID}}" class="kadai-other" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+            <div id="b{{courseID}}" class="cs-assignment-other" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-other lecture-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
                     <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
-                    <p class="kadai-date">{{dueDateString}}</p>
+                    <p class="cs-assignment-date">{{dueDateString}}</p>
                     <span class="time-remain">{{remainTimeString}}</span>
                     <p class="kadai-title">
                         {{#isMemo}}
@@ -164,12 +164,12 @@
         </div>
         <div class="sidenav-list sidenav-list-late">
             {{#elements.lateSubmit}}
-                <div id="b{{courseID}}" class="kadai-late" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
+                <div id="b{{courseID}}" class="cs-assignment-late" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                     <a class="lecture-late lecture-name" href="{{coursePage}}">{{courseName}}</a>
                     {{#assignmentEntries}}
                         <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                         <label for="{{assignmentID}}"></label>
-                        <p class="kadai-date">{{dueCloseDateString}}</p>
+                        <p class="cs-assignment-date">{{dueCloseDateString}}</p>
                         <span class="time-remain">{{remainCloseTimeString}}</span>
                         <p class="kadai-title">
                             {{#isMemo}}

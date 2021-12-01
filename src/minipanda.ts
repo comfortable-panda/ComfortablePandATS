@@ -352,9 +352,9 @@ function overrideCSSColor() {
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
-  overwriteborder("assignment-danger", CPsettings.getMiniColorDanger);
-  overwriteborder("assignment-success", CPsettings.getMiniColorSuccess);
-  overwriteborder("assignment-warning", CPsettings.getMiniColorWarning);
+  overwriteborder("cs-assignment-danger", CPsettings.getMiniColorDanger);
+  overwriteborder("cs-assignment-success", CPsettings.getMiniColorSuccess);
+  overwriteborder("cs-assignment-warning", CPsettings.getMiniColorWarning);
   overwritebackground("lecture-danger", CPsettings.getMiniColorDanger);
   overwritebackground("lecture-success", CPsettings.getMiniColorSuccess);
   overwritebackground("lecture-warning", CPsettings.getMiniColorWarning);
