@@ -251,9 +251,9 @@ function registerEventHandlers(root: Element) {
   root.querySelector("#settingsTab")?.addEventListener("click", () => toggleSettingsTab());
   root.querySelectorAll(".todo-check").forEach((c) => c.addEventListener("change", (e) => toggleFinishedFlag(e)));
   root.querySelector("#close_btn")?.addEventListener("click", () => toggleMiniSakai());
-  root.querySelector("#plus-button")?.addEventListener("click", () => toggleMemoBox());
+  root.querySelector("#cs-add-memo-btn")?.addEventListener("click", () => toggleMemoBox());
   root.querySelector("#todo-add")?.addEventListener("click", () => addMemo());
-  root.querySelectorAll(".del-button").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
+  root.querySelectorAll(".cs-del-memo-btn").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
 }
 
 function initState(root: Element) {

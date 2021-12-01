@@ -1,4 +1,4 @@
-<img class="logo" alt="logo" src="{{minipandaLogo}}">
+<img class="cs-minisakai-logo" alt="logo" src="{{minipandaLogo}}">
 <p class="cs-version">Version {{VERSION}}</p>
 {{^subset}}
 <a id="close_btn" class="closebtn q" href="#">x</a>
@@ -6,7 +6,7 @@
 <label for="kadaiTab"> {{titles.assignmentTab}} </label>
 <input id="settingsTab" type="radio" name="cp_tab">
 <label for="settingsTab"> {{titles.settingsTab}} </label>
-<button id="plus-button">+</button>
+<button id="cs-add-memo-btn">+</button>
 {{/subset}}
 <div class="cs-assignment-time">
     <p class="cs-assignment-time-text">{{titles.assignmentFetchedTime}}</p>
@@ -58,7 +58,7 @@
                     <p class="cs-assignment-title">
                         {{#isMemo}}
                             <span class="add-badge add-badge-success">{{badge.memo}}</span>
-                            <span class="del-button" id="{{assignmentID}}">×</span>
+                            <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                         {{/isMemo}}
                         {{#isQuiz}}
                             <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
@@ -87,7 +87,7 @@
                     <p class="cs-assignment-title">
                         {{#isMemo}}
                             <span class="add-badge add-badge-success">{{badge.memo}}</span>
-                            <span class="del-button" id="{{assignmentID}}">×</span>
+                            <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                         {{/isMemo}}
                         {{#isQuiz}}
                             <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
@@ -116,7 +116,7 @@
                 <p class="cs-assignment-title">
                     {{#isMemo}}
                         <span class="add-badge add-badge-success">{{badge.memo}}</span>
-                        <span class="del-button" id="{{assignmentID}}">×</span>
+                        <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                     {{/isMemo}}
                     {{#isQuiz}}
                         <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
@@ -145,7 +145,7 @@
                     <p class="cs-assignment-title">
                         {{#isMemo}}
                             <span class="add-badge add-badge-success">{{badge.memo}}</span>
-                            <span class="del-button" id="{{assignmentID}}">×</span>
+                            <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                         {{/isMemo}}
                         {{#isQuiz}}
                             <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
@@ -174,7 +174,7 @@
                         <p class="cs-assignment-title">
                             {{#isMemo}}
                                 <span class="add-badge add-badge-success">{{badge.memo}}</span>
-                                <span class="del-button" id="{{assignmentID}}">×</span>
+                                <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                             {{/isMemo}}
                             {{#isQuiz}}
                                 <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>

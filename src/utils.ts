@@ -83,8 +83,8 @@ function miniSakaiReady(): void {
   const loadingIcon = document.getElementsByClassName("cs-loading")[0];
   const hamburgerIcon = document.createElement("img");
   hamburgerIcon.src = chrome.extension.getURL("img/miniSakaiBtn.png");
-  hamburgerIcon.className = "hamburgerIcon";
-  loadingIcon.className = "hamburgerDiv";
+  hamburgerIcon.className = "cs-minisakai-btn";
+  loadingIcon.className = "cs-minisakai-btn-div";
   loadingIcon.append(hamburgerIcon);
 }
 

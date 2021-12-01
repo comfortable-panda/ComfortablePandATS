@@ -307,18 +307,18 @@
     word-break: break-word;
 }
 
-.hamburgerDiv {
+.cs-minisakai-btn-div {
     font-size: 25px;
     cursor: pointer;
     padding-left: 15px;
 }
 
-.hamburgerIcon {
+.cs-minisakai-btn {
     width: 23px;
     padding-bottom: 5px;
 }
 
-.logo {
+.cs-minisakai-logo {
     position: absolute;
     top: 7px;
     left: 2px;
@@ -507,7 +507,7 @@
     background-color: #ff6a00;
 }
 
-.del-button {
+.cs-del-memo-btn {
     color: #c61212;
     position: relative;
     float: right;
@@ -521,7 +521,7 @@
     cursor: pointer;
 }
 
-#plus-button {
+#cs-add-memo-btn {
     margin-left: 15px;
     margin-bottom: 2px;
     border: none;

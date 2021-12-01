@@ -40,7 +40,7 @@ function toggleAssignmentTab(): void {
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "none";
-  const addMemoButton = document.querySelector("#plus-button");
+  const addMemoButton = document.querySelector("#cs-add-memo-btn");
   // @ts-ignore
   addMemoButton.style.display = "";
   const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
@@ -59,7 +59,7 @@ function toggleSettingsTab(): void {
   const settingsTab = document.querySelector(".settings-tab");
   // @ts-ignore
   settingsTab.style.display = "";
-  const addMemoButton = document.querySelector("#plus-button");
+  const addMemoButton = document.querySelector("#cs-add-memo-btn");
   // @ts-ignore
   addMemoButton.style.display = "none";
   const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
