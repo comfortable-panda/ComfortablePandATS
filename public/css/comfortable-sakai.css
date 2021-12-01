@@ -120,12 +120,12 @@
     display: block;
 }
 
-.sidenav-list .lecture-name {
+.sidenav-list .cs-course-name {
     display: block;
     text-decoration: none;
 }
 
-.sidenav-list .lecture-name:hover {
+.sidenav-list .cs-course-name:hover {
     text-decoration: none;
 }
 
@@ -325,7 +325,7 @@
     height: 40px;
 }
 
-.time-remain {
+.cs-assignment-time-remain {
     font-weight: bold;
     font-size: 12px;
 }
