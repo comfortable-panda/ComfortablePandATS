@@ -21,11 +21,11 @@ function toggleMiniSakai(): void {
   // miniSakaiを表示・非表示にします
   if (toggle) {
     miniPandA.style.width = "0px";
-    document.getElementById("cover")?.remove();
+    document.getElementById("cs-cover")?.remove();
   } else {
     miniPandA.style.width = "300px";
     const cover = document.createElement("div");
-    cover.id = "cover";
+    cover.id = "cs-cover";
     document.getElementsByTagName("body")[0].appendChild(cover);
     cover.onclick = toggleMiniSakai;
   }
@@ -34,38 +34,38 @@ function toggleMiniSakai(): void {
 
 function toggleAssignmentTab(): void {
   // 課題一覧タブの表示・非表示をします
-  const assignmentTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".cs-assignment-tab");
   // @ts-ignore
   assignmentTab.style.display = "";
-  const settingsTab = document.querySelector(".settings-tab");
+  const settingsTab = document.querySelector(".cs-settings-tab");
   // @ts-ignore
   settingsTab.style.display = "none";
-  const addMemoButton = document.querySelector("#plus-button");
+  const addMemoButton = document.querySelector("#cs-add-memo-btn");
   // @ts-ignore
   addMemoButton.style.display = "";
-  const assignmentFetchedTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
   // @ts-ignore
   assignmentFetchedTime.style.display = "";
-  const quizFetchedTime = document.querySelector(".quiz-time");
+  const quizFetchedTime = document.querySelector(".cs-quiz-time");
   // @ts-ignore
   quizFetchedTime.style.display = "";
 }
 
 function toggleSettingsTab(): void {
   // クイズ・小テスト・試験一覧タブを表示・非表示にします
-  const assignmentTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".cs-assignment-tab");
   // @ts-ignore
   assignmentTab.style.display = "none";
-  const settingsTab = document.querySelector(".settings-tab");
+  const settingsTab = document.querySelector(".cs-settings-tab");
   // @ts-ignore
   settingsTab.style.display = "";
-  const addMemoButton = document.querySelector("#plus-button");
+  const addMemoButton = document.querySelector("#cs-add-memo-btn");
   // @ts-ignore
   addMemoButton.style.display = "none";
-  const assignmentFetchedTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
   // @ts-ignore
   assignmentFetchedTime.style.display = "none";
-  const quizFetchedTime = document.querySelector(".quiz-time");
+  const quizFetchedTime = document.querySelector(".cs-quiz-time");
   // @ts-ignore
   quizFetchedTime.style.display = "none";
 }

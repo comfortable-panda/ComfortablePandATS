@@ -34,12 +34,12 @@ function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
 }
 
 export const miniPandA = createElem("div", { id: "miniPandA" });
-miniPandA.classList.add("sidenav");
-miniPandA.classList.add("cp_tab");
+miniPandA.classList.add("cs-minisakai");
+miniPandA.classList.add("cs-tab");
 
-export const assignmentDiv = createElem("div", { className: "kadai-tab" });
+export const assignmentDiv = createElem("div", { className: "cs-assignment-tab" });
 
-export const hamburger = createElem("div", { className: "loader" }, {"click": toggleMiniSakai});
+export const hamburger = createElem("div", { className: "cs-loading" }, {"click": toggleMiniSakai});
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace SettingsDom {
@@ -51,7 +51,7 @@ namespace SettingsDom {
   export const resetBtn = createElem("input", { type: "button" });
   export const stringBox = createElem("input", {type: "color", className: "cp-settings-inputbox" });
   export const inputBox = createElem("input", { type: "number", className: "cp-settings-inputbox" });
-  export const span = createElem("span", { className: "slider round" });
+  export const span = createElem("span", { className: "cs-toggle-slider round" });
 }
 
 export { SettingsDom, addAttributes, createElem, cloneElem, appendChildAll };

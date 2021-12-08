@@ -1,24 +1,24 @@
-.nav-danger {
+.cs-tab-danger {
     background: #f78989 !important;
-    border: 0px solid #f78989 !important;
+    border: 0 solid #f78989 !important;
 }
 
-.nav-warning {
+.cs-tab-warning {
     background: #fdd783 !important;
-    border: 0px solid #fdd783 !important;
+    border: 0 solid #fdd783 !important;
 }
 
-.nav-safe {
+.cs-tab-success {
     background: #8bd48d !important;
-    border: 0px solid #8bd48d !important;
+    border: 0 solid #8bd48d !important;
 }
 
-.nav-other {
+.cs-tab-other {
     background: #adadad !important;
-    border: 0px solid #adadad !important;
+    border: 0 solid #adadad !important;
 }
 
-.red-badge::after {
+.cs-notification-badge::after {
     z-index: 1;
     content: "";
     position: absolute;
@@ -33,7 +33,7 @@
     border: 1px solid #fffefe;
 }
 
-.sidenav {
+.cs-minisakai {
     height: 95vh;
     width: 0;
     position: absolute;
@@ -47,11 +47,11 @@
     border-radius: 8px;
 }
 
-.sidenav::-webkit-scrollbar {
+.cs-minisakai::-webkit-scrollbar {
     display: none;
 }
 
-.sidenav .q {
+.cs-minisakai .q {
     padding: 8px 8px 8px 8px;
     text-decoration: none;
     font-weight: 600;
@@ -60,7 +60,7 @@
     transition: 0.3s;
 }
 
-.sidenav .closebtn {
+.cs-minisakai .closebtn {
     position: absolute;
     top: 0;
     right: 15px;
@@ -68,7 +68,7 @@
     margin-left: 50px;
 }
 
-.sidenav-danger {
+.cs-minisakai-danger {
     position: relative;
     padding: 0.1em 0.5em;
     border-left: solid 6px #e85555;
@@ -77,7 +77,7 @@
     border-radius: 5px;
 }
 
-.sidenav-warning {
+.cs-minisakai-warning {
     position: relative;
     padding: 0.1em 0.5em;
     border-left: solid 6px #d7aa57;
@@ -86,7 +86,7 @@
     border-radius: 5px;
 }
 
-.sidenav-success {
+.cs-minisakai-success {
     position: relative;
     padding: 0.1em 0.5em;
     border-left: solid 6px #62b665;
@@ -95,7 +95,7 @@
     border-radius: 5px;
 }
 
-.sidenav-other {
+.cs-minisakai-other {
     position: relative;
     padding: 0.1em 0.5em;
     border-left: solid 6px #777777;
@@ -104,7 +104,7 @@
     border-radius: 5px;
 }
 
-.sidenav-late {
+.cs-minisakai-late {
     position: relative;
     padding: 0.1em 0.5em;
     border-left: solid 6px #212121;
@@ -113,23 +113,23 @@
     border-radius: 5px;
 }
 
-.sidenav-list {
+.cs-minisakai-list {
     padding: 20px 8px 8px 8px;
     text-decoration: none;
     color: #818181;
     display: block;
 }
 
-.sidenav-list .lecture-name {
+.cs-minisakai-list .cs-course-name {
     display: block;
     text-decoration: none;
 }
 
-.sidenav-list .lecture-name:hover {
+.cs-minisakai-list .cs-course-name:hover {
     text-decoration: none;
 }
 
-.sidenav-list .lecture-danger {
+.cs-minisakai-list .cs-course-danger {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -140,7 +140,7 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list .lecture-danger:hover {
+.cs-minisakai-list .cs-course-danger:hover {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -151,7 +151,7 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list .lecture-warning {
+.cs-minisakai-list .cs-course-warning {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -162,7 +162,7 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list .lecture-warning:hover {
+.cs-minisakai-list .cs-course-warning:hover {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -173,7 +173,7 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list .lecture-success {
+.cs-minisakai-list .cs-course-success {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -184,7 +184,7 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list .lecture-success:hover {
+.cs-minisakai-list .cs-course-success:hover {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -195,7 +195,7 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list .lecture-other {
+.cs-minisakai-list .cs-course-other {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -206,7 +206,7 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list .lecture-other:hover {
+.cs-minisakai-list .cs-course-other:hover {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -217,7 +217,7 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list .lecture-late {
+.cs-minisakai-list .cs-course-late {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -228,7 +228,7 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list .lecture-late:hover {
+.cs-minisakai-list .cs-course-late:hover {
     font-size: 12px;
     font-weight: 400 !important;
     color: #f7f7f7;
@@ -239,17 +239,17 @@
     border-radius: 20px 20px 20px 20px;
 }
 
-.sidenav-list p {
+.cs-minisakai-list p {
     list-style-type: initial;
     font-size: 14px;
     margin: 5px;
 }
 
-.sidenav-list .kadai-date {
+.cs-minisakai-list .cs-assignment-date {
     display: inline-block;
 }
 
-.kadai-danger {
+.cs-assignment-danger {
     border-top: solid 2px #e85555;
     border-left: solid 2px #e85555;
     border-bottom: solid 2px #e85555;
@@ -258,7 +258,7 @@
     margin-bottom: 20px;
 }
 
-.kadai-warning {
+.cs-assignment-warning {
     border-top: solid 2px #d7aa57;
     border-left: solid 2px #d7aa57;
     border-bottom: solid 2px #d7aa57;
@@ -267,7 +267,7 @@
     margin-bottom: 20px;
 }
 
-.kadai-success {
+.cs-assignment-success {
     border-top: solid 2px #62b665;
     border-left: solid 2px #62b665;
     border-bottom: solid 2px #62b665;
@@ -276,7 +276,7 @@
     margin-bottom: 20px;
 }
 
-.kadai-other {
+.cs-assignment-other {
     border-top: solid 2px #777777;
     border-left: solid 2px #777777;
     border-bottom: solid 2px #777777;
@@ -285,7 +285,7 @@
     margin-bottom: 20px;
 }
 
-.kadai-late {
+.cs-assignment-late {
     border-top: solid 2px #212121;
     border-left: solid 2px #212121;
     border-bottom: solid 2px #212121;
@@ -294,43 +294,43 @@
     margin-bottom: 20px;
 }
 
-.kadai-date {
+.cs-assignment-date {
     font-size: 12px !important;
     font-weight: bold;
     color: #b01011
 }
 
-.kadai-title {
+.cs-assignment-title {
     font-size: 12px !important;
     color: #524e4e;
     padding-left: 20px;
     word-break: break-word;
 }
 
-.hamburgerDiv {
+.cs-minisakai-btn-div {
     font-size: 25px;
     cursor: pointer;
     padding-left: 15px;
 }
 
-.hamburgerIcon {
+.cs-minisakai-btn {
     width: 23px;
     padding-bottom: 5px;
 }
 
-.logo {
+.cs-minisakai-logo {
     position: absolute;
     top: 7px;
     left: 2px;
     height: 40px;
 }
 
-.time-remain {
+.cs-assignment-time-remain {
     font-weight: bold;
     font-size: 12px;
 }
 
-#cover {
+#cs-cover {
     width: 100%;
     height: 100%;
     position: fixed;
@@ -339,18 +339,18 @@
     opacity: 0;
 }
 
-.todo-check {
+.cs-checkbox {
     position: absolute;
     opacity: 0;
 }
 
-.todo-check + label {
+.cs-checkbox + label {
     position: relative;
     cursor: pointer;
     padding: 0;
 }
 
-.todo-check + label:before {
+.cs-checkbox + label:before {
     content: '';
     display: inline-block;
     vertical-align: text-top;
@@ -362,22 +362,22 @@
     margin-right: 2px;
 }
 
-.todo-check:checked + label:before {
+.cs-checkbox:checked + label:before {
     background: #0064cd;
     border-radius: 10px;
 }
 
-.todo-check:disabled + label {
+.cs-checkbox:disabled + label {
     color: #b8b8b8;
     cursor: auto;
 }
 
-.todo-check:disabled + label:before {
+.cs-checkbox:disabled + label:before {
     box-shadow: none;
     background: #ddd;
 }
 
-.todo-check:checked + label:after {
+.cs-checkbox:checked + label:after {
     content: '';
     position: absolute;
     left: 2.5px;
@@ -391,37 +391,35 @@
     margin-left: 5px;
 }
 
-.cp_tab *, .cp_tab *:before, .cp_tab *:after {
+.cs-tab *, .cs-tab *:before, .cs-tab *:after {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 
-.cp_tab > input[type='radio'] {
+.cs-tab > input[type='radio'] {
     margin: 0;
     padding: 0;
     border: none;
     border-radius: 0;
-    /*outline: antiquewhite;*/
-    /*background: salmon;*/
     -webkit-appearance: none;
     appearance: none;
     display: none;
 }
 
-.cp_tab .cp_tabpanel {
+.cs-tab .cs-tab-panel {
     display: none;
 }
 
-.cp_tab > input:first-child:checked ~ .cp_tabpanels > .cp_tabpanel:first-child,
-.cp_tab > input:nth-child(3):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(2),
-.cp_tab > input:nth-child(5):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(3),
-.cp_tab > input:nth-child(7):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(4),
-.cp_tab > input:nth-child(9):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(5),
-.cp_tab > input:nth-child(11):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(6) {
+.cs-tab > input:first-child:checked ~ .cs-tab-panels > .cs-tab-panel:first-child,
+.cs-tab > input:nth-child(3):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(2),
+.cs-tab > input:nth-child(5):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(3),
+.cs-tab > input:nth-child(7):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(4),
+.cs-tab > input:nth-child(9):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(5),
+.cs-tab > input:nth-child(11):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(6) {
     display: block;
 }
 
-.cp_tab > label {
+.cs-tab > label {
     position: relative;
     display: inline-block;
     padding: 10px 15px;
@@ -431,7 +429,7 @@
     border-color: #9b9898
 }
 
-.cp_tab > input:checked + label {
+.cs-tab > input:checked + label {
     margin-bottom: -1px;
     border-color: #a5a5a5;
     padding-left: 15px;
@@ -443,43 +441,24 @@
 }
 
 @media (max-width: 480px) {
-    .cp_tab {
+    .cs-tab {
         width: 100%;
         font-size: 0.8em;
     }
 
-    .cp_tab label {
+    .cs-tab label {
         padding: 0.5em;
     }
 }
 
-.btn-square {
-    position: relative;
-    display: inline-block;
-    padding: 0.25em 0.5em;
-    text-decoration: none;
-    color: #FFF;
-    font-size: 12px;
-    background: #f16262;
-    border: solid 1px #bc2020;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-}
-
-.btn-square:active {
-    box-shadow: none;
-    text-shadow: none;
-}
-
-.settingsBox {
+.cs-memo-box {
     padding-bottom: 10px;
     padding-left: 10px;
     margin: 10px;
     border: inset;
 }
 
-.add-badge {
+.cs-badge {
     display: inline-block;
     padding: 0.25em 0.4em;
     margin-right: 0.5em;
@@ -493,23 +472,17 @@
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.add-badge-success {
+.cs-badge-memo {
     color: #fff;
     background-color: #28a745;
 }
 
-.add-badge-quiz {
+.cs-badge-quiz {
     color: #fff;
     background-color: #ef2410;
 }
 
-.add-badge-late {
-    margin-right: 0;
-    color: #fff;
-    background-color: #ff6a00;
-}
-
-.del-button {
+.cs-del-memo-btn {
     color: #c61212;
     position: relative;
     float: right;
@@ -523,7 +496,7 @@
     cursor: pointer;
 }
 
-#plus-button {
+#cs-add-memo-btn {
     margin-left: 15px;
     margin-bottom: 2px;
     border: none;
@@ -540,7 +513,7 @@
     border-radius: 50%;
 }
 
-.kadai-time {
+.cs-assignment-time {
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -550,11 +523,11 @@
     color: #464646;
 }
 
-.kadai-time-text {
+.cs-assignment-time-text {
     margin-bottom: 0;
 }
 
-.quiz-time {
+.cs-quiz-time {
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -564,13 +537,13 @@
     color: #464646;
 }
 
-.relaxpanda-img {
+.cs-noassignment-img {
     width: 150px;
     margin-top: 50px;
     margin-left: 70px;
 }
 
-.relaxpanda-p {
+.cs-noassignment-p {
     color: gray;
     font-family: serif;
     font-size: 17px;
@@ -579,13 +552,13 @@
     padding-top: 20px;
 }
 
-.loader, .loader:after {
+.cs-loading, .cs-loading:after {
     border-radius: 50%;
     width: 25px;
     height: 25px;
 }
 
-.loader {
+.cs-loading {
     font-size: 11px;
     margin-left: 15px;
     text-indent: -9999em;
@@ -596,11 +569,11 @@
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
-    -webkit-animation: load8 1.1s infinite linear;
-    animation: load8 1.1s infinite linear;
+    -webkit-animation: cs-load 1.1s infinite linear;
+    animation: cs-load 1.1s infinite linear;
 }
 
-@-webkit-keyframes load8 {
+@-webkit-keyframes cs-load {
     0% {
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
@@ -611,7 +584,7 @@
     }
 }
 
-@keyframes load8 {
+@keyframes cs-load {
     0% {
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
@@ -626,7 +599,7 @@
     padding: 3px;
 }
 
-.settings-tab {
+.cs-settings-tab {
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 5px;
@@ -639,7 +612,7 @@
     border-image: initial;
 }
 
-.cp-version{
+.cs-version{
     padding-left: 5px;
     font-weight: bold;
 }
@@ -658,7 +631,7 @@
     width: 65px;
 }
 
-.miniSakai-memoBoxItem {
+.cs-memo-item {
     padding-top: 5px;
     display: block;
     flex-direction: column;
@@ -666,20 +639,20 @@
     color: rgb(70, 70, 70);
 }
 
-.switch {
+.cs-toggle-btn {
     position: relative;
     display: inline-flex;
     width: 60px;
     height: 20px;
 }
 
-.switch input {
+.cs-toggle-btn input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.slider {
+.cs-toggle-slider {
     cursor: pointer;
     text-indent: -9999px;
     margin-left: -15px;
@@ -691,7 +664,7 @@
     position: relative;
 }
 
-.slider:after {
+.cs-toggle-slider:after {
     content: '';
     position: absolute;
     top: 5px;
@@ -703,11 +676,11 @@
     transition: 0.3s;
 }
 
-input:checked + .slider {
+input:checked + .cs-toggle-slider {
     background-color: #2196F3;
 }
 
-input:checked + .slider:after {
+input:checked + .cs-toggle-slider:after {
     left: calc(100% - 5px);
     transform: translateX(-100%);
 }
