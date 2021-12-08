@@ -247,7 +247,7 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
 }
 
 function registerEventHandlers(root: Element) {
-  root.querySelector("#kadaiTab")?.addEventListener("click", () => toggleAssignmentTab());
+  root.querySelector("#assignmentTab")?.addEventListener("click", () => toggleAssignmentTab());
   root.querySelector("#settingsTab")?.addEventListener("click", () => toggleSettingsTab());
   root.querySelectorAll(".cs-checkbox").forEach((c) => c.addEventListener("change", (e) => toggleFinishedFlag(e)));
   root.querySelector("#close_btn")?.addEventListener("click", () => toggleMiniSakai());
@@ -258,7 +258,7 @@ function registerEventHandlers(root: Element) {
 
 function initState(root: Element) {
   // @ts-ignore
-  root.querySelector("#kadaiTab")?.checked = true;
+  root.querySelector("#assignmentTab")?.checked = true;
   // @ts-ignore
   root.querySelector(".todoDue")?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`)
     .toISOString()
