@@ -330,7 +330,7 @@
     font-size: 12px;
 }
 
-#cover {
+#cs-cover {
     width: 100%;
     height: 100%;
     position: fixed;
@@ -339,18 +339,18 @@
     opacity: 0;
 }
 
-.todo-check {
+.cs-checkbox {
     position: absolute;
     opacity: 0;
 }
 
-.todo-check + label {
+.cs-checkbox + label {
     position: relative;
     cursor: pointer;
     padding: 0;
 }
 
-.todo-check + label:before {
+.cs-checkbox + label:before {
     content: '';
     display: inline-block;
     vertical-align: text-top;
@@ -362,22 +362,22 @@
     margin-right: 2px;
 }
 
-.todo-check:checked + label:before {
+.cs-checkbox:checked + label:before {
     background: #0064cd;
     border-radius: 10px;
 }
 
-.todo-check:disabled + label {
+.cs-checkbox:disabled + label {
     color: #b8b8b8;
     cursor: auto;
 }
 
-.todo-check:disabled + label:before {
+.cs-checkbox:disabled + label:before {
     box-shadow: none;
     background: #ddd;
 }
 
-.todo-check:checked + label:after {
+.cs-checkbox:checked + label:after {
     content: '';
     position: absolute;
     left: 2.5px;
@@ -477,7 +477,7 @@
     border: inset;
 }
 
-.add-badge {
+.cs-badge {
     display: inline-block;
     padding: 0.25em 0.4em;
     margin-right: 0.5em;
@@ -491,20 +491,14 @@
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.add-badge-success {
+.cs-badge-memo {
     color: #fff;
     background-color: #28a745;
 }
 
-.add-badge-quiz {
+.cs-badge-quiz {
     color: #fff;
     background-color: #ef2410;
-}
-
-.add-badge-late {
-    margin-right: 0;
-    color: #fff;
-    background-color: #ff6a00;
 }
 
 .cs-del-memo-btn {

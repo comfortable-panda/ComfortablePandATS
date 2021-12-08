@@ -21,11 +21,11 @@ function toggleMiniSakai(): void {
   // miniSakaiを表示・非表示にします
   if (toggle) {
     miniPandA.style.width = "0px";
-    document.getElementById("cover")?.remove();
+    document.getElementById("cs-cover")?.remove();
   } else {
     miniPandA.style.width = "300px";
     const cover = document.createElement("div");
-    cover.id = "cover";
+    cover.id = "cs-cover";
     document.getElementsByTagName("body")[0].appendChild(cover);
     cover.onclick = toggleMiniSakai;
   }

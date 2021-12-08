@@ -51,17 +51,17 @@
             <div id="b{{courseID}}" class="cs-assignment-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-danger cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
-                    <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                    <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
                     <p class="cs-assignment-date">{{dueDateString}}</p>
                     <span class="cs-assignment-time-remain">{{remainTimeString}}</span>
                     <p class="cs-assignment-title">
                         {{#isMemo}}
-                            <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                            <span class="cs-badge cs-badge-memo">{{badge.memo}}</span>
                             <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                         {{/isMemo}}
                         {{#isQuiz}}
-                            <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                            <span class="cs-badge cs-badge-quiz">{{badge.quiz}}</span>
                         {{/isQuiz}}
                         {{assignmentTitle}}
                     </p>
@@ -80,17 +80,17 @@
             <div id="b{{courseID}}" class="cs-assignment-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-warning cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
-                    <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                    <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
                     <p class="cs-assignment-date">{{dueDateString}}</p>
                     <span class="cs-assignment-time-remain">{{remainTimeString}}</span>
                     <p class="cs-assignment-title">
                         {{#isMemo}}
-                            <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                            <span class="cs-badge cs-badge-memo">{{badge.memo}}</span>
                             <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                         {{/isMemo}}
                         {{#isQuiz}}
-                            <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                            <span class="cs-badge cs-badge-quiz">{{badge.quiz}}</span>
                         {{/isQuiz}}
                         {{assignmentTitle}}
                     </p>
@@ -109,17 +109,17 @@
             <div id="b{{courseID}}" class="cs-assignment-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
             <a class="lecture-success cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
-                <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                 <label for="{{assignmentID}}"></label>
                 <p class="cs-assignment-date">{{dueDateString}}</p>
                 <span class="cs-assignment-time-remain">{{remainTimeString}}</span>
                 <p class="cs-assignment-title">
                     {{#isMemo}}
-                        <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                        <span class="cs-badge cs-badge-memo">{{badge.memo}}</span>
                         <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                     {{/isMemo}}
                     {{#isQuiz}}
-                        <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                        <span class="cs-badge cs-badge-quiz">{{badge.quiz}}</span>
                     {{/isQuiz}}
                     {{assignmentTitle}}
                 </p>
@@ -138,17 +138,17 @@
             <div id="b{{courseID}}" class="cs-assignment-other" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="lecture-other cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
-                    <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                    <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
                     <p class="cs-assignment-date">{{dueDateString}}</p>
                     <span class="cs-assignment-time-remain">{{remainTimeString}}</span>
                     <p class="cs-assignment-title">
                         {{#isMemo}}
-                            <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                            <span class="cs-badge cs-badge-memo">{{badge.memo}}</span>
                             <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                         {{/isMemo}}
                         {{#isQuiz}}
-                            <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                            <span class="cs-badge cs-badge-quiz">{{badge.quiz}}</span>
                         {{/isQuiz}}
                         {{assignmentTitle}}
                     </p>
@@ -167,17 +167,17 @@
                 <div id="b{{courseID}}" class="cs-assignment-late" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                     <a class="lecture-late cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                     {{#assignmentEntries}}
-                        <input id="{{assignmentID}}" class="todo-check" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                        <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                         <label for="{{assignmentID}}"></label>
                         <p class="cs-assignment-date">{{dueCloseDateString}}</p>
                         <span class="cs-assignment-time-remain">{{remainCloseTimeString}}</span>
                         <p class="cs-assignment-title">
                             {{#isMemo}}
-                                <span class="add-badge add-badge-success">{{badge.memo}}</span>
+                                <span class="cs-badge cs-badge-memo">{{badge.memo}}</span>
                                 <span class="cs-del-memo-btn" id="{{assignmentID}}">×</span>
                             {{/isMemo}}
                             {{#isQuiz}}
-                                <span class="add-badge add-badge-quiz">{{badge.quiz}}</span>
+                                <span class="cs-badge cs-badge-quiz">{{badge.quiz}}</span>
                             {{/isQuiz}}
                             {{assignmentTitle}}
                         </p>
