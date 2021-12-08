@@ -34,7 +34,7 @@ function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
 }
 
 export const miniPandA = createElem("div", { id: "miniPandA" });
-miniPandA.classList.add("sidenav");
+miniPandA.classList.add("cs-minisakai");
 miniPandA.classList.add("cp_tab");
 
 export const assignmentDiv = createElem("div", { className: "kadai-tab" });

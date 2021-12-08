@@ -270,7 +270,7 @@ async function displayMiniPandA(mergedAssignmentList: Array<Assignment>, courseS
 }
 
 function deleteNavBarNotification(): void {
-  const classlist = ["red-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-safe"];
+  const classlist = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success"];
   for (const c of classlist) {
     const q = document.querySelectorAll(`.${c}`);
     // @ts-ignore
@@ -296,7 +296,7 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
       if (q !== -1) {
         const closestTime = (CPsettings.displayCheckedKadai) ? assignmentList[q].closestDueDateTimestamp : assignmentList[q].closestDueDateTimestampExcludeFinished;
         if (!assignmentList[q].isRead && closestTime !== -1) {
-          defaultTab[j].classList.add("red-badge");
+          defaultTab[j].classList.add("cs-notification-badge");
         }
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
@@ -315,9 +315,9 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
             }
             break;
           case "due14d":
-            defaultTab[j].classList.add("cs-tab-safe");
+            defaultTab[j].classList.add("cs-tab-success");
             for (let i = 0; i < aTagCount; i++) {
-              defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-safe");
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-success");
             }
             break;
           case "dueOver14d":
@@ -355,15 +355,15 @@ function overrideCSSColor() {
   overwriteborder("cs-assignment-danger", CPsettings.getMiniColorDanger);
   overwriteborder("cs-assignment-success", CPsettings.getMiniColorSuccess);
   overwriteborder("cs-assignment-warning", CPsettings.getMiniColorWarning);
-  overwritebackground("lecture-danger", CPsettings.getMiniColorDanger);
-  overwritebackground("lecture-success", CPsettings.getMiniColorSuccess);
-  overwritebackground("lecture-warning", CPsettings.getMiniColorWarning);
+  overwritebackground("cs-course-danger", CPsettings.getMiniColorDanger);
+  overwritebackground("cs-course-success", CPsettings.getMiniColorSuccess);
+  overwritebackground("cs-course-warning", CPsettings.getMiniColorWarning);
 
   overwritebackground("cs-tab-danger", CPsettings.getTopColorDanger);
-  overwritebackground("cs-tab-safe", CPsettings.getTopColorSuccess);
+  overwritebackground("cs-tab-success", CPsettings.getTopColorSuccess);
   overwritebackground("cs-tab-warning", CPsettings.getTopColorWarning);
   overwriteborder("cs-tab-danger", CPsettings.getTopColorDanger);
-  overwriteborder("cs-tab-safe", CPsettings.getTopColorSuccess);
+  overwriteborder("cs-tab-success", CPsettings.getTopColorSuccess);
   overwriteborder("cs-tab-warning", CPsettings.getTopColorWarning);
 }
 
