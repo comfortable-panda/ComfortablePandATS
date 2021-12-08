@@ -1,4 +1,8 @@
 # ComfortablePandATS
+[![License](https://img.shields.io/github/license/comfortable-panda/ComfortablePandATS?color=orange)](https://github.com/comfortable-panda/ComfortablePandATS/blob/master/LICENSE)
+[![Release](https://img.shields.io/github/v/release/comfortable-panda/ComfortablePandATS?include_prereleases)](https://github.com/comfortable-panda/ComfortablePandATS/releases)
+[![CodeQL](https://github.com/comfortable-panda/ComfortablePandATS/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/comfortable-panda/ComfortablePandATS/actions/workflows/codeql-analysis.yml)  
+
 PandAを快適にするブラウザ拡張機能です．
 
 ## Readme
