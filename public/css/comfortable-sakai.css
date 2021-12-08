@@ -391,12 +391,12 @@
     margin-left: 5px;
 }
 
-.cp_tab *, .cp_tab *:before, .cp_tab *:after {
+.cs-tab *, .cs-tab *:before, .cs-tab *:after {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 
-.cp_tab > input[type='radio'] {
+.cs-tab > input[type='radio'] {
     margin: 0;
     padding: 0;
     border: none;
@@ -406,20 +406,20 @@
     display: none;
 }
 
-.cp_tab .cp_tabpanel {
+.cs-tab .cs-tabpanel {
     display: none;
 }
 
-.cp_tab > input:first-child:checked ~ .cp_tabpanels > .cp_tabpanel:first-child,
-.cp_tab > input:nth-child(3):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(2),
-.cp_tab > input:nth-child(5):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(3),
-.cp_tab > input:nth-child(7):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(4),
-.cp_tab > input:nth-child(9):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(5),
-.cp_tab > input:nth-child(11):checked ~ .cp_tabpanels > .cp_tabpanel:nth-child(6) {
+.cs-tab > input:first-child:checked ~ .cs-tabpanels > .cs-tabpanel:first-child,
+.cs-tab > input:nth-child(3):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(2),
+.cs-tab > input:nth-child(5):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(3),
+.cs-tab > input:nth-child(7):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(4),
+.cs-tab > input:nth-child(9):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(5),
+.cs-tab > input:nth-child(11):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(6) {
     display: block;
 }
 
-.cp_tab > label {
+.cs-tab > label {
     position: relative;
     display: inline-block;
     padding: 10px 15px;
@@ -429,7 +429,7 @@
     border-color: #9b9898
 }
 
-.cp_tab > input:checked + label {
+.cs-tab > input:checked + label {
     margin-bottom: -1px;
     border-color: #a5a5a5;
     padding-left: 15px;
@@ -441,12 +441,12 @@
 }
 
 @media (max-width: 480px) {
-    .cp_tab {
+    .cs-tab {
         width: 100%;
         font-size: 0.8em;
     }
 
-    .cp_tab label {
+    .cs-tab label {
         padding: 0.5em;
     }
 }
