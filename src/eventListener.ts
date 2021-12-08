@@ -34,10 +34,10 @@ function toggleMiniSakai(): void {
 
 function toggleAssignmentTab(): void {
   // 課題一覧タブの表示・非表示をします
-  const assignmentTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".cs-assignment-tab");
   // @ts-ignore
   assignmentTab.style.display = "";
-  const settingsTab = document.querySelector(".settings-tab");
+  const settingsTab = document.querySelector(".cs-settings-tab");
   // @ts-ignore
   settingsTab.style.display = "none";
   const addMemoButton = document.querySelector("#cs-add-memo-btn");
@@ -53,10 +53,10 @@ function toggleAssignmentTab(): void {
 
 function toggleSettingsTab(): void {
   // クイズ・小テスト・試験一覧タブを表示・非表示にします
-  const assignmentTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".cs-assignment-tab");
   // @ts-ignore
   assignmentTab.style.display = "none";
-  const settingsTab = document.querySelector(".settings-tab");
+  const settingsTab = document.querySelector(".cs-settings-tab");
   // @ts-ignore
   settingsTab.style.display = "";
   const addMemoButton = document.querySelector("#cs-add-memo-btn");

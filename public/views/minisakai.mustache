@@ -17,10 +17,10 @@
     <p class="cs-assignment-time-text">{{fetchedTime.assignment}}</p>
 </div>
 
-<div class="kadai-tab">
+<div class="cs-assignment-tab">
     {{^subset}}
-    <div class="settingsBox addMemoBox" style="display: none;">
-        <div class="miniSakai-memoBoxItem">
+    <div class="cs-memo-box addMemoBox" style="display: none;">
+        <div class="cs-memo-item">
             <p>{{todoBox.courseName}}</p>
             <label><select class="todoLecName">
                 {{#todoBox.courseSiteList}}
@@ -28,15 +28,15 @@
                 {{/todoBox.courseSiteList}}
             </select></label>
         </div>
-        <div class="miniSakai-memoBoxItem">
+        <div class="cs-memo-item">
             <p>{{todoBox.memoLabel}}</p>
             <label><input type="text" class="todoContent"></label>
         </div>
-        <div class="miniSakai-memoBoxItem">
+        <div class="cs-memo-item">
             <p>{{todoBox.dueDate}}</p>
             <label><input type="datetime-local" class="todoDue"></label>
         </div>
-        <div class="miniSakai-memoBoxItem">
+        <div class="cs-memo-item">
             <button type="submit" id="todo-add">{{todoBox.addBtnLabel}}</button>
         </div>
     </div>
@@ -196,6 +196,6 @@
 </div>
 
 {{^subset}}
-<div class="settings-tab" style="">
+<div class="cs-settings-tab" style="">
 </div>
 {{/subset}}

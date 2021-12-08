@@ -204,13 +204,13 @@ async function createSettingsTab(root: Element): Promise<void> {
 
   createSettingItem(root, chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
   // @ts-ignore
-  root.querySelector(".settings-tab")?.style.display = "none";
+  root.querySelector(".cs-settings-tab")?.style.display = "none";
 }
 
 function createSettingItem(root: Element, itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
-  const settingsDiv = root.querySelector(".settings-tab");
+  const settingsDiv = root.querySelector(".cs-settings-tab");
   if (settingsDiv == null) {
-    console.log(".settings-tab not found");
+    console.log(".cs-settings-tab not found");
     return;
   }
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);
@@ -223,7 +223,7 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
   const span = SettingsDom.span.cloneNode(true);
   switch (typeof value) {
     case "boolean":
-      label.classList.add("switch");
+      label.classList.add("cs-toggle-btn");
       settingItem = cloneElem(SettingsDom.toggleBtn, {checked: value, id: id}, {"change": function (res: any) { updateSettings(res, "check");}});
       break;
     case "number":

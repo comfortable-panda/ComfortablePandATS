@@ -37,7 +37,7 @@ export const miniPandA = createElem("div", { id: "miniPandA" });
 miniPandA.classList.add("cs-minisakai");
 miniPandA.classList.add("cs-tab");
 
-export const assignmentDiv = createElem("div", { className: "kadai-tab" });
+export const assignmentDiv = createElem("div", { className: "cs-assignment-tab" });
 
 export const hamburger = createElem("div", { className: "cs-loading" }, {"click": toggleMiniSakai});
 
@@ -51,7 +51,7 @@ namespace SettingsDom {
   export const resetBtn = createElem("input", { type: "button" });
   export const stringBox = createElem("input", {type: "color", className: "cp-settings-inputbox" });
   export const inputBox = createElem("input", { type: "number", className: "cp-settings-inputbox" });
-  export const span = createElem("span", { className: "slider round" });
+  export const span = createElem("span", { className: "cs-toggle-slider round" });
 }
 
 export { SettingsDom, addAttributes, createElem, cloneElem, appendChildAll };

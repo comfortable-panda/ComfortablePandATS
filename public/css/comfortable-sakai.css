@@ -406,16 +406,16 @@
     display: none;
 }
 
-.cs-tab .cs-tabpanel {
+.cs-tab .cs-tab-panel {
     display: none;
 }
 
-.cs-tab > input:first-child:checked ~ .cs-tabpanels > .cs-tabpanel:first-child,
-.cs-tab > input:nth-child(3):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(2),
-.cs-tab > input:nth-child(5):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(3),
-.cs-tab > input:nth-child(7):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(4),
-.cs-tab > input:nth-child(9):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(5),
-.cs-tab > input:nth-child(11):checked ~ .cs-tabpanels > .cs-tabpanel:nth-child(6) {
+.cs-tab > input:first-child:checked ~ .cs-tab-panels > .cs-tab-panel:first-child,
+.cs-tab > input:nth-child(3):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(2),
+.cs-tab > input:nth-child(5):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(3),
+.cs-tab > input:nth-child(7):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(4),
+.cs-tab > input:nth-child(9):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(5),
+.cs-tab > input:nth-child(11):checked ~ .cs-tab-panels > .cs-tab-panel:nth-child(6) {
     display: block;
 }
 
@@ -451,7 +451,7 @@
     }
 }
 
-.settingsBox {
+.cs-memo-box {
     padding-bottom: 10px;
     padding-left: 10px;
     margin: 10px;
@@ -599,7 +599,7 @@
     padding: 3px;
 }
 
-.settings-tab {
+.cs-settings-tab {
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 5px;
@@ -631,7 +631,7 @@
     width: 65px;
 }
 
-.miniSakai-memoBoxItem {
+.cs-memo-item {
     padding-top: 5px;
     display: block;
     flex-direction: column;
@@ -639,20 +639,20 @@
     color: rgb(70, 70, 70);
 }
 
-.switch {
+.cs-toggle-btn {
     position: relative;
     display: inline-flex;
     width: 60px;
     height: 20px;
 }
 
-.switch input {
+.cs-toggle-btn input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.slider {
+.cs-toggle-slider {
     cursor: pointer;
     text-indent: -9999px;
     margin-left: -15px;
@@ -664,7 +664,7 @@
     position: relative;
 }
 
-.slider:after {
+.cs-toggle-slider:after {
     content: '';
     position: absolute;
     top: 5px;
@@ -676,11 +676,11 @@
     transition: 0.3s;
 }
 
-input:checked + .slider {
+input:checked + .cs-toggle-slider {
     background-color: #2196F3;
 }
 
-input:checked + .slider:after {
+input:checked + .cs-toggle-slider:after {
     left: calc(100% - 5px);
     transform: translateX(-100%);
 }
