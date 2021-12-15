@@ -113,7 +113,7 @@ async function main() {
     await loadConfigs();
     await loadCourseIDList();
     mergedAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache(assignmentFetchedTime, assignmentCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
-    await addBookmarkedCourseSites(baseURL);
+    // await addBookmarkedCourseSites(baseURL);
     await displayMiniPandA(mergedAssignmentList, courseIDList);
     createNavBarNotification(courseIDList, mergedAssignmentList);
 
