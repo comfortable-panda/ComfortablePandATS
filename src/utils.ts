@@ -26,7 +26,15 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
 function formatTimestamp(timestamp: number | undefined): string {
   // timestampをフォーマットする
   const date = new Date(timestamp ? timestamp : nowTime);
-  return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2) + ":" + ("00" + date.getSeconds()).slice(-2);
+  return (
+    date.toLocaleDateString() +
+    " " +
+    date.getHours() +
+    ":" +
+    ("00" + date.getMinutes()).slice(-2) +
+    ":" +
+    ("00" + date.getSeconds()).slice(-2)
+  );
 }
 
 function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
