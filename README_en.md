@@ -93,6 +93,7 @@ The cache time can be changed in the configuration.
 - 2021/05/17 v3.5.0 Support for color universal design.
 - 2021/05/17 v3.5.2 Color code assignments with due date more than 14days
 - 2021/11/24 v4.0.0 Merged [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai).
+Now supports English locale. Re-wrote codes.
 
 # How to compile from source code
 - Run

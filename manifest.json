@@ -3,7 +3,7 @@
   "description": "__MSG_EXTENSION_DESCRIPTION__",
   "version": "4.0.0",
   "manifest_version": 2,
-  "default_locale": "en",
+  "default_locale": "ja",
   "icons": {
     "16": "img/icon16.png",
     "48": "img/icon48.png",
