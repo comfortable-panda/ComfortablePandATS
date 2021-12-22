@@ -10,8 +10,7 @@ function getBaseURL(): string {
   return baseURL;
 }
 
-// Lecture ID をすべて取得する
-// ネットワーク通信は行わない
+// Fetch all course site IDs
 function getCourseIDList(): Array<CourseSiteInfo> {
   const elementCollection = document.getElementsByClassName("fav-sites-entry");
   const elements = Array.prototype.slice.call(elementCollection);
