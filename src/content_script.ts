@@ -112,7 +112,11 @@ async function main() {
     createMiniSakaiBtn();
     await loadConfigs();
     await loadCourseIDList();
-    mergedAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache(assignmentFetchedTime, assignmentCacheInterval), useCache(quizFetchedTime, quizCacheInterval));
+    mergedAssignmentList = await loadAndMergeAssignmentList(
+      courseIDList,
+      useCache(assignmentFetchedTime, assignmentCacheInterval),
+      useCache(quizFetchedTime, quizCacheInterval)
+    );
     // await addBookmarkedCourseSites(baseURL);
     await displayMiniSakai(mergedAssignmentList, courseIDList);
     createNavBarNotification(courseIDList, mergedAssignmentList);

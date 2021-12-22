@@ -248,8 +248,9 @@ async function editFavTabMessage(): Promise<void> {
   await new Promise((r) => setTimeout(r, 200));
   try {
     const message = document.getElementsByClassName("favorites-max-marker")[0];
-    message.innerHTML =
-      '<i class="fa fa-bell warning-icon"></i>Comfortable PandAによってお気に入り登録した<br>サイトが全てバーに追加されました。';
+    message.innerHTML = `<i class="fa fa-bell warning-icon"></i>${
+      chrome.runtime.getManifest().name
+    }によってお気に入り登録した<br>サイトが全てバーに追加されました。`;
     const lectureTabs = document.getElementsByClassName("fav-sites-entry");
     const lectureTabsCount = lectureTabs.length;
     for (let i = 0; i < lectureTabsCount; i++) {

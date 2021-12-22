@@ -8,10 +8,10 @@ const subpandaRoot = document.querySelector("#subpanda");
 async function updateSubPandA(root: Element) {
   let mergedKadaiList: Array<Assignment>;
 
-  const kadais = await loadFromLocalStorage("TSkadaiList") as Array<Assignment>;
-  const quizList = await loadFromLocalStorage("TSQuizList") as Array<Assignment>;
+  const kadais = (await loadFromLocalStorage("TSkadaiList")) as Array<Assignment>;
+  const quizList = (await loadFromLocalStorage("TSQuizList")) as Array<Assignment>;
   const kadaiMemoList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
-  const lectureIDs = await loadFromLocalStorage("TSlectureids") as Array<CourseSiteInfo>;
+  const lectureIDs = (await loadFromLocalStorage("TSlectureids")) as Array<CourseSiteInfo>;
   mergedKadaiList = mergeIntoAssignmentList(kadais, quizList);
   mergedKadaiList = mergeIntoAssignmentList(mergedKadaiList, kadaiMemoList);
   mergedKadaiList = sortAssignmentList(mergedKadaiList);

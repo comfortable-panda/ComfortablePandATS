@@ -5,7 +5,7 @@ const MAX_FAVORITES = 10;
 function getSiteIdAndHrefLectureNameMap(): Map<string, { href: string, title: string }> {
   const sites = document.querySelectorAll(".fav-sites-entry");
   const map = new Map<string, { href: string; title: string }>();
-  sites.forEach(site => {
+  sites.forEach((site) => {
     const siteId = site.querySelector(".site-favorite-btn")?.getAttribute("data-site-id");
     if (siteId == null) return;
     const href = (site.querySelector(".fav-title")?.childNodes[1] as HTMLAnchorElement).href;
