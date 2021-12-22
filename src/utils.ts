@@ -82,7 +82,7 @@ function updateIsReadFlag(assignmentList: Array<Assignment>): void {
         updatedAssignmentList.push(assignment);
       }
     }
-    saveToLocalStorage("TSkadaiList", updatedAssignmentList);
+    saveToLocalStorage("CS_AssignmentList", updatedAssignmentList);
   }
 }
 

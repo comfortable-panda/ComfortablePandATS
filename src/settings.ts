@@ -62,7 +62,7 @@ export class DefaultSettings extends Settings {
 }
 
 export async function loadSettings(): Promise<Settings>{
-  const settingsArr = await loadFromLocalStorage("TSSettings");
+  const settingsArr = await loadFromLocalStorage("CS_Settings");
   const CPsettings = convertArrayToSettings(settingsArr);
   CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
   return CPsettings;

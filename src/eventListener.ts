@@ -79,9 +79,9 @@ async function toggleFinishedFlag(event: any): Promise<void> {
   const assignmentID = event.target.id;
   let assignmentList: Array<Assignment>;
   // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
-  if (assignmentID[0] === "m") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
-  else if (assignmentID[0] === "q") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSQuizList"));
-  else assignmentList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiList"));
+  if (assignmentID[0] === "m") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_MemoList"));
+  else if (assignmentID[0] === "q") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_QuizList"));
+  else assignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_AssignmentList"));
 
   const updatedAssignmentList = [];
   for (const assignment of assignmentList) {
@@ -110,9 +110,9 @@ async function toggleFinishedFlag(event: any): Promise<void> {
     updatedAssignmentList.push(new Assignment(assignment.courseSiteInfo, updatedAssignmentEntries, assignment.isRead));
   }
 
-  if (assignmentID[0] === "m") await saveToLocalStorage("TSkadaiMemoList", updatedAssignmentList);
-  else if (assignmentID[0] === "q") await saveToLocalStorage("TSQuizList", updatedAssignmentList);
-  else await saveToLocalStorage("TSkadaiList", updatedAssignmentList);
+  if (assignmentID[0] === "m") await saveToLocalStorage("CS_MemoList", updatedAssignmentList);
+  else if (assignmentID[0] === "q") await saveToLocalStorage("CS_QuizList", updatedAssignmentList);
+  else await saveToLocalStorage("CS_AssignmentList", updatedAssignmentList);
 
   // NavBarを再描画
   await reloadNavBar(courseIDList, true);
@@ -134,7 +134,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
   }
 
   const settings = new Settings();
-  const oldSettings = await loadFromLocalStorage("TSSettings");
+  const oldSettings = await loadFromLocalStorage("CS_Settings");
   for (const i in DefaultSettings) {
     // @ts-ignore
     settings[i] = oldSettings[i] ?? DefaultSettings[i];
@@ -163,7 +163,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
     CPsettings[settingsID] = settingsValue;
   }
 
-  saveToLocalStorage("TSSettings", settings);
+  saveToLocalStorage("CS_Settings", settings);
 
   // NavBarを再描画
   await reloadNavBar(courseIDList, true);
@@ -176,7 +176,7 @@ async function addMemo(): Promise<void> {
   // @ts-ignore
   const memoDueDateTimestamp = new Date(document.querySelector(".todoDue").value).getTime() / 1000;
 
-  let memoList = await loadFromLocalStorage("TSkadaiMemoList");
+  let memoList = await loadFromLocalStorage("CS_MemoList");
   const memoEntry = new AssignmentEntry(genUniqueStr(), memoTitle, memoDueDateTimestamp, memoDueDateTimestamp, true, false, false, "");
   const memo = new Assignment(new CourseSiteInfo(courseID, courseID), [memoEntry], true);
 
@@ -193,7 +193,7 @@ async function addMemo(): Promise<void> {
   } else {
     memoList = [memo];
   }
-  saveToLocalStorage("TSkadaiMemoList", memoList);
+  saveToLocalStorage("CS_MemoList", memoList);
 
   // Redraw miniSakai menu
   while (miniSakai.firstChild) {
@@ -205,7 +205,7 @@ async function addMemo(): Promise<void> {
   miniSakai.remove();
   assignmentDiv.remove();
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, memoList);
-  const quizList = await loadFromLocalStorage("TSQuizList");
+  const quizList = await loadFromLocalStorage("CS_QuizList");
   await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
@@ -214,7 +214,7 @@ async function addMemo(): Promise<void> {
 
 async function deleteMemo(event: any): Promise<void> {
   const memoID = event.target.id;
-  const memoList = convertArrayToAssignment(await loadFromLocalStorage("TSkadaiMemoList"));
+  const memoList = convertArrayToAssignment(await loadFromLocalStorage("CS_MemoList"));
   const deletedMemoList = [];
   for (const memo of memoList) {
     const memoEntries = [];
@@ -234,9 +234,9 @@ async function deleteMemo(event: any): Promise<void> {
   miniSakai.remove();
   assignmentDiv.remove();
 
-  saveToLocalStorage("TSkadaiMemoList", deletedMemoList);
+  saveToLocalStorage("CS_MemoList", deletedMemoList);
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, deletedMemoList);
-  const quizList = await loadFromLocalStorage("TSQuizList");
+  const quizList = await loadFromLocalStorage("CS_QuizList");
   await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
