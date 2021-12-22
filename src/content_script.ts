@@ -117,7 +117,7 @@ async function main() {
       useCache(assignmentFetchedTime, assignmentCacheInterval),
       useCache(quizFetchedTime, quizCacheInterval)
     );
-    // await addBookmarkedCourseSites(baseURL);
+    await addBookmarkedCourseSites(baseURL);
     await displayMiniSakai(mergedAssignmentList, courseIDList);
     createNavBarNotification(courseIDList, mergedAssignmentList);
 
