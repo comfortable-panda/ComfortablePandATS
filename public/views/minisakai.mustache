@@ -7,7 +7,7 @@
 <input id="settingsTab" type="radio" name="cs-tab">
 <label for="settingsTab"> {{titles.settingsTab}} </label>
 <button id="cs-add-memo-btn">+</button>
-{{/subset}}
+
 <div class="cs-assignment-time">
     <p class="cs-assignment-time-text">{{titles.assignmentFetchedTime}}</p>
     <p class="cs-assignment-time-text">{{fetchedTime.assignment}}</p>
@@ -16,6 +16,7 @@
     <p class="cs-assignment-time-text">{{titles.quizFetchedTime}}</p>
     <p class="cs-assignment-time-text">{{fetchedTime.assignment}}</p>
 </div>
+{{/subset}}
 
 <div class="cs-assignment-tab">
     {{^subset}}
