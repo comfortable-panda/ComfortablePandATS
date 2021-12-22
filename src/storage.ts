@@ -1,3 +1,11 @@
+function getKeys(): Promise<any> {
+  return new Promise(function (resolve, reject) {
+    chrome.storage.local.get(null, function (keys: any) {
+      resolve(Object.keys(keys));
+    });
+  });
+}
+
 function loadFromLocalStorage(key: string, ifUndefinedType = "array"): Promise<any> {
   const hostName = window.location.hostname;
   return new Promise(function (resolve, reject) {
@@ -24,8 +32,7 @@ function loadFromLocalStorage(key: string, ifUndefinedType = "array"): Promise<a
   });
 }
 
-function loadFromLocalStorage2(key: string): Promise<any> {
-  const hostName = "panda.ecs.kyoto-u.ac.jp";
+function loadFromLocalStorage2(hostName: string, key: string): Promise<any> {
   return new Promise(function (resolve, reject) {
     chrome.storage.local.get(hostName, function (items: any) {
       if (typeof items[hostName] === "undefined" || typeof items[hostName][key] === "undefined") {
@@ -52,4 +59,4 @@ function saveToLocalStorage(key: string, value: any): Promise<any> {
   });
 }
 
-export { loadFromLocalStorage, loadFromLocalStorage2, saveToLocalStorage };
+export { loadFromLocalStorage, loadFromLocalStorage2, saveToLocalStorage, getKeys };

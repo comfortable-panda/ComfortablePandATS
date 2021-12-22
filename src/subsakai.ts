@@ -1,22 +1,21 @@
 import { Assignment, CourseSiteInfo } from "./model";
-import { loadFromLocalStorage2 } from "./storage";
+import { getKeys, loadFromLocalStorage2 } from "./storage";
 import { convertArrayToAssignment, mergeIntoAssignmentList, sortAssignmentList } from "./utils";
 import { createMiniSakaiGeneralized } from "./minisakai";
 
 const subSakaiRoot = document.querySelector("#sub-sakai");
 
 async function updateSubSakai(root: Element) {
+  const hostname = (await getKeys())[0];
   let mergedAssignmentList: Array<Assignment>;
 
-  const assignmentList = convertArrayToAssignment(await loadFromLocalStorage2("TSkadaiList"));
-  const quizList = convertArrayToAssignment(await loadFromLocalStorage2("TSQuizList"));
-  const assignmentMemoList = convertArrayToAssignment(await loadFromLocalStorage2("TSkadaiMemoList"));
-  const courseIDs = (await loadFromLocalStorage2("TSlectureids")) as Array<CourseSiteInfo>;
+  const assignmentList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "TSkadaiList"));
+  const quizList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "TSQuizList"));
+  const assignmentMemoList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "TSkadaiMemoList"));
+  const courseIDs = (await loadFromLocalStorage2(hostname, "TSlectureids")) as Array<CourseSiteInfo>;
   mergedAssignmentList = mergeIntoAssignmentList(assignmentList, quizList);
   mergedAssignmentList = mergeIntoAssignmentList(mergedAssignmentList, assignmentMemoList);
   mergedAssignmentList = sortAssignmentList(mergedAssignmentList);
-
-  console.log("merged", mergedAssignmentList);
 
   createMiniSakaiGeneralized(root, mergedAssignmentList, courseIDs, true, (rendered) => {
     console.log(rendered);
