@@ -300,6 +300,10 @@
     color: #b01011
 }
 
+.cs-assignmate-date-padding {
+    padding-left: 15px;
+}
+
 .cs-assignment-title {
     font-size: 12px !important;
     color: #524e4e;

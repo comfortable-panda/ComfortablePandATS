@@ -52,9 +52,14 @@
             <div id="b{{courseID}}" class="cs-assignment-danger" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="cs-course-danger cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
+                  {{^subset}}
                     <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
                     <p class="cs-assignment-date">{{dueDateString}}</p>
+                  {{/subset}}
+                  {{#subset}}
+                    <p class="cs-assignment-date cs-assignmate-date-padding">{{dueDateString}}</p>
+                  {{/subset}}
                     <span class="cs-assignment-time-remain">{{remainTimeString}}</span>
                     <p class="cs-assignment-title">
                         {{#isMemo}}
@@ -81,9 +86,14 @@
             <div id="b{{courseID}}" class="cs-assignment-warning" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="cs-course-warning cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
+                  {{^subset}}
                     <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
                     <p class="cs-assignment-date">{{dueDateString}}</p>
+                  {{/subset}}
+                  {{#subset}}
+                    <p class="cs-assignment-date cs-assignmate-date-padding">{{dueDateString}}</p>
+                  {{/subset}}
                     <span class="cs-assignment-time-remain">{{remainTimeString}}</span>
                     <p class="cs-assignment-title">
                         {{#isMemo}}
@@ -110,9 +120,14 @@
             <div id="b{{courseID}}" class="cs-assignment-success" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
             <a class="cs-course-success cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
-                <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
-                <label for="{{assignmentID}}"></label>
-                <p class="cs-assignment-date">{{dueDateString}}</p>
+                  {{^subset}}
+                    <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
+                    <label for="{{assignmentID}}"></label>
+                    <p class="cs-assignment-date">{{dueDateString}}</p>
+                  {{/subset}}
+                  {{#subset}}
+                    <p class="cs-assignment-date cs-assignmate-date-padding">{{dueDateString}}</p>
+                  {{/subset}}
                 <span class="cs-assignment-time-remain">{{remainTimeString}}</span>
                 <p class="cs-assignment-title">
                     {{#isMemo}}
@@ -139,9 +154,14 @@
             <div id="b{{courseID}}" class="cs-assignment-other" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                 <a class="cs-course-other cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                 {{#assignmentEntries}}
+                  {{^subset}}
                     <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                     <label for="{{assignmentID}}"></label>
                     <p class="cs-assignment-date">{{dueDateString}}</p>
+                  {{/subset}}
+                  {{#subset}}
+                    <p class="cs-assignment-date cs-assignmate-date-padding">{{dueDateString}}</p>
+                  {{/subset}}
                     <span class="cs-assignment-time-remain">{{remainTimeString}}</span>
                     <p class="cs-assignment-title">
                         {{#isMemo}}
@@ -168,9 +188,14 @@
                 <div id="b{{courseID}}" class="cs-assignment-late" style="border-style: solid; border-width: 2px; border-color: {{successBorderColor}}">
                     <a class="cs-course-late cs-course-name" href="{{coursePage}}">{{courseName}}</a>
                     {{#assignmentEntries}}
+                      {{^subset}}
                         <input id="{{assignmentID}}" class="cs-checkbox" type="checkbox" {{#isFinished}}checked{{/isFinished}}>
                         <label for="{{assignmentID}}"></label>
                         <p class="cs-assignment-date">{{dueCloseDateString}}</p>
+                      {{/subset}}
+                      {{#subset}}
+                        <p class="cs-assignment-date cs-assignmate-date-padding">{{dueCloseDateString}}</p>
+                      {{/subset}}
                         <span class="cs-assignment-time-remain">{{remainCloseTimeString}}</span>
                         <p class="cs-assignment-title">
                             {{#isMemo}}
