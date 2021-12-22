@@ -26,7 +26,15 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
 function formatTimestamp(timestamp: number | undefined): string {
   // timestampをフォーマットする
   const date = new Date(timestamp ? timestamp : nowTime);
-  return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2) + ":" + ("00" + date.getSeconds()).slice(-2);
+  return (
+    date.toLocaleDateString() +
+    " " +
+    date.getHours() +
+    ":" +
+    ("00" + date.getMinutes()).slice(-2) +
+    ":" +
+    ("00" + date.getSeconds()).slice(-2)
+  );
 }
 
 function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
@@ -80,11 +88,11 @@ function updateIsReadFlag(assignmentList: Array<Assignment>): void {
 
 function miniSakaiReady(): void {
   // ロード表示を切り替えて3本線表示にする
-  const loadingIcon = document.getElementsByClassName("loader")[0];
+  const loadingIcon = document.getElementsByClassName("cs-loading")[0];
   const hamburgerIcon = document.createElement("img");
   hamburgerIcon.src = chrome.extension.getURL("img/miniSakaiBtn.png");
-  hamburgerIcon.className = "hamburgerIcon";
-  loadingIcon.className = "hamburgerDiv";
+  hamburgerIcon.className = "cs-minisakai-btn";
+  loadingIcon.className = "cs-minisakai-btn-div";
   loadingIcon.append(hamburgerIcon);
 }
 

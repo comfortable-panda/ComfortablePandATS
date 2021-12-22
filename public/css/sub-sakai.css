@@ -10,25 +10,24 @@ span {
     font-family: "Open Sans", sans-serif;
 }
 
-.kadai-title {
+.cs-assignment-title {
     font-family: "Open Sans", sans-serif;
     font-size: 12px !important;
     color: #524e4e;
     padding-left: 20px;
     word-break: break-word;
 }
-.kadai-date {
+.cs-assignment-date {
     font-family: initial;
     font-size: 11px !important;
     font-weight: bold;
     color: #b01011
 }
-/* .kadai-tab {
-} */
+
 .sp{
     margin: 10px;
 }
-.kadai-time {
+.cs-assignment-time {
     font-family: "Open Sans", sans-serif;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -40,7 +39,7 @@ span {
     font-size: small;
 }
 
-.quiz-time {
+.cs-quiz-time {
     font-family: "Open Sans", sans-serif;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -52,14 +51,14 @@ span {
     font-size: small;
 }
 
-.logo {
+.cs-minisakai-logo {
     top: 7px;
     left: 2px;
     height: 40px;
     position: unset;
 }
 
-.cp-version{
+.cs-version{
     font-family: "Open  Sans", sans-serif;
     padding-left: 5px;
     font-weight: bold;

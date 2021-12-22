@@ -1,6 +1,6 @@
 import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
 import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
-import { appendChildAll, cloneElem, hamburger, miniPandA, SettingsDom } from "./dom";
+import { appendChildAll, cloneElem, hamburger, miniSakai, SettingsDom } from "./dom";
 import { CPsettings, assignmentFetchedTime, quizFetchedTime, VERSION } from "./content_script";
 import {
   addMemo,
@@ -24,7 +24,7 @@ function createMiniSakaiBtn(): void {
   }
 }
 
-export function createMiniPandAGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
+export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
   const assignmentFetchedTimeString = formatTimestamp(assignmentFetchedTime);
   const quizFetchedTimeString = formatTimestamp(quizFetchedTime);
 
@@ -84,7 +84,8 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
           appendElement(courseName, otherElements);
           break;
         case "duePassed":
-          if (CPsettings.getDisplayLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
+          const showLateSubmitAssignment = CPsettings ? CPsettings.getDisplayLateSubmitAssignment : false;
+          if (showLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
             appendElement(courseName, lateSubmitElements);
           }
           break;
@@ -125,7 +126,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       assignment: assignmentFetchedTimeString,
       quiz: quizFetchedTimeString,
     },
-    minipandaLogo: chrome.extension.getURL("img/logo.png"),
+    miniSakaiLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
     subset: subset,
     showRelaxPandA: relaxPandA,
@@ -179,12 +180,12 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     });
 }
 
-function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
-  createMiniPandAGeneralized(miniPandA, assignmentList, courseSiteInfos, false, (rendered) => {
-    miniPandA.innerHTML = rendered;
+function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
+  createMiniSakaiGeneralized(miniSakai, assignmentList, courseSiteInfos, false, (rendered) => {
+    miniSakai.innerHTML = rendered;
     const parent = document.getElementById("pageBody");
     const ref = document.getElementById("toolMenuWrap");
-    parent?.insertBefore(miniPandA, ref);
+    parent?.insertBefore(miniSakai, ref);
   });
 }
 
@@ -204,13 +205,13 @@ async function createSettingsTab(root: Element): Promise<void> {
 
   createSettingItem(root, chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
   // @ts-ignore
-  root.querySelector(".settings-tab")?.style.display = "none";
+  root.querySelector(".cs-settings-tab")?.style.display = "none";
 }
 
 function createSettingItem(root: Element, itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
-  const settingsDiv = root.querySelector(".settings-tab");
+  const settingsDiv = root.querySelector(".cs-settings-tab");
   if (settingsDiv == null) {
-    console.log(".settings-tab not found");
+    console.log(".cs-settings-tab not found");
     return;
   }
   const mainDiv = SettingsDom.mainDiv.cloneNode(true);
@@ -223,7 +224,7 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
   const span = SettingsDom.span.cloneNode(true);
   switch (typeof value) {
     case "boolean":
-      label.classList.add("switch");
+      label.classList.add("cs-toggle-btn");
       settingItem = cloneElem(SettingsDom.toggleBtn, {checked: value, id: id}, {"change": function (res: any) { updateSettings(res, "check");}});
       break;
     case "number":
@@ -247,30 +248,30 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
 }
 
 function registerEventHandlers(root: Element) {
-  root.querySelector("#kadaiTab")?.addEventListener("click", () => toggleAssignmentTab());
+  root.querySelector("#assignmentTab")?.addEventListener("click", () => toggleAssignmentTab());
   root.querySelector("#settingsTab")?.addEventListener("click", () => toggleSettingsTab());
-  root.querySelectorAll(".todo-check").forEach((c) => c.addEventListener("change", (e) => toggleFinishedFlag(e)));
+  root.querySelectorAll(".cs-checkbox").forEach((c) => c.addEventListener("change", (e) => toggleFinishedFlag(e)));
   root.querySelector("#close_btn")?.addEventListener("click", () => toggleMiniSakai());
-  root.querySelector("#plus-button")?.addEventListener("click", () => toggleMemoBox());
+  root.querySelector("#cs-add-memo-btn")?.addEventListener("click", () => toggleMemoBox());
   root.querySelector("#todo-add")?.addEventListener("click", () => addMemo());
-  root.querySelectorAll(".del-button").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
+  root.querySelectorAll(".cs-del-memo-btn").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
 }
 
 function initState(root: Element) {
   // @ts-ignore
-  root.querySelector("#kadaiTab")?.checked = true;
+  root.querySelector("#assignmentTab")?.checked = true;
   // @ts-ignore
   root.querySelector(".todoDue")?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`)
     .toISOString()
     .substr(0, 16);
 }
 
-async function displayMiniPandA(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
-  createMiniPandA(mergedAssignmentList, courseSiteInfos);
+async function displayMiniSakai(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
+  createMiniSakai(mergedAssignmentList, courseSiteInfos);
 }
 
 function deleteNavBarNotification(): void {
-  const classlist = ["red-badge", "nav-danger", "nav-warning", "nav-safe"];
+  const classlist = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success"];
   for (const c of classlist) {
     const q = document.querySelectorAll(`.${c}`);
     // @ts-ignore
@@ -296,34 +297,34 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
       if (q !== -1) {
         const closestTime = (CPsettings.displayCheckedKadai) ? assignmentList[q].closestDueDateTimestamp : assignmentList[q].closestDueDateTimestampExcludeFinished;
         if (!assignmentList[q].isRead && closestTime !== -1) {
-          defaultTab[j].classList.add("red-badge");
+          defaultTab[j].classList.add("cs-notification-badge");
         }
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
 
         switch (daysUntilDue) {
           case "due24h":
-            defaultTab[j].classList.add("nav-danger");
+            defaultTab[j].classList.add("cs-tab-danger");
             for (let i = 0; i < aTagCount; i++) {
-              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-danger");
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-danger");
             }
             break;
           case "due5d":
-            defaultTab[j].classList.add("nav-warning");
+            defaultTab[j].classList.add("cs-tab-warning");
             for (let i = 0; i < aTagCount; i++) {
-              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-warning");
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-warning");
             }
             break;
           case "due14d":
-            defaultTab[j].classList.add("nav-safe");
+            defaultTab[j].classList.add("cs-tab-success");
             for (let i = 0; i < aTagCount; i++) {
-              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-safe");
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-success");
             }
             break;
           case "dueOver14d":
-            defaultTab[j].classList.add("nav-other");
+            defaultTab[j].classList.add("cs-tab-other");
             for (let i = 0; i < aTagCount; i++) {
-              defaultTab[j].getElementsByTagName("a")[i].classList.add("nav-other");
+              defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-other");
             }
             break;
         }
@@ -352,19 +353,19 @@ function overrideCSSColor() {
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
-  overwriteborder("kadai-danger", CPsettings.getMiniColorDanger);
-  overwriteborder("kadai-success", CPsettings.getMiniColorSuccess);
-  overwriteborder("kadai-warning", CPsettings.getMiniColorWarning);
-  overwritebackground("lecture-danger", CPsettings.getMiniColorDanger);
-  overwritebackground("lecture-success", CPsettings.getMiniColorSuccess);
-  overwritebackground("lecture-warning", CPsettings.getMiniColorWarning);
+  overwriteborder("cs-assignment-danger", CPsettings.getMiniColorDanger);
+  overwriteborder("cs-assignment-success", CPsettings.getMiniColorSuccess);
+  overwriteborder("cs-assignment-warning", CPsettings.getMiniColorWarning);
+  overwritebackground("cs-course-danger", CPsettings.getMiniColorDanger);
+  overwritebackground("cs-course-success", CPsettings.getMiniColorSuccess);
+  overwritebackground("cs-course-warning", CPsettings.getMiniColorWarning);
 
-  overwritebackground("nav-danger", CPsettings.getTopColorDanger);
-  overwritebackground("nav-safe", CPsettings.getTopColorSuccess);
-  overwritebackground("nav-warning", CPsettings.getTopColorWarning);
-  overwriteborder("nav-danger", CPsettings.getTopColorDanger);
-  overwriteborder("nav-safe", CPsettings.getTopColorSuccess);
-  overwriteborder("nav-warning", CPsettings.getTopColorWarning);
+  overwritebackground("cs-tab-danger", CPsettings.getTopColorDanger);
+  overwritebackground("cs-tab-success", CPsettings.getTopColorSuccess);
+  overwritebackground("cs-tab-warning", CPsettings.getTopColorWarning);
+  overwriteborder("cs-tab-danger", CPsettings.getTopColorDanger);
+  overwriteborder("cs-tab-success", CPsettings.getTopColorSuccess);
+  overwriteborder("cs-tab-warning", CPsettings.getTopColorWarning);
 }
 
-export { createMiniSakaiBtn, createMiniPandA, displayMiniPandA, deleteNavBarNotification, createNavBarNotification };
+export { createMiniSakaiBtn, createMiniSakai, displayMiniSakai, deleteNavBarNotification, createNavBarNotification };

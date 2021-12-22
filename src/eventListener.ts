@@ -1,31 +1,22 @@
-import { assignmentDiv, miniPandA } from "./dom";
+import { assignmentDiv, miniSakai } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
-import {CourseSiteInfo, Assignment, AssignmentEntry} from "./model";
+import { CourseSiteInfo, Assignment, AssignmentEntry } from "./model";
 import { convertArrayToAssignment, genUniqueStr, mergeIntoAssignmentList } from "./utils";
-import {
-  CPsettings,
-  courseIDList,
-  loadAndMergeAssignmentList,
-  mergedAssignmentListNoMemo,
-} from "./content_script";
+import { CPsettings, courseIDList, loadAndMergeAssignmentList, mergedAssignmentListNoMemo } from "./content_script";
 import { DefaultSettings, Settings } from "./settings";
-import {
-  createNavBarNotification,
-  deleteNavBarNotification,
-  displayMiniPandA,
-} from "./minipanda";
+import { createNavBarNotification, deleteNavBarNotification, displayMiniSakai } from "./minisakai";
 
 let toggle = false;
 
 function toggleMiniSakai(): void {
   // miniSakaiを表示・非表示にします
   if (toggle) {
-    miniPandA.style.width = "0px";
-    document.getElementById("cover")?.remove();
+    miniSakai.style.width = "0px";
+    document.getElementById("cs-cover")?.remove();
   } else {
-    miniPandA.style.width = "300px";
+    miniSakai.style.width = "300px";
     const cover = document.createElement("div");
-    cover.id = "cover";
+    cover.id = "cs-cover";
     document.getElementsByTagName("body")[0].appendChild(cover);
     cover.onclick = toggleMiniSakai;
   }
@@ -34,38 +25,38 @@ function toggleMiniSakai(): void {
 
 function toggleAssignmentTab(): void {
   // 課題一覧タブの表示・非表示をします
-  const assignmentTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".cs-assignment-tab");
   // @ts-ignore
   assignmentTab.style.display = "";
-  const settingsTab = document.querySelector(".settings-tab");
+  const settingsTab = document.querySelector(".cs-settings-tab");
   // @ts-ignore
   settingsTab.style.display = "none";
-  const addMemoButton = document.querySelector("#plus-button");
+  const addMemoButton = document.querySelector("#cs-add-memo-btn");
   // @ts-ignore
   addMemoButton.style.display = "";
-  const assignmentFetchedTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
   // @ts-ignore
   assignmentFetchedTime.style.display = "";
-  const quizFetchedTime = document.querySelector(".quiz-time");
+  const quizFetchedTime = document.querySelector(".cs-quiz-time");
   // @ts-ignore
   quizFetchedTime.style.display = "";
 }
 
 function toggleSettingsTab(): void {
   // クイズ・小テスト・試験一覧タブを表示・非表示にします
-  const assignmentTab = document.querySelector(".kadai-tab");
+  const assignmentTab = document.querySelector(".cs-assignment-tab");
   // @ts-ignore
   assignmentTab.style.display = "none";
-  const settingsTab = document.querySelector(".settings-tab");
+  const settingsTab = document.querySelector(".cs-settings-tab");
   // @ts-ignore
   settingsTab.style.display = "";
-  const addMemoButton = document.querySelector("#plus-button");
+  const addMemoButton = document.querySelector("#cs-add-memo-btn");
   // @ts-ignore
   addMemoButton.style.display = "none";
-  const assignmentFetchedTime = document.querySelector(".kadai-time");
+  const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
   // @ts-ignore
   assignmentFetchedTime.style.display = "none";
-  const quizFetchedTime = document.querySelector(".quiz-time");
+  const quizFetchedTime = document.querySelector(".cs-quiz-time");
   // @ts-ignore
   quizFetchedTime.style.display = "none";
 }
@@ -144,7 +135,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
 
   const settings = new Settings();
   const oldSettings = await loadFromLocalStorage("TSSettings");
-  for (const i in DefaultSettings){
+  for (const i in DefaultSettings) {
     // @ts-ignore
     settings[i] = oldSettings[i] ?? DefaultSettings[i];
   }
@@ -192,7 +183,7 @@ async function addMemo(): Promise<void> {
   if (typeof memoList !== "undefined" && memoList.length > 0) {
     memoList = convertArrayToAssignment(memoList);
     const idx = memoList.findIndex((oldMemo: Assignment) => {
-      return (oldMemo.courseSiteInfo.courseID === courseID);
+      return oldMemo.courseSiteInfo.courseID === courseID;
     });
     if (idx !== -1) {
       memoList[idx].assignmentEntries.push(memoEntry);
@@ -204,18 +195,18 @@ async function addMemo(): Promise<void> {
   }
   saveToLocalStorage("TSkadaiMemoList", memoList);
 
-  // miniPandAを再描画
-  while (miniPandA.firstChild) {
-    miniPandA.removeChild(miniPandA.firstChild);
+  // Redraw miniSakai menu
+  while (miniSakai.firstChild) {
+    miniSakai.removeChild(miniSakai.firstChild);
   }
   while (assignmentDiv.firstChild) {
     assignmentDiv.removeChild(assignmentDiv.firstChild);
   }
-  miniPandA.remove();
+  miniSakai.remove();
   assignmentDiv.remove();
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, memoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
+  await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
   await reloadNavBar(courseIDList, true);
@@ -233,20 +224,20 @@ async function deleteMemo(event: any): Promise<void> {
     deletedMemoList.push(new Assignment(memo.courseSiteInfo, memoEntries, memo.isRead));
   }
 
-  // miniPandAを再描画
-  while (miniPandA.firstChild) {
-    miniPandA.removeChild(miniPandA.firstChild);
+  // Redraw miniSakai menu
+  while (miniSakai.firstChild) {
+    miniSakai.removeChild(miniSakai.firstChild);
   }
   while (assignmentDiv.firstChild) {
     assignmentDiv.removeChild(assignmentDiv.firstChild);
   }
-  miniPandA.remove();
+  miniSakai.remove();
   assignmentDiv.remove();
 
   saveToLocalStorage("TSkadaiMemoList", deletedMemoList);
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, deletedMemoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
+  await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
   await reloadNavBar(courseIDList, true);
@@ -257,8 +248,9 @@ async function editFavTabMessage(): Promise<void> {
   await new Promise((r) => setTimeout(r, 200));
   try {
     const message = document.getElementsByClassName("favorites-max-marker")[0];
-    message.innerHTML =
-      '<i class="fa fa-bell warning-icon"></i>ComfortablePandAによってお気に入り登録した<br>サイトが全てバーに追加されました。';
+    message.innerHTML = `<i class="fa fa-bell warning-icon"></i>${
+      chrome.runtime.getManifest().name
+    }によってお気に入り登録した<br>サイトが全てバーに追加されました。`;
     const lectureTabs = document.getElementsByClassName("fav-sites-entry");
     const lectureTabsCount = lectureTabs.length;
     for (let i = 0; i < lectureTabsCount; i++) {
@@ -269,7 +261,7 @@ async function editFavTabMessage(): Promise<void> {
   }
 }
 
-async function reloadNavBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void>{
+async function reloadNavBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void> {
   // NavBarを再描画
   deleteNavBarNotification();
   const newAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache, useCache);

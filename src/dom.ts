@@ -33,25 +33,25 @@ function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
   return to;
 }
 
-export const miniPandA = createElem("div", { id: "miniPandA" });
-miniPandA.classList.add("sidenav");
-miniPandA.classList.add("cp_tab");
+export const miniSakai = createElem("div", { id: "miniSakai" });
+miniSakai.classList.add("cs-minisakai");
+miniSakai.classList.add("cs-tab");
 
-export const assignmentDiv = createElem("div", { className: "kadai-tab" });
+export const assignmentDiv = createElem("div", { className: "cs-assignment-tab" });
 
-export const hamburger = createElem("div", { className: "loader" }, {"click": toggleMiniSakai});
+export const hamburger = createElem("div", { className: "cs-loading" }, { click: toggleMiniSakai });
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace SettingsDom {
-  export const mainDiv = createElem("div", {className: "cp-settings"});
+  export const mainDiv = createElem("div", { className: "cp-settings" });
   export const div = createElem("div");
-  export const p = createElem("p", {className: "cp-settings-text"});
+  export const p = createElem("p", { className: "cp-settings-text" });
   export const label = createElem("label");
   export const toggleBtn = createElem("input", { type: "checkbox" });
   export const resetBtn = createElem("input", { type: "button" });
-  export const stringBox = createElem("input", {type: "color", className: "cp-settings-inputbox" });
+  export const stringBox = createElem("input", { type: "color", className: "cp-settings-inputbox" });
   export const inputBox = createElem("input", { type: "number", className: "cp-settings-inputbox" });
-  export const span = createElem("span", { className: "slider round" });
+  export const span = createElem("span", { className: "cs-toggle-slider round" });
 }
 
 export { SettingsDom, addAttributes, createElem, cloneElem, appendChildAll };

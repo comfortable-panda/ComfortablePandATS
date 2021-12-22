@@ -19,7 +19,7 @@
         "content_script.js"
       ],
       "css": [
-        "css/custom-panda.css"
+        "css/comfortable-sakai.css"
       ],
       "matches": ["https://panda.ecs.kyoto-u.ac.jp/*"]
     }
@@ -34,7 +34,7 @@
     "storage"
   ],
   "web_accessible_resources": [
-    "css/custom-panda.css",
+    "css/comfortable-sakai.css",
     "img/logo.png",
     "img/relaxPanda.png",
     "img/miniSakaiBtn.png",
