@@ -19,8 +19,18 @@ function loadFromLocalStorage(key: string, ifUndefinedType = "array"): Promise<a
             break;
         }
         resolve(res);
-      }
-      else resolve(items[hostName][key]);
+      } else resolve(items[hostName][key]);
+    });
+  });
+}
+
+function loadFromLocalStorage2(key: string): Promise<any> {
+  const hostName = "panda.ecs.kyoto-u.ac.jp";
+  return new Promise(function (resolve, reject) {
+    chrome.storage.local.get(hostName, function (items: any) {
+      if (typeof items[hostName] === "undefined" || typeof items[hostName][key] === "undefined") {
+        resolve([]);
+      } else resolve(items[hostName][key]);
     });
   });
 }
@@ -42,4 +52,4 @@ function saveToLocalStorage(key: string, value: any): Promise<any> {
   });
 }
 
-export { loadFromLocalStorage, saveToLocalStorage };
+export { loadFromLocalStorage, loadFromLocalStorage2, saveToLocalStorage };
