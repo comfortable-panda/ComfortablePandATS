@@ -1,6 +1,6 @@
 import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
 import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
-import { appendChildAll, cloneElem, hamburger, miniPandA, SettingsDom } from "./dom";
+import { appendChildAll, cloneElem, hamburger, miniSakai, SettingsDom } from "./dom";
 import { CPsettings, assignmentFetchedTime, quizFetchedTime, VERSION } from "./content_script";
 import {
   addMemo,
@@ -24,7 +24,7 @@ function createMiniSakaiBtn(): void {
   }
 }
 
-export function createMiniPandAGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
+export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
   const assignmentFetchedTimeString = formatTimestamp(assignmentFetchedTime);
   const quizFetchedTimeString = formatTimestamp(quizFetchedTime);
 
@@ -125,7 +125,7 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
       assignment: assignmentFetchedTimeString,
       quiz: quizFetchedTimeString,
     },
-    minipandaLogo: chrome.extension.getURL("img/logo.png"),
+    miniSakaiLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
     subset: subset,
     showRelaxPandA: relaxPandA,
@@ -179,12 +179,12 @@ export function createMiniPandAGeneralized(root: Element, assignmentList: Array<
     });
 }
 
-function createMiniPandA(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
-  createMiniPandAGeneralized(miniPandA, assignmentList, courseSiteInfos, false, (rendered) => {
-    miniPandA.innerHTML = rendered;
+function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
+  createMiniSakaiGeneralized(miniSakai, assignmentList, courseSiteInfos, false, (rendered) => {
+    miniSakai.innerHTML = rendered;
     const parent = document.getElementById("pageBody");
     const ref = document.getElementById("toolMenuWrap");
-    parent?.insertBefore(miniPandA, ref);
+    parent?.insertBefore(miniSakai, ref);
   });
 }
 
@@ -265,8 +265,8 @@ function initState(root: Element) {
     .substr(0, 16);
 }
 
-async function displayMiniPandA(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
-  createMiniPandA(mergedAssignmentList, courseSiteInfos);
+async function displayMiniSakai(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
+  createMiniSakai(mergedAssignmentList, courseSiteInfos);
 }
 
 function deleteNavBarNotification(): void {
@@ -367,4 +367,4 @@ function overrideCSSColor() {
   overwriteborder("cs-tab-warning", CPsettings.getTopColorWarning);
 }
 
-export { createMiniSakaiBtn, createMiniPandA, displayMiniPandA, deleteNavBarNotification, createNavBarNotification };
+export { createMiniSakaiBtn, createMiniSakai, displayMiniSakai, deleteNavBarNotification, createNavBarNotification };

@@ -1,4 +1,4 @@
-import { assignmentDiv, miniPandA } from "./dom";
+import { assignmentDiv, miniSakai } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import {CourseSiteInfo, Assignment, AssignmentEntry} from "./model";
 import { convertArrayToAssignment, genUniqueStr, mergeIntoAssignmentList } from "./utils";
@@ -12,18 +12,18 @@ import { DefaultSettings, Settings } from "./settings";
 import {
   createNavBarNotification,
   deleteNavBarNotification,
-  displayMiniPandA,
-} from "./minipanda";
+  displayMiniSakai,
+} from "./minisakai";
 
 let toggle = false;
 
 function toggleMiniSakai(): void {
   // miniSakaiを表示・非表示にします
   if (toggle) {
-    miniPandA.style.width = "0px";
+    miniSakai.style.width = "0px";
     document.getElementById("cs-cover")?.remove();
   } else {
-    miniPandA.style.width = "300px";
+    miniSakai.style.width = "300px";
     const cover = document.createElement("div");
     cover.id = "cs-cover";
     document.getElementsByTagName("body")[0].appendChild(cover);
@@ -204,18 +204,18 @@ async function addMemo(): Promise<void> {
   }
   saveToLocalStorage("TSkadaiMemoList", memoList);
 
-  // miniPandAを再描画
-  while (miniPandA.firstChild) {
-    miniPandA.removeChild(miniPandA.firstChild);
+  // Redraw miniSakai menu
+  while (miniSakai.firstChild) {
+    miniSakai.removeChild(miniSakai.firstChild);
   }
   while (assignmentDiv.firstChild) {
     assignmentDiv.removeChild(assignmentDiv.firstChild);
   }
-  miniPandA.remove();
+  miniSakai.remove();
   assignmentDiv.remove();
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, memoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
+  await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
   await reloadNavBar(courseIDList, true);
@@ -233,20 +233,20 @@ async function deleteMemo(event: any): Promise<void> {
     deletedMemoList.push(new Assignment(memo.courseSiteInfo, memoEntries, memo.isRead));
   }
 
-  // miniPandAを再描画
-  while (miniPandA.firstChild) {
-    miniPandA.removeChild(miniPandA.firstChild);
+  // Redraw miniSakai menu
+  while (miniSakai.firstChild) {
+    miniSakai.removeChild(miniSakai.firstChild);
   }
   while (assignmentDiv.firstChild) {
     assignmentDiv.removeChild(assignmentDiv.firstChild);
   }
-  miniPandA.remove();
+  miniSakai.remove();
   assignmentDiv.remove();
 
   saveToLocalStorage("TSkadaiMemoList", deletedMemoList);
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, deletedMemoList);
   const quizList = await loadFromLocalStorage("TSQuizList");
-  await displayMiniPandA(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
+  await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   // NavBarを再描画
   await reloadNavBar(courseIDList, true);

@@ -1,7 +1,7 @@
 import { Assignment, CourseSiteInfo } from "./model";
 import { loadFromLocalStorage } from "./storage";
 import { convertArrayToAssignment, mergeIntoAssignmentList, sortAssignmentList } from "./utils";
-import { createMiniPandAGeneralized } from "./minipanda";
+import { createMiniSakaiGeneralized } from "./minisakai";
 
 const subpandaRoot = document.querySelector("#subpanda");
 
@@ -16,7 +16,7 @@ async function updateSubPandA(root: Element) {
   mergedKadaiList = mergeIntoAssignmentList(mergedKadaiList, kadaiMemoList);
   mergedKadaiList = sortAssignmentList(mergedKadaiList);
 
-  createMiniPandAGeneralized(root, mergedKadaiList, lectureIDs, true, (rendered) => {
+  createMiniSakaiGeneralized(root, mergedKadaiList, lectureIDs, true, (rendered) => {
     console.log(rendered);
     root.innerHTML = rendered;
   });
