@@ -84,7 +84,8 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
           appendElement(courseName, otherElements);
           break;
         case "duePassed":
-          if (CPsettings.getDisplayLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
+          const showLateSubmitAssignment = CPsettings ? CPsettings.getDisplayLateSubmitAssignment : false;
+          if (showLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
             appendElement(courseName, lateSubmitElements);
           }
           break;
