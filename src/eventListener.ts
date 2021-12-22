@@ -1,19 +1,10 @@
 import { assignmentDiv, miniSakai } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
-import {CourseSiteInfo, Assignment, AssignmentEntry} from "./model";
+import { CourseSiteInfo, Assignment, AssignmentEntry } from "./model";
 import { convertArrayToAssignment, genUniqueStr, mergeIntoAssignmentList } from "./utils";
-import {
-  CPsettings,
-  courseIDList,
-  loadAndMergeAssignmentList,
-  mergedAssignmentListNoMemo,
-} from "./content_script";
+import { CPsettings, courseIDList, loadAndMergeAssignmentList, mergedAssignmentListNoMemo } from "./content_script";
 import { DefaultSettings, Settings } from "./settings";
-import {
-  createNavBarNotification,
-  deleteNavBarNotification,
-  displayMiniSakai,
-} from "./minisakai";
+import { createNavBarNotification, deleteNavBarNotification, displayMiniSakai } from "./minisakai";
 
 let toggle = false;
 
@@ -144,7 +135,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
 
   const settings = new Settings();
   const oldSettings = await loadFromLocalStorage("TSSettings");
-  for (const i in DefaultSettings){
+  for (const i in DefaultSettings) {
     // @ts-ignore
     settings[i] = oldSettings[i] ?? DefaultSettings[i];
   }
@@ -192,7 +183,7 @@ async function addMemo(): Promise<void> {
   if (typeof memoList !== "undefined" && memoList.length > 0) {
     memoList = convertArrayToAssignment(memoList);
     const idx = memoList.findIndex((oldMemo: Assignment) => {
-      return (oldMemo.courseSiteInfo.courseID === courseID);
+      return oldMemo.courseSiteInfo.courseID === courseID;
     });
     if (idx !== -1) {
       memoList[idx].assignmentEntries.push(memoEntry);
@@ -258,7 +249,7 @@ async function editFavTabMessage(): Promise<void> {
   try {
     const message = document.getElementsByClassName("favorites-max-marker")[0];
     message.innerHTML =
-      '<i class="fa fa-bell warning-icon"></i>ComfortablePandAによってお気に入り登録した<br>サイトが全てバーに追加されました。';
+      '<i class="fa fa-bell warning-icon"></i>Comfortable PandAによってお気に入り登録した<br>サイトが全てバーに追加されました。';
     const lectureTabs = document.getElementsByClassName("fav-sites-entry");
     const lectureTabsCount = lectureTabs.length;
     for (let i = 0; i < lectureTabsCount; i++) {
@@ -269,7 +260,7 @@ async function editFavTabMessage(): Promise<void> {
   }
 }
 
-async function reloadNavBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void>{
+async function reloadNavBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void> {
   // NavBarを再描画
   deleteNavBarNotification();
   const newAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache, useCache);
