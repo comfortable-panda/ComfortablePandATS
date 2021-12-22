@@ -4,7 +4,7 @@ import { convertArrayToSettings } from "./utils";
 export class Settings {
   assignmentCacheInterval?: number;
   quizCacheInterval?: number;
-  displayCheckedKadai?: boolean;
+  displayCheckedAssignment?: boolean;
   displayLateSubmitAssignment?: boolean;
   topColorDanger?: string;
   topColorWarning?: string;
@@ -22,8 +22,8 @@ export class Settings {
   get getQuizCacheInterval(): number {
     return this.quizCacheInterval ? this.quizCacheInterval : DefaultSettings.quizCacheInterval;
   }
-  get getDisplayCheckedKadai(): boolean {
-    return this.displayCheckedKadai !== undefined ? this.displayCheckedKadai : DefaultSettings.displayCheckedKadai;
+  get getDisplayCheckedAssignment(): boolean {
+    return this.displayCheckedAssignment !== undefined ? this.displayCheckedAssignment : DefaultSettings.displayCheckedAssignment;
   }
   get getDisplayLateSubmitAssignment(): boolean {
     return this.displayLateSubmitAssignment !== undefined ? this.displayLateSubmitAssignment : DefaultSettings.displayLateSubmitAssignment;
@@ -51,7 +51,7 @@ export class Settings {
 export class DefaultSettings extends Settings {
   static assignmentCacheInterval = 120;
   static quizCacheInterval = 600;
-  static displayCheckedKadai = true;
+  static displayCheckedAssignment = true;
   static displayLateSubmitAssignment = false;
   static topColorDanger = "#f78989";
   static topColorWarning = "#fdd783";
@@ -64,7 +64,7 @@ export class DefaultSettings extends Settings {
 export async function loadSettings(): Promise<Settings>{
   const settingsArr = await loadFromLocalStorage("TSSettings");
   const CPsettings = convertArrayToSettings(settingsArr);
-  CPsettings.displayCheckedKadai = CPsettings.getDisplayCheckedKadai;
+  CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
   return CPsettings;
 }
 

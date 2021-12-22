@@ -100,7 +100,7 @@ function convertArrayToSettings(arr: any): Settings {
   const settings = new Settings();
   settings.assignmentCacheInterval = arr.assignmentCacheInterval;
   settings.quizCacheInterval = arr.quizCacheInterval;
-  settings.displayCheckedKadai = arr.displayCheckedKadai;
+  settings.displayCheckedAssignment = arr.displayCheckedAssignment;
   settings.displayLateSubmitAssignment = arr.displayLateSubmitAssignment;
   settings.topColorDanger = arr.topColorDanger;
   settings.topColorWarning = arr.topColorWarning;

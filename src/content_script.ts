@@ -97,7 +97,7 @@ async function loadConfigs() {
   CPsettings = await loadSettings();
   assignmentCacheInterval = CPsettings.getAssignmentCacheInterval;
   quizCacheInterval = CPsettings.getQuizCacheInterval;
-  CPsettings.displayCheckedKadai = CPsettings.getDisplayCheckedKadai;
+  CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
   assignmentFetchedTime = await loadFromLocalStorage("TSkadaiFetchedTime", "undefined");
   quizFetchedTime = await loadFromLocalStorage("TSquizFetchedTime", "undefined");
 }
