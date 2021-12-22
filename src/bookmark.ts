@@ -16,7 +16,7 @@ function getSiteIdAndHrefLectureNameMap(): Map<string, { href: string, title: st
 }
 
 function isCurrentSite(siteId: string): boolean {
-  const currentSiteIdM = window.location.href.match(/https?:\/\/panda\.ecs\.kyoto-u\.ac\.jp\/portal\/site\/([^\/]+)/);
+  const currentSiteIdM = window.location.href.match(/https?:\/\/[^\/]+\/portal\/site\/([^\/]+)/);
   if (currentSiteIdM == null) return false;
   return currentSiteIdM[1] == siteId;
 }
