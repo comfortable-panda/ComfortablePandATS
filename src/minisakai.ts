@@ -15,6 +15,9 @@ import {
 // @ts-ignore
 import Mustache = require("mustache");
 
+/**
+ * Create a button to open miniSakai
+ */
 function createMiniSakaiBtn(): void {
   const topbar = document.getElementById("mastLogin");
   try {
@@ -24,6 +27,9 @@ function createMiniSakaiBtn(): void {
   }
 }
 
+/**
+ * Using template engine to generate miniSakai list.
+ */
 export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
   const assignmentFetchedTimeString = formatTimestamp(assignmentFetchedTime);
   const quizFetchedTimeString = formatTimestamp(quizFetchedTime);
@@ -169,6 +175,7 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     },
   };
 
+  // Load mustache
   fetch(chrome.extension.getURL("views/minisakai.mustache"))
     .then((res) => res.text())
     .then((template) => {
@@ -180,6 +187,9 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     });
 }
 
+/**
+ * Insert miniSakai into Sakai.
+ */
 function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
   createMiniSakaiGeneralized(miniSakai, assignmentList, courseSiteInfos, false, (rendered) => {
     miniSakai.innerHTML = rendered;
@@ -189,6 +199,9 @@ function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Arr
   });
 }
 
+/**
+ * Initialize Settings tab.
+ */
 async function createSettingsTab(root: Element): Promise<void> {
   createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.getDisplayCheckedAssignment, "displayCheckedAssignment");
   createSettingItem(root, chrome.i18n.getMessage('settings_display_late_submit_assignment'), CPsettings.getDisplayLateSubmitAssignment, "displayLateSubmitAssignment");
@@ -203,11 +216,14 @@ async function createSettingsTab(root: Element): Promise<void> {
   createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.getMiniColorWarning, "miniColorWarning");
   createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.getMiniColorSuccess, "miniColorSuccess");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
+  createSettingItem(root, chrome.i18n.getMessage("settings_reset_colors"), "reset", "reset");
   // @ts-ignore
   root.querySelector(".cs-settings-tab")?.style.display = "none";
 }
 
+/**
+ * Create Settings tab item.
+ */
 function createSettingItem(root: Element, itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
   const settingsDiv = root.querySelector(".cs-settings-tab");
   if (settingsDiv == null) {
@@ -247,6 +263,9 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
   settingsDiv.appendChild(mainDiv);
 }
 
+/**
+ * Add event listener to each Settings item
+ */
 function registerEventHandlers(root: Element) {
   root.querySelector("#assignmentTab")?.addEventListener("click", () => toggleAssignmentTab());
   root.querySelector("#settingsTab")?.addEventListener("click", () => toggleSettingsTab());
@@ -257,6 +276,9 @@ function registerEventHandlers(root: Element) {
   root.querySelectorAll(".cs-del-memo-btn").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
 }
 
+/**
+ * Initialize states
+ */
 function initState(root: Element) {
   // @ts-ignore
   root.querySelector("#assignmentTab")?.checked = true;
@@ -266,23 +288,17 @@ function initState(root: Element) {
     .substr(0, 16);
 }
 
+/**
+ * Display miniSakai
+ */
 async function displayMiniSakai(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
   createMiniSakai(mergedAssignmentList, courseSiteInfos);
 }
 
-function deleteNavBarNotification(): void {
-  const classlist = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success"];
-  for (const c of classlist) {
-    const q = document.querySelectorAll(`.${c}`);
-    // @ts-ignore
-    for (const _ of q) {
-      _.classList.remove(`${c}`);
-      _.style = "";
-    }
-  }
-}
-
-function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assignmentList: Array<Assignment>): void {
+/**
+ * Add notification badge for new Assignment/Quiz
+ */
+function createFavoritesBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assignmentList: Array<Assignment>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
 
@@ -334,6 +350,24 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
   overrideCSSColor();
 }
 
+/**
+ * Delete notification badge for new Assignment/Quiz
+ */
+function deleteFavoritesBarNotification(): void {
+  const classlist = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success"];
+  for (const c of classlist) {
+    const q = document.querySelectorAll(`.${c}`);
+    // @ts-ignore
+    for (const _ of q) {
+      _.classList.remove(`${c}`);
+      _.style = "";
+    }
+  }
+}
+
+/**
+ * Override CSS of favorites bar and miniSakai.
+ */
 function overrideCSSColor() {
   const overwriteborder = function (className: string, color: string | undefined) {
     const dangerelem = document.getElementsByClassName(className);
@@ -368,4 +402,10 @@ function overrideCSSColor() {
   overwriteborder("cs-tab-warning", CPsettings.getTopColorWarning);
 }
 
-export { createMiniSakaiBtn, createMiniSakai, displayMiniSakai, deleteNavBarNotification, createNavBarNotification };
+export {
+  createMiniSakaiBtn,
+  createMiniSakai,
+  displayMiniSakai,
+  deleteFavoritesBarNotification,
+  createFavoritesBarNotification,
+};

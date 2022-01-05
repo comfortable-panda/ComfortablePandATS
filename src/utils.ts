@@ -4,8 +4,12 @@ import { Settings } from "./settings";
 
 export const nowTime = new Date().getTime();
 
+/**
+ * Calculate category of assignment due date
+ * @param {number} dt1 standard time
+ * @param {number} dt2 target time
+ */
 function getDaysUntil(dt1: number, dt2: number): DueCategory {
-  // 締め切りまでの日数を計算します
   let diff = (dt2 - dt1) / 1000;
   diff /= 3600 * 24;
   let category: DueCategory;
@@ -23,8 +27,11 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
   return category;
 }
 
+/**
+ * Format timestamp for displaying
+ * @param {number | undefined} timestamp
+ */
 function formatTimestamp(timestamp: number | undefined): string {
-  // timestampをフォーマットする
   const date = new Date(timestamp ? timestamp : nowTime);
   return (
     date.toLocaleDateString() +
@@ -37,8 +44,11 @@ function formatTimestamp(timestamp: number | undefined): string {
   );
 }
 
+/**
+ * Creates a Map of courseID and course name.
+ * @param {CourseSiteInfo[]} courseSiteInfos
+ */
 function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
-  // 講義IDと講義名のMapを作る
   const courseIDMap = new Map<string, string>();
   for (const courseSiteInfo of courseSiteInfos) {
     let courseName;
@@ -49,8 +59,10 @@ function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, 
   return courseIDMap;
 }
 
+/**
+ * Check if user is loggend in to Sakai.
+ */
 function isLoggedIn(): boolean {
-  // ログインしているかどうかを返す
   const scripts = document.getElementsByTagName("script");
   let loggedIn = false;
   for (const script of Array.from(scripts)) {
@@ -59,8 +71,10 @@ function isLoggedIn(): boolean {
   return loggedIn;
 }
 
+/**
+ * Get courseID of current site.
+ */
 function getSiteCourseID(): string | undefined {
-  // 現在のページの講義IDを返す
   const url = location.href;
   let courseID: string | undefined;
   const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
@@ -70,10 +84,14 @@ function getSiteCourseID(): string | undefined {
   return courseID;
 }
 
+/**
+ * Update new-assignment notification flags.
+ * @param {Assignment[]} assignmentList
+ */
 function updateIsReadFlag(assignmentList: Array<Assignment>): void {
   const courseID = getSiteCourseID();
   const updatedAssignmentList = [];
-  // TODO: 怪しい処理を見直す
+  // TODO: Review this process
   if (courseID && courseID.length >= 17) {
     for (const assignment of assignmentList) {
       if (assignment.courseSiteInfo.courseID === courseID) {
@@ -86,8 +104,10 @@ function updateIsReadFlag(assignmentList: Array<Assignment>): void {
   }
 }
 
+/**
+ * Change loading icon to hamburger button.
+ */
 function miniSakaiReady(): void {
-  // ロード表示を切り替えて3本線表示にする
   const loadingIcon = document.getElementsByClassName("cs-loading")[0];
   const hamburgerIcon = document.createElement("img");
   hamburgerIcon.src = chrome.extension.getURL("img/miniSakaiBtn.png");
@@ -96,6 +116,10 @@ function miniSakaiReady(): void {
   loadingIcon.append(hamburgerIcon);
 }
 
+/**
+ * Convert array to Settings class
+ * @param {any} arr
+ */
 function convertArrayToSettings(arr: any): Settings {
   const settings = new Settings();
   settings.assignmentCacheInterval = arr.assignmentCacheInterval;
@@ -111,6 +135,10 @@ function convertArrayToSettings(arr: any): Settings {
   return settings;
 }
 
+/**
+ * Convert array to Assignment class
+ * @param {any} arr
+ */
 function convertArrayToAssignment(arr: Array<any>): Array<Assignment> {
   const assignmentList = [];
   for (const i of arr) {
@@ -125,43 +153,54 @@ function convertArrayToAssignment(arr: Array<any>): Array<Assignment> {
   return assignmentList;
 }
 
+/**
+ * Compare old and new AssignmentList and merge them.
+ * @param {Assignment[]} oldAssignmentiList
+ * @param {Assignment[]} newAssignmentList
+ */
 function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
   const mergedAssignmentList = [];
 
-  // 最新の課題リストをもとにマージする
+  // Merge Assignments based on newAssignmentList
   for (const newAssignment of newAssignmentList) {
     const idx = oldAssignmentiList.findIndex((oldAssignment: Assignment) => {
       return oldAssignment.courseSiteInfo.courseID === newAssignment.courseSiteInfo.courseID;
     });
 
-    // もし過去に保存した課題リストの中に講義IDが存在しない時
+    // If this courseID is **NOT** in oldAssignmentList:
     if (idx === -1) {
-      // 未読フラグを立ててマージ
+      // Since this course site has a first assignment, set isRead flags to false.
       const isRead = newAssignment.assignmentEntries.length === 0;
+
+      // Sort and add this to AssignmentList
       newAssignment.assignmentEntries.sort((a, b) => {
         return a.getDueDateTimestamp - b.getDueDateTimestamp;
       });
       mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, newAssignment.assignmentEntries, isRead));
     }
-    // 過去に保存した課題リストの中に講義IDが存在する時
+
+    // If this courseID **IS** in oldAssignmentList:
     else {
-      // 未読フラグを引き継ぐ
+      // Take over isRead flag
       let isRead = oldAssignmentiList[idx].isRead;
-      // 何も課題がない時は既読フラグをつける
+      // Just in case if AssignmentList is empty, set flag to true
       if (newAssignment.assignmentEntries.length === 0) isRead = true;
 
-      let mergedAssignmentEntries = [];
+      const mergedAssignmentEntries = [];
       for (const newAssignmentEntry of newAssignment.assignmentEntries) {
-        // 新しく取得した課題が保存された課題一覧の中にあるか探す
+        // Find if this new assignment is in old AssignmentList
         const oldAssignment = oldAssignmentiList[idx] as Assignment;
         const q = oldAssignment.assignmentEntries.findIndex((oldAssignmentEntry) => {
           return oldAssignmentEntry.assignmentID === newAssignmentEntry.assignmentID;
         });
-        // もしなければ新規課題なので未読フラグを立てる
+        // If there is same assignmentID, update it.
         if (q === -1) {
+          // Set isRead flag to false since there might be some updates in assignment.
           isRead = false;
           mergedAssignmentEntries.push(newAssignmentEntry);
-        } else {
+        }
+        // If there is not, create a new AssignmentEntry for the course site.
+        else {
           const entry = new AssignmentEntry(
             newAssignmentEntry.assignmentID,
             newAssignmentEntry.assignmentTitle,
@@ -176,7 +215,7 @@ function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, ne
           mergedAssignmentEntries.push(entry);
         }
       }
-      // 未読フラグ部分を変更してマージ
+      // Sort AssignmentList
       mergedAssignmentEntries.sort((a, b) => {
         return a.getDueDateTimestamp - b.getDueDateTimestamp;
       });
@@ -186,6 +225,11 @@ function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, ne
   return mergedAssignmentList;
 }
 
+/**
+ * Merge Assignments, Quizzes, Memos together.
+ * @param {Assignment[]} targetAssignmentList
+ * @param {Assignment[]} newAssignmentList
+ */
 function mergeIntoAssignmentList(targetAssignmentList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
   const mergedAssignmentList = [];
   for (const assignment of targetAssignmentList) {
@@ -206,6 +250,10 @@ function mergeIntoAssignmentList(targetAssignmentList: Array<Assignment>, newAss
   return mergedAssignmentList;
 }
 
+/**
+ * Function for sorting Assignments
+ * @param {Assignment[]} assignmentList
+ */
 function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment> {
   return Array.from(assignmentList).sort((a, b) => {
     if (a.closestDueDateTimestamp > b.closestDueDateTimestamp) return 1;
@@ -214,13 +262,22 @@ function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment
   });
 }
 
+/**
+ * Decides whether to use cache
+ * @param {number | undefined} fetchedTime
+ * @param {number} cacheInterval
+ */
 function useCache(fetchedTime: number | undefined, cacheInterval: number): boolean {
   if (fetchedTime) return (nowTime - fetchedTime) / 1000 <= cacheInterval;
   else return false;
 }
 
-function genUniqueStr(): string {
-  return "m" + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
+/**
+ * Generate unique ID
+ * @param {string} prefix
+ */
+function genUniqueID(prefix: string): string {
+  return prefix + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
 }
 
 export {
@@ -234,7 +291,7 @@ export {
   compareAndMergeAssignmentList,
   updateIsReadFlag,
   useCache,
-  genUniqueStr,
+  genUniqueID,
   mergeIntoAssignmentList,
   sortAssignmentList,
 };

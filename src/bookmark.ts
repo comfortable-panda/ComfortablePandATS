@@ -1,5 +1,9 @@
-import { editFavTabMessage } from "./eventListener";
+import { editFavoritesMessage } from "./eventListener";
 
+/**
+ * Limit maximum number of course sites
+ * @type {int}
+ */
 const MAX_FAVORITES = 10;
 
 function getSiteIdAndHrefLectureNameMap(): Map<string, { href: string, title: string }> {
@@ -15,13 +19,20 @@ function getSiteIdAndHrefLectureNameMap(): Map<string, { href: string, title: st
   return map;
 }
 
+/**
+ * Check if current site-id is given site-id
+ * @param {string} siteId
+ */
 function isCurrentSite(siteId: string): boolean {
   const currentSiteIdM = window.location.href.match(/https?:\/\/[^\/]+\/portal\/site\/([^\/]+)/);
   if (currentSiteIdM == null) return false;
   return currentSiteIdM[1] == siteId;
 }
 
-function getCurrentShownSiteHrefs(): Array<string> {
+/**
+ * Get hrefs of sites in favorite bar
+ */
+function getCurrentFavoritesSite(): Array<string> {
   const topnav = document.querySelector("#topnav");
   if (topnav == null) return new Array<string>();
   const sites = topnav.querySelectorAll(".Mrphs-sitesNav__menuitem");
@@ -33,8 +44,10 @@ function getCurrentShownSiteHrefs(): Array<string> {
   return hrefs;
 }
 
-// お気に入り上限を超えた講義を topbar に追加する
-// ネットワーク通信を行うので注意
+/**
+ * Add course sites to favorites bar (more than Sakai config)
+ * @param {string} baseURL
+ */
 function addBookmarkedCourseSites(baseURL: string): Promise<void> {
   const topnav = document.querySelector("#topnav");
   if (topnav == null) return new Promise((resolve, reject) => resolve());
@@ -42,7 +55,7 @@ function addBookmarkedCourseSites(baseURL: string): Promise<void> {
   request.open("GET", baseURL + "/portal/favorites/list");
   request.responseType = "json";
 
-  document.querySelector(".organizeFavorites")?.addEventListener("click", editFavTabMessage);
+  document.querySelector(".organizeFavorites")?.addEventListener("click", editFavoritesMessage);
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
       const res = request.response;
@@ -52,7 +65,7 @@ function addBookmarkedCourseSites(baseURL: string): Promise<void> {
       }
       const favorites = res.favoriteSiteIds as [string];
       const sitesInfo = getSiteIdAndHrefLectureNameMap();
-      const currentlyShownSites = getCurrentShownSiteHrefs();
+      const currentFavoriteSite = getCurrentFavoritesSite();
       for (const favorite of favorites) {
         // skip if favorite is the current site
         if (isCurrentSite(favorite)) continue;
@@ -63,7 +76,7 @@ function addBookmarkedCourseSites(baseURL: string): Promise<void> {
         const title = siteInfo.title;
 
         // skip if the site is already shown
-        if (currentlyShownSites.find((c) => c == href) != null) continue;
+        if (currentFavoriteSite.find((c) => c == href) != null) continue;
 
         const li = document.createElement("li");
         li.classList.add("Mrphs-sitesNav__menuitem");

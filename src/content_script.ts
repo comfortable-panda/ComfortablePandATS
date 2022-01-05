@@ -1,8 +1,8 @@
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
 import { getCourseIDList, getBaseURL, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
-import { createMiniSakaiBtn, createNavBarNotification, displayMiniSakai } from "./minisakai";
-import { addBookmarkedCourseSites } from "./bookmark";
+import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
+
 import {
   compareAndMergeAssignmentList,
   convertArrayToAssignment,
@@ -27,35 +27,43 @@ export let mergedAssignmentList: Array<Assignment>;
 export let mergedAssignmentListNoMemo: Array<Assignment>;
 export let CPsettings: Settings;
 
+/**
+ * Load old assignments/quizzes from storage and fetch new assignments/quizzes from Sakai.
+ * @param {CourseSiteInfo[]} courseSiteInfos
+ * @param {boolean} useAssignmentCache
+ * @param {boolean} useQuizCache
+ */
 export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSiteInfo>, useAssignmentCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
-  // ストレージから前回保存したassignmentListを読み込む
+  // Load old assignments and quizzes from local storage
   const oldAssignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_AssignmentList"));
   const oldQuizList = convertArrayToAssignment(await loadFromLocalStorage("CS_QuizList"));
   let newAssignmentList = [];
   let newQuizList = [];
 
+  // Use cache
   if (useAssignmentCache) {
     newAssignmentList = oldAssignmentList;
   } else {
     console.log("Fetching assignments...");
     const pendingList = [];
-    // 課題取得待ちリストに追加
+    // Add course sites to fetch-pending list
     for (const i of courseSiteInfos) {
       pendingList.push(getAssignmentByCourseID(baseURL, i.courseID));
     }
-    // 全部揃ったら取得に成功したものをnewAssignmentListに入れる
+    // Wait until all assignments are fetched
     const result = await (Promise as any).allSettled(pendingList);
     for (const k of result) {
       if (k.status === "fulfilled") newAssignmentList.push(k.value);
     }
-    // 取得した時間を保存
+    // Update assignment fetch timestamp
     await saveToLocalStorage("CS_AssignmentFetchTime", nowTime);
     assignmentFetchedTime = nowTime;
   }
-  // 保存してあったものとマージする
+  // Compare assignments with old ones
   mergedAssignmentListNoMemo = compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList);
   mergedAssignmentList = compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList);
 
+  // Use cache
   if (useQuizCache) {
     if (typeof oldQuizList !== "undefined") {
       newQuizList = oldQuizList;
@@ -63,36 +71,40 @@ export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSi
   } else {
     console.log("Fetching quizzes...");
     const pendingList = [];
-    // クイズ取得待ちリストに追加
+    // Add course sites to fetch-pending list
     for (const i of courseSiteInfos) {
       pendingList.push(getQuizFromCourseID(baseURL, i.courseID));
     }
-    // 全部揃ったら取得に成功したものをnewQuizListに入れる
+    // Wait until all quizzes are fetched
     const result = await (Promise as any).allSettled(pendingList);
     for (const k of result) {
       if (k.status === "fulfilled") newQuizList.push(k.value);
     }
-    // 取得した時間を保存
+    // Update assignment fetch timestamp
     await saveToLocalStorage("CS_QuizFetchTime", nowTime);
     quizFetchedTime = nowTime;
   }
+  // Compare quizzes with old ones
   const mergedQuizList = compareAndMergeAssignmentList(oldQuizList, newQuizList);
 
-  // マージ後のkadaiListをストレージに保存する
-  await saveToLocalStorage("CS_AssignmentList", mergedAssignmentListNoMemo);
-  await saveToLocalStorage("CS_QuizList", mergedQuizList);
-
+  // Merge assignments and quizzes
   mergedAssignmentList = mergeIntoAssignmentList(mergedAssignmentList, mergedQuizList);
 
-  // メモ一覧を読み込む
+  // Load memos
   const memoList = convertArrayToAssignment(await loadFromLocalStorage("CS_MemoList"));
-  // さらにメモもマージする
-  mergedAssignmentList = mergeIntoAssignmentList(mergedAssignmentList, memoList);
-  mergedAssignmentList = sortAssignmentList(mergedAssignmentList);
+  // Merge memos
+  mergedAssignmentList = sortAssignmentList(mergeIntoAssignmentList(mergedAssignmentList, memoList));
+
+  // Save assignments and quizzes to local storage
+  await saveToLocalStorage("CS_AssignmentList", mergedAssignmentListNoMemo);
+  await saveToLocalStorage("CS_QuizList", mergedQuizList);
 
   return mergedAssignmentList;
 }
 
+/**
+ * Load configurations from local storage
+ */
 async function loadConfigs() {
   CPsettings = await loadSettings();
   assignmentCacheInterval = CPsettings.getAssignmentCacheInterval;
@@ -102,6 +114,9 @@ async function loadConfigs() {
   quizFetchedTime = await loadFromLocalStorage("CS_QuizFetchTime", "undefined");
 }
 
+/**
+ * Load course site IDs
+ */
 async function loadCourseIDList() {
   courseIDList = getCourseIDList();
   await saveToLocalStorage("CS_CourseInfo", courseIDList);
@@ -119,7 +134,7 @@ async function main() {
     );
     // await addBookmarkedCourseSites(baseURL);
     await displayMiniSakai(mergedAssignmentList, courseIDList);
-    createNavBarNotification(courseIDList, mergedAssignmentList);
+    createFavoritesBarNotification(courseIDList, mergedAssignmentList);
 
     miniSakaiReady();
     updateIsReadFlag(mergedAssignmentListNoMemo);

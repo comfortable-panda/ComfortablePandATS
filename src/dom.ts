@@ -1,6 +1,27 @@
 import { toggleMiniSakai } from "./eventListener";
 
-function addAttributes(elem: any, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?:any)=>void|Promise<void> }): any{
+/**
+ * Create DOM elements
+ */
+function createElem(tag: string, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?: any) => void | Promise<void> }): any {
+  const elem = document.createElement(tag);
+  addAttributes(elem, dict, eventListener);
+  return elem;
+}
+
+/**
+ * Clone DOM elements
+ */
+function cloneElem(elem: any, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?: any) => void | Promise<void> }): any {
+  const clone = elem.cloneNode(true);
+  addAttributes(clone, dict, eventListener);
+  return clone;
+}
+
+/**
+ * Add attributes to DOM elements
+ */
+function addAttributes(elem: any, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?: any) => void | Promise<void> }): any {
   for (const key in dict) {
     if (key === "style") elem[key].display = dict[key];
     else {
@@ -14,18 +35,9 @@ function addAttributes(elem: any, dict?: { [key: string]: any }, eventListener?:
   return elem;
 }
 
-function createElem(tag: string, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?:any)=>void|Promise<void> }): any {
-  const elem = document.createElement(tag);
-  addAttributes(elem, dict, eventListener);
-  return elem;
-}
-
-function cloneElem(elem: any, dict?: { [key: string]: any }, eventListener?: { [key: string]: (e?:any)=>void|Promise<void> }): any {
-  const clone = elem.cloneNode(true);
-  addAttributes(clone, dict, eventListener);
-  return clone;
-}
-
+/**
+ * Append all elements as child of 1st arg
+ */
 function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
   for (const obj in arr) {
     to.appendChild(arr[obj]);
@@ -34,8 +46,7 @@ function appendChildAll(to: HTMLElement, arr: Array<any>): HTMLElement {
 }
 
 export const miniSakai = createElem("div", { id: "miniSakai" });
-miniSakai.classList.add("cs-minisakai");
-miniSakai.classList.add("cs-tab");
+miniSakai.classList.add("cs-minisakai", "cs-tab");
 
 export const assignmentDiv = createElem("div", { className: "cs-assignment-tab" });
 

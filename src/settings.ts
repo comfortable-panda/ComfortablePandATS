@@ -23,10 +23,14 @@ export class Settings {
     return this.quizCacheInterval ? this.quizCacheInterval : DefaultSettings.quizCacheInterval;
   }
   get getDisplayCheckedAssignment(): boolean {
-    return this.displayCheckedAssignment !== undefined ? this.displayCheckedAssignment : DefaultSettings.displayCheckedAssignment;
+    return this.displayCheckedAssignment !== undefined
+      ? this.displayCheckedAssignment
+      : DefaultSettings.displayCheckedAssignment;
   }
   get getDisplayLateSubmitAssignment(): boolean {
-    return this.displayLateSubmitAssignment !== undefined ? this.displayLateSubmitAssignment : DefaultSettings.displayLateSubmitAssignment;
+    return this.displayLateSubmitAssignment !== undefined
+      ? this.displayLateSubmitAssignment
+      : DefaultSettings.displayLateSubmitAssignment;
   }
   get getTopColorDanger(): string {
     return this.topColorDanger ? this.topColorDanger : DefaultSettings.topColorDanger;
@@ -61,13 +65,9 @@ export class DefaultSettings extends Settings {
   static miniColorSuccess = "#62b665";
 }
 
-export async function loadSettings(): Promise<Settings>{
+export async function loadSettings(): Promise<Settings> {
   const settingsArr = await loadFromLocalStorage("CS_Settings");
   const CPsettings = convertArrayToSettings(settingsArr);
   CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
   return CPsettings;
 }
-
-// export function load2(): Settings{
-//   return Promise.resolve(loadSettings());
-// }
