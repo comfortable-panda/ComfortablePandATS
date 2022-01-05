@@ -84,10 +84,14 @@ function getSiteCourseID(): string | undefined {
   return courseID;
 }
 
+/**
+ * Update new-assignment notification flags.
+ * @param {Assignment[]} assignmentList
+ */
 function updateIsReadFlag(assignmentList: Array<Assignment>): void {
   const courseID = getSiteCourseID();
   const updatedAssignmentList = [];
-  // TODO: 怪しい処理を見直す
+  // TODO: Review this process
   if (courseID && courseID.length >= 17) {
     for (const assignment of assignmentList) {
       if (assignment.courseSiteInfo.courseID === courseID) {
@@ -100,8 +104,10 @@ function updateIsReadFlag(assignmentList: Array<Assignment>): void {
   }
 }
 
+/**
+ * Change loading icon to hamburger button.
+ */
 function miniSakaiReady(): void {
-  // ロード表示を切り替えて3本線表示にする
   const loadingIcon = document.getElementsByClassName("cs-loading")[0];
   const hamburgerIcon = document.createElement("img");
   hamburgerIcon.src = chrome.extension.getURL("img/miniSakaiBtn.png");
@@ -110,6 +116,10 @@ function miniSakaiReady(): void {
   loadingIcon.append(hamburgerIcon);
 }
 
+/**
+ * Convert array to Settings class
+ * @param {any} arr
+ */
 function convertArrayToSettings(arr: any): Settings {
   const settings = new Settings();
   settings.assignmentCacheInterval = arr.assignmentCacheInterval;
@@ -125,6 +135,10 @@ function convertArrayToSettings(arr: any): Settings {
   return settings;
 }
 
+/**
+ * Convert array to Assignment class
+ * @param {any} arr
+ */
 function convertArrayToAssignment(arr: Array<any>): Array<Assignment> {
   const assignmentList = [];
   for (const i of arr) {
@@ -220,6 +234,10 @@ function mergeIntoAssignmentList(targetAssignmentList: Array<Assignment>, newAss
   return mergedAssignmentList;
 }
 
+/**
+ * Function for sorting Assignments
+ * @param {Assignment[]} assignmentList
+ */
 function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment> {
   return Array.from(assignmentList).sort((a, b) => {
     if (a.closestDueDateTimestamp > b.closestDueDateTimestamp) return 1;
@@ -228,12 +246,21 @@ function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment
   });
 }
 
+/**
+ * Decides whether to use cache
+ * @param {number | undefined} fetchedTime
+ * @param {number} cacheInterval
+ */
 function useCache(fetchedTime: number | undefined, cacheInterval: number): boolean {
   if (fetchedTime) return (nowTime - fetchedTime) / 1000 <= cacheInterval;
   else return false;
 }
 
-function genUniqueStr(prefix: string): string {
+/**
+ * Generate unique ID
+ * @param {string} prefix
+ */
+function genUniqueID(prefix: string): string {
   return prefix + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
 }
 
@@ -248,7 +275,7 @@ export {
   compareAndMergeAssignmentList,
   updateIsReadFlag,
   useCache,
-  genUniqueStr,
+  genUniqueID,
   mergeIntoAssignmentList,
   sortAssignmentList,
 };

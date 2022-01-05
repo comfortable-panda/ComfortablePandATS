@@ -1,7 +1,7 @@
 import { assignmentDiv, miniSakai } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { CourseSiteInfo, Assignment, AssignmentEntry } from "./model";
-import { convertArrayToAssignment, genUniqueStr, mergeIntoAssignmentList } from "./utils";
+import { convertArrayToAssignment, genUniqueID, mergeIntoAssignmentList } from "./utils";
 import { CPsettings, courseIDList, loadAndMergeAssignmentList, mergedAssignmentListNoMemo } from "./content_script";
 import { DefaultSettings } from "./settings";
 import { createFavoritesBarNotification, deleteFavoritesBarNotification, displayMiniSakai } from "./minisakai";
@@ -175,7 +175,7 @@ async function addMemo(): Promise<void> {
   const memoDueDateTimestamp = new Date(document.querySelector(".todoDue").value).getTime() / 1000;
 
   let memoList = await loadFromLocalStorage("CS_MemoList");
-  const memoEntry = new AssignmentEntry(genUniqueStr("m"), memoTitle, memoDueDateTimestamp, memoDueDateTimestamp, true, false, false, "");
+  const memoEntry = new AssignmentEntry(genUniqueID("m"), memoTitle, memoDueDateTimestamp, memoDueDateTimestamp, true, false, false, "");
   const memo = new Assignment(new CourseSiteInfo(courseID, courseID), [memoEntry], true);
 
   if (typeof memoList !== "undefined" && memoList.length > 0) {
