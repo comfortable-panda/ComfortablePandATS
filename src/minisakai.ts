@@ -270,7 +270,7 @@ async function displayMiniSakai(mergedAssignmentList: Array<Assignment>, courseS
   createMiniSakai(mergedAssignmentList, courseSiteInfos);
 }
 
-function deleteNavBarNotification(): void {
+function deleteFavoritesBarNotification(): void {
   const classlist = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success"];
   for (const c of classlist) {
     const q = document.querySelectorAll(`.${c}`);
@@ -282,7 +282,7 @@ function deleteNavBarNotification(): void {
   }
 }
 
-function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assignmentList: Array<Assignment>): void {
+function createFavoritesBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assignmentList: Array<Assignment>): void {
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
 
@@ -368,4 +368,4 @@ function overrideCSSColor() {
   overwriteborder("cs-tab-warning", CPsettings.getTopColorWarning);
 }
 
-export { createMiniSakaiBtn, createMiniSakai, displayMiniSakai, deleteNavBarNotification, createNavBarNotification };
+export { createMiniSakaiBtn, createMiniSakai, displayMiniSakai, deleteFavoritesBarNotification, createFavoritesBarNotification };

@@ -1,7 +1,7 @@
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
 import { getCourseIDList, getBaseURL, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
-import { createMiniSakaiBtn, createNavBarNotification, displayMiniSakai } from "./minisakai";
+import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
 
 import {
   compareAndMergeAssignmentList,
@@ -134,7 +134,7 @@ async function main() {
     );
     // await addBookmarkedCourseSites(baseURL);
     await displayMiniSakai(mergedAssignmentList, courseIDList);
-    createNavBarNotification(courseIDList, mergedAssignmentList);
+    createFavoritesBarNotification(courseIDList, mergedAssignmentList);
 
     miniSakaiReady();
     updateIsReadFlag(mergedAssignmentListNoMemo);

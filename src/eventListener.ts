@@ -3,8 +3,8 @@ import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { CourseSiteInfo, Assignment, AssignmentEntry } from "./model";
 import { convertArrayToAssignment, genUniqueStr, mergeIntoAssignmentList } from "./utils";
 import { CPsettings, courseIDList, loadAndMergeAssignmentList, mergedAssignmentListNoMemo } from "./content_script";
-import { DefaultSettings, Settings } from "./settings";
-import { createNavBarNotification, deleteNavBarNotification, displayMiniSakai } from "./minisakai";
+import { DefaultSettings } from "./settings";
+import { createFavoritesBarNotification, deleteFavoritesBarNotification, displayMiniSakai } from "./minisakai";
 
 let toggle = false;
 
@@ -252,9 +252,9 @@ async function editFavoritesMessage(): Promise<void> {
  * @param {boolean} useCache
  */
 async function redrawFavoritesBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void> {
-  deleteNavBarNotification();
+  deleteFavoritesBarNotification();
   const newAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache, useCache);
-  createNavBarNotification(courseIDList, newAssignmentList);
+  createFavoritesBarNotification(courseIDList, newAssignmentList);
 }
 
 function redrawMiniSakai() {
