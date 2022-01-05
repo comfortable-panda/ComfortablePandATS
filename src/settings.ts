@@ -23,10 +23,14 @@ export class Settings {
     return this.quizCacheInterval ? this.quizCacheInterval : DefaultSettings.quizCacheInterval;
   }
   get getDisplayCheckedAssignment(): boolean {
-    return this.displayCheckedAssignment !== undefined ? this.displayCheckedAssignment : DefaultSettings.displayCheckedAssignment;
+    return this.displayCheckedAssignment !== undefined
+      ? this.displayCheckedAssignment
+      : DefaultSettings.displayCheckedAssignment;
   }
   get getDisplayLateSubmitAssignment(): boolean {
-    return this.displayLateSubmitAssignment !== undefined ? this.displayLateSubmitAssignment : DefaultSettings.displayLateSubmitAssignment;
+    return this.displayLateSubmitAssignment !== undefined
+      ? this.displayLateSubmitAssignment
+      : DefaultSettings.displayLateSubmitAssignment;
   }
   get getTopColorDanger(): string {
     return this.topColorDanger ? this.topColorDanger : DefaultSettings.topColorDanger;

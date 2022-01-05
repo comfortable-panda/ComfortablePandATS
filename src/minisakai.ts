@@ -365,7 +365,6 @@ function deleteFavoritesBarNotification(): void {
   }
 }
 
-
 /**
  * Override CSS of favorites bar and miniSakai.
  */
