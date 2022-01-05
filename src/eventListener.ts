@@ -112,6 +112,7 @@ async function toggleFinishedFlag(event: any): Promise<void> {
     updatedAssignmentList.push(new Assignment(assignment.courseSiteInfo, updatedAssignmentEntries, assignment.isRead));
   }
 
+  // Save to local storage
   if (assignmentID[0] === "m") await saveToLocalStorage("CS_MemoList", updatedAssignmentList);
   else if (assignmentID[0] === "q") await saveToLocalStorage("CS_QuizList", updatedAssignmentList);
   else await saveToLocalStorage("CS_AssignmentList", updatedAssignmentList);
@@ -120,10 +121,14 @@ async function toggleFinishedFlag(event: any): Promise<void> {
   await reloadNavBar(courseIDList, true);
 }
 
+/**
+ * Update Settings parameter
+ */
 async function updateSettings(event: any, type: string): Promise<void> {
   const settingsID = event.target.id;
   let settingsValue = event.currentTarget.value;
 
+  // Type of Settings
   switch (type) {
     case "check":
       settingsValue = event.currentTarget.checked;
@@ -135,21 +140,12 @@ async function updateSettings(event: any, type: string): Promise<void> {
       break;
   }
 
-  const settings = new Settings();
-  const oldSettings = await loadFromLocalStorage("CS_Settings");
-  for (const i in DefaultSettings) {
-    // @ts-ignore
-    settings[i] = oldSettings[i] ?? DefaultSettings[i];
-  }
-
   if (type === "reset") {
-    const dict = [
+    const colorList = [
       "topColorDanger", "topColorWarning" ,"topColorSuccess",
       "miniColorDanger", "miniColorWarning" ,"miniColorSuccess"
     ];
-    for (const k of dict) {
-      // @ts-ignore
-      settings[k] = DefaultSettings[k];
+    for (const k of colorList) {
       // @ts-ignore
       CPsettings[k] = DefaultSettings[k];
       const q = <HTMLInputElement>document.getElementById(k);
@@ -160,21 +156,22 @@ async function updateSettings(event: any, type: string): Promise<void> {
     }
   } else {
     // @ts-ignore
-    settings[settingsID] = settingsValue;
-    // @ts-ignore
     CPsettings[settingsID] = settingsValue;
   }
 
-  saveToLocalStorage("CS_Settings", settings);
+  saveToLocalStorage("CS_Settings", CPsettings);
 
-  // NavBarを再描画
   await reloadNavBar(courseIDList, true);
 }
 
+/**
+ * Add Memo to miniSakai and save.
+ */
 async function addMemo(): Promise<void> {
   const selectedIdx = (document.querySelector(".todoLecName") as HTMLSelectElement).selectedIndex;
   const courseID = (document.querySelector(".todoLecName") as HTMLSelectElement).options[selectedIdx].id;
   const memoTitle = (document.querySelector(".todoContent") as HTMLInputElement).value;
+
   // @ts-ignore
   const memoDueDateTimestamp = new Date(document.querySelector(".todoDue").value).getTime() / 1000;
 
@@ -197,7 +194,7 @@ async function addMemo(): Promise<void> {
   }
   saveToLocalStorage("CS_MemoList", memoList);
 
-  // Redraw miniSakai menu
+  // Redraw miniSakai
   while (miniSakai.firstChild) {
     miniSakai.removeChild(miniSakai.firstChild);
   }
@@ -241,7 +238,6 @@ async function deleteMemo(event: any): Promise<void> {
   const quizList = await loadFromLocalStorage("CS_QuizList");
   await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
-  // NavBarを再描画
   await reloadNavBar(courseIDList, true);
 }
 
@@ -263,8 +259,12 @@ async function editFavTabMessage(): Promise<void> {
   }
 }
 
+/**
+ * Redraw nav-bar(favorites bar)
+ * @param {CourseSiteInfo[]} courseIDList
+ * @param {boolean} useCache
+ */
 async function reloadNavBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void> {
-  // NavBarを再描画
   deleteNavBarNotification();
   const newAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache, useCache);
   createNavBarNotification(courseIDList, newAssignmentList);
