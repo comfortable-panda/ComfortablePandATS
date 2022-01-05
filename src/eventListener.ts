@@ -175,7 +175,7 @@ async function addMemo(): Promise<void> {
   const memoDueDateTimestamp = new Date(document.querySelector(".todoDue").value).getTime() / 1000;
 
   let memoList = await loadFromLocalStorage("CS_MemoList");
-  const memoEntry = new AssignmentEntry(genUniqueStr(), memoTitle, memoDueDateTimestamp, memoDueDateTimestamp, true, false, false, "");
+  const memoEntry = new AssignmentEntry(genUniqueStr("m"), memoTitle, memoDueDateTimestamp, memoDueDateTimestamp, true, false, false, "");
   const memo = new Assignment(new CourseSiteInfo(courseID, courseID), [memoEntry], true);
 
   if (typeof memoList !== "undefined" && memoList.length > 0) {

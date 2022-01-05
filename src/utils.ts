@@ -4,8 +4,12 @@ import { Settings } from "./settings";
 
 export const nowTime = new Date().getTime();
 
+/**
+ * Calculate category of assignment due date
+ * @param {number} dt1 standard time
+ * @param {number} dt2 target time
+ */
 function getDaysUntil(dt1: number, dt2: number): DueCategory {
-  // 締め切りまでの日数を計算します
   let diff = (dt2 - dt1) / 1000;
   diff /= 3600 * 24;
   let category: DueCategory;
@@ -23,8 +27,11 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
   return category;
 }
 
+/**
+ * Format timestamp for displaying
+ * @param {number | undefined} timestamp
+ */
 function formatTimestamp(timestamp: number | undefined): string {
-  // timestampをフォーマットする
   const date = new Date(timestamp ? timestamp : nowTime);
   return (
     date.toLocaleDateString() +
@@ -37,8 +44,11 @@ function formatTimestamp(timestamp: number | undefined): string {
   );
 }
 
+/**
+ * Creates a Map of courseID and course name.
+ * @param {CourseSiteInfo[]} courseSiteInfos
+ */
 function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
-  // 講義IDと講義名のMapを作る
   const courseIDMap = new Map<string, string>();
   for (const courseSiteInfo of courseSiteInfos) {
     let courseName;
@@ -49,8 +59,10 @@ function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, 
   return courseIDMap;
 }
 
+/**
+ * Check if user is loggend in to Sakai.
+ */
 function isLoggedIn(): boolean {
-  // ログインしているかどうかを返す
   const scripts = document.getElementsByTagName("script");
   let loggedIn = false;
   for (const script of Array.from(scripts)) {
@@ -59,8 +71,10 @@ function isLoggedIn(): boolean {
   return loggedIn;
 }
 
+/**
+ * Get courseID of current site.
+ */
 function getSiteCourseID(): string | undefined {
-  // 現在のページの講義IDを返す
   const url = location.href;
   let courseID: string | undefined;
   const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
@@ -219,8 +233,8 @@ function useCache(fetchedTime: number | undefined, cacheInterval: number): boole
   else return false;
 }
 
-function genUniqueStr(): string {
-  return "m" + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
+function genUniqueStr(prefix: string): string {
+  return prefix + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
 }
 
 export {
