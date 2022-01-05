@@ -153,43 +153,54 @@ function convertArrayToAssignment(arr: Array<any>): Array<Assignment> {
   return assignmentList;
 }
 
+/**
+ * Compare old and new AssignmentList and merge them.
+ * @param {Assignment[]} oldAssignmentiList
+ * @param {Assignment[]} newAssignmentList
+ */
 function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
   const mergedAssignmentList = [];
 
-  // 最新の課題リストをもとにマージする
+  // Merge Assignments based on newAssignmentList
   for (const newAssignment of newAssignmentList) {
     const idx = oldAssignmentiList.findIndex((oldAssignment: Assignment) => {
       return oldAssignment.courseSiteInfo.courseID === newAssignment.courseSiteInfo.courseID;
     });
 
-    // もし過去に保存した課題リストの中に講義IDが存在しない時
+    // If this courseID is **NOT** in oldAssignmentList:
     if (idx === -1) {
-      // 未読フラグを立ててマージ
+      // Since this course site has a first assignment, set isRead flags to false.
       const isRead = newAssignment.assignmentEntries.length === 0;
+
+      // Sort and add this to AssignmentList
       newAssignment.assignmentEntries.sort((a, b) => {
         return a.getDueDateTimestamp - b.getDueDateTimestamp;
       });
       mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, newAssignment.assignmentEntries, isRead));
     }
-    // 過去に保存した課題リストの中に講義IDが存在する時
+
+    // If this courseID **IS** in oldAssignmentList:
     else {
-      // 未読フラグを引き継ぐ
+      // Take over isRead flag
       let isRead = oldAssignmentiList[idx].isRead;
-      // 何も課題がない時は既読フラグをつける
+      // Just in case if AssignmentList is empty, set flag to true
       if (newAssignment.assignmentEntries.length === 0) isRead = true;
 
-      let mergedAssignmentEntries = [];
+      const mergedAssignmentEntries = [];
       for (const newAssignmentEntry of newAssignment.assignmentEntries) {
-        // 新しく取得した課題が保存された課題一覧の中にあるか探す
+        // Find if this new assignment is in old AssignmentList
         const oldAssignment = oldAssignmentiList[idx] as Assignment;
         const q = oldAssignment.assignmentEntries.findIndex((oldAssignmentEntry) => {
           return oldAssignmentEntry.assignmentID === newAssignmentEntry.assignmentID;
         });
-        // もしなければ新規課題なので未読フラグを立てる
+        // If there is same assignmentID, update it.
         if (q === -1) {
+          // Set isRead flag to false since there might be some updates in assignment.
           isRead = false;
           mergedAssignmentEntries.push(newAssignmentEntry);
-        } else {
+        }
+        // If there is not, create a new AssignmentEntry for the course site.
+        else {
           const entry = new AssignmentEntry(
             newAssignmentEntry.assignmentID,
             newAssignmentEntry.assignmentTitle,
@@ -204,7 +215,7 @@ function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, ne
           mergedAssignmentEntries.push(entry);
         }
       }
-      // 未読フラグ部分を変更してマージ
+      // Sort AssignmentList
       mergedAssignmentEntries.sort((a, b) => {
         return a.getDueDateTimestamp - b.getDueDateTimestamp;
       });
@@ -214,6 +225,11 @@ function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, ne
   return mergedAssignmentList;
 }
 
+/**
+ * Merge Assignments, Quizzes, Memos together.
+ * @param {Assignment[]} targetAssignmentList
+ * @param {Assignment[]} newAssignmentList
+ */
 function mergeIntoAssignmentList(targetAssignmentList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
   const mergedAssignmentList = [];
   for (const assignment of targetAssignmentList) {
