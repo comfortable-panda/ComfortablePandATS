@@ -8,12 +8,16 @@ import { createNavBarNotification, deleteNavBarNotification, displayMiniSakai } 
 
 let toggle = false;
 
+/**
+ * Change visibility of miniSakai
+ */
 function toggleMiniSakai(): void {
-  // miniSakaiを表示・非表示にします
   if (toggle) {
+    // Hide miniSakai
     miniSakai.style.width = "0px";
     document.getElementById("cs-cover")?.remove();
   } else {
+    // Display miniSakai
     miniSakai.style.width = "300px";
     const cover = document.createElement("div");
     cover.id = "cs-cover";
@@ -23,62 +27,60 @@ function toggleMiniSakai(): void {
   toggle = !toggle;
 }
 
+/**
+ * Change visibility of Assignment tab
+ */
 function toggleAssignmentTab(): void {
-  // 課題一覧タブの表示・非表示をします
-  const assignmentTab = document.querySelector(".cs-assignment-tab");
-  // @ts-ignore
+  const assignmentTab = document.querySelector(".cs-assignment-tab") as HTMLElement;
   assignmentTab.style.display = "";
-  const settingsTab = document.querySelector(".cs-settings-tab");
-  // @ts-ignore
+  const settingsTab = document.querySelector(".cs-settings-tab") as HTMLElement;
   settingsTab.style.display = "none";
-  const addMemoButton = document.querySelector("#cs-add-memo-btn");
-  // @ts-ignore
+  const addMemoButton = document.querySelector("#cs-add-memo-btn") as HTMLButtonElement;
   addMemoButton.style.display = "";
-  const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
-  // @ts-ignore
+  const assignmentFetchedTime = document.querySelector(".cs-assignment-time") as HTMLElement;
   assignmentFetchedTime.style.display = "";
-  const quizFetchedTime = document.querySelector(".cs-quiz-time");
-  // @ts-ignore
+  const quizFetchedTime = document.querySelector(".cs-quiz-time") as HTMLElement;
   quizFetchedTime.style.display = "";
 }
 
+/**
+ * Change visibility of Settings tab
+ */
 function toggleSettingsTab(): void {
-  // クイズ・小テスト・試験一覧タブを表示・非表示にします
-  const assignmentTab = document.querySelector(".cs-assignment-tab");
-  // @ts-ignore
+  const assignmentTab = document.querySelector(".cs-assignment-tab") as HTMLElement;
   assignmentTab.style.display = "none";
-  const settingsTab = document.querySelector(".cs-settings-tab");
-  // @ts-ignore
+  const settingsTab = document.querySelector(".cs-settings-tab") as HTMLElement;
   settingsTab.style.display = "";
-  const addMemoButton = document.querySelector("#cs-add-memo-btn");
-  // @ts-ignore
+  const addMemoButton = document.querySelector("#cs-add-memo-btn") as HTMLButtonElement;
   addMemoButton.style.display = "none";
-  const assignmentFetchedTime = document.querySelector(".cs-assignment-time");
-  // @ts-ignore
+  const assignmentFetchedTime = document.querySelector(".cs-assignment-time") as HTMLElement;
   assignmentFetchedTime.style.display = "none";
-  const quizFetchedTime = document.querySelector(".cs-quiz-time");
-  // @ts-ignore
+  const quizFetchedTime = document.querySelector(".cs-quiz-time") as HTMLElement;
   quizFetchedTime.style.display = "none";
 }
 
+/**
+ * Change visibility of Memo box
+ */
 function toggleMemoBox(): void {
-  // メモ追加のボックスを表示・非表示にします
-  const addMemoBox = document.querySelector(".addMemoBox");
-  // @ts-ignore
+  const addMemoBox = document.querySelector(".addMemoBox") as HTMLElement;
   const toggleStatus = addMemoBox.style.display;
   if (toggleStatus === "") {
-    // @ts-ignore
     addMemoBox.style.display = "none";
   } else {
-    // @ts-ignore
     addMemoBox.style.display = "";
   }
 }
 
+/**
+ * Toggle finished checkbox for assignment/quiz
+ */
 async function toggleFinishedFlag(event: any): Promise<void> {
   const assignmentID = event.target.id;
   let assignmentList: Array<Assignment>;
-  // "m"から始まるものはメモ，"q"から始まるものはクイズを表してる
+  // AssignmentID prefix:
+  // "q" -> Quiz
+  // "m" -> Memo
   if (assignmentID[0] === "m") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_MemoList"));
   else if (assignmentID[0] === "q") assignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_QuizList"));
   else assignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_AssignmentList"));
@@ -114,7 +116,7 @@ async function toggleFinishedFlag(event: any): Promise<void> {
   else if (assignmentID[0] === "q") await saveToLocalStorage("CS_QuizList", updatedAssignmentList);
   else await saveToLocalStorage("CS_AssignmentList", updatedAssignmentList);
 
-  // NavBarを再描画
+  // Redraw nav-bar
   await reloadNavBar(courseIDList, true);
 }
 
