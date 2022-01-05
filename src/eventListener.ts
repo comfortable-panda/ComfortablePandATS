@@ -117,8 +117,7 @@ async function toggleFinishedFlag(event: any): Promise<void> {
   else if (assignmentID[0] === "q") await saveToLocalStorage("CS_QuizList", updatedAssignmentList);
   else await saveToLocalStorage("CS_AssignmentList", updatedAssignmentList);
 
-  // Redraw nav-bar
-  await reloadNavBar(courseIDList, true);
+  await redrawFavoritesBar(courseIDList, true);
 }
 
 /**
@@ -161,7 +160,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
 
   saveToLocalStorage("CS_Settings", CPsettings);
 
-  await reloadNavBar(courseIDList, true);
+  await redrawFavoritesBar(courseIDList, true);
 }
 
 /**
@@ -194,23 +193,17 @@ async function addMemo(): Promise<void> {
   }
   saveToLocalStorage("CS_MemoList", memoList);
 
-  // Redraw miniSakai
-  while (miniSakai.firstChild) {
-    miniSakai.removeChild(miniSakai.firstChild);
-  }
-  while (assignmentDiv.firstChild) {
-    assignmentDiv.removeChild(assignmentDiv.firstChild);
-  }
-  miniSakai.remove();
-  assignmentDiv.remove();
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, memoList);
   const quizList = await loadFromLocalStorage("CS_QuizList");
+  redrawMiniSakai();
   await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
-  // NavBarを再描画
-  await reloadNavBar(courseIDList, true);
+  await redrawFavoritesBar(courseIDList, true);
 }
 
+/**
+ * Delete Memo from miniSakai and storage.
+ */
 async function deleteMemo(event: any): Promise<void> {
   const memoID = event.target.id;
   const memoList = convertArrayToAssignment(await loadFromLocalStorage("CS_MemoList"));
@@ -223,26 +216,20 @@ async function deleteMemo(event: any): Promise<void> {
     deletedMemoList.push(new Assignment(memo.courseSiteInfo, memoEntries, memo.isRead));
   }
 
-  // Redraw miniSakai menu
-  while (miniSakai.firstChild) {
-    miniSakai.removeChild(miniSakai.firstChild);
-  }
-  while (assignmentDiv.firstChild) {
-    assignmentDiv.removeChild(assignmentDiv.firstChild);
-  }
-  miniSakai.remove();
-  assignmentDiv.remove();
-
   saveToLocalStorage("CS_MemoList", deletedMemoList);
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, deletedMemoList);
   const quizList = await loadFromLocalStorage("CS_QuizList");
+  redrawMiniSakai();
   await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
-  await reloadNavBar(courseIDList, true);
+  await redrawFavoritesBar(courseIDList, true);
 }
 
-async function editFavTabMessage(): Promise<void> {
-  // 200ms待ってからgetElementしないと，jQueryで生成される前に参照してしまう
+/**
+ * Edit default message of favorites tab.
+ */
+async function editFavoritesMessage(): Promise<void> {
+  // Wait 200ms until jQuery finished generating message.
   await new Promise((r) => setTimeout(r, 200));
   try {
     const message = document.getElementsByClassName("favorites-max-marker")[0];
@@ -260,14 +247,25 @@ async function editFavTabMessage(): Promise<void> {
 }
 
 /**
- * Redraw nav-bar(favorites bar)
+ * Redraw favorites bar
  * @param {CourseSiteInfo[]} courseIDList
  * @param {boolean} useCache
  */
-async function reloadNavBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void> {
+async function redrawFavoritesBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void> {
   deleteNavBarNotification();
   const newAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache, useCache);
   createNavBarNotification(courseIDList, newAssignmentList);
+}
+
+function redrawMiniSakai() {
+  while (miniSakai.firstChild) {
+    miniSakai.removeChild(miniSakai.firstChild);
+  }
+  while (assignmentDiv.firstChild) {
+    assignmentDiv.removeChild(assignmentDiv.firstChild);
+  }
+  miniSakai.remove();
+  assignmentDiv.remove();
 }
 
 export {
@@ -279,5 +277,5 @@ export {
   addMemo,
   updateSettings,
   deleteMemo,
-  editFavTabMessage,
+  editFavoritesMessage,
 };

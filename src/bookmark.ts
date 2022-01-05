@@ -1,4 +1,4 @@
-import { editFavTabMessage } from "./eventListener";
+import { editFavoritesMessage } from "./eventListener";
 
 /**
  * Limit maximum number of course sites
@@ -55,7 +55,7 @@ function addBookmarkedCourseSites(baseURL: string): Promise<void> {
   request.open("GET", baseURL + "/portal/favorites/list");
   request.responseType = "json";
 
-  document.querySelector(".organizeFavorites")?.addEventListener("click", editFavTabMessage);
+  document.querySelector(".organizeFavorites")?.addEventListener("click", editFavoritesMessage);
   return new Promise((resolve, reject) => {
     request.addEventListener("load", (e) => {
       const res = request.response;
