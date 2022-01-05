@@ -61,13 +61,9 @@ export class DefaultSettings extends Settings {
   static miniColorSuccess = "#62b665";
 }
 
-export async function loadSettings(): Promise<Settings>{
+export async function loadSettings(): Promise<Settings> {
   const settingsArr = await loadFromLocalStorage("CS_Settings");
   const CPsettings = convertArrayToSettings(settingsArr);
   CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
   return CPsettings;
 }
-
-// export function load2(): Settings{
-//   return Promise.resolve(loadSettings());
-// }

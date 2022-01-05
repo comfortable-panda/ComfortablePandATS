@@ -1,3 +1,6 @@
+/**
+ * Get all keys in local storage
+ */
 function getKeys(): Promise<any> {
   return new Promise(function (resolve, reject) {
     chrome.storage.local.get(null, function (keys: any) {
@@ -6,11 +9,16 @@ function getKeys(): Promise<any> {
   });
 }
 
+/**
+ * Load from local storage
+ * @param {string} key
+ * @param {string} ifUndefinedType Can specify response type if result was undefined
+ */
 function loadFromLocalStorage(key: string, ifUndefinedType = "array"): Promise<any> {
-  const hostName = window.location.hostname;
+  const baseURL = window.location.hostname;
   return new Promise(function (resolve, reject) {
-    chrome.storage.local.get(hostName, function (items: any) {
-      if (typeof items[hostName] === "undefined" || typeof items[hostName][key] === "undefined") {
+    chrome.storage.local.get(baseURL, function (items: any) {
+      if (typeof items[baseURL] === "undefined" || typeof items[baseURL][key] === "undefined") {
         let res: any;
         switch (ifUndefinedType) {
           case "number":
@@ -27,32 +35,43 @@ function loadFromLocalStorage(key: string, ifUndefinedType = "array"): Promise<a
             break;
         }
         resolve(res);
-      } else resolve(items[hostName][key]);
+      } else resolve(items[baseURL][key]);
     });
   });
 }
 
-function loadFromLocalStorage2(hostName: string, key: string): Promise<any> {
+/**
+ * Load from local storage
+ * FOR SubSakai since it might not be executed in SakaiLMS.
+ * @param {string} baseURL
+ * @param {string} key
+ */
+function loadFromLocalStorage2(baseURL: string, key: string): Promise<any> {
   return new Promise(function (resolve, reject) {
-    chrome.storage.local.get(hostName, function (items: any) {
-      if (typeof items[hostName] === "undefined" || typeof items[hostName][key] === "undefined") {
+    chrome.storage.local.get(baseURL, function (items: any) {
+      if (typeof items[baseURL] === "undefined" || typeof items[baseURL][key] === "undefined") {
         resolve([]);
-      } else resolve(items[hostName][key]);
+      } else resolve(items[baseURL][key]);
     });
   });
 }
 
+/**
+ * Save to local storage
+ * @param {string} key
+ * @param {any} value
+ */
 function saveToLocalStorage(key: string, value: any): Promise<any> {
-  const hostName = window.location.hostname;
+  const baseURL = window.location.hostname;
   const entity: { [key: string]: [value: any] } = {};
   entity[key] = value;
   return new Promise(function (resolve, reject) {
-    chrome.storage.local.get(hostName, function (items: any) {
-      if (typeof items[hostName] === "undefined") {
-        items[hostName] = {};
+    chrome.storage.local.get(baseURL, function (items: any) {
+      if (typeof items[baseURL] === "undefined") {
+        items[baseURL] = {};
       }
-      items[hostName][key] = value;
-      chrome.storage.local.set({ [hostName]: items[hostName] }, () => {
+      items[baseURL][key] = value;
+      chrome.storage.local.set({ [baseURL]: items[baseURL] }, () => {
         resolve("saved");
       });
     });
