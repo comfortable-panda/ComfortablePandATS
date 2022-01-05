@@ -5,6 +5,9 @@ import { createMiniSakaiGeneralized } from "./minisakai";
 
 const subSakaiRoot = document.querySelector("#sub-sakai");
 
+/**
+ * Update subSakai to latest info
+ */
 async function updateSubSakai(root: Element) {
   const hostname = (await getKeys())[0];
   let mergedAssignmentList: Array<Assignment>;
@@ -25,10 +28,12 @@ async function updateSubSakai(root: Element) {
 
 function addSubSakaiToPopup(): Element | null {
   if (subSakaiRoot == null) return null;
-  console.log(subSakaiRoot);
   return subSakaiRoot;
 }
 
+/**
+ * Initialize subSakai
+ */
 async function initSubSakai() {
   const root = addSubSakaiToPopup();
   root && (await updateSubSakai(root));

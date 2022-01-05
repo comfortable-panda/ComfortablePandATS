@@ -257,6 +257,9 @@ async function redrawFavoritesBar(courseIDList: Array<CourseSiteInfo>, useCache:
   createFavoritesBarNotification(courseIDList, newAssignmentList);
 }
 
+/**
+ * Redraw miniSakai
+ */
 function redrawMiniSakai() {
   while (miniSakai.firstChild) {
     miniSakai.removeChild(miniSakai.firstChild);
