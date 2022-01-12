@@ -76,7 +76,6 @@ export async function loadAndMergeAssignmentList(config: Config ,courseSiteInfos
     }
     // Update assignment fetch timestamp
     await saveToLocalStorage("CS_QuizFetchTime", nowTime);
-    console.log("saved quiz fetch time")
     config.fetchedTime.quiz = nowTime;
   }
   // Compare quizzes with old ones
