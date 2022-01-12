@@ -114,7 +114,7 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     return elements;
   };
 
-  let relaxPandA = null;
+  let noAssignmentImg = null;
   let assignmentCnt = 0;
   if (assignmentList.length !== 0) {
     for (const assignment of assignmentList) {
@@ -122,8 +122,8 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     }
   }
   if (assignmentList.length === 0 || assignmentCnt === 0) {
-    relaxPandA = {
-      img: chrome.extension.getURL("img/relaxPanda.png"),
+    noAssignmentImg = {
+      img: chrome.extension.getURL("img/noAssignment.png"),
     };
   }
 
@@ -135,7 +135,7 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     miniSakaiLogo: chrome.extension.getURL("img/logo.png"),
     VERSION: VERSION,
     subset: subset,
-    showRelaxPandA: relaxPandA,
+    noAssignment: noAssignmentImg,
     elements: {
       danger: sortElements(dangerElements),
       warning: sortElements(warningElements),
@@ -160,7 +160,7 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
       due14d: chrome.i18n.getMessage("due14d"),
       dueOver14d: chrome.i18n.getMessage("dueOver14d"),
       duePassed: chrome.i18n.getMessage("duePassed"),
-      relaxPandA: chrome.i18n.getMessage("no_available_assignments"),
+      noAssignment: chrome.i18n.getMessage("no_available_assignments"),
     },
     todoBox: {
       courseName: chrome.i18n.getMessage("todo_box_course_name"),

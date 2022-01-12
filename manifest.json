@@ -36,7 +36,7 @@
   "web_accessible_resources": [
     "css/comfortable-sakai.css",
     "img/logo.png",
-    "img/relaxPanda.png",
+    "img/noAssignment.png",
     "img/miniSakaiBtn.png",
     "views/minisakai.mustache"
   ]
