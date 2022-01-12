@@ -203,7 +203,7 @@ function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Arr
 /**
  * Initialize Settings tab.
  */
-async function createSettingsTab(root: Element): Promise<void> {
+async function createSettingsTab(root: Element) {
   createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.getDisplayCheckedAssignment, "displayCheckedAssignment");
   createSettingItem(root, chrome.i18n.getMessage('settings_display_late_submit_assignment'), CPsettings.getDisplayLateSubmitAssignment, "displayLateSubmitAssignment");
   createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
@@ -371,9 +371,9 @@ function deleteFavoritesBarNotification(): void {
  */
 function overrideCSSColor() {
   const overwriteborder = function (className: string, color: string | undefined) {
-    const dangerelem = document.getElementsByClassName(className);
-    for (let i = 0; i < dangerelem.length; i++) {
-      const elem = dangerelem[i] as HTMLElement;
+    const element = document.getElementsByClassName(className);
+    for (let i = 0; i < element.length; i++) {
+      const elem = element[i] as HTMLElement;
       const attr = "solid 2px " + color;
       (<any>elem.style)["border-top"] = attr;
       (<any>elem.style)["border-left"] = attr;
@@ -382,9 +382,9 @@ function overrideCSSColor() {
     }
   };
   const overwritebackground = function (className: string, color: string | undefined) {
-    const dangerelem = document.getElementsByClassName(className);
-    for (let i = 0; i < dangerelem.length; i++) {
-      const elem = dangerelem[i] as HTMLElement;
+    const element = document.getElementsByClassName(className);
+    for (let i = 0; i < element.length; i++) {
+      const elem = element[i] as HTMLElement;
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
