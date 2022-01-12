@@ -1,0 +1,27 @@
+{
+  "entityPrefix": "assignment",
+  "assignment_collection": [
+    {
+      "closeTime": {
+        "epochSecond": 1668008000,
+        "nano": 0
+      },
+      "closeTimeString": "2022-11-10T00:33:20Z",
+      "context": "2021-110-6205-000",
+      "dropDeadTime": {
+        "epochSecond": 1668008000,
+        "nano": 0
+      },
+      "dropDeadTimeString": "2022-11-10T00:33:20Z",
+      "dueTime": {
+        "epochSecond": 1668006000,
+        "nano": 0
+      },
+      "id": "sample2",
+      "instructions": "--------",
+      "title": "Sample Assignment2",
+      "entityId": "sample2",
+      "entityTitle": "Sample Assignment2"
+    }
+  ]
+}
