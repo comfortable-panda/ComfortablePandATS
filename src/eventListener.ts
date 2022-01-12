@@ -126,7 +126,6 @@ async function toggleFinishedFlag(event: any): Promise<void> {
 async function updateSettings(event: any, type: string): Promise<void> {
   const settingsID = event.target.id;
   let settingsValue = event.target.value;
-  // console.log("Settings...", settingsID, settingsValue,event.target.value)
   const config = await loadConfigs();
   const CPSettings = config.CPSettings;
 
@@ -161,8 +160,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
     CPSettings[settingsID] = settingsValue;
   }
 
-  saveToLocalStorage("CS_Settings", CPSettings);
-  console.log("CPSettings", CPSettings);
+  await saveToLocalStorage("CS_Settings", CPSettings);
 
   await redrawFavoritesBar(courseIDList, true);
 }

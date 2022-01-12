@@ -1,6 +1,6 @@
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
-import { getCourseIDList, getBaseURL, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
+import { getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
 import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
 
 import {
@@ -15,14 +15,6 @@ import {
   useCache,
 } from "./utils";
 import { Config, loadConfigs } from "./settings";
-
-// export const baseURL = getBaseURL();
-// export const VERSION = chrome.runtime.getManifest().version;
-// export let assignmentFetchedTime: number | undefined;
-// export let quizFetchedTime: number | undefined;
-// export let assignmentCacheInterval: number;
-// export let quizCacheInterval: number;
-// export let CPsettings: Settings;
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -105,18 +97,6 @@ export async function loadAndMergeAssignmentList(config: Config ,courseSiteInfos
   return mergedAssignmentList;
 }
 
-// /**
-//  * Load configurations from local storage
-//  */
-// async function loadConfigs() {
-//   CPsettings = await loadSettings();
-//   assignmentCacheInterval = CPsettings.getAssignmentCacheInterval;
-//   quizCacheInterval = CPsettings.getQuizCacheInterval;
-//   CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
-//   assignmentFetchedTime = await loadFromLocalStorage("CS_AssignmentFetchTime", "undefined");
-//   quizFetchedTime = await loadFromLocalStorage("CS_QuizFetchTime", "undefined");
-// }
-
 /**
  * Load course site IDs
  */
@@ -129,7 +109,6 @@ async function main() {
   if (isLoggedIn()) {
     createMiniSakaiBtn();
     const config = await loadConfigs();
-    console.log("config", config,useCache(config.fetchedTime.assignment, config.cacheInterval.assignment),useCache(config.fetchedTime.quiz, config.cacheInterval.quiz))
     await loadCourseIDList();
     mergedAssignmentList = await loadAndMergeAssignmentList(
       config,

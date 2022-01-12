@@ -1,7 +1,6 @@
 import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
 import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
 import { appendChildAll, cloneElem, hamburger, miniSakai, SettingsDom } from "./dom";
-// import { CPsettings, assignmentFetchedTime, quizFetchedTime, VERSION } from "./content_script";
 import {
   addMemo,
   deleteMemo,
@@ -33,11 +32,8 @@ function createMiniSakaiBtn(): void {
  */
 export async function createMiniSakaiGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): Promise<void> {
   const config = await loadConfigs();
-  console.log("minisakai config", config)
   const assignmentFetchedTimeString = formatTimestamp(config.fetchedTime.assignment);
   const quizFetchedTimeString = formatTimestamp(config.fetchedTime.quiz);
-  console.log("timestamps", assignmentFetchedTimeString, quizFetchedTimeString)
-
   const courseSiteList: Array<CourseSiteInfo> = [];
 
   const courseIDMap = createCourseIDMap(courseSiteInfos);
