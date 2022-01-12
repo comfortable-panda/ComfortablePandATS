@@ -90,7 +90,7 @@ export async function createMiniSakaiGeneralized(root: Element, assignmentList: 
           appendElement(courseName, otherElements);
           break;
         case "duePassed":
-          const showLateSubmitAssignment = config.CPSettings ? config.CPSettings.getDisplayLateSubmitAssignment : false;
+          const showLateSubmitAssignment = config.CSsettings ? config.CSsettings.getDisplayLateSubmitAssignment : false;
           if (showLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
             appendElement(courseName, lateSubmitElements);
           }
@@ -205,18 +205,18 @@ async function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfo
  */
 async function createSettingsTab(root: Element) {
   const config = await loadConfigs();
-  createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), config.CPSettings.getDisplayCheckedAssignment, "displayCheckedAssignment");
-  createSettingItem(root, chrome.i18n.getMessage('settings_display_late_submit_assignment'), config.CPSettings.getDisplayLateSubmitAssignment, "displayLateSubmitAssignment");
-  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), config.CPSettings.getAssignmentCacheInterval, "assignmentCacheInterval");
-  createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), config.CPSettings.getQuizCacheInterval, "quizCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), config.CSsettings.getDisplayCheckedAssignment, "displayCheckedAssignment");
+  createSettingItem(root, chrome.i18n.getMessage('settings_display_late_submit_assignment'), config.CSsettings.getDisplayLateSubmitAssignment, "displayLateSubmitAssignment");
+  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), config.CSsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), config.CSsettings.getQuizCacheInterval, "quizCacheInterval");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), config.CPSettings.getTopColorDanger, "topColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 5]), config.CPSettings.getTopColorWarning, "topColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 14]), config.CPSettings.getTopColorSuccess, "topColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), config.CSsettings.getTopColorDanger, "topColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 5]), config.CSsettings.getTopColorWarning, "topColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 14]), config.CSsettings.getTopColorSuccess, "topColorSuccess");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), config.CPSettings.getMiniColorDanger, "miniColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), config.CPSettings.getMiniColorWarning, "miniColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), config.CPSettings.getMiniColorSuccess, "miniColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), config.CSsettings.getMiniColorDanger, "miniColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), config.CSsettings.getMiniColorWarning, "miniColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), config.CSsettings.getMiniColorSuccess, "miniColorSuccess");
 
   createSettingItem(root, chrome.i18n.getMessage("settings_reset_colors"), "reset", "reset");
   // @ts-ignore
@@ -314,7 +314,7 @@ async function createFavoritesBarNotification(courseSiteInfos: Array<CourseSiteI
         return assignment.courseSiteInfo.courseID === courseID;
       });
       if (q !== -1) {
-        const closestTime = (config.CPSettings.displayCheckedAssignment) ? assignmentList[q].closestDueDateTimestamp : assignmentList[q].closestDueDateTimestampExcludeFinished;
+        const closestTime = (config.CSsettings.displayCheckedAssignment) ? assignmentList[q].closestDueDateTimestamp : assignmentList[q].closestDueDateTimestampExcludeFinished;
         if (!assignmentList[q].isRead && closestTime !== -1) {
           defaultTab[j].classList.add("cs-notification-badge");
         }
@@ -393,18 +393,18 @@ async function overrideCSSColor() {
   };
 
   // Overwrite colors
-  overwritebackground("cs-course-danger", config.CPSettings.getMiniColorDanger);
-  overwritebackground("cs-course-warning", config.CPSettings.getMiniColorWarning);
-  overwritebackground("cs-course-success", config.CPSettings.getMiniColorSuccess);
-  overwritebackground("cs-tab-danger", config.CPSettings.getTopColorDanger);
-  overwritebackground("cs-tab-warning", config.CPSettings.getTopColorWarning);
-  overwritebackground("cs-tab-success", config.CPSettings.getTopColorSuccess);
-  overwriteborder("cs-assignment-danger", config.CPSettings.getMiniColorDanger);
-  overwriteborder("cs-assignment-warning", config.CPSettings.getMiniColorWarning);
-  overwriteborder("cs-assignment-success", config.CPSettings.getMiniColorSuccess);
-  overwriteborder("cs-tab-danger", config.CPSettings.getTopColorDanger);
-  overwriteborder("cs-tab-warning", config.CPSettings.getTopColorWarning);
-  overwriteborder("cs-tab-success", config.CPSettings.getTopColorSuccess);
+  overwritebackground("cs-course-danger", config.CSsettings.getMiniColorDanger);
+  overwritebackground("cs-course-warning", config.CSsettings.getMiniColorWarning);
+  overwritebackground("cs-course-success", config.CSsettings.getMiniColorSuccess);
+  overwritebackground("cs-tab-danger", config.CSsettings.getTopColorDanger);
+  overwritebackground("cs-tab-warning", config.CSsettings.getTopColorWarning);
+  overwritebackground("cs-tab-success", config.CSsettings.getTopColorSuccess);
+  overwriteborder("cs-assignment-danger", config.CSsettings.getMiniColorDanger);
+  overwriteborder("cs-assignment-warning", config.CSsettings.getMiniColorWarning);
+  overwriteborder("cs-assignment-success", config.CSsettings.getMiniColorSuccess);
+  overwriteborder("cs-tab-danger", config.CSsettings.getTopColorDanger);
+  overwriteborder("cs-tab-warning", config.CSsettings.getTopColorWarning);
+  overwriteborder("cs-tab-success", config.CSsettings.getTopColorSuccess);
 }
 
 export {

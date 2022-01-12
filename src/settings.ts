@@ -68,15 +68,15 @@ export class DefaultSettings extends Settings {
 
 export async function loadSettings(): Promise<Settings> {
   const settingsArr = await loadFromLocalStorage("CS_Settings");
-  const CPsettings = convertArrayToSettings(settingsArr);
-  CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
-  return CPsettings;
+  const CSsettings = convertArrayToSettings(settingsArr);
+  CSsettings.displayCheckedAssignment = CSsettings.getDisplayCheckedAssignment;
+  return CSsettings;
 }
 
 export interface Config {
   baseURL: string;
   version: string;
-  CPSettings: Settings;
+  CSsettings: Settings;
   fetchedTime: {
     assignment: number;
     quiz: number;
@@ -93,16 +93,16 @@ export interface Config {
 export async function loadConfigs(): Promise<Config> {
   const baseURL = getBaseURL();
   const VERSION = chrome.runtime.getManifest().version;
-  const CPsettings = await loadSettings();
-  CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
-  const assignmentCacheInterval = CPsettings.getAssignmentCacheInterval;
-  const quizCacheInterval = CPsettings.getQuizCacheInterval;
+  const CSsettings = await loadSettings();
+  CSsettings.displayCheckedAssignment = CSsettings.getDisplayCheckedAssignment;
+  const assignmentCacheInterval = CSsettings.getAssignmentCacheInterval;
+  const quizCacheInterval = CSsettings.getQuizCacheInterval;
   const assignmentFetchedTime = await loadFromLocalStorage("CS_AssignmentFetchTime", "undefined");
   const quizFetchedTime = await loadFromLocalStorage("CS_QuizFetchTime", "undefined");
   return {
     baseURL: baseURL,
     version: VERSION,
-    CPSettings: CPsettings,
+    CSsettings: CSsettings,
     cacheInterval: {
       assignment: assignmentCacheInterval,
       quiz: quizCacheInterval,

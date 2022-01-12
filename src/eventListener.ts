@@ -127,7 +127,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
   const settingsID = event.target.id;
   let settingsValue = event.target.value;
   const config = await loadConfigs();
-  const CPSettings = config.CPSettings;
+  const CSsettings = config.CSsettings;
 
   // Type of Settings
   switch (type) {
@@ -148,7 +148,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
     ];
     for (const k of colorList) {
       // @ts-ignore
-      CPSettings[k] = DefaultSettings[k];
+      CSsettings[k] = DefaultSettings[k];
       const q = <HTMLInputElement>document.getElementById(k);
       if (q) {
         // @ts-ignore
@@ -157,10 +157,10 @@ async function updateSettings(event: any, type: string): Promise<void> {
     }
   } else {
     // @ts-ignore
-    CPSettings[settingsID] = settingsValue;
+    CSsettings[settingsID] = settingsValue;
   }
 
-  await saveToLocalStorage("CS_Settings", CPSettings);
+  await saveToLocalStorage("CS_Settings", CSsettings);
 
   await redrawFavoritesBar(courseIDList, true);
 }
