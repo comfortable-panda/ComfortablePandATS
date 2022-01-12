@@ -20,7 +20,7 @@ async function updateSubSakai(root: Element) {
   mergedAssignmentList = mergeIntoAssignmentList(mergedAssignmentList, assignmentMemoList);
   mergedAssignmentList = sortAssignmentList(mergedAssignmentList);
 
-  createMiniSakaiGeneralized(root, mergedAssignmentList, courseIDs, true, (rendered) => {
+  await createMiniSakaiGeneralized(root, mergedAssignmentList, courseIDs, true, (rendered) => {
     console.log(rendered);
     root.innerHTML = rendered;
   });

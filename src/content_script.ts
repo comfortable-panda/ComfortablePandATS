@@ -1,6 +1,6 @@
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
-import { getCourseIDList, getBaseURL, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
+import { getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
 import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
 
 import {
@@ -14,26 +14,20 @@ import {
   updateIsReadFlag,
   useCache,
 } from "./utils";
-import { Settings, loadSettings } from "./settings";
+import { Config, loadConfigs } from "./settings";
 
-export const baseURL = getBaseURL();
-export const VERSION = chrome.runtime.getManifest().version;
-export let assignmentCacheInterval: number;
-export let quizCacheInterval: number;
-export let assignmentFetchedTime: number | undefined;
-export let quizFetchedTime: number | undefined;
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
 export let mergedAssignmentListNoMemo: Array<Assignment>;
-export let CPsettings: Settings;
 
 /**
  * Load old assignments/quizzes from storage and fetch new assignments/quizzes from Sakai.
+ * @param {Config} config
  * @param {CourseSiteInfo[]} courseSiteInfos
  * @param {boolean} useAssignmentCache
  * @param {boolean} useQuizCache
  */
-export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSiteInfo>, useAssignmentCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
+export async function loadAndMergeAssignmentList(config: Config ,courseSiteInfos: Array<CourseSiteInfo>, useAssignmentCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
   // Load old assignments and quizzes from local storage
   const oldAssignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_AssignmentList"));
   const oldQuizList = convertArrayToAssignment(await loadFromLocalStorage("CS_QuizList"));
@@ -48,7 +42,7 @@ export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSi
     const pendingList = [];
     // Add course sites to fetch-pending list
     for (const i of courseSiteInfos) {
-      pendingList.push(getAssignmentByCourseID(baseURL, i.courseID));
+      pendingList.push(getAssignmentByCourseID(config.baseURL, i.courseID));
     }
     // Wait until all assignments are fetched
     const result = await (Promise as any).allSettled(pendingList);
@@ -57,7 +51,7 @@ export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSi
     }
     // Update assignment fetch timestamp
     await saveToLocalStorage("CS_AssignmentFetchTime", nowTime);
-    assignmentFetchedTime = nowTime;
+    config.fetchedTime.assignment = nowTime;
   }
   // Compare assignments with old ones
   mergedAssignmentListNoMemo = compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList);
@@ -73,7 +67,7 @@ export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSi
     const pendingList = [];
     // Add course sites to fetch-pending list
     for (const i of courseSiteInfos) {
-      pendingList.push(getQuizFromCourseID(baseURL, i.courseID));
+      pendingList.push(getQuizFromCourseID(config.baseURL, i.courseID));
     }
     // Wait until all quizzes are fetched
     const result = await (Promise as any).allSettled(pendingList);
@@ -82,7 +76,7 @@ export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSi
     }
     // Update assignment fetch timestamp
     await saveToLocalStorage("CS_QuizFetchTime", nowTime);
-    quizFetchedTime = nowTime;
+    config.fetchedTime.quiz = nowTime;
   }
   // Compare quizzes with old ones
   const mergedQuizList = compareAndMergeAssignmentList(oldQuizList, newQuizList);
@@ -103,18 +97,6 @@ export async function loadAndMergeAssignmentList(courseSiteInfos: Array<CourseSi
 }
 
 /**
- * Load configurations from local storage
- */
-async function loadConfigs() {
-  CPsettings = await loadSettings();
-  assignmentCacheInterval = CPsettings.getAssignmentCacheInterval;
-  quizCacheInterval = CPsettings.getQuizCacheInterval;
-  CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
-  assignmentFetchedTime = await loadFromLocalStorage("CS_AssignmentFetchTime", "undefined");
-  quizFetchedTime = await loadFromLocalStorage("CS_QuizFetchTime", "undefined");
-}
-
-/**
  * Load course site IDs
  */
 async function loadCourseIDList() {
@@ -125,16 +107,17 @@ async function loadCourseIDList() {
 async function main() {
   if (isLoggedIn()) {
     createMiniSakaiBtn();
-    await loadConfigs();
+    const config = await loadConfigs();
     await loadCourseIDList();
     mergedAssignmentList = await loadAndMergeAssignmentList(
+      config,
       courseIDList,
-      useCache(assignmentFetchedTime, assignmentCacheInterval),
-      useCache(quizFetchedTime, quizCacheInterval)
+      useCache(config.fetchedTime.assignment, config.cacheInterval.assignment),
+      useCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
     );
     // await addBookmarkedCourseSites(baseURL);
     await displayMiniSakai(mergedAssignmentList, courseIDList);
-    createFavoritesBarNotification(courseIDList, mergedAssignmentList);
+    await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
 
     miniSakaiReady();
     updateIsReadFlag(mergedAssignmentListNoMemo);

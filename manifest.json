@@ -1,7 +1,7 @@
 {
   "name": "Comfortable Sakai",
   "description": "__MSG_EXTENSION_DESCRIPTION__",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "manifest_version": 2,
   "default_locale": "en",
   "icons": {
@@ -36,7 +36,7 @@
   "web_accessible_resources": [
     "css/comfortable-sakai.css",
     "img/logo.png",
-    "img/relaxPanda.png",
+    "img/noAssignment.png",
     "img/miniSakaiBtn.png",
     "views/minisakai.mustache"
   ]

@@ -2,8 +2,8 @@ import { assignmentDiv, miniSakai } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { CourseSiteInfo, Assignment, AssignmentEntry } from "./model";
 import { convertArrayToAssignment, genUniqueID, mergeIntoAssignmentList } from "./utils";
-import { CPsettings, courseIDList, loadAndMergeAssignmentList, mergedAssignmentListNoMemo } from "./content_script";
-import { DefaultSettings } from "./settings";
+import { courseIDList, loadAndMergeAssignmentList, mergedAssignmentListNoMemo } from "./content_script";
+import { DefaultSettings, loadConfigs } from "./settings";
 import { createFavoritesBarNotification, deleteFavoritesBarNotification, displayMiniSakai } from "./minisakai";
 
 let toggle = false;
@@ -125,15 +125,17 @@ async function toggleFinishedFlag(event: any): Promise<void> {
  */
 async function updateSettings(event: any, type: string): Promise<void> {
   const settingsID = event.target.id;
-  let settingsValue = event.currentTarget.value;
+  let settingsValue = event.target.value;
+  const config = await loadConfigs();
+  const CSsettings = config.CSsettings;
 
   // Type of Settings
   switch (type) {
     case "check":
-      settingsValue = event.currentTarget.checked;
+      settingsValue = event.target.checked;
       break;
     case "number":
-      settingsValue = parseInt(event.currentTarget.value);
+      settingsValue = parseInt(event.target.value);
       break;
     case "string":
       break;
@@ -146,7 +148,7 @@ async function updateSettings(event: any, type: string): Promise<void> {
     ];
     for (const k of colorList) {
       // @ts-ignore
-      CPsettings[k] = DefaultSettings[k];
+      CSsettings[k] = DefaultSettings[k];
       const q = <HTMLInputElement>document.getElementById(k);
       if (q) {
         // @ts-ignore
@@ -155,10 +157,10 @@ async function updateSettings(event: any, type: string): Promise<void> {
     }
   } else {
     // @ts-ignore
-    CPsettings[settingsID] = settingsValue;
+    CSsettings[settingsID] = settingsValue;
   }
 
-  saveToLocalStorage("CS_Settings", CPsettings);
+  await saveToLocalStorage("CS_Settings", CSsettings);
 
   await redrawFavoritesBar(courseIDList, true);
 }
@@ -253,8 +255,9 @@ async function editFavoritesMessage(): Promise<void> {
  */
 async function redrawFavoritesBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void> {
   deleteFavoritesBarNotification();
-  const newAssignmentList = await loadAndMergeAssignmentList(courseIDList, useCache, useCache);
-  createFavoritesBarNotification(courseIDList, newAssignmentList);
+  const config = await loadConfigs();
+  const newAssignmentList = await loadAndMergeAssignmentList(config, courseIDList, useCache, useCache);
+  await createFavoritesBarNotification(courseIDList, newAssignmentList);
 }
 
 /**
