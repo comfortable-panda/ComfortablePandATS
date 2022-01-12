@@ -1,5 +1,6 @@
 import { loadFromLocalStorage } from "./storage";
 import { convertArrayToSettings } from "./utils";
+import { getBaseURL } from "./network";
 
 export class Settings {
   assignmentCacheInterval?: number;
@@ -70,4 +71,45 @@ export async function loadSettings(): Promise<Settings> {
   const CPsettings = convertArrayToSettings(settingsArr);
   CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
   return CPsettings;
+}
+
+export interface Config {
+  baseURL: string;
+  version: string;
+  CPSettings: Settings;
+  fetchedTime: {
+    assignment: number;
+    quiz: number;
+  };
+  cacheInterval: {
+    assignment: number;
+    quiz: number;
+  };
+}
+
+/**
+ * Load configurations from local storage
+ */
+export async function loadConfigs(): Promise<Config> {
+  const baseURL = getBaseURL();
+  const VERSION = chrome.runtime.getManifest().version;
+  const CPsettings = await loadSettings();
+  CPsettings.displayCheckedAssignment = CPsettings.getDisplayCheckedAssignment;
+  const assignmentCacheInterval = CPsettings.getAssignmentCacheInterval;
+  const quizCacheInterval = CPsettings.getQuizCacheInterval;
+  const assignmentFetchedTime = await loadFromLocalStorage("CS_AssignmentFetchTime", "undefined");
+  const quizFetchedTime = await loadFromLocalStorage("CS_QuizFetchTime", "undefined");
+  return {
+    baseURL: baseURL,
+    version: VERSION,
+    CPSettings: CPsettings,
+    cacheInterval: {
+      assignment: assignmentCacheInterval,
+      quiz: quizCacheInterval,
+    },
+    fetchedTime: {
+      assignment: assignmentFetchedTime,
+      quiz: quizFetchedTime,
+    },
+  };
 }
