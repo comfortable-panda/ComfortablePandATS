@@ -20,9 +20,6 @@ describe("testapi()", (): void => {
     assignmentEntry.assignmentDetail = "--------";
     assignmentEntry.assignmentPage = "/portal/site/";
     const assignment = new Assignment(new CourseSiteInfo("", ""), [assignmentEntry], false);
-
     expect(a).toEqual(assignment);
-
-    // expect(await getAssignmentByCourseID("", "")).toBe("");
   });
 });
