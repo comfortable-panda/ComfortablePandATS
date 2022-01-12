@@ -19,7 +19,7 @@ describe("Assignment", (): void => {
 
     // mock time
     Object.defineProperty(utils, "nowTime", {
-      value: 1668005000000,
+      value: 1668005000000
     });
     const a = await getAssignmentByCourseID("", "");
     const assignmentEntry = new AssignmentEntry("sample1", "Sample Assignment1", 1668006000, 1668006000, false, false, false);
@@ -36,7 +36,7 @@ describe("Assignment", (): void => {
 
     // mock time
     Object.defineProperty(utils, "nowTime", {
-      value: 1668007000000,
+      value: 1668007000000
     });
     const a = await getAssignmentByCourseID("", "");
     const assignmentEntry = new AssignmentEntry("sample1", "Sample Assignment1", 1668006000, 1668006000, false, false, false);
@@ -53,7 +53,7 @@ describe("Assignment", (): void => {
 
     // mock time
     Object.defineProperty(utils, "nowTime", {
-      value: 1668007000000,
+      value: 1668007000000
     });
     const a = await getAssignmentByCourseID("", "");
     const assignmentEntry = new AssignmentEntry("sample2", "Sample Assignment2", 1668006000, 1668008000, false, false, false);
