@@ -127,6 +127,7 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     };
   }
 
+  // Create dict of data for miniSakai
   const templateVars = {
     fetchedTime: {
       assignment: assignmentFetchedTimeString,
@@ -387,19 +388,20 @@ function overrideCSSColor() {
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
-  overwriteborder("cs-assignment-danger", CPsettings.getMiniColorDanger);
-  overwriteborder("cs-assignment-success", CPsettings.getMiniColorSuccess);
-  overwriteborder("cs-assignment-warning", CPsettings.getMiniColorWarning);
-  overwritebackground("cs-course-danger", CPsettings.getMiniColorDanger);
-  overwritebackground("cs-course-success", CPsettings.getMiniColorSuccess);
-  overwritebackground("cs-course-warning", CPsettings.getMiniColorWarning);
 
+  // Overwrite colors
+  overwritebackground("cs-course-danger", CPsettings.getMiniColorDanger);
+  overwritebackground("cs-course-warning", CPsettings.getMiniColorWarning);
+  overwritebackground("cs-course-success", CPsettings.getMiniColorSuccess);
   overwritebackground("cs-tab-danger", CPsettings.getTopColorDanger);
-  overwritebackground("cs-tab-success", CPsettings.getTopColorSuccess);
   overwritebackground("cs-tab-warning", CPsettings.getTopColorWarning);
+  overwritebackground("cs-tab-success", CPsettings.getTopColorSuccess);
+  overwriteborder("cs-assignment-danger", CPsettings.getMiniColorDanger);
+  overwriteborder("cs-assignment-warning", CPsettings.getMiniColorWarning);
+  overwriteborder("cs-assignment-success", CPsettings.getMiniColorSuccess);
   overwriteborder("cs-tab-danger", CPsettings.getTopColorDanger);
-  overwriteborder("cs-tab-success", CPsettings.getTopColorSuccess);
   overwriteborder("cs-tab-warning", CPsettings.getTopColorWarning);
+  overwriteborder("cs-tab-success", CPsettings.getTopColorSuccess);
 }
 
 export {
