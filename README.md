@@ -2,6 +2,8 @@
 [![License](https://img.shields.io/github/license/kyoto-u/comfortable-sakai?color=orange)](https://github.com/kyoto-u/comfortable-sakai/blob/master/LICENSE)
 [![Release](https://img.shields.io/github/v/release/kyoto-u/comfortable-sakai?include_prereleases)](https://github.com/kyoto-u/comfortable-sakai/releases)
 [![CodeQL](https://github.com/kyoto-u/comfortable-sakai/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/kyoto-u/comfortable-sakai/actions/workflows/codeql-analysis.yml)  
+[![npm test](https://github.com/kyoto-u/comfortable-sakai/actions/workflows/npm_tests.yml/badge.svg)](https://github.com/kyoto-u/comfortable-sakai/actions/workflows/npm_tests.yml)
+
 A Web browser Extension for improving UX of Sakai LMS.  
 Originated from [Comfortable PandA](https://github.com/comfortable-panda/ComfortablePandATS) for Kyoto Univ.
 
