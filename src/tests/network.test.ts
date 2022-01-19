@@ -6,6 +6,9 @@ import fs from "fs";
 import { Assignment, AssignmentEntry, CourseSiteInfo } from "../model";
 import * as utils from "../utils";
 
+/**
+ * Tests for Assignment API
+ */
 describe("Assignment", (): void => {
   beforeEach(() => {
     //@ts-ignore
@@ -20,7 +23,15 @@ describe("Assignment", (): void => {
     // mock time
     Object.defineProperty(utils, "nowTime", { value: 1668005000000 });
     const a = await getAssignmentByCourseID("", "");
-    const assignmentEntry = new AssignmentEntry("sample1", "Sample Assignment1", 1668006000, 1668006000, false, false, false);
+    const assignmentEntry = new AssignmentEntry(
+      "sample1",
+      "Sample Assignment1",
+      1668006000,
+      1668006000,
+      false,
+      false,
+      false
+    );
     assignmentEntry.assignmentDetail = "--------";
     assignmentEntry.assignmentPage = "/portal/site/";
     const assignment = new Assignment(new CourseSiteInfo("", ""), [assignmentEntry], false);
@@ -47,7 +58,15 @@ describe("Assignment", (): void => {
     // mock time
     Object.defineProperty(utils, "nowTime", { value: 1668007000000 });
     const a = await getAssignmentByCourseID("", "");
-    const assignmentEntry = new AssignmentEntry("sample2", "Sample Assignment2", 1668006000, 1668008000, false, false, false);
+    const assignmentEntry = new AssignmentEntry(
+      "sample2",
+      "Sample Assignment2",
+      1668006000,
+      1668008000,
+      false,
+      false,
+      false
+    );
     assignmentEntry.assignmentDetail = "--------";
     assignmentEntry.assignmentPage = "/portal/site/";
     const assignment = new Assignment(new CourseSiteInfo("", ""), [assignmentEntry], false);
@@ -55,6 +74,9 @@ describe("Assignment", (): void => {
   });
 });
 
+/**
+ * Tests for Quiz API
+ */
 describe("Quiz", (): void => {
   beforeEach(() => {
     //@ts-ignore
