@@ -8,11 +8,6 @@
       },
       "closeTimeString": "2022-11-10T00:00:00Z",
       "context": "2021-110-6205-000",
-      "dropDeadTime": {
-        "epochSecond": 1668006000,
-        "nano": 0
-      },
-      "dropDeadTimeString": "2022-11-10T00:00:00Z",
       "dueTime": {
         "epochSecond": 1668006000,
         "nano": 0
