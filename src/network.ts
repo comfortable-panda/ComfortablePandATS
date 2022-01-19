@@ -111,7 +111,7 @@ function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string,
  */
 function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
   return data.sam_pub_collection
-    .filter((json: any) => json.startDate < nowTime)
+    .filter((json: any) => json.startDate < nowTime && (json.dueDate >= nowTime || json.dueDate == null))
     .map((json: any) => {
       const quizID = "q" + json.publishedAssessmentId;
       const quizTitle = json.title;
