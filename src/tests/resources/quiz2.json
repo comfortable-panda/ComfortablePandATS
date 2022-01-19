@@ -1,0 +1,19 @@
+{
+  "entityPrefix": "sam_pub",
+  "sam_pub_collection": [
+    {
+      "categoryId": null,
+      "comments": null,
+      "createdBy": null,
+      "createdDate": null,
+      "data": null,
+      "dueDate": null,
+      "lastModifiedDate": 1619141836000,
+      "lastModifiedDateForDisplay": null,
+      "publishedAssessmentId": 193178,
+      "securedIPAddressSet": null,
+      "startDate": 1593733500000,
+      "title": "quiz2"
+    }
+  ]
+}
