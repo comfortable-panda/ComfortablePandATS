@@ -1,6 +1,7 @@
 /**
  * @jest-environment jsdom
  */
+
 import { getDaysUntil } from "../utils";
 
 // Declare toBeWithinRange as global method.
