@@ -8,12 +8,12 @@
       "createdDate": null,
       "data": null,
       "dueDate": null,
-      "lastModifiedDate": 1619141836000,
+      "lastModifiedDate": 1668000000000,
       "lastModifiedDateForDisplay": null,
-      "publishedAssessmentId": 193178,
+      "publishedAssessmentId": 12345,
       "securedIPAddressSet": null,
-      "startDate": 1593733500000,
-      "title": "quiz2"
+      "startDate": 1668000000000,
+      "title": "quiz1"
     }
   ]
 }

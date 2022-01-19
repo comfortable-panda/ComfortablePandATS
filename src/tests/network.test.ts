@@ -95,4 +95,34 @@ describe("Quiz", (): void => {
     expect(a).toEqual(assignment);
   });
 
+  test("quizDueNotSetButOpen", async (): Promise<void> => {
+    const jsonObject = JSON.parse(fs.readFileSync(`./src/tests/resources/quiz2.json`, "utf8"));
+    //@ts-ignore
+    fetch.mockResponseOnce(JSON.stringify(jsonObject));
+
+    // mock time
+    Object.defineProperty(utils, "nowTime", { value: 1668010000000 });
+    const a = await getQuizFromCourseID("", "");
+    const assignmentEntry = new AssignmentEntry("q12345", "quiz1", null, null, false, false, true);
+    assignmentEntry.assignmentDetail = "";
+    assignmentEntry.assignmentPage = "/portal/site/";
+    const assignment = new Assignment(new CourseSiteInfo("", ""), [assignmentEntry], false);
+    expect(a).toEqual(assignment);
+  });
+
+  test("quizDueNotSetButClosed", async (): Promise<void> => {
+    const jsonObject = JSON.parse(fs.readFileSync(`./src/tests/resources/quiz2.json`, "utf8"));
+    //@ts-ignore
+    fetch.mockResponseOnce(JSON.stringify(jsonObject));
+
+    // mock time
+    Object.defineProperty(utils, "nowTime", { value: 1668000000000 });
+    const a = await getQuizFromCourseID("", "");
+    const assignmentEntry = new AssignmentEntry("q12345", "quiz1", null, null, false, false, true);
+    assignmentEntry.assignmentDetail = "";
+    assignmentEntry.assignmentPage = "/portal/site/";
+    const assignment = new Assignment(new CourseSiteInfo("", ""), [], false);
+    expect(a).toEqual(assignment);
+  });
+
 });
