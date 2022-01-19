@@ -96,7 +96,7 @@ describe("Quiz", (): void => {
     // mock time
     Object.defineProperty(utils, "nowTime", { value: 1668010000000 });
     const a = await getQuizFromCourseID("", "");
-    const assignmentEntry = new AssignmentEntry("q12345", "quiz1", null, null, false, false, true);
+    const assignmentEntry = new AssignmentEntry("q12345", "quiz2", null, null, false, false, true);
     assignmentEntry.assignmentDetail = "";
     assignmentEntry.assignmentPage = "/portal/site/";
     const assignment = new Assignment(new CourseSiteInfo("", ""), [assignmentEntry], false);
