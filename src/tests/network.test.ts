@@ -35,9 +35,6 @@ describe("Assignment", (): void => {
     // mock time
     Object.defineProperty(utils, "nowTime", { value: 1668007000000 });
     const a = await getAssignmentByCourseID("", "");
-    const assignmentEntry = new AssignmentEntry("sample1", "Sample Assignment1", 1668006000, 1668006000, false, false, false);
-    assignmentEntry.assignmentDetail = "--------";
-    assignmentEntry.assignmentPage = "/portal/site/";
     const assignment = new Assignment(new CourseSiteInfo("", ""), [], false);
     expect(a).toEqual(assignment);
   });
@@ -57,7 +54,6 @@ describe("Assignment", (): void => {
     expect(a).toEqual(assignment);
   });
 });
-
 
 describe("Quiz", (): void => {
   beforeEach(() => {
@@ -88,9 +84,6 @@ describe("Quiz", (): void => {
     // mock time
     Object.defineProperty(utils, "nowTime", { value: 1668010000000 });
     const a = await getQuizFromCourseID("", "");
-    const assignmentEntry = new AssignmentEntry("q12345", "quiz1", 1668009000, 1668009000, false, false, true);
-    assignmentEntry.assignmentDetail = "";
-    assignmentEntry.assignmentPage = "/portal/site/";
     const assignment = new Assignment(new CourseSiteInfo("", ""), [], false);
     expect(a).toEqual(assignment);
   });
@@ -118,11 +111,7 @@ describe("Quiz", (): void => {
     // mock time
     Object.defineProperty(utils, "nowTime", { value: 1668000000000 });
     const a = await getQuizFromCourseID("", "");
-    const assignmentEntry = new AssignmentEntry("q12345", "quiz1", null, null, false, false, true);
-    assignmentEntry.assignmentDetail = "";
-    assignmentEntry.assignmentPage = "/portal/site/";
     const assignment = new Assignment(new CourseSiteInfo("", ""), [], false);
     expect(a).toEqual(assignment);
   });
-
 });
