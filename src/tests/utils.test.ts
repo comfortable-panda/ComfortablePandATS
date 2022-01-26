@@ -58,38 +58,39 @@ describe("getDaysUntil()", (): void => {
 
 describe("updateIsReadFlag()", (): void => {
   const sampleAssignmentEntry = new AssignmentEntry("id1", "title", 1000000, 100000, false, false, false);
+  const inputAssignmentList = [
+    new Assignment(
+      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
+      [sampleAssignmentEntry],
+      false
+    ),
+    new Assignment(
+      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course1"),
+      [sampleAssignmentEntry],
+      false
+    ),
+  ];
+  const expectAssignmentList = [
+    new Assignment(
+      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
+      [sampleAssignmentEntry],
+      true
+    ),
+    new Assignment(
+      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course1"),
+      [sampleAssignmentEntry],
+      false
+    ),
+  ];
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   test("doesMatchCourseID", (): void => {
     const spyGetSiteCourseID = jest
       .spyOn(utils, "getSiteCourseID")
       .mockReturnValueOnce("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109")
       .mockReturnValueOnce("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1")
-      .mockReturnValueOnce("FC0DDCE7-EFE5-446A-A928-A4857A7C63A8");
-    const inputAssignmentList = [
-      new Assignment(
-        new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
-        [sampleAssignmentEntry],
-        false
-      ),
-      new Assignment(
-        new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course1"),
-        [sampleAssignmentEntry],
-        false
-      ),
-    ];
-
-    const expectAssignmentList = [
-      new Assignment(
-        new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
-        [sampleAssignmentEntry],
-        true
-      ),
-      new Assignment(
-        new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course1"),
-        [sampleAssignmentEntry],
-        false
-      ),
-    ];
 
     let result = utils.updateIsReadFlag(inputAssignmentList);
     expect(result).toStrictEqual(expectAssignmentList);
@@ -100,11 +101,47 @@ describe("updateIsReadFlag()", (): void => {
     expectAssignmentList[1].isRead = true;
     expect(result).toStrictEqual(expectAssignmentList);
     expect(spyGetSiteCourseID).toBeCalledTimes(2);
+  });
 
-    result = utils.updateIsReadFlag(inputAssignmentList);
+  test("doesNOTMatchCourseID", (): void => {
+    const spyGetSiteCourseID = jest
+      .spyOn(utils, "getSiteCourseID")
+      .mockReturnValueOnce("FC0DDCE7-EFE5-446A-A928-A4857A7C63A8")
+      .mockReturnValueOnce("")
+      .mockReturnValueOnce(undefined);
+
+    let result = utils.updateIsReadFlag(inputAssignmentList);
     expectAssignmentList[0].isRead = false;
     expectAssignmentList[1].isRead = false;
     expect(result).toStrictEqual(expectAssignmentList);
+    expect(spyGetSiteCourseID).toBeCalledTimes(1);
+
+    result = utils.updateIsReadFlag(inputAssignmentList);
+    expect(result).toStrictEqual(expectAssignmentList);
+    expect(spyGetSiteCourseID).toBeCalledTimes(2);
+
+    result = utils.updateIsReadFlag(inputAssignmentList);
+    expect(result).toStrictEqual(expectAssignmentList);
     expect(spyGetSiteCourseID).toBeCalledTimes(3);
+  });
+
+  test("alreadyIsRead", (): void => {
+    const spyGetSiteCourseID = jest
+      .spyOn(utils, "getSiteCourseID")
+      .mockReturnValueOnce("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109")
+      .mockReturnValueOnce("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1")
+
+    inputAssignmentList[0].isRead = true;
+    inputAssignmentList[1].isRead = true;
+
+    let result = utils.updateIsReadFlag(inputAssignmentList);
+    expectAssignmentList[0].isRead = true;
+    expectAssignmentList[1].isRead = true;
+    expect(result).toStrictEqual(expectAssignmentList);
+    expect(spyGetSiteCourseID).toBeCalledTimes(1);
+
+    result = utils.updateIsReadFlag(inputAssignmentList);
+    expect(result).toStrictEqual(expectAssignmentList);
+    expect(spyGetSiteCourseID).toBeCalledTimes(2);
   });
 });
