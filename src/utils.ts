@@ -1,5 +1,4 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
-import { saveToLocalStorage } from "./storage";
 import { Settings } from "./settings";
 
 export const nowTime = new Date().getTime();
@@ -106,10 +105,6 @@ export const updateIsReadFlag = (assignmentList: Array<Assignment>): Array<Assig
 
   return updatedAssignmentList;
 }
-
-export const test = (): string | undefined => {
-  return getSiteCourseID();
-};
 
 /**
  * Change loading icon to hamburger button.
@@ -288,9 +283,7 @@ function genUniqueID(prefix: string): string {
 }
 
 export {
-  // test,
   getDaysUntil,
-  // getSiteCourseID,
   createCourseIDMap,
   formatTimestamp,
   isLoggedIn,
@@ -298,7 +291,6 @@ export {
   convertArrayToSettings,
   convertArrayToAssignment,
   compareAndMergeAssignmentList,
-  // updateIsReadFlag,
   useCache,
   genUniqueID,
   mergeIntoAssignmentList,
