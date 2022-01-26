@@ -12,7 +12,7 @@ import {
   updateSettings,
 } from "./eventListener";
 // @ts-ignore
-import Mustache = require("mustache");
+import Mustache from "mustache";
 import { loadConfigs } from "./settings";
 
 /**
@@ -90,6 +90,7 @@ export async function createMiniSakaiGeneralized(root: Element, assignmentList: 
           appendElement(courseName, otherElements);
           break;
         case "duePassed":
+          // eslint-disable-next-line no-case-declarations
           const showLateSubmitAssignment = config.CSsettings ? config.CSsettings.getDisplayLateSubmitAssignment : false;
           if (showLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
             appendElement(courseName, lateSubmitElements);
@@ -220,7 +221,7 @@ async function createSettingsTab(root: Element) {
 
   createSettingItem(root, chrome.i18n.getMessage("settings_reset_colors"), "reset", "reset");
   // @ts-ignore
-  root.querySelector(".cs-settings-tab")?.style.display = "none";
+  root.querySelector(".cs-settings-tab").style.display = "none";
 }
 
 /**
@@ -283,9 +284,9 @@ function registerEventHandlers(root: Element) {
  */
 function initState(root: Element) {
   // @ts-ignore
-  root.querySelector("#assignmentTab")?.checked = true;
+  root.querySelector("#assignmentTab").checked = true;
   // @ts-ignore
-  root.querySelector(".todoDue")?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`)
+  root.querySelector(".todoDue").value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`)
     .toISOString()
     .substr(0, 16);
 }
