@@ -56,24 +56,12 @@ describe("getDaysUntil()", (): void => {
   });
 });
 
-// jest.mock("../utils", () => {
-//   // 実際のモジュールを取得
-//   const Utils = jest.requireActual("../utils");
-//   return {
-//     // モック化不要なものはそのまま
-//     ...Utils,
-//     // テスト対象のみ置き換える
-//     getSiteCourseID: jest.fn().mockImplementation(() => {
-//       return "keyClass";
-//     }),
-//   };
-// });
-
 describe("updateIsReadFlag()", (): void => {
   const sampleAssignmentEntry = new AssignmentEntry("id1", "title", 1000000, 100000, false, false, false);
 
   test("doesMatchCourseID", (): void => {
-    const spyGetSiteCourseID = jest.spyOn(utils, "getSiteCourseID")
+    const spyGetSiteCourseID = jest
+      .spyOn(utils, "getSiteCourseID")
       .mockReturnValueOnce("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109")
       .mockReturnValueOnce("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1")
       .mockReturnValueOnce("FC0DDCE7-EFE5-446A-A928-A4857A7C63A8");
