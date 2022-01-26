@@ -120,7 +120,8 @@ async function main() {
     await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
 
     miniSakaiReady();
-    updateIsReadFlag(mergedAssignmentListNoMemo);
+
+    await saveToLocalStorage("CS_AssignmentList", updateIsReadFlag(mergedAssignmentListNoMemo));
   }
 }
 

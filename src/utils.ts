@@ -1,5 +1,4 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
-import { saveToLocalStorage } from "./storage";
 import { Settings } from "./settings";
 
 export const nowTime = new Date().getTime();
@@ -74,7 +73,7 @@ function isLoggedIn(): boolean {
 /**
  * Get courseID of current site.
  */
-function getSiteCourseID(): string | undefined {
+export const getSiteCourseID = (): string | undefined => {
   const url = location.href;
   let courseID: string | undefined;
   const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
@@ -82,15 +81,15 @@ function getSiteCourseID(): string | undefined {
     courseID = url.match(reg)?.[2];
   }
   return courseID;
-}
+};
 
 /**
  * Update new-assignment notification flags.
  * @param {Assignment[]} assignmentList
  */
-function updateIsReadFlag(assignmentList: Array<Assignment>): void {
+export const updateIsReadFlag = (assignmentList: Array<Assignment>): Array<Assignment> => {
   const courseID = getSiteCourseID();
-  const updatedAssignmentList = [];
+  let updatedAssignmentList = [];
   // TODO: Review this process
   if (courseID && courseID.length >= 17) {
     for (const assignment of assignmentList) {
@@ -100,8 +99,11 @@ function updateIsReadFlag(assignmentList: Array<Assignment>): void {
         updatedAssignmentList.push(assignment);
       }
     }
-    saveToLocalStorage("CS_AssignmentList", updatedAssignmentList);
+  } else {
+    updatedAssignmentList = assignmentList;
   }
+
+  return updatedAssignmentList;
 }
 
 /**
@@ -289,7 +291,6 @@ export {
   convertArrayToSettings,
   convertArrayToAssignment,
   compareAndMergeAssignmentList,
-  updateIsReadFlag,
   useCache,
   genUniqueID,
   mergeIntoAssignmentList,
