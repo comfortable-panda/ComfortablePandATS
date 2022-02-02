@@ -265,10 +265,23 @@ describe("compareAndMergeAssignmentList()", (): void => {
     newAssignmentList[1].assignmentEntries = [];
     expectAssignmentList[0].assignmentEntries = [];
     expectAssignmentList[1].assignmentEntries = [];
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[0].assignmentEntries).toStrictEqual(expectAssignmentList[0].assignmentEntries);
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[1].assignmentEntries).toStrictEqual(expectAssignmentList[1].assignmentEntries);
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[0].isRead).not.toBe(false);
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[1].isRead).toBe(true);
+
+    const result = utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList);
+    expect(result[0].assignmentEntries).toStrictEqual(expectAssignmentList[0].assignmentEntries);
+    expect(result[1].assignmentEntries).toStrictEqual(expectAssignmentList[1].assignmentEntries);
+    expect(result[0].isRead).not.toBe(false);
+    expect(result[1].isRead).toBe(true);
+  });
+
+  test("updateIsReadFlag", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    const newAssignmentEntry = new AssignmentEntry("id4", "title4", 1668613800, 1668613800, false, false, false);
+    expectAssignmentList[0].isRead = true;
+    newAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
+    expectAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[0].isRead).toBe(false);
   });
 
 });
