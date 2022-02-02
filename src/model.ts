@@ -21,7 +21,8 @@ export class AssignmentEntry {
     isMemo: boolean,
     isFinished: boolean,
     isQuiz: boolean,
-    assignmentDetail?: string
+    assignmentDetail?: string,
+    assignmentPage?: string
   ) {
     this.assignmentID = assignmentID;
     this.assignmentTitle = assignmentTitle;
@@ -31,6 +32,7 @@ export class AssignmentEntry {
     this.isMemo = isMemo;
     this.isFinished = isFinished;
     this.isQuiz = isQuiz;
+    this.assignmentPage = assignmentPage;
   }
 
   get getDueDateTimestamp(): number {
