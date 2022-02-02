@@ -1,6 +1,6 @@
 {
   "name": "comfortable-sakai",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "Comfortable Sakai is a Web browser extension for managing assignments and quizzes on Sakai LMS.",
   "main": "index.ts",
   "scripts": {
