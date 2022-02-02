@@ -4,6 +4,7 @@
 
 import * as utils from "../utils";
 import { Assignment, AssignmentEntry, CourseSiteInfo } from "../model";
+import _ from "lodash";
 
 // Declare toBeWithinRange as global method.
 declare global {
@@ -90,7 +91,7 @@ describe("updateIsReadFlag()", (): void => {
     const spyGetSiteCourseID = jest
       .spyOn(utils, "getSiteCourseID")
       .mockReturnValueOnce("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109")
-      .mockReturnValueOnce("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1")
+      .mockReturnValueOnce("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1");
 
     let result = utils.updateIsReadFlag(inputAssignmentList);
     expect(result).toStrictEqual(expectAssignmentList);
@@ -129,7 +130,7 @@ describe("updateIsReadFlag()", (): void => {
     const spyGetSiteCourseID = jest
       .spyOn(utils, "getSiteCourseID")
       .mockReturnValueOnce("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109")
-      .mockReturnValueOnce("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1")
+      .mockReturnValueOnce("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1");
 
     inputAssignmentList[0].isRead = true;
     inputAssignmentList[1].isRead = true;
@@ -144,4 +145,130 @@ describe("updateIsReadFlag()", (): void => {
     expect(result).toStrictEqual(expectAssignmentList);
     expect(spyGetSiteCourseID).toBeCalledTimes(2);
   });
+});
+
+describe("compareAndMergeAssignmentList()", (): void => {
+  const _oldAssignmentList = [
+    new Assignment(
+      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
+      [
+        new AssignmentEntry("id1", "title", 1668611800, 1668611800, false, false, false),
+        new AssignmentEntry("id2", "title2", 1668612800, 1668612800, false, false, false),
+      ],
+      false
+    ),
+    new Assignment(
+      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course2"),
+      [
+        new AssignmentEntry("id3", "title3", 1668613800, 1668613800, false, false, false)
+      ],
+      false
+    ),
+  ];
+  const _newAssignmentList = [
+    new Assignment(
+      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
+      [
+        new AssignmentEntry("id1", "title", 1668611800, 1668611800, false, false, false),
+        new AssignmentEntry("id2", "title2", 1668612800, 1668612800, false, false, false),
+      ],
+      false
+    ),
+    new Assignment(
+      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course2"),
+      [
+        new AssignmentEntry("id3", "title3", 1668613800, 1668613800, false, false, false)
+      ],
+      false
+    ),
+  ];
+
+  const _expectAssignmentList = [
+    new Assignment(
+      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
+      [
+        new AssignmentEntry("id1", "title", 1668611800, 1668611800, false, false, false),
+        new AssignmentEntry("id2", "title2", 1668612800, 1668612800, false, false, false),
+      ],
+      false
+    ),
+    new Assignment(
+      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course2"),
+      [
+        new AssignmentEntry("id3", "title3", 1668613800, 1668613800, false, false, false)
+      ],
+      false
+    ),
+  ];
+  test("hasNoChange", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
+  });
+
+  test("hasANewAssignment", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    const newAssignmentEntry = new AssignmentEntry("id4", "title4", 1668613800, 1668613800, false, false, false);
+    newAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
+    expectAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
+
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
+  });
+
+  test("hasUpdatesOnTitle", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    newAssignmentList[0].assignmentEntries[0].assignmentTitle = "new title1";
+    newAssignmentList[1].assignmentEntries[0].assignmentTitle = "new title3";
+    expectAssignmentList[0].assignmentEntries[0].assignmentTitle = "new title1";
+    expectAssignmentList[1].assignmentEntries[0].assignmentTitle = "new title3";
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
+  });
+
+  test("oldAssignments>newAssignments", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    const newAssignmentEntry = new AssignmentEntry("id4", "title4", 1668613800, 1668613800, false, false, false);
+    oldAssignmentList[1].assignmentEntries.push(newAssignmentEntry);
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
+  });
+
+  test("oldAssignments<newAssignments", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    const newAssignmentEntry = new AssignmentEntry("id4", "title4", 1668613800, 1668613800, false, false, false);
+    newAssignmentList[1].assignmentEntries.push(newAssignmentEntry);
+    expectAssignmentList[1].assignmentEntries.push(newAssignmentEntry);
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
+  });
+
+  test("noOldAssignments", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    oldAssignmentList[0].assignmentEntries = [];
+    oldAssignmentList[1].assignmentEntries = [];
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
+  });
+
+  test("noNewAssignments", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    newAssignmentList[0].assignmentEntries = [];
+    newAssignmentList[1].assignmentEntries = [];
+    expectAssignmentList[0].assignmentEntries = [];
+    expectAssignmentList[1].assignmentEntries = [];
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[0].assignmentEntries).toStrictEqual(expectAssignmentList[0].assignmentEntries);
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[1].assignmentEntries).toStrictEqual(expectAssignmentList[1].assignmentEntries);
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[0].isRead).not.toBe(false);
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[1].isRead).toBe(true);
+  });
+
 });
