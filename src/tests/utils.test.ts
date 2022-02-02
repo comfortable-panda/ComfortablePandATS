@@ -200,6 +200,7 @@ describe("compareAndMergeAssignmentList()", (): void => {
       false
     ),
   ];
+
   test("hasNoChange", (): void => {
     const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
     const newAssignmentList = _.cloneDeep(_newAssignmentList);
@@ -282,6 +283,39 @@ describe("compareAndMergeAssignmentList()", (): void => {
     newAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
     expectAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
     expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[0].isRead).toBe(false);
+  });
+
+  test("newCourses", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    const assignment = new Assignment(
+      new CourseSiteInfo("8D479860-44DA-4531-8739-3ECD68A546F4", "course4"),
+      [
+        new AssignmentEntry("id5", "title5", 1668613800, 1668613800, false, false, false)
+      ],
+      false
+    );
+    newAssignmentList.push(assignment);
+    expectAssignmentList.push(assignment);
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
+    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[2].isRead).toBe(false);
+  });
+
+  test("newCoursesWithNoAssignment", (): void => {
+    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
+    const newAssignmentList = _.cloneDeep(_newAssignmentList);
+    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
+    const assignment = new Assignment(
+      new CourseSiteInfo("8D479860-44DA-4531-8739-3ECD68A546F4", "course4"),
+      [],
+      false
+    );
+    newAssignmentList.push(assignment);
+    expectAssignmentList.push(assignment);
+    const result = utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList);
+    expect(result[2].assignmentEntries).toStrictEqual(expectAssignmentList[2].assignmentEntries);
+    expect(result[2].isRead).toBe(true);
   });
 
 });
