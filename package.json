@@ -11,7 +11,7 @@
   "author": "Kazuki Takeda, Shoji Kajita(Kyoto University)",
   "license": "Apache-2.0",
   "dependencies": {
-    "@types/chrome": "^0.0.174",
+    "@types/chrome": "^0.0.178",
     "copy-webpack-plugin": "^10.2.0",
     "lodash": "^4.17.21",
     "mustache": "^4.2.0",

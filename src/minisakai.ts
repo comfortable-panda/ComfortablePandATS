@@ -211,13 +211,13 @@ async function createSettingsTab(root: Element) {
   createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), config.CSsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
   createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), config.CSsettings.getQuizCacheInterval, "quizCacheInterval");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), config.CSsettings.getTopColorDanger, "topColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 5]), config.CSsettings.getTopColorWarning, "topColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 14]), config.CSsettings.getTopColorSuccess, "topColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', '24']), config.CSsettings.getTopColorDanger, "topColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', '5']), config.CSsettings.getTopColorWarning, "topColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', '14']), config.CSsettings.getTopColorSuccess, "topColorSuccess");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), config.CSsettings.getMiniColorDanger, "miniColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), config.CSsettings.getMiniColorWarning, "miniColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), config.CSsettings.getMiniColorSuccess, "miniColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', '24']), config.CSsettings.getMiniColorDanger, "miniColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', '5']), config.CSsettings.getMiniColorWarning, "miniColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', '14']), config.CSsettings.getMiniColorSuccess, "miniColorSuccess");
 
   createSettingItem(root, chrome.i18n.getMessage("settings_reset_colors"), "reset", "reset");
   // @ts-ignore
