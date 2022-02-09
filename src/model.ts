@@ -118,11 +118,11 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
     this.courseID = courseID;
   }
 
-  private getTimeRemain(remainTimestamp: number): [number, number, number] {
+  private getTimeRemain(remainTimestamp: number): [string, string, string] {
     const day = Math.floor(remainTimestamp / (3600 * 24));
     const hours = Math.floor((remainTimestamp - day * 3600 * 24) / 3600);
     const minutes = Math.floor((remainTimestamp - (day * 3600 * 24 + hours * 3600)) / 60);
-    return [day, hours, minutes];
+    return [day.toString(), hours.toString(), minutes.toString()];
   }
 
   get remainTimeString(): string {
