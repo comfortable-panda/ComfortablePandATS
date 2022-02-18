@@ -16,7 +16,7 @@
     "lodash": "^4.17.21",
     "mustache": "^4.2.0",
     "ts-loader": "^9.2.6",
-    "webpack": "^5.65.0"
+    "webpack": "^5.69.1"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
