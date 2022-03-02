@@ -13,15 +13,15 @@
   "settings_color_checked_item": {"message": "チェック済の課題も色付けする"},
   "settings_display_late_submit_assignment": {"message": "遅延提出可能な課題を表示する"},
   "settings_reset_colors": {"message": "デフォルト色に戻す"},
-  "settings_colors_hour": { "message": "カラー #$color$ 締切$time$時間前",
+  "settings_colors_hour": { "message": "【$color_type$】 締切$time$時間前",
     "placeholders": {
-      "color": { "content": "$1" },
+      "color_type": { "content": "$1" },
       "time": { "content": "$2" }
     }
   },
-  "settings_colors_day": { "message": "カラー #$color$ 締切$time$日前",
+  "settings_colors_day": { "message": "【$color_type$】 締切$time$日前",
     "placeholders": {
-      "color": { "content": "$1" },
+      "color_type": { "content": "$1" },
       "time": { "content": "$2" }
     }
   },
