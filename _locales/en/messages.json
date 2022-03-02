@@ -13,15 +13,15 @@
   "settings_color_checked_item": {"message": "Color course tabs including checked items"},
   "settings_display_late_submit_assignment": {"message": "Show assignments that can be submitted late"},
   "settings_reset_colors": {"message": "Reset to default colors"},
-  "settings_colors_hour": { "message": "Color #$color$ $time$ hours before due",
+  "settings_colors_hour": { "message": "[$color_type$] $time$ hours before due",
     "placeholders": {
-      "color": { "content": "$1" },
+      "color_type": { "content": "$1" },
       "time": { "content": "$2" }
     }
   },
-  "settings_colors_day": { "message": "Color #$color$ $time$ days before due",
+  "settings_colors_day": { "message": "[$color_type$] $time$ days before due",
     "placeholders": {
-      "color": { "content": "$1" },
+      "color_type": { "content": "$1" },
       "time": { "content": "$2" }
     }
   },
