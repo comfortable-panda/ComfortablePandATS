@@ -344,3 +344,30 @@ describe("createCourseIDMap()", (): void => {
     expect(utils.createCourseIDMap(courseSiteList)).toStrictEqual(expectResult);
   });
 });
+
+describe("isLoggedIn()", (): void => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  const mockResponseLoggedIn = document.createElement("script");
+  mockResponseLoggedIn.text = "\"i18n\": {},\n" +
+      "                \"loggedIn\": true,\n" +
+      "                \"portalPath\": \"https://****.****/portal\","
+  const mockResponseNotLoggedIn = document.createElement("script");
+  mockResponseNotLoggedIn.text = "\"i18n\": {},\n" +
+      "                \"loggedIn\": false,\n" +
+      "                \"portalPath\": \"https://****.****/portal\","
+  test("logged in", (): void => {
+    const spyGetSiteCourseID = jest
+        .spyOn(utils, "getLoggedInInfoFromScript")
+        .mockReturnValueOnce([mockResponseLoggedIn]);
+    expect(utils.isLoggedIn()).toBe(true);
+  });
+
+  test("NOT logged in", (): void => {
+    const spyGetSiteCourseID = jest
+        .spyOn(utils, "getLoggedInInfoFromScript")
+        .mockReturnValueOnce([mockResponseNotLoggedIn]);
+    expect(utils.isLoggedIn()).toBe(false);
+  });
+});

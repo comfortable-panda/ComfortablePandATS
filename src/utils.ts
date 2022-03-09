@@ -58,13 +58,17 @@ function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, 
   return courseIDMap;
 }
 
+export const getLoggedInInfoFromScript = (): Array<HTMLScriptElement> => {
+  return  Array.from(document.getElementsByTagName("script"));
+}
+
 /**
  * Check if user is loggend in to Sakai.
  */
 function isLoggedIn(): boolean {
-  const scripts = document.getElementsByTagName("script");
+  const scripts = getLoggedInInfoFromScript();
   let loggedIn = false;
-  for (const script of Array.from(scripts)) {
+  for (const script of scripts) {
     if (script.text.match('"loggedIn": true')) loggedIn = true;
   }
   return loggedIn;
