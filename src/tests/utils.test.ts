@@ -331,3 +331,16 @@ describe("formatTimestamp()", (): void => {
     expect(utils.formatTimestamp(undefined)).toBe("10/22/2021 17:56:40");
   });
 });
+
+describe("createCourseIDMap()", (): void => {
+  const courseSiteList = [
+      new CourseSiteInfo("course1", "alpha"),
+      new CourseSiteInfo("course2", undefined),
+      new CourseSiteInfo("course3", "gamma"),
+  ];
+  const expectResult = new Map([["course1", "alpha"], ["course2", ""], ["course3", "gamma"]]);
+
+  test("createCourseIDMap", (): void => {
+    expect(utils.createCourseIDMap(courseSiteList)).toStrictEqual(expectResult);
+  });
+});
