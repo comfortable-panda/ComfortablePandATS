@@ -77,8 +77,7 @@ function isLoggedIn(): boolean {
 /**
  * Get courseID of current site.
  */
-export const getSiteCourseID = (): string | undefined => {
-  const url = location.href;
+export const getSiteCourseID = (url: string): string | undefined => {
   let courseID: string | undefined;
   const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
   if (url.match(reg)) {
@@ -92,7 +91,7 @@ export const getSiteCourseID = (): string | undefined => {
  * @param {Assignment[]} assignmentList
  */
 export const updateIsReadFlag = (assignmentList: Array<Assignment>): Array<Assignment> => {
-  const courseID = getSiteCourseID();
+  const courseID = getSiteCourseID(location.href);
   let updatedAssignmentList = [];
   // TODO: Review this process
   if (courseID && courseID.length >= 17) {
