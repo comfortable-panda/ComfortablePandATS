@@ -319,3 +319,56 @@ describe("compareAndMergeAssignmentList()", (): void => {
   });
 
 });
+
+describe("formatTimestamp()", (): void => {
+  // TODO: Consider timezone
+  // test("randomTimestamp", (): void => {
+  //   expect(utils.formatTimestamp(1634893200000)).toBe("10/22/2021 18:00:00");
+  // });
+
+  // test("randomTimestamp", (): void => {
+  //   // mock time
+  //   Object.defineProperty(utils, "nowTime", { value: 1634893000000 });
+  //   expect(utils.formatTimestamp(undefined)).toBe("10/22/2021 17:56:40");
+  // });
+});
+
+describe("createCourseIDMap()", (): void => {
+  const courseSiteList = [
+      new CourseSiteInfo("course1", "alpha"),
+      new CourseSiteInfo("course2", undefined),
+      new CourseSiteInfo("course3", "gamma"),
+  ];
+  const expectResult = new Map([["course1", "alpha"], ["course2", ""], ["course3", "gamma"]]);
+
+  test("createCourseIDMap", (): void => {
+    expect(utils.createCourseIDMap(courseSiteList)).toStrictEqual(expectResult);
+  });
+});
+
+describe("isLoggedIn()", (): void => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  const mockResponseLoggedIn = document.createElement("script");
+  mockResponseLoggedIn.text = "\"i18n\": {},\n" +
+      "                \"loggedIn\": true,\n" +
+      "                \"portalPath\": \"https://****.****/portal\","
+  const mockResponseNotLoggedIn = document.createElement("script");
+  mockResponseNotLoggedIn.text = "\"i18n\": {},\n" +
+      "                \"loggedIn\": false,\n" +
+      "                \"portalPath\": \"https://****.****/portal\","
+  test("logged in", (): void => {
+    const spyGetSiteCourseID = jest
+        .spyOn(utils, "getLoggedInInfoFromScript")
+        .mockReturnValueOnce([mockResponseLoggedIn]);
+    expect(utils.isLoggedIn()).toBe(true);
+  });
+
+  test("NOT logged in", (): void => {
+    const spyGetSiteCourseID = jest
+        .spyOn(utils, "getLoggedInInfoFromScript")
+        .mockReturnValueOnce([mockResponseNotLoggedIn]);
+    expect(utils.isLoggedIn()).toBe(false);
+  });
+});
