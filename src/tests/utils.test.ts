@@ -319,3 +319,15 @@ describe("compareAndMergeAssignmentList()", (): void => {
   });
 
 });
+
+describe("formatTimestamp()", (): void => {
+  test("randomTimestamp", (): void => {
+    expect(utils.formatTimestamp(1634893200000)).toBe("10/22/2021 18:00:00");
+  });
+
+  test("randomTimestamp", (): void => {
+    // mock time
+    Object.defineProperty(utils, "nowTime", { value: 1634893000000 });
+    expect(utils.formatTimestamp(undefined)).toBe("10/22/2021 17:56:40");
+  });
+});
