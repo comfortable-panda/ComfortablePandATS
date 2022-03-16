@@ -9,7 +9,7 @@
     "48": "img/icon48.png",
     "128": "img/icon128.png"
   },
-  "browser_action": {
+  "action": {
     "default_title": "Comfortable Sakai",
     "default_popup": "popup.html"
   },
@@ -21,23 +21,31 @@
       "css": [
         "css/comfortable-sakai.css"
       ],
-      "matches": ["http://*/*", "https://*/*"]
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
     }
   ],
   "background": {
-    "scripts": [
-      "background.js"
-    ],
-    "persistent": false
+    "service_worker": "background.js"
   },
   "permissions": [
     "storage"
   ],
   "web_accessible_resources": [
-    "css/comfortable-sakai.css",
-    "img/logo.png",
-    "img/noAssignment.png",
-    "img/miniSakaiBtn.png",
-    "views/minisakai.mustache"
+    {
+      "resources": [
+        "css/comfortable-sakai.css",
+        "img/logo.png",
+        "img/noAssignment.png",
+        "img/miniSakaiBtn.png",
+        "views/minisakai.mustache"
+      ],
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ]
+    }
   ]
 }
