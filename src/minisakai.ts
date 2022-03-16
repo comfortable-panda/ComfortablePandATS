@@ -124,7 +124,7 @@ export async function createMiniSakaiGeneralized(root: Element, assignmentList: 
   }
   if (assignmentList.length === 0 || assignmentCnt === 0) {
     noAssignmentImg = {
-      img: chrome.extension.getURL("img/noAssignment.png"),
+      img: chrome.runtime.getURL("img/noAssignment.png"),
     };
   }
 
@@ -134,7 +134,7 @@ export async function createMiniSakaiGeneralized(root: Element, assignmentList: 
       assignment: assignmentFetchedTimeString,
       quiz: quizFetchedTimeString,
     },
-    miniSakaiLogo: chrome.extension.getURL("img/logo.png"),
+    miniSakaiLogo: chrome.runtime.getURL("img/logo.png"),
     VERSION: config.version,
     subset: subset,
     noAssignment: noAssignmentImg,
@@ -178,7 +178,7 @@ export async function createMiniSakaiGeneralized(root: Element, assignmentList: 
   };
 
   // Load mustache
-  fetch(chrome.extension.getURL("views/minisakai.mustache"))
+  fetch(chrome.runtime.getURL("views/minisakai.mustache"))
     .then((res) => res.text())
     .then((template) => {
       const rendered = Mustache.render(template, templateVars);
