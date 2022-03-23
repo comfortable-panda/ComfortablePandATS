@@ -2,7 +2,7 @@ import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
 import { getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
 import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
-
+import { addFavoritedCourseSites } from "./favorites";
 import {
   compareAndMergeAssignmentList,
   convertArrayToAssignment,
@@ -115,7 +115,7 @@ async function main() {
       useCache(config.fetchedTime.assignment, config.cacheInterval.assignment),
       useCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
     );
-    // await addBookmarkedCourseSites(baseURL);
+    await addFavoritedCourseSites(config.baseURL);
     await displayMiniSakai(mergedAssignmentList, courseIDList);
     await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
 
