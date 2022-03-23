@@ -1,20 +1,19 @@
-import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
+import { Config, loadConfigs } from "./settings";
 import { Assignment, CourseSiteInfo } from "./model";
+import { addFavoritedCourseSites } from "./favorites";
+import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
 import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
-
 import {
   compareAndMergeAssignmentList,
   convertArrayToAssignment,
   isLoggedIn,
   mergeIntoAssignmentList,
-  miniSakaiReady,
   nowTime,
   sortAssignmentList,
   updateIsReadFlag,
-  useCache,
+  isUsingCache,
 } from "./utils";
-import { Config, loadConfigs } from "./settings";
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -104,6 +103,11 @@ async function loadCourseIDList() {
   await saveToLocalStorage("CS_CourseInfo", courseIDList);
 }
 
+async function updateReadFlag() {
+  const updatedAssignmentList = updateIsReadFlag(mergedAssignmentListNoMemo);
+  await saveToLocalStorage("CS_AssignmentList", updatedAssignmentList);
+}
+
 async function main() {
   if (isLoggedIn()) {
     createMiniSakaiBtn();
@@ -112,16 +116,14 @@ async function main() {
     mergedAssignmentList = await loadAndMergeAssignmentList(
       config,
       courseIDList,
-      useCache(config.fetchedTime.assignment, config.cacheInterval.assignment),
-      useCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
+      isUsingCache(config.fetchedTime.assignment, config.cacheInterval.assignment),
+      isUsingCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
     );
-    // await addBookmarkedCourseSites(baseURL);
+    await addFavoritedCourseSites(config.baseURL);
     await displayMiniSakai(mergedAssignmentList, courseIDList);
     await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
 
-    miniSakaiReady();
-
-    await saveToLocalStorage("CS_AssignmentList", updateIsReadFlag(mergedAssignmentListNoMemo));
+    await updateReadFlag();
   }
 }
 

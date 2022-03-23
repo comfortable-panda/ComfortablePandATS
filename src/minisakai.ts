@@ -1,5 +1,5 @@
 import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
-import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
+import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime, miniSakaiReady } from "./utils";
 import { appendChildAll, cloneElem, hamburger, miniSakai, SettingsDom } from "./dom";
 import {
   addMemo,
@@ -296,6 +296,7 @@ function initState(root: Element) {
  */
 async function displayMiniSakai(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
   await createMiniSakai(mergedAssignmentList, courseSiteInfos);
+  miniSakaiReady();
 }
 
 /**

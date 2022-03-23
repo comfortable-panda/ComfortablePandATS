@@ -4,9 +4,9 @@ import { editFavoritesMessage } from "./eventListener";
  * Limit maximum number of course sites
  * @type {int}
  */
-const MAX_FAVORITES = 10;
+const MAX_FAVORITES = 20;
 
-function getSiteIdAndHrefLectureNameMap(): Map<string, { href: string, title: string }> {
+function getSiteIdAndHrefSiteNameMap(): Map<string, { href: string, title: string }> {
   const sites = document.querySelectorAll(".fav-sites-entry");
   const map = new Map<string, { href: string; title: string }>();
   sites.forEach((site) => {
@@ -48,7 +48,7 @@ function getCurrentFavoritesSite(): Array<string> {
  * Add course sites to favorites bar (more than Sakai config)
  * @param {string} baseURL
  */
-function addBookmarkedCourseSites(baseURL: string): Promise<void> {
+function addFavoritedCourseSites(baseURL: string): Promise<void> {
   const topnav = document.querySelector("#topnav");
   if (topnav == null) return new Promise((resolve, reject) => resolve());
   const request = new XMLHttpRequest();
@@ -64,9 +64,9 @@ function addBookmarkedCourseSites(baseURL: string): Promise<void> {
         reject();
       }
       const favorites = res.favoriteSiteIds as [string];
-      const sitesInfo = getSiteIdAndHrefLectureNameMap();
+      const sitesInfo = getSiteIdAndHrefSiteNameMap();
       const currentFavoriteSite = getCurrentFavoritesSite();
-      for (const favorite of favorites) {
+      for (const favorite of favorites.slice(0, MAX_FAVORITES)) {
         // skip if favorite is the current site
         if (isCurrentSite(favorite)) continue;
 
@@ -96,4 +96,4 @@ function addBookmarkedCourseSites(baseURL: string): Promise<void> {
   });
 }
 
-export { addBookmarkedCourseSites };
+export { addFavoritedCourseSites };
