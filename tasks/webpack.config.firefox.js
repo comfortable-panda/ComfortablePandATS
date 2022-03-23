@@ -15,7 +15,9 @@ specificConfig.plugins.push(
             { from: "./manifest.json" }
         ]
     }),
-    new MergeManifestPlugin()
+    new MergeManifestPlugin({
+        browser: "firefox"
+    })
 );
 
 module.exports = specificConfig;
