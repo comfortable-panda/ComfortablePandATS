@@ -1,6 +1,7 @@
 import { nowTime } from "./utils";
 
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
+const MAX_TIMESTAMP = 99999999999999;
 
 export class AssignmentEntry {
   assignmentID: string;
@@ -36,10 +37,10 @@ export class AssignmentEntry {
   }
 
   get getDueDateTimestamp(): number {
-    return this.dueDateTimestamp ? this.dueDateTimestamp : 9999999999;
+    return this.dueDateTimestamp ? this.dueDateTimestamp : MAX_TIMESTAMP;
   }
   get getCloseDateTimestamp(): number {
-    return this.closeDateTimestamp ? this.closeDateTimestamp : 9999999999;
+    return this.closeDateTimestamp ? this.closeDateTimestamp : MAX_TIMESTAMP;
   }
 }
 
@@ -56,20 +57,20 @@ export class Assignment {
 
   get closestDueDateTimestamp(): number {
     if (this.assignmentEntries.length == 0) return -1;
-    let min = 99999999999999;
+    let min = MAX_TIMESTAMP;
     for (const entry of this.assignmentEntries) {
       if (min > entry.getDueDateTimestamp && entry.getDueDateTimestamp * 1000 >= nowTime) {
         min = entry.getDueDateTimestamp;
       }
     }
-    if (min === 99999999999999) min = -1;
+    if (min === MAX_TIMESTAMP) min = -1;
     return min;
   }
 
   // 完了済み以外からclosestTimeを取得する
   get closestDueDateTimestampExcludeFinished(): number {
     if (this.assignmentEntries.length == 0) return -1;
-    let min = 99999999999999;
+    let min = MAX_TIMESTAMP;
     let excludeCount = 0;
     for (const entry of this.assignmentEntries) {
       if (entry.isFinished) {
@@ -81,7 +82,7 @@ export class Assignment {
       }
     }
     if (excludeCount === this.assignmentEntries.length) min = -1;
-    if (min === 99999999999999) min = -1;
+    if (min === MAX_TIMESTAMP) min = -1;
     return min;
   }
 
