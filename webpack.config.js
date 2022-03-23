@@ -32,7 +32,7 @@ module.exports = {
       patterns: [
         { from: "./public", to: "./" },
         { from: "./_locales", to: "./_locales" },
-        { from: "./manifest.json" }
+        // { from: "./manifest.json" }
       ]
     })
   ]
