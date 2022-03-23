@@ -5,10 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "test": "jest",
-    "tsc": "tsc",
-    "build": "webpack",
-    "build-chrome": "webpack --config tasks/webpack.config.chrome.js && node tasks/release chrome",
-    "build-firefox": "webpack --config tasks/webpack.config.firefox.js && node tasks/release firefox"
+    "build:chrome": "webpack --config tasks/webpack.config.chrome.js && node tasks/release chrome",
+    "build:firefox": "webpack --config tasks/webpack.config.firefox.js && node tasks/release firefox",
+    "build:all": "npm run build:chrome && npm run build:firefox"
   },
   "author": "Kazuki Takeda, Shoji Kajita(Kyoto University)",
   "license": "Apache-2.0",

@@ -65,14 +65,14 @@ The cache time can be changed in the configuration tab in `miniSakai`.
 
 # How to compile from source code
 Run
-```
-npx webpack
+```bash
+npm run build:all
 ```
 in the root directory of cloned repository.
 
 # How to run tests
-```
-npm test
+```bash
+npm run test
 ```
 
 # License
