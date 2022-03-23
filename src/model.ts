@@ -119,39 +119,39 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
     this.courseID = courseID;
   }
 
-  private getTimeRemain(remainTimestamp: number): [string, string, string] {
+  private static getTimeRemain(remainTimestamp: number): [string, string, string] {
     const day = Math.floor(remainTimestamp / (3600 * 24));
     const hours = Math.floor((remainTimestamp - day * 3600 * 24) / 3600);
     const minutes = Math.floor((remainTimestamp - (day * 3600 * 24 + hours * 3600)) / 60);
     return [day.toString(), hours.toString(), minutes.toString()];
   }
 
-  get remainTimeString(): string {
-    const timestamp = this.dueDateTimestamp;
+  private static createTimeString(timestamp: number | null): string {
     if (!timestamp) return chrome.i18n.getMessage("due_not_set");
-    const timeRemain = this.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
+    const timeRemain = DisplayAssignmentEntry.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
     return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
+  }
+
+  private static createDateString(timestamp: number | null): string {
+    if (!timestamp) return "----/--/--";
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
+  }
+
+  get remainTimeString(): string {
+    return DisplayAssignmentEntry.createTimeString(this.dueDateTimestamp);
   }
 
   get remainCloseTimeString(): string {
-    const timestamp = this.closeDateTimestamp;
-    if (!timestamp) return chrome.i18n.getMessage("due_not_set");
-    const timeRemain = this.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
-    return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
+    return DisplayAssignmentEntry.createTimeString(this.closeDateTimestamp);
   }
 
   get dueDateString(): string {
-    const timestamp = this.dueDateTimestamp;
-    if (!timestamp) return "----/--/--";
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
+    return DisplayAssignmentEntry.createDateString(this.dueDateTimestamp)
   }
 
   get dueCloseDateString(): string {
-    const timestamp = this.closeDateTimestamp;
-    if (!timestamp) return "----/--/--";
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
+    return DisplayAssignmentEntry.createDateString(this.closeDateTimestamp)
   }
 }
 
