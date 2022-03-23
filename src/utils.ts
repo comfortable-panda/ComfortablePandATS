@@ -272,7 +272,7 @@ function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment
  * @param {number | undefined} fetchedTime
  * @param {number} cacheInterval
  */
-function useCache(fetchedTime: number | undefined, cacheInterval: number): boolean {
+function isUsingCache(fetchedTime: number | undefined, cacheInterval: number): boolean {
   if (fetchedTime) return (nowTime - fetchedTime) / 1000 <= cacheInterval;
   else return false;
 }
@@ -294,7 +294,7 @@ export {
   convertArrayToSettings,
   convertArrayToAssignment,
   compareAndMergeAssignmentList,
-  useCache,
+  isUsingCache,
   genUniqueID,
   mergeIntoAssignmentList,
   sortAssignmentList,
