@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const {jsonRegex} = require("ts-loader/dist/constants");
 
 module.exports = class MergeManifestWebpackPlugin {
     constructor(options) {

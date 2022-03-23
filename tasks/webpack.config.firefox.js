@@ -1,6 +1,6 @@
 const commonConfig = require("../webpack.config.js");
 const CopyPlugin = require("copy-webpack-plugin");
-const ManifestPlugin = require("./manifest-webpack-plugin");
+const MergeManifestPlugin = require("./manifest-webpack-plugin");
 const path = require("path");
 
 const specificConfig = Object.assign({}, commonConfig);
@@ -15,7 +15,7 @@ specificConfig.plugins.push(
             { from: "./manifest.json" }
         ]
     }),
-    new ManifestPlugin()
+    new MergeManifestPlugin()
 );
 
 module.exports = specificConfig;
