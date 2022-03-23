@@ -1,6 +1,6 @@
 const commonConfig = require("../webpack.config.js");
 const CopyPlugin = require("copy-webpack-plugin");
-const path = require("path")
+const path = require("path");
 
 const specificConfig = Object.assign({}, commonConfig);
 
