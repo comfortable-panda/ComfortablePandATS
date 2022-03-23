@@ -22,11 +22,11 @@ module.exports = class MergeManifestWebpackPlugin {
             if (browser === "firefox") {
                 mergeManifestJson = { ...JSON.parse(manifestJson), ...JSON.parse(ffManifestJson) };
             } else {
-                mergeManifestJson = {...JSON.parse(manifestJson)};
+                mergeManifestJson = { ...JSON.parse(manifestJson) };
             }
             mergeManifestJson.version = JSON.parse(packageJson).version;
-            console.log(mergeManifestJson)
             await fs.writeFile(savePath, JSON.stringify(mergeManifestJson, null, 1));
+            console.log("Merge manifest: Success ");
         });
     }
 };
