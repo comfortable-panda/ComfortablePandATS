@@ -1,9 +1,8 @@
-import { Config, loadConfigs } from "./settings";
-import { Assignment, CourseSiteInfo } from "./model";
-import { addFavoritedCourseSites } from "./favorites";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
+import { Assignment, CourseSiteInfo } from "./model";
 import { getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
 import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
+import { addFavoritedCourseSites } from "./favorites";
 import {
   compareAndMergeAssignmentList,
   convertArrayToAssignment,
@@ -14,6 +13,7 @@ import {
   updateIsReadFlag,
   isUsingCache,
 } from "./utils";
+import { Config, loadConfigs } from "./settings";
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
