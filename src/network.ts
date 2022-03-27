@@ -1,6 +1,9 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo } from "./model";
 import { nowTime } from "./utils";
 
+/**
+ * Get base URL of Sakai.
+ */
 function getBaseURL(): string {
   let baseURL = "";
   const match = location.href.match("(https?://[^/]+)/portal");
@@ -10,14 +13,15 @@ function getBaseURL(): string {
   return baseURL;
 }
 
-// Lecture ID をすべて取得する
-// ネットワーク通信は行わない
+/**
+ * Fetch course site IDs.
+ */
 function getCourseIDList(): Array<CourseSiteInfo> {
   const elementCollection = document.getElementsByClassName("fav-sites-entry");
   const elements = Array.prototype.slice.call(elementCollection);
   const result = [];
   for (const elem of elements) {
-    const lectureInfo = new CourseSiteInfo("", ""); // tabTypeはPandAのトップバーに存在するかしないか
+    const lectureInfo = new CourseSiteInfo("", "");
     const lecture = elem.getElementsByTagName("div")[0].getElementsByTagName("a")[0];
     const m = lecture.href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)");
     if (m && m[2][0] !== "~") {
@@ -29,6 +33,11 @@ function getCourseIDList(): Array<CourseSiteInfo> {
   return result;
 }
 
+/**
+ * Fetch assignments from Sakai REST API.
+ * @param {string} baseURL
+ * @param {string} courseID
+ */
 function getAssignmentByCourseID(baseURL: string, courseID: string): Promise<Assignment> {
   const queryURL = baseURL + "/direct/assignment/site/" + courseID + ".json";
 
@@ -48,6 +57,11 @@ function getAssignmentByCourseID(baseURL: string, courseID: string): Promise<Ass
   });
 }
 
+/**
+ * Fetch quizzes from Sakai REST API.
+ * @param {string} baseURL
+ * @param {string} courseID
+ */
 function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Assignment> {
   const queryURL = baseURL + "/direct/sam_pub/context/" + courseID + ".json";
 
@@ -67,6 +81,12 @@ function getQuizFromCourseID(baseURL: string, courseID: string): Promise<Assignm
   });
 }
 
+/**
+ * Convert json response to AssignmentEntries.
+ * @param data
+ * @param baseURL
+ * @param siteID
+ */
 function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
   const assignment_collection = data.assignment_collection;
   return assignment_collection
@@ -83,9 +103,15 @@ function convJsonToAssignmentEntries(data: Record<string, any>, baseURL: string,
     });
 }
 
+/**
+ * Convert json response to QuizEntries.
+ * @param data
+ * @param baseURL
+ * @param siteID
+ */
 function convJsonToQuizEntries(data: Record<string, any>, baseURL: string, siteID: string): Array<AssignmentEntry> {
   return data.sam_pub_collection
-    .filter((json: any) => json.startDate < nowTime)
+    .filter((json: any) => json.startDate < nowTime && (json.dueDate >= nowTime || json.dueDate == null))
     .map((json: any) => {
       const quizID = "q" + json.publishedAssessmentId;
       const quizTitle = json.title;

@@ -14,7 +14,7 @@
 </div>
 <div class="cs-quiz-time">
     <p class="cs-assignment-time-text">{{titles.quizFetchedTime}}</p>
-    <p class="cs-assignment-time-text">{{fetchedTime.assignment}}</p>
+    <p class="cs-assignment-time-text">{{fetchedTime.quiz}}</p>
 </div>
 {{/subset}}
 
@@ -213,12 +213,12 @@
         </div>
     {{/display.lateSubmit}}
 
-    {{#showRelaxPandA}}
+    {{#noAssignment}}
     <div>
-        <p class="cs-noassignment-p">{{titles.relaxPandA}}</p>
+        <p class="cs-noassignment-p">{{titles.noAssignment}}</p>
         <img alt="logo" class="cs-noassignment-img" src="{{img}}">
     </div>
-    {{/showRelaxPandA}}
+    {{/noAssignment}}
 </div>
 
 {{^subset}}

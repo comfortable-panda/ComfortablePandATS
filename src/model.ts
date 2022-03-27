@@ -1,6 +1,7 @@
 import { nowTime } from "./utils";
 
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
+const MAX_TIMESTAMP = 99999999999999;
 
 export class AssignmentEntry {
   assignmentID: string;
@@ -21,7 +22,8 @@ export class AssignmentEntry {
     isMemo: boolean,
     isFinished: boolean,
     isQuiz: boolean,
-    assignmentDetail?: string
+    assignmentDetail?: string,
+    assignmentPage?: string
   ) {
     this.assignmentID = assignmentID;
     this.assignmentTitle = assignmentTitle;
@@ -31,13 +33,14 @@ export class AssignmentEntry {
     this.isMemo = isMemo;
     this.isFinished = isFinished;
     this.isQuiz = isQuiz;
+    this.assignmentPage = assignmentPage;
   }
 
   get getDueDateTimestamp(): number {
-    return this.dueDateTimestamp ? this.dueDateTimestamp : 9999999999;
+    return this.dueDateTimestamp ? this.dueDateTimestamp : MAX_TIMESTAMP;
   }
   get getCloseDateTimestamp(): number {
-    return this.closeDateTimestamp ? this.closeDateTimestamp : 9999999999;
+    return this.closeDateTimestamp ? this.closeDateTimestamp : MAX_TIMESTAMP;
   }
 }
 
@@ -54,20 +57,20 @@ export class Assignment {
 
   get closestDueDateTimestamp(): number {
     if (this.assignmentEntries.length == 0) return -1;
-    let min = 99999999999999;
+    let min = MAX_TIMESTAMP;
     for (const entry of this.assignmentEntries) {
       if (min > entry.getDueDateTimestamp && entry.getDueDateTimestamp * 1000 >= nowTime) {
         min = entry.getDueDateTimestamp;
       }
     }
-    if (min === 99999999999999) min = -1;
+    if (min === MAX_TIMESTAMP) min = -1;
     return min;
   }
 
   // 完了済み以外からclosestTimeを取得する
   get closestDueDateTimestampExcludeFinished(): number {
     if (this.assignmentEntries.length == 0) return -1;
-    let min = 99999999999999;
+    let min = MAX_TIMESTAMP;
     let excludeCount = 0;
     for (const entry of this.assignmentEntries) {
       if (entry.isFinished) {
@@ -79,7 +82,7 @@ export class Assignment {
       }
     }
     if (excludeCount === this.assignmentEntries.length) min = -1;
-    if (min === 99999999999999) min = -1;
+    if (min === MAX_TIMESTAMP) min = -1;
     return min;
   }
 
@@ -116,39 +119,39 @@ export class DisplayAssignmentEntry extends AssignmentEntry {
     this.courseID = courseID;
   }
 
-  private getTimeRemain(remainTimestamp: number): [number, number, number] {
+  private static getTimeRemain(remainTimestamp: number): [string, string, string] {
     const day = Math.floor(remainTimestamp / (3600 * 24));
     const hours = Math.floor((remainTimestamp - day * 3600 * 24) / 3600);
     const minutes = Math.floor((remainTimestamp - (day * 3600 * 24 + hours * 3600)) / 60);
-    return [day, hours, minutes];
+    return [day.toString(), hours.toString(), minutes.toString()];
+  }
+
+  private static createTimeString(timestamp: number | null): string {
+    if (!timestamp) return chrome.i18n.getMessage("due_not_set");
+    const timeRemain = DisplayAssignmentEntry.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
+    return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
+  }
+
+  private static createDateString(timestamp: number | null): string {
+    if (!timestamp) return "----/--/--";
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
   }
 
   get remainTimeString(): string {
-    const timestamp = this.dueDateTimestamp;
-    if (!timestamp) return chrome.i18n.getMessage("due_not_set");
-    const timeRemain = this.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
-    return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
+    return DisplayAssignmentEntry.createTimeString(this.dueDateTimestamp);
   }
 
   get remainCloseTimeString(): string {
-    const timestamp = this.closeDateTimestamp;
-    if (!timestamp) return chrome.i18n.getMessage("due_not_set");
-    const timeRemain = this.getTimeRemain((timestamp * 1000 - nowTime) / 1000);
-    return chrome.i18n.getMessage("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]]);
+    return DisplayAssignmentEntry.createTimeString(this.closeDateTimestamp);
   }
 
   get dueDateString(): string {
-    const timestamp = this.dueDateTimestamp;
-    if (!timestamp) return "----/--/--";
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
+    return DisplayAssignmentEntry.createDateString(this.dueDateTimestamp)
   }
 
   get dueCloseDateString(): string {
-    const timestamp = this.closeDateTimestamp;
-    if (!timestamp) return "----/--/--";
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
+    return DisplayAssignmentEntry.createDateString(this.closeDateTimestamp)
   }
 }
 

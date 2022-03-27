@@ -1,7 +1,6 @@
 import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
-import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime } from "./utils";
+import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime, miniSakaiReady } from "./utils";
 import { appendChildAll, cloneElem, hamburger, miniSakai, SettingsDom } from "./dom";
-import { CPsettings, assignmentFetchedTime, quizFetchedTime, VERSION } from "./content_script";
 import {
   addMemo,
   deleteMemo,
@@ -13,8 +12,12 @@ import {
   updateSettings,
 } from "./eventListener";
 // @ts-ignore
-import Mustache = require("mustache");
+import Mustache from "mustache";
+import { loadConfigs } from "./settings";
 
+/**
+ * Create a button to open miniSakai
+ */
 function createMiniSakaiBtn(): void {
   const topbar = document.getElementById("mastLogin");
   try {
@@ -24,10 +27,13 @@ function createMiniSakaiBtn(): void {
   }
 }
 
-export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): void {
-  const assignmentFetchedTimeString = formatTimestamp(assignmentFetchedTime);
-  const quizFetchedTimeString = formatTimestamp(quizFetchedTime);
-
+/**
+ * Using template engine to generate miniSakai list.
+ */
+export async function createMiniSakaiGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): Promise<void> {
+  const config = await loadConfigs();
+  const assignmentFetchedTimeString = formatTimestamp(config.fetchedTime.assignment);
+  const quizFetchedTimeString = formatTimestamp(config.fetchedTime.quiz);
   const courseSiteList: Array<CourseSiteInfo> = [];
 
   const courseIDMap = createCourseIDMap(courseSiteInfos);
@@ -84,7 +90,8 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
           appendElement(courseName, otherElements);
           break;
         case "duePassed":
-          const showLateSubmitAssignment = CPsettings ? CPsettings.getDisplayLateSubmitAssignment : false;
+          // eslint-disable-next-line no-case-declarations
+          const showLateSubmitAssignment = config.CSsettings ? config.CSsettings.getDisplayLateSubmitAssignment : false;
           if (showLateSubmitAssignment && getDaysUntil(nowTime, assignmentEntry.getCloseDateTimestamp * 1000) !== "duePassed") {
             appendElement(courseName, lateSubmitElements);
           }
@@ -108,7 +115,7 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     return elements;
   };
 
-  let relaxPandA = null;
+  let noAssignmentImg = null;
   let assignmentCnt = 0;
   if (assignmentList.length !== 0) {
     for (const assignment of assignmentList) {
@@ -116,20 +123,21 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     }
   }
   if (assignmentList.length === 0 || assignmentCnt === 0) {
-    relaxPandA = {
-      img: chrome.extension.getURL("img/relaxPanda.png"),
+    noAssignmentImg = {
+      img: chrome.runtime.getURL("img/noAssignment.png"),
     };
   }
 
+  // Create dict of data for miniSakai
   const templateVars = {
     fetchedTime: {
       assignment: assignmentFetchedTimeString,
       quiz: quizFetchedTimeString,
     },
-    miniSakaiLogo: chrome.extension.getURL("img/logo.png"),
-    VERSION: VERSION,
+    miniSakaiLogo: chrome.runtime.getURL("img/logo.png"),
+    VERSION: config.version,
     subset: subset,
-    showRelaxPandA: relaxPandA,
+    noAssignment: noAssignmentImg,
     elements: {
       danger: sortElements(dangerElements),
       warning: sortElements(warningElements),
@@ -154,7 +162,7 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
       due14d: chrome.i18n.getMessage("due14d"),
       dueOver14d: chrome.i18n.getMessage("dueOver14d"),
       duePassed: chrome.i18n.getMessage("duePassed"),
-      relaxPandA: chrome.i18n.getMessage("no_available_assignments"),
+      noAssignment: chrome.i18n.getMessage("no_available_assignments"),
     },
     todoBox: {
       courseName: chrome.i18n.getMessage("todo_box_course_name"),
@@ -169,7 +177,8 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     },
   };
 
-  fetch(chrome.extension.getURL("views/minisakai.mustache"))
+  // Load mustache
+  fetch(chrome.runtime.getURL("views/minisakai.mustache"))
     .then((res) => res.text())
     .then((template) => {
       const rendered = Mustache.render(template, templateVars);
@@ -180,8 +189,11 @@ export function createMiniSakaiGeneralized(root: Element, assignmentList: Array<
     });
 }
 
-function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): void {
-  createMiniSakaiGeneralized(miniSakai, assignmentList, courseSiteInfos, false, (rendered) => {
+/**
+ * Insert miniSakai into Sakai.
+ */
+async function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void> {
+  await createMiniSakaiGeneralized(miniSakai, assignmentList, courseSiteInfos, false, (rendered) => {
     miniSakai.innerHTML = rendered;
     const parent = document.getElementById("pageBody");
     const ref = document.getElementById("toolMenuWrap");
@@ -189,25 +201,32 @@ function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Arr
   });
 }
 
-async function createSettingsTab(root: Element): Promise<void> {
-  createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), CPsettings.getDisplayCheckedKadai, "displayCheckedKadai");
-  createSettingItem(root, chrome.i18n.getMessage('settings_display_late_submit_assignment'), CPsettings.getDisplayLateSubmitAssignment, "displayLateSubmitAssignment");
-  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), CPsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
-  createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), CPsettings.getQuizCacheInterval, "quizCacheInterval");
+/**
+ * Initialize Settings tab.
+ */
+async function createSettingsTab(root: Element) {
+  const config = await loadConfigs();
+  createSettingItem(root, chrome.i18n.getMessage('settings_color_checked_item'), config.CSsettings.getDisplayCheckedAssignment, "displayCheckedAssignment");
+  createSettingItem(root, chrome.i18n.getMessage('settings_display_late_submit_assignment'), config.CSsettings.getDisplayLateSubmitAssignment, "displayLateSubmitAssignment");
+  createSettingItem(root, chrome.i18n.getMessage('settings_assignment_cache'), config.CSsettings.getAssignmentCacheInterval, "assignmentCacheInterval");
+  createSettingItem(root, chrome.i18n.getMessage('settings_quizzes_cache'), config.CSsettings.getQuizCacheInterval, "quizCacheInterval");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['1', 24]), CPsettings.getTopColorDanger, "topColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 5]), CPsettings.getTopColorWarning, "topColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['1', 14]), CPsettings.getTopColorSuccess, "topColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['Tab Bar', '24']), config.CSsettings.getTopColorDanger, "topColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['Tab Bar', '5']), config.CSsettings.getTopColorWarning, "topColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['Tab Bar', '14']), config.CSsettings.getTopColorSuccess, "topColorSuccess");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['2', 24]), CPsettings.getMiniColorDanger, "miniColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 5]), CPsettings.getMiniColorWarning, "miniColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['2', 14]), CPsettings.getMiniColorSuccess, "miniColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['miniSakai', '24']), config.CSsettings.getMiniColorDanger, "miniColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniSakai', '5']), config.CSsettings.getMiniColorWarning, "miniColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniSakai', '14']), config.CSsettings.getMiniColorSuccess, "miniColorSuccess");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_reset_colors'), "reset", "reset");
+  createSettingItem(root, chrome.i18n.getMessage("settings_reset_colors"), "reset", "reset");
   // @ts-ignore
-  root.querySelector(".cs-settings-tab")?.style.display = "none";
+  root.querySelector(".cs-settings-tab").style.display = "none";
 }
 
+/**
+ * Create Settings tab item.
+ */
 function createSettingItem(root: Element, itemDescription: string, value: boolean | number | string | null, id: string, display = true) {
   const settingsDiv = root.querySelector(".cs-settings-tab");
   if (settingsDiv == null) {
@@ -247,6 +266,9 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
   settingsDiv.appendChild(mainDiv);
 }
 
+/**
+ * Add event listener to each Settings item
+ */
 function registerEventHandlers(root: Element) {
   root.querySelector("#assignmentTab")?.addEventListener("click", () => toggleAssignmentTab());
   root.querySelector("#settingsTab")?.addEventListener("click", () => toggleSettingsTab());
@@ -257,32 +279,31 @@ function registerEventHandlers(root: Element) {
   root.querySelectorAll(".cs-del-memo-btn").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
 }
 
+/**
+ * Initialize states
+ */
 function initState(root: Element) {
   // @ts-ignore
-  root.querySelector("#assignmentTab")?.checked = true;
+  root.querySelector("#assignmentTab").checked = true;
   // @ts-ignore
-  root.querySelector(".todoDue")?.value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`)
+  root.querySelector(".todoDue").value = new Date(`${new Date().toISOString().substr(0, 16)}-10:00`)
     .toISOString()
     .substr(0, 16);
 }
 
+/**
+ * Display miniSakai
+ */
 async function displayMiniSakai(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
-  createMiniSakai(mergedAssignmentList, courseSiteInfos);
+  await createMiniSakai(mergedAssignmentList, courseSiteInfos);
+  miniSakaiReady();
 }
 
-function deleteNavBarNotification(): void {
-  const classlist = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success"];
-  for (const c of classlist) {
-    const q = document.querySelectorAll(`.${c}`);
-    // @ts-ignore
-    for (const _ of q) {
-      _.classList.remove(`${c}`);
-      _.style = "";
-    }
-  }
-}
-
-function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assignmentList: Array<Assignment>): void {
+/**
+ * Add notification badge for new Assignment/Quiz
+ */
+async function createFavoritesBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assignmentList: Array<Assignment>): Promise<void> {
+  const config = await loadConfigs();
   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
   const defaultTabCount = Object.keys(defaultTab).length;
 
@@ -295,7 +316,7 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
         return assignment.courseSiteInfo.courseID === courseID;
       });
       if (q !== -1) {
-        const closestTime = (CPsettings.displayCheckedKadai) ? assignmentList[q].closestDueDateTimestamp : assignmentList[q].closestDueDateTimestampExcludeFinished;
+        const closestTime = (config.CSsettings.displayCheckedAssignment) ? assignmentList[q].closestDueDateTimestamp : assignmentList[q].closestDueDateTimestampExcludeFinished;
         if (!assignmentList[q].isRead && closestTime !== -1) {
           defaultTab[j].classList.add("cs-notification-badge");
         }
@@ -331,14 +352,33 @@ function createNavBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assign
       }
     }
   }
-  overrideCSSColor();
+  await overrideCSSColor();
 }
 
-function overrideCSSColor() {
+/**
+ * Delete notification badge for new Assignment/Quiz
+ */
+function deleteFavoritesBarNotification(): void {
+  const classlist = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success"];
+  for (const c of classlist) {
+    const q = document.querySelectorAll(`.${c}`);
+    // @ts-ignore
+    for (const _ of q) {
+      _.classList.remove(`${c}`);
+      _.style = "";
+    }
+  }
+}
+
+/**
+ * Override CSS of favorites bar and miniSakai.
+ */
+async function overrideCSSColor() {
+  const config = await loadConfigs();
   const overwriteborder = function (className: string, color: string | undefined) {
-    const dangerelem = document.getElementsByClassName(className);
-    for (let i = 0; i < dangerelem.length; i++) {
-      const elem = dangerelem[i] as HTMLElement;
+    const element = document.getElementsByClassName(className);
+    for (let i = 0; i < element.length; i++) {
+      const elem = element[i] as HTMLElement;
       const attr = "solid 2px " + color;
       (<any>elem.style)["border-top"] = attr;
       (<any>elem.style)["border-left"] = attr;
@@ -347,25 +387,32 @@ function overrideCSSColor() {
     }
   };
   const overwritebackground = function (className: string, color: string | undefined) {
-    const dangerelem = document.getElementsByClassName(className);
-    for (let i = 0; i < dangerelem.length; i++) {
-      const elem = dangerelem[i] as HTMLElement;
+    const element = document.getElementsByClassName(className);
+    for (let i = 0; i < element.length; i++) {
+      const elem = element[i] as HTMLElement;
       elem.setAttribute("style", "background:" + color + "!important");
     }
   };
-  overwriteborder("cs-assignment-danger", CPsettings.getMiniColorDanger);
-  overwriteborder("cs-assignment-success", CPsettings.getMiniColorSuccess);
-  overwriteborder("cs-assignment-warning", CPsettings.getMiniColorWarning);
-  overwritebackground("cs-course-danger", CPsettings.getMiniColorDanger);
-  overwritebackground("cs-course-success", CPsettings.getMiniColorSuccess);
-  overwritebackground("cs-course-warning", CPsettings.getMiniColorWarning);
 
-  overwritebackground("cs-tab-danger", CPsettings.getTopColorDanger);
-  overwritebackground("cs-tab-success", CPsettings.getTopColorSuccess);
-  overwritebackground("cs-tab-warning", CPsettings.getTopColorWarning);
-  overwriteborder("cs-tab-danger", CPsettings.getTopColorDanger);
-  overwriteborder("cs-tab-success", CPsettings.getTopColorSuccess);
-  overwriteborder("cs-tab-warning", CPsettings.getTopColorWarning);
+  // Overwrite colors
+  overwritebackground("cs-course-danger", config.CSsettings.getMiniColorDanger);
+  overwritebackground("cs-course-warning", config.CSsettings.getMiniColorWarning);
+  overwritebackground("cs-course-success", config.CSsettings.getMiniColorSuccess);
+  overwritebackground("cs-tab-danger", config.CSsettings.getTopColorDanger);
+  overwritebackground("cs-tab-warning", config.CSsettings.getTopColorWarning);
+  overwritebackground("cs-tab-success", config.CSsettings.getTopColorSuccess);
+  overwriteborder("cs-assignment-danger", config.CSsettings.getMiniColorDanger);
+  overwriteborder("cs-assignment-warning", config.CSsettings.getMiniColorWarning);
+  overwriteborder("cs-assignment-success", config.CSsettings.getMiniColorSuccess);
+  overwriteborder("cs-tab-danger", config.CSsettings.getTopColorDanger);
+  overwriteborder("cs-tab-warning", config.CSsettings.getTopColorWarning);
+  overwriteborder("cs-tab-success", config.CSsettings.getTopColorSuccess);
 }
 
-export { createMiniSakaiBtn, createMiniSakai, displayMiniSakai, deleteNavBarNotification, createNavBarNotification };
+export {
+  createMiniSakaiBtn,
+  createMiniSakai,
+  displayMiniSakai,
+  deleteFavoritesBarNotification,
+  createFavoritesBarNotification,
+};

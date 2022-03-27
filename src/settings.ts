@@ -1,10 +1,11 @@
 import { loadFromLocalStorage } from "./storage";
 import { convertArrayToSettings } from "./utils";
+import { getBaseURL } from "./network";
 
 export class Settings {
   assignmentCacheInterval?: number;
   quizCacheInterval?: number;
-  displayCheckedKadai?: boolean;
+  displayCheckedAssignment?: boolean;
   displayLateSubmitAssignment?: boolean;
   topColorDanger?: string;
   topColorWarning?: string;
@@ -22,11 +23,15 @@ export class Settings {
   get getQuizCacheInterval(): number {
     return this.quizCacheInterval ? this.quizCacheInterval : DefaultSettings.quizCacheInterval;
   }
-  get getDisplayCheckedKadai(): boolean {
-    return this.displayCheckedKadai !== undefined ? this.displayCheckedKadai : DefaultSettings.displayCheckedKadai;
+  get getDisplayCheckedAssignment(): boolean {
+    return this.displayCheckedAssignment !== undefined
+      ? this.displayCheckedAssignment
+      : DefaultSettings.displayCheckedAssignment;
   }
   get getDisplayLateSubmitAssignment(): boolean {
-    return this.displayLateSubmitAssignment !== undefined ? this.displayLateSubmitAssignment : DefaultSettings.displayLateSubmitAssignment;
+    return this.displayLateSubmitAssignment !== undefined
+      ? this.displayLateSubmitAssignment
+      : DefaultSettings.displayLateSubmitAssignment;
   }
   get getTopColorDanger(): string {
     return this.topColorDanger ? this.topColorDanger : DefaultSettings.topColorDanger;
@@ -51,7 +56,7 @@ export class Settings {
 export class DefaultSettings extends Settings {
   static assignmentCacheInterval = 120;
   static quizCacheInterval = 600;
-  static displayCheckedKadai = true;
+  static displayCheckedAssignment = true;
   static displayLateSubmitAssignment = false;
   static topColorDanger = "#f78989";
   static topColorWarning = "#fdd783";
@@ -61,13 +66,50 @@ export class DefaultSettings extends Settings {
   static miniColorSuccess = "#62b665";
 }
 
-export async function loadSettings(): Promise<Settings>{
-  const settingsArr = await loadFromLocalStorage("TSSettings");
-  const CPsettings = convertArrayToSettings(settingsArr);
-  CPsettings.displayCheckedKadai = CPsettings.getDisplayCheckedKadai;
-  return CPsettings;
+export async function loadSettings(): Promise<Settings> {
+  const settingsArr = await loadFromLocalStorage("CS_Settings");
+  const CSsettings = convertArrayToSettings(settingsArr);
+  CSsettings.displayCheckedAssignment = CSsettings.getDisplayCheckedAssignment;
+  return CSsettings;
 }
 
-// export function load2(): Settings{
-//   return Promise.resolve(loadSettings());
-// }
+export interface Config {
+  baseURL: string;
+  version: string;
+  CSsettings: Settings;
+  fetchedTime: {
+    assignment: number;
+    quiz: number;
+  };
+  cacheInterval: {
+    assignment: number;
+    quiz: number;
+  };
+}
+
+/**
+ * Load configurations from local storage
+ */
+export async function loadConfigs(): Promise<Config> {
+  const baseURL = getBaseURL();
+  const VERSION = chrome.runtime.getManifest().version;
+  const CSsettings = await loadSettings();
+  CSsettings.displayCheckedAssignment = CSsettings.getDisplayCheckedAssignment;
+  const assignmentCacheInterval = CSsettings.getAssignmentCacheInterval;
+  const quizCacheInterval = CSsettings.getQuizCacheInterval;
+  const assignmentFetchedTime = await loadFromLocalStorage("CS_AssignmentFetchTime", "undefined");
+  const quizFetchedTime = await loadFromLocalStorage("CS_QuizFetchTime", "undefined");
+  return {
+    baseURL: baseURL,
+    version: VERSION,
+    CSsettings: CSsettings,
+    cacheInterval: {
+      assignment: assignmentCacheInterval,
+      quiz: quizCacheInterval,
+    },
+    fetchedTime: {
+      assignment: assignmentFetchedTime,
+      quiz: quizFetchedTime,
+    },
+  };
+}
