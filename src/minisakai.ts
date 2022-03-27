@@ -215,9 +215,9 @@ async function createSettingsTab(root: Element) {
   createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['Tab Bar', '5']), config.CSsettings.getTopColorWarning, "topColorWarning");
   createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['Tab Bar', '14']), config.CSsettings.getTopColorSuccess, "topColorSuccess");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['miniSakai', '24']), config.CSsettings.getMiniColorDanger, "miniColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniSakai', '5']), config.CSsettings.getMiniColorWarning, "miniColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniSakai', '14']), config.CSsettings.getMiniColorSuccess, "miniColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['miniPandA', '24']), config.CSsettings.getMiniColorDanger, "miniColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniPandA', '5']), config.CSsettings.getMiniColorWarning, "miniColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniPandA', '14']), config.CSsettings.getMiniColorSuccess, "miniColorSuccess");
 
   createSettingItem(root, chrome.i18n.getMessage("settings_reset_colors"), "reset", "reset");
   // @ts-ignore
