@@ -97,21 +97,32 @@ PandAへの負荷を軽減するために課題・クイズ取得にキャッシ
 - 2022/3/27 v4.1.0 [Comfortable-Sakai](https://github.com/kyoto-u/comfortable-sakai) の変更分を取り込み。
 英語対応、その他内部処理の改善
 
-
 # コンパイル方法
-- 初回実行時
-```
+- 1.初回実行時
+```bash
 npm install
 ```
-- Run
+を実行して、依存関係をインストールしてください
+
+- 2.ChromeとFirefox版をまとめてコンパイルする場合
+```bash
+npm run build:all
 ```
-npx webpack
+- 2.Chrome版をコンパイルする場合
+```bash
+npm run build:chrome
 ```
+- 2.Firefox版をコンパイルする場合
+```bash
+npm run build:firefox
+```
+を本レポジトリのルートディレクトリで実行してください
 
 # テスト実行方法
+```bash
+npm run test
 ```
-npm test
-```
+
 
 # License
 Apache-2.0 License
