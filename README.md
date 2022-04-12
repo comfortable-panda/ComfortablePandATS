@@ -98,15 +98,21 @@ PandAへの負荷を軽減するために課題・クイズ取得にキャッシ
 英語対応、その他内部処理の改善
 
 # コンパイル方法
-- ChromeとFirefox版をまとめてコンパイルする場合
+- 1.初回実行時
+```bash
+npm install
+```
+を実行して、依存関係をインストールしてください
+
+- 2.ChromeとFirefox版をまとめてコンパイルする場合
 ```bash
 npm run build:all
 ```
-- Chrome版をコンパイルする場合
+- 2.Chrome版をコンパイルする場合
 ```bash
 npm run build:chrome
 ```
-- Firefox版をコンパイルする場合
+- 2.Firefox版をコンパイルする場合
 ```bash
 npm run build:firefox
 ```
