@@ -1,7 +1,8 @@
 {
   "applications": {
     "gecko": {
-      "id": "comfortable.sakai@kyoto-u"
+      "id": "comfortable.panda@das08",
+      "update_url": "https://tinaxd.github.io/comfortable-panda-firefox-updates/updates.json"
     }
   }
 }
