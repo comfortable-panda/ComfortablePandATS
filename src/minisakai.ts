@@ -1,5 +1,5 @@
 import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
-import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime, miniSakaiReady } from "./utils";
+import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime, miniSakaiReady, getSakaiTheme } from "./utils";
 import { appendChildAll, cloneElem, hamburger, miniSakai, SettingsDom } from "./dom";
 import {
   addMemo,
@@ -186,7 +186,7 @@ export async function createMiniSakaiGeneralized(root: Element, assignmentList: 
       registerEventHandlers(root);
       if (!subset) createSettingsTab(root);
       initState(root);
-    });
+    }).then(overrideCSSDarkTheme);
 }
 
 /**
@@ -215,9 +215,9 @@ async function createSettingsTab(root: Element) {
   createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['Tab Bar', '5']), config.CSsettings.getTopColorWarning, "topColorWarning");
   createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['Tab Bar', '14']), config.CSsettings.getTopColorSuccess, "topColorSuccess");
 
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['miniSakai', '24']), config.CSsettings.getMiniColorDanger, "miniColorDanger");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniSakai', '5']), config.CSsettings.getMiniColorWarning, "miniColorWarning");
-  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniSakai', '14']), config.CSsettings.getMiniColorSuccess, "miniColorSuccess");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_hour', ['miniPandA', '24']), config.CSsettings.getMiniColorDanger, "miniColorDanger");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniPandA', '5']), config.CSsettings.getMiniColorWarning, "miniColorWarning");
+  createSettingItem(root, chrome.i18n.getMessage('settings_colors_day', ['miniPandA', '14']), config.CSsettings.getMiniColorSuccess, "miniColorSuccess");
 
   createSettingItem(root, chrome.i18n.getMessage("settings_reset_colors"), "reset", "reset");
   // @ts-ignore
@@ -370,30 +370,38 @@ function deleteFavoritesBarNotification(): void {
   }
 }
 
+const overwriteborder = function (className: string, color: string | undefined) {
+  const element = document.getElementsByClassName(className);
+  for (let i = 0; i < element.length; i++) {
+    const elem = element[i] as HTMLElement;
+    const attr = "solid 2px " + color;
+    (<any>elem.style)["border-top"] = attr;
+    (<any>elem.style)["border-left"] = attr;
+    (<any>elem.style)["border-bottom"] = attr;
+    (<any>elem.style)["border-right"] = attr;
+  }
+};
+const overwritebackground = function (className: string, color: string | undefined) {
+  const element = document.getElementsByClassName(className);
+  for (let i = 0; i < element.length; i++) {
+    const elem = element[i] as HTMLElement;
+    elem.setAttribute("style", "background:" + color + "!important");
+  }
+};
+const overwritecolor = function (className: string, color: string | undefined) {
+  const element = document.getElementsByClassName(className);
+  for (let i = 0; i < element.length; i++) {
+    const elem = element[i] as HTMLElement;
+    elem.setAttribute("style", "color:" + color + "!important");
+  }
+};
+
 /**
  * Override CSS of favorites bar and miniSakai.
  */
 async function overrideCSSColor() {
   const config = await loadConfigs();
-  const overwriteborder = function (className: string, color: string | undefined) {
-    const element = document.getElementsByClassName(className);
-    for (let i = 0; i < element.length; i++) {
-      const elem = element[i] as HTMLElement;
-      const attr = "solid 2px " + color;
-      (<any>elem.style)["border-top"] = attr;
-      (<any>elem.style)["border-left"] = attr;
-      (<any>elem.style)["border-bottom"] = attr;
-      (<any>elem.style)["border-right"] = attr;
-    }
-  };
-  const overwritebackground = function (className: string, color: string | undefined) {
-    const element = document.getElementsByClassName(className);
-    for (let i = 0; i < element.length; i++) {
-      const elem = element[i] as HTMLElement;
-      elem.setAttribute("style", "background:" + color + "!important");
-    }
-  };
-
+  
   // Overwrite colors
   overwritebackground("cs-course-danger", config.CSsettings.getMiniColorDanger);
   overwritebackground("cs-course-warning", config.CSsettings.getMiniColorWarning);
@@ -401,12 +409,32 @@ async function overrideCSSColor() {
   overwritebackground("cs-tab-danger", config.CSsettings.getTopColorDanger);
   overwritebackground("cs-tab-warning", config.CSsettings.getTopColorWarning);
   overwritebackground("cs-tab-success", config.CSsettings.getTopColorSuccess);
+  
   overwriteborder("cs-assignment-danger", config.CSsettings.getMiniColorDanger);
   overwriteborder("cs-assignment-warning", config.CSsettings.getMiniColorWarning);
   overwriteborder("cs-assignment-success", config.CSsettings.getMiniColorSuccess);
   overwriteborder("cs-tab-danger", config.CSsettings.getTopColorDanger);
   overwriteborder("cs-tab-warning", config.CSsettings.getTopColorWarning);
   overwriteborder("cs-tab-success", config.CSsettings.getTopColorSuccess);
+  
+}
+
+function overrideCSSDarkTheme(){
+  if(getSakaiTheme() == 'dark'){
+    let foregroundColorDark = "#D4D4D4";
+    let backgroundColorDark = "#555555";
+    let dateColorDark = "#e07071";
+    overwritebackground("cs-minisakai", backgroundColorDark);
+    overwritecolor("cs-assignment-time", foregroundColorDark);
+    overwritecolor("cs-assignment-date", dateColorDark);
+    overwritecolor("cs-quiz-time", foregroundColorDark);
+    overwritecolor("cs-minipanda", foregroundColorDark);
+    overwritecolor("cs-settings-tab", foregroundColorDark);
+    overwritecolor("cs-memo-item", foregroundColorDark);
+    overwritecolor("cs-minisakai-list", foregroundColorDark);
+    overwritecolor("cs-assignment-title", foregroundColorDark);
+    overwritecolor("cs-noassignment-p", foregroundColorDark);
+  }
 }
 
 export {

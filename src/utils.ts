@@ -59,7 +59,7 @@ function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, 
 }
 
 export const getLoggedInInfoFromScript = (): Array<HTMLScriptElement> => {
-  return  Array.from(document.getElementsByTagName("script"));
+  return Array.from(document.getElementsByTagName("script"));
 }
 
 /**
@@ -149,7 +149,7 @@ function convertArrayToAssignment(arr: Array<any>): Array<Assignment> {
   for (const i of arr) {
     const assignmentEntries = [];
     for (const e of i.assignmentEntries) {
-      const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.closeDateTimestamp, e.isMemo, e.isFinished, e.isQuiz ,e.assignmentDetail);
+      const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.closeDateTimestamp, e.isMemo, e.isFinished, e.isQuiz, e.assignmentDetail);
       entry.assignmentPage = e.assignmentPage;
       if (entry.getCloseDateTimestamp * 1000 > nowTime) assignmentEntries.push(entry);
     }
@@ -163,7 +163,7 @@ function convertArrayToAssignment(arr: Array<any>): Array<Assignment> {
  * @param {Assignment[]} oldAssignmentiList
  * @param {Assignment[]} newAssignmentList
  */
-function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
+function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment> {
   const mergedAssignmentList = [];
 
   // Merge Assignments based on newAssignmentList
@@ -235,7 +235,7 @@ function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, ne
  * @param {Assignment[]} targetAssignmentList
  * @param {Assignment[]} newAssignmentList
  */
-function mergeIntoAssignmentList(targetAssignmentList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment>{
+function mergeIntoAssignmentList(targetAssignmentList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment> {
   const mergedAssignmentList = [];
   for (const assignment of targetAssignmentList) {
     mergedAssignmentList.push(new Assignment(assignment.courseSiteInfo, assignment.assignmentEntries, assignment.isRead));
@@ -285,6 +285,30 @@ function genUniqueID(prefix: string): string {
   return prefix + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
 }
 
+/**
+ * Get the current Sakai theme.
+ * @returns 'light' or 'dark'. Returns null on failure.
+ */
+function getSakaiTheme(): 'light' | 'dark' | null {
+  // Get the 'background-color' property of #topnav_container
+  const topnavContainer = document.querySelector('#topnav_container');
+  if (topnavContainer === null) {
+    return null;
+  }
+
+  const color = window.getComputedStyle(topnavContainer).backgroundColor;
+  if (!(color as any).startsWith('rgb')) {
+    // backgroundColor is not defined properly
+    return null;
+  }
+
+  if (color === "rgb(255, 255, 255)") {
+    return 'light';
+  } else {
+    return 'dark';
+  }
+}
+
 export {
   getDaysUntil,
   createCourseIDMap,
@@ -298,4 +322,5 @@ export {
   genUniqueID,
   mergeIntoAssignmentList,
   sortAssignmentList,
+  getSakaiTheme,
 };
