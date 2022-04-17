@@ -11,7 +11,7 @@ import {
   nowTime,
   sortAssignmentList,
   updateIsReadFlag,
-  isUsingCache,
+  isUsingCache, miniSakaiReady
 } from "./utils";
 import { Config, loadConfigs } from "./settings";
 
@@ -120,9 +120,10 @@ async function main() {
       isUsingCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
     );
     await addFavoritedCourseSites(config.baseURL);
-    await displayMiniSakai(mergedAssignmentList, courseIDList);
     await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
+    await displayMiniSakai(mergedAssignmentList, courseIDList);
 
+    miniSakaiReady();
     await updateReadFlag();
   }
 }
