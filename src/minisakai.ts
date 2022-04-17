@@ -434,6 +434,9 @@ function overrideCSSDarkTheme(){
     overwritecolor("cs-minisakai-list", foregroundColorDark);
     overwritecolor("cs-assignment-title", foregroundColorDark);
     overwritecolor("cs-noassignment-p", foregroundColorDark);
+    overwritecolor("cs-tab-danger", backgroundColorDark);
+    overwritecolor("cs-tab-warning", backgroundColorDark);
+    overwritecolor("cs-tab-success", backgroundColorDark);
   }
 }
 
