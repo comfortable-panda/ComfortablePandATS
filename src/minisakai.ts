@@ -296,7 +296,6 @@ function initState(root: Element) {
  */
 async function displayMiniSakai(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
   await createMiniSakai(mergedAssignmentList, courseSiteInfos);
-  miniSakaiReady();
 }
 
 /**
