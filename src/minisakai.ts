@@ -186,7 +186,7 @@ export async function createMiniSakaiGeneralized(root: Element, assignmentList: 
       registerEventHandlers(root);
       if (!subset) createSettingsTab(root);
       initState(root);
-    }).then(overrideCSSDarkTheme);
+    });
 }
 
 /**
@@ -352,6 +352,7 @@ async function createFavoritesBarNotification(courseSiteInfos: Array<CourseSiteI
     }
   }
   await overrideCSSColor();
+  overrideCSSDarkTheme();
 }
 
 /**

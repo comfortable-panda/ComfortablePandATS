@@ -120,8 +120,8 @@ async function main() {
       isUsingCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
     );
     await addFavoritedCourseSites(config.baseURL);
-    await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
     await displayMiniSakai(mergedAssignmentList, courseIDList);
+    await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
 
     miniSakaiReady();
     await updateReadFlag();
