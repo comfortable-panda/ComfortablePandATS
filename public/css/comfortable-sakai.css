@@ -33,6 +33,14 @@
     border: 1px solid #fffefe;
 }
 
+.cs-show {
+    width: 300px !important;
+}
+
+.cs-hide {
+    width: 0px !important;
+}
+
 .cs-minisakai {
     height: 95vh;
     width: 0;
