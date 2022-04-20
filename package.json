@@ -1,6 +1,6 @@
 {
   "name": "comfortable-panda",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "Comfortable PandA is a browser extension for managing assignments and quizzes on PandA.",
   "main": "index.ts",
   "scripts": {
