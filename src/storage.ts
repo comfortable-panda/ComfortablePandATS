@@ -78,4 +78,24 @@ function saveToLocalStorage(key: string, value: any): Promise<any> {
   });
 }
 
-export { loadFromLocalStorage, loadFromLocalStorage2, saveToLocalStorage, getKeys };
+function saveHostName(): Promise<any> {
+  const hostname = window.location.hostname;
+  return new Promise(function (resolve, reject) {
+    chrome.storage.local.set({ CS_Hostname: hostname }, () => {
+      resolve("saved");
+    });
+  });
+}
+
+function getHostName(): Promise<any> {
+  const key = "CS_Hostname";
+  return new Promise(function (resolve, reject) {
+    chrome.storage.local.get("CS_Hostname", function (items: any) {
+      if (typeof items[key] === "undefined") {
+        resolve(undefined);
+      } else resolve(items[key]);
+    });
+  });
+}
+
+export { loadFromLocalStorage, loadFromLocalStorage2, saveToLocalStorage, getKeys, saveHostName, getHostName };

@@ -1,5 +1,5 @@
 import { Assignment, CourseSiteInfo } from "./model";
-import { getKeys, loadFromLocalStorage2 } from "./storage";
+import { getHostName, loadFromLocalStorage2 } from "./storage";
 import { convertArrayToAssignment, mergeIntoAssignmentList, sortAssignmentList } from "./utils";
 import { createMiniSakaiGeneralized } from "./minisakai";
 
@@ -9,7 +9,7 @@ const subSakaiRoot = document.querySelector("#sub-sakai");
  * Update subSakai to latest info
  */
 async function updateSubSakai(root: Element) {
-  const hostname = (await getKeys())[0];
+  const hostname = await getHostName();
   let mergedAssignmentList: Array<Assignment>;
 
   const assignmentList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "CS_AssignmentList"));

@@ -1,4 +1,4 @@
-import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
+import { loadFromLocalStorage, saveHostName, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
 import { getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
 import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
@@ -125,6 +125,7 @@ async function main() {
 
     miniSakaiReady();
     await updateReadFlag();
+    await saveHostName();
   }
 }
 
