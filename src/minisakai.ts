@@ -392,7 +392,7 @@ const overwritecolor = function (className: string, color: string | undefined) {
   const element = document.getElementsByClassName(className);
   for (let i = 0; i < element.length; i++) {
     const elem = element[i] as HTMLElement;
-    elem.setAttribute("style", "color:" + color + "!important");
+    elem.setAttribute("style", elem.getAttribute("style") + ";color:" + color + "!important");
   }
 };
 
