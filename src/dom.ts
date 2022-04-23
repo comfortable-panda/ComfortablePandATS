@@ -50,7 +50,7 @@ miniSakai.classList.add("cs-minisakai", "cs-tab");
 
 export const assignmentDiv = createElem("div", { className: "cs-assignment-tab" });
 
-export const hamburger = createElem("div", { className: "cs-loading" }, { click: toggleMiniSakai });
+export const hamburger = createElem("button", { className: "cs-loading" }, { click: toggleMiniSakai });
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace SettingsDom {
