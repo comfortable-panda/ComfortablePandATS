@@ -319,10 +319,14 @@
     word-break: break-word;
 }
 
-.cs-minisakai-btn-div {
+button.cs-minisakai-btn-div {
+    /* buttonのデフォルトスタイルを打ち消す */
+    background-color: transparent !important;
+    padding: 0 !important;
+    border: none !important;
     font-size: 25px;
     cursor: pointer;
-    padding-left: 15px;
+    padding-left: 15px !important;
 }
 
 .cs-minisakai-btn {
@@ -565,19 +569,23 @@
 }
 
 .cs-loading, .cs-loading:after {
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    border-radius: 50% !important;
+    width: 25px !important;
+    height: 25px !important;
 }
 
 .cs-loading {
+    /* buttonのデフォルトスタイルを打ち消す */
+    background-color: transparent !important;
+    padding: 0 !important;
+    border: none !important;
     font-size: 11px;
-    margin-left: 15px;
+    margin-left: 15px !important;
     text-indent: -9999em;
-    border-top: 5px solid rgba(255, 255, 255, 0.2);
-    border-right: 5px solid rgba(255, 255, 255, 0.2);
-    border-bottom: 5px solid rgba(255, 255, 255, 0.2);
-    border-left: 5px solid #ffffff;
+    border-top: 5px solid rgba(255, 255, 255, 0.2) !important;
+    border-right: 5px solid rgba(255, 255, 255, 0.2) !important;
+    border-bottom: 5px solid rgba(255, 255, 255, 0.2) !important;
+    border-left: 5px solid #ffffff !important;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
     transform: translateZ(0);
