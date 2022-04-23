@@ -319,7 +319,7 @@
     word-break: break-word;
 }
 
-button.cs-minisakai-btn-div {
+.cs-minisakai-btn-div {
     /* buttonのデフォルトスタイルを打ち消す */
     background-color: transparent !important;
     padding: 0 !important;
