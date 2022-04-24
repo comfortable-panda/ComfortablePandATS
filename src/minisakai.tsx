@@ -14,7 +14,7 @@ import {
 // @ts-ignore
 import Mustache from "mustache";
 import { Config, loadConfigs } from "./settings";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from 'react-dom/client';
 import ReactDOM from "react-dom";
 
@@ -47,14 +47,32 @@ function MiniSakaiVersion(props: { version: string }) {
   );
 }
 
-function MiniSakaiClose(props: {onClose: () => void}) {
+function MiniSakaiClose(props: { onClose: () => void }) {
   return (
     <a className="closebtn q" href="#" onClick={props.onClose}>x</a>
   );
 }
 
-export function MiniSakaiRoot({subset}: {
-  subset: boolean
+function MiniSakaiTabs() {
+  const assignmentTab = useMemo(() => {
+    return chrome.i18n.getMessage("tab_assignments");
+  }, []);
+  const settingsTab = useMemo(() => {
+    return chrome.i18n.getMessage("tab_settings");
+  }, []);
+  return (
+    <>
+      <input id="assignmentTab" type="radio" name="cs-tab" />
+      <label htmlFor="assignmentTab"> {assignmentTab} </label>
+      <input id="settingsTab" type="radio" name="cs-tab" />
+      <label htmlFor="settingsTab"> {settingsTab} </label>
+    </>
+  );
+}
+
+
+export function MiniSakaiRoot({ subset }: {
+  subset: boolean,
 }): JSX.Element {
   // const [config, setConfig] = useState<Config|null>(null);
   // useEffect(() => {
@@ -68,8 +86,11 @@ export function MiniSakaiRoot({subset}: {
     <>
       <MiniSakaiLogo />
       <MiniSakaiVersion version={config === null ? "" : config.version} />
-      {(subset ? null : 
-        <MiniSakaiClose onClose={() => toggleMiniSakai()}/>
+      {(subset ? null :
+        (<>
+          <MiniSakaiClose onClose={() => toggleMiniSakai()} />
+          <MiniSakaiTabs />
+        </>)
       )}
     </>
   );
