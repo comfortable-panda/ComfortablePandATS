@@ -14,6 +14,8 @@ import {
   isUsingCache, miniSakaiReady
 } from "./utils";
 import { Config, loadConfigs } from "./settings";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -26,7 +28,7 @@ export let mergedAssignmentListNoMemo: Array<Assignment>;
  * @param {boolean} useAssignmentCache
  * @param {boolean} useQuizCache
  */
-export async function loadAndMergeAssignmentList(config: Config ,courseSiteInfos: Array<CourseSiteInfo>, useAssignmentCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
+export async function loadAndMergeAssignmentList(config: Config, courseSiteInfos: Array<CourseSiteInfo>, useAssignmentCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
   // Load old assignments and quizzes from local storage
   const oldAssignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_AssignmentList"));
   const oldQuizList = convertArrayToAssignment(await loadFromLocalStorage("CS_QuizList"));
@@ -130,3 +132,8 @@ async function main() {
 }
 
 main();
+
+ReactDOM.render(
+  <div>Hello React</div>,
+  document.body
+);

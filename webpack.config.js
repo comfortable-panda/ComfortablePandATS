@@ -7,13 +7,13 @@ module.exports = {
   devtool: "inline-source-map",
   entry: {
     background: `${__dirname}/src/background.ts`,
-    content_script: `${__dirname}/src/content_script.ts`,
+    content_script: `${__dirname}/src/content_script.tsx`,
     subsakai: `${__dirname}/src/subsakai.ts`
   },
   module: {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.tsx?$/,
         use: "ts-loader",
         exclude: /node_modules/
       }
@@ -24,7 +24,7 @@ module.exports = {
     filename: "[name].js"
   },
   resolve: {
-    extensions: [".ts", ".js"]
+    extensions: [".ts", ".js", ".tsx"]
   },
   plugins: [
     new CleanWebpackPlugin(),
