@@ -14,8 +14,6 @@ import {
   isUsingCache, miniSakaiReady
 } from "./utils";
 import { Config, loadConfigs } from "./settings";
-import React from 'react';
-import ReactDOM from 'react-dom';
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -132,8 +130,3 @@ async function main() {
 }
 
 main();
-
-ReactDOM.render(
-  <div>Hello React</div>,
-  document.body
-);

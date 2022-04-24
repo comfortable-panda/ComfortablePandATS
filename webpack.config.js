@@ -7,7 +7,7 @@ module.exports = {
   devtool: "inline-source-map",
   entry: {
     background: `${__dirname}/src/background.ts`,
-    content_script: `${__dirname}/src/content_script.tsx`,
+    content_script: `${__dirname}/src/content_script.ts`,
     subsakai: `${__dirname}/src/subsakai.ts`
   },
   module: {
