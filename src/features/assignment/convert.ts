@@ -6,13 +6,13 @@ export const toAssignments = (data: Record<string, any>): Array<AssignmentEntry>
   return data.sam_pub_collection
     .filter((json: any) => json.closeTime.epochSecond * 1000 >= nowTime)
     .map((json: any) => {
-      const entry: AssignmentEntry = {
-        id: json.id,
-        title: json.title,
-        dueTime: json.dueTime.epochSecond ? json.dueTime.epochSecond : null,
-        closeTime: json.closeTime.epochSecond ? json.closeTime.epochSecond : null,
-        hasFinished: false,
-      };
+      const entry = new AssignmentEntry(
+        json.id,
+        json.title,
+        json.dueTime.epochSecond ? json.dueTime.epochSecond : null,
+        json.closeTime.epochSecond ? json.closeTime.epochSecond : null,
+        false,
+      );
       return entry;
     });
 };
