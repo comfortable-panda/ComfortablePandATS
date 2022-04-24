@@ -16,7 +16,6 @@ import Mustache from "mustache";
 import { Config, loadConfigs } from "./settings";
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from 'react-dom/client';
-import ReactDOM from "react-dom";
 
 /**
  * Create a button to open miniSakai
@@ -70,17 +69,13 @@ function MiniSakaiTabs() {
   );
 }
 
-
 export function MiniSakaiRoot({ subset }: {
   subset: boolean,
 }): JSX.Element {
-  // const [config, setConfig] = useState<Config|null>(null);
-  // useEffect(() => {
-  //   loadConfigs().then((c) => setConfig(c));
-  // }, []);
-  const config = {
-    version: 'foobar'
-  };
+  const [config, setConfig] = useState<Config | null>(null);
+  useEffect(() => {
+    loadConfigs().then((c) => setConfig(c));
+  }, []);
 
   return (
     <>
@@ -267,9 +262,7 @@ function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Arr
   const ref = document.getElementById("toolMenuWrap");
   parent?.insertBefore(miniSakai, ref);
   const root = createRoot(miniSakai);
-  root.render(MiniSakaiRoot({
-    subset: false
-  }));
+  root.render(<MiniSakaiRoot subset={false}/>);
 }
 
 /**
