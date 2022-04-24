@@ -375,10 +375,10 @@ const overwriteborder = function (className: string, color: string | undefined) 
   for (let i = 0; i < element.length; i++) {
     const elem = element[i] as HTMLElement;
     const attr = "solid 2px " + color;
-    (<any>elem.style)["border-top"] = attr;
-    (<any>elem.style)["border-left"] = attr;
-    (<any>elem.style)["border-bottom"] = attr;
-    (<any>elem.style)["border-right"] = attr;
+    (elem.style as any)["border-top"] = attr;
+    (elem.style as any)["border-left"] = attr;
+    (elem.style as any)["border-bottom"] = attr;
+    (elem.style as any)["border-right"] = attr;
   }
 };
 const overwritebackground = function (className: string, color: string | undefined) {
