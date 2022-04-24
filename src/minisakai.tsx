@@ -14,8 +14,20 @@ import {
 // @ts-ignore
 import Mustache from "mustache";
 import { Config, loadConfigs } from "./settings";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { createRoot } from 'react-dom/client';
+
+const MiniSakaiContext = React.createContext<{
+  config: Config | null
+}>({
+  config: null
+});
+
+function useTranslation(tag: string): string {
+  return useMemo(() => {
+    return chrome.i18n.getMessage(tag);
+  }, []);
+}
 
 /**
  * Create a button to open miniSakai
@@ -40,9 +52,10 @@ function MiniSakaiLogo() {
   );
 }
 
-function MiniSakaiVersion(props: { version: string }) {
+function MiniSakaiVersion() {
+  const ctx = useContext(MiniSakaiContext);
   return (
-    <p className="cs-version">Version {props.version}</p>
+    <p className="cs-version">Version {ctx.config === null ? "" : ctx.config.version}</p>
   );
 }
 
@@ -52,20 +65,116 @@ function MiniSakaiClose(props: { onClose: () => void }) {
   );
 }
 
-function MiniSakaiTabs() {
-  const assignmentTab = useMemo(() => {
-    return chrome.i18n.getMessage("tab_assignments");
-  }, []);
-  const settingsTab = useMemo(() => {
-    return chrome.i18n.getMessage("tab_settings");
-  }, []);
+function MiniSakaiTabs(props: {
+  onAssignment: () => void,
+  onSettings: () => void
+}) {
+  const assignmentTab = useTranslation("tab_assignments");
+  const settingsTab = useTranslation("tab_settings");
   return (
     <>
-      <input id="assignmentTab" type="radio" name="cs-tab" />
+      <input id="assignmentTab" type="radio" name="cs-tab" onClick={props.onAssignment} />
       <label htmlFor="assignmentTab"> {assignmentTab} </label>
-      <input id="settingsTab" type="radio" name="cs-tab" />
+      <input id="settingsTab" type="radio" name="cs-tab" onClick={props.onSettings} />
       <label htmlFor="settingsTab"> {settingsTab} </label>
     </>
+  );
+}
+
+function MiniSakaiTimeBox(props: {
+  clazz: string,
+  title: string,
+  time: string
+}) {
+  return (
+    <div className={props.clazz}>
+      <p className="cs-assignment-time-text">{props.title}</p>
+      <p className="cs-assignment-time-text">{props.time}</p>
+    </div>
+  );
+}
+
+function MiniSakaiAssignmentTime() {
+  const ctx = useContext(MiniSakaiContext);
+  const title = useTranslation("assignment_acquisition_date");
+  const time = ctx.config === null ? "" : formatTimestamp(ctx.config.fetchedTime.assignment);
+  return <MiniSakaiTimeBox clazz="cs-assignment-time" title={title} time={time} />
+}
+
+function MiniSakaiQuizTime() {
+  const ctx = useContext(MiniSakaiContext);
+  const title = useTranslation("testquiz_acquisition_date");
+  const time = ctx.config === null ? "" : formatTimestamp(ctx.config.fetchedTime.quiz);
+  return <MiniSakaiTimeBox clazz="cs-quiz-time" title={title} time={time} />
+}
+
+function AssignmentTab(props: {
+  isSubset: boolean,
+  showMemoBox: boolean
+}) {
+
+  return (
+    <>
+      <AddMemoBox shown={!props.isSubset && props.showMemoBox} courseSites={[]} />
+    </>
+  );
+}
+
+// TODO
+function AddMemoBox(props: {
+  shown: boolean,
+  courseSites: CourseSiteInfo[]
+}) {
+  const courseName = useTranslation("todo_box_course_name");
+  const memoLabel = useTranslation("todo_box_memo");
+  const dueDate = useTranslation("todo_box_due_date");
+  const addBtnLabel = useTranslation("todo_box_add");
+
+  const [todoContent, setTodoContent] = useState("");
+  const [todoDue, setTodoDue] = useState("");
+
+  const options = useMemo(() => {
+    return props.courseSites.map(site => {
+      return <option value={site.courseID}>{site.courseName}</option>;
+    });
+  }, [props.courseSites]);
+
+  if (!props.shown) {
+    return <div></div>
+  }
+
+  return (
+    <div className="cs-memo-box addMemoBox">
+      <div className="cs-memo-item">
+        <p>{courseName}</p>
+        <label>
+          <select className="todoLecName">
+            {options}
+          </select>
+        </label>
+      </div>
+      <div className="cs-memo-item">
+        <p>{memoLabel}</p>
+        <label>
+          <input type="text" className="todoContent"
+            value={todoContent}
+            onChange={(ev) => setTodoContent(ev.target.value)}
+          />
+        </label>
+      </div>
+      <div className="cs-memo-item">
+        <p>{dueDate}</p>
+        <label>
+          <input type="datetime-local" className="todoDue"
+            value={todoDue}
+            onChange={(ev) => setTodoDue(ev.target.value)}
+          />
+        </label>
+      </div>
+      <div className="cs-memo-item">
+        <button type="submit" id="todo-add">{addBtnLabel}</button>
+      </div>
+    </div>
   );
 }
 
@@ -77,17 +186,37 @@ export function MiniSakaiRoot({ subset }: {
     loadConfigs().then((c) => setConfig(c));
   }, []);
 
+  const [shownTab, setShownTab] = useState<'assignment' | 'settings'>('assignment');
+  const [memoBoxShown, setMemoBoxShown] = useState(false);
+
   return (
-    <>
+    <MiniSakaiContext.Provider value={{
+      config: config
+    }}>
       <MiniSakaiLogo />
-      <MiniSakaiVersion version={config === null ? "" : config.version} />
+      <MiniSakaiVersion />
       {(subset ? null :
         (<>
           <MiniSakaiClose onClose={() => toggleMiniSakai()} />
-          <MiniSakaiTabs />
+          <MiniSakaiTabs
+            onAssignment={() => setShownTab('assignment')}
+            onSettings={() => setShownTab('settings')}
+          />
+          {
+            (shownTab === 'assignment') ?
+              <>
+                <button className="cs-add-memo-btn" onClick={() => {
+                  setMemoBoxShown(s => !s);
+                }}>+</button>
+                <MiniSakaiAssignmentTime />
+                <MiniSakaiQuizTime />
+              </>
+              : null
+          }
         </>)
       )}
-    </>
+      <AssignmentTab showMemoBox={memoBoxShown} isSubset={subset}/>
+    </MiniSakaiContext.Provider>
   );
 }
 
@@ -262,7 +391,7 @@ function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Arr
   const ref = document.getElementById("toolMenuWrap");
   parent?.insertBefore(miniSakai, ref);
   const root = createRoot(miniSakai);
-  root.render(<MiniSakaiRoot subset={false}/>);
+  root.render(<MiniSakaiRoot subset={false} />);
 }
 
 /**

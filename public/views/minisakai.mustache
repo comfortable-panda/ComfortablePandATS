@@ -1,22 +1,4 @@
-<img class="cs-minisakai-logo" alt="logo" src="{{miniSakaiLogo}}">
-<p class="cs-version">Version {{VERSION}}</p>
-{{^subset}}
-<a id="close_btn" class="closebtn q" href="#">x</a>
-<input id="assignmentTab" type="radio" name="cs-tab">
-<label for="assignmentTab"> {{titles.assignmentTab}} </label>
-<input id="settingsTab" type="radio" name="cs-tab">
-<label for="settingsTab"> {{titles.settingsTab}} </label>
-<button id="cs-add-memo-btn">+</button>
 
-<div class="cs-assignment-time">
-    <p class="cs-assignment-time-text">{{titles.assignmentFetchedTime}}</p>
-    <p class="cs-assignment-time-text">{{fetchedTime.assignment}}</p>
-</div>
-<div class="cs-quiz-time">
-    <p class="cs-assignment-time-text">{{titles.quizFetchedTime}}</p>
-    <p class="cs-assignment-time-text">{{fetchedTime.quiz}}</p>
-</div>
-{{/subset}}
 
 <div class="cs-assignment-tab">
     {{^subset}}
