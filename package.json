@@ -17,6 +17,8 @@
     "copy-webpack-plugin": "^10.2.4",
     "lodash": "^4.17.21",
     "mustache": "^4.2.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "ts-loader": "^9.2.6",
     "webpack": "^5.70.0"
   },
