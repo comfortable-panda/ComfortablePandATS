@@ -1,15 +1,19 @@
+import { Renderable } from "../../minisakai";
 import { Course } from "../course/types";
 
-export type AssignmentEntry = {
-  id: string;
-  title: string;
-  dueTime: number | null;
-  closeTime: number | null;
-  hasFinished: boolean;
+export class AssignmentEntry implements Renderable {
+  constructor(public id: string, public title: string, public dueTime: number|null, public closeTime: number|null, public hasFinished:boolean) {
+  }
+
+  render(): [React.Component<{}, {}, any>, number][] {
+      throw "not yet implemented";
+  }
 };
 
-export type Assignment = {
-  course: Course;
-  entries: Array<AssignmentEntry>;
-  isRead: boolean;
+export class Assignment implements Renderable {
+  constructor(public course: Course, public entries:Array<AssignmentEntry>, public isRead:boolean) {}
+
+  render(): [React.Component<{}, {}, any>, number][] {
+    return this.entries.map(e => e.render()).reduce((acc, val) => acc.concat(val), []);
+  }
 };

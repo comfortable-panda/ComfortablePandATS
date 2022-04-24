@@ -14,6 +14,8 @@ import {
 // @ts-ignore
 import Mustache from "mustache";
 import { loadConfigs } from "./settings";
+import React from "react";
+import ReactDOM from "react-dom";
 
 /**
  * Create a button to open miniSakai
@@ -25,6 +27,10 @@ function createMiniSakaiBtn(): void {
   } catch (e) {
     console.log("could not launch miniSakai.");
   }
+}
+
+export interface Renderable {
+  render(): [React.Component, number][];
 }
 
 /**
