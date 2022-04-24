@@ -1,3 +1,5 @@
+import { Course } from "../course/types";
+
 export type AssignmentEntry = {
   id: string;
   title: string;
@@ -7,7 +9,7 @@ export type AssignmentEntry = {
 };
 
 export type Assignment = {
-  courseSite: null; //TODO: 型を定義する
+  course: Course;
   entries: Array<AssignmentEntry>;
   isRead: boolean;
 };

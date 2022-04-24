@@ -1,3 +1,5 @@
+import { Course } from "../course/types";
+
 export type MemoEntry = {
   id: string;
   title: string;
@@ -6,7 +8,7 @@ export type MemoEntry = {
 };
 
 export type Memo = {
-  courseSite: null; //TODO: 型を定義する
+  course: Course;
   entries: Array<MemoEntry>;
   isRead: boolean;
 };

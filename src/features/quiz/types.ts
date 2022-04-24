@@ -1,3 +1,5 @@
+import { Course } from "../course/types";
+
 export type QuizEntry = {
   id: string;
   title: string;
@@ -6,7 +8,7 @@ export type QuizEntry = {
 };
 
 export type Quiz = {
-  courseSite: null; //TODO: 型を定義する
+  course: Course;
   entries: Array<QuizEntry>;
   isRead: boolean;
 };

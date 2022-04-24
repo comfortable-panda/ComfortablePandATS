@@ -1,10 +1,11 @@
 import { Assignment } from "../assignment/types";
 import { Quiz } from "../quiz/types";
+import { Course } from "../course/types";
 import { toAssignments } from "../assignment/convert";
 import { toQuizzes } from "../quiz/convert";
 
 /* Sakai APIから課題を取得する */
-export const fetchAssignment = (baseURL: string, courseID: string): Promise<Assignment> => {
+export const fetchAssignment = (baseURL: string, courseID: string): Promise<(course: Course) => Assignment> => {
   const queryURL = baseURL + "/direct/assignment/site/" + courseID + ".json";
   return new Promise((resolve, reject) => {
     fetch(queryURL, { cache: "no-cache" })
@@ -12,12 +13,13 @@ export const fetchAssignment = (baseURL: string, courseID: string): Promise<Assi
         if (response.ok) {
           const data = await response.json();
           const assignmentEntries = toAssignments(data);
-          const assignment: Assignment = {
-            courseSite: null,
-            entries: assignmentEntries,
-            isRead: false,
-          };
-          resolve(assignment);
+          resolve((course: Course) => {
+            return {
+              course: course,
+              entries: assignmentEntries,
+              isRead: false,
+            };
+          });
         } else {
           reject(`Request failed: ${response.status}`);
         }
@@ -27,7 +29,7 @@ export const fetchAssignment = (baseURL: string, courseID: string): Promise<Assi
 };
 
 /* Sakai APIからクイズを取得する */
-export const fetchQuiz = (baseURL: string, courseID: string): Promise<Quiz> => {
+export const fetchQuiz = (baseURL: string, courseID: string): Promise<(course: Course) => Quiz> => {
   const queryURL = baseURL + "/direct/sam_pub/context/" + courseID + ".json";
   return new Promise((resolve, reject) => {
     fetch(queryURL, { cache: "no-cache" })
@@ -35,12 +37,13 @@ export const fetchQuiz = (baseURL: string, courseID: string): Promise<Quiz> => {
         if (response.ok) {
           const data = await response.json();
           const quizEntries = toQuizzes(data);
-          const quiz: Quiz = {
-            courseSite: null,
-            entries: quizEntries,
-            isRead: false,
-          };
-          resolve(quiz);
+          resolve((course: Course) => {
+            return {
+              course: course,
+              entries: quizEntries,
+              isRead: false,
+            };
+          });
         } else {
           reject(`Request failed: ${response.status}`);
         }
