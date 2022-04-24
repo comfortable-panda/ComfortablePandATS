@@ -33,11 +33,11 @@ export const fetchAssignment = (baseURL: string, courseID: string): Promise<(cou
           const data = await response.json();
           const assignmentEntries = toAssignments(data);
           resolve((course: Course) => {
-            return {
-              course: course,
-              entries: assignmentEntries,
-              isRead: false,
-            };
+            return new Assignment(
+              course,
+              assignmentEntries,
+              false,
+            );
           });
         } else {
           reject(`Request failed: ${response.status}`);
@@ -57,11 +57,11 @@ export const fetchQuiz = (baseURL: string, courseID: string): Promise<(course: C
           const data = await response.json();
           const quizEntries = toQuizzes(data);
           resolve((course: Course) => {
-            return {
-              course: course,
-              entries: quizEntries,
-              isRead: false,
-            };
+            return new Quiz(
+              course,
+              quizEntries,
+              false,
+            );
           });
         } else {
           reject(`Request failed: ${response.status}`);

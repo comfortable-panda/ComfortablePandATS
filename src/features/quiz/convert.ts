@@ -7,12 +7,12 @@ export const toQuizzes = (data: Record<string, any>): Array<QuizEntry> => {
   return data.sam_pub_collection
     .filter((json: any) => json.startDate < nowTime && (json.dueDate >= nowTime || json.dueDate == null))
     .map((json: any) => {
-      const entry: QuizEntry = {
-        id: json.publishedAssessmentId,
-        title: json.title,
-        dueTime: json.dueDate ? json.dueDate / 1000 : null,
-        hasFinished: false,
-      };
+      const entry = new QuizEntry(
+        json.publishedAssessmentId,
+        json.title,
+        json.dueDate ? json.dueDate / 1000 : null,
+        false,
+      );
       return entry;
     });
 };
