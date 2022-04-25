@@ -23,10 +23,22 @@ const MiniSakaiContext = React.createContext<{
   config: null
 });
 
+const DueDateContext = React.createContext<{
+  due: 'danger' | 'warning' | 'success' | 'other'
+}>({
+  due: 'other'
+});
+
 function useTranslation(tag: string): string {
   return useMemo(() => {
     return chrome.i18n.getMessage(tag);
   }, []);
+}
+
+function useTranslationDeps(tag: string, deps: React.DependencyList) {
+  return useMemo(() => {
+    return chrome.i18n.getMessage(tag);
+  }, deps);
 }
 
 /**
@@ -143,6 +155,36 @@ function AddMemoBox(props: {
     return <div></div>
   }
 
+  function MiniSakaiColoredTitle() {
+    const ty = useContext(DueDateContext);
+    let titleTag = '';
+    let clazz = '';
+    switch (ty.due) {
+      case 'danger':
+        clazz = 'cs-minisakai-danger';
+        titleTag = 'due24h';
+        break;
+      case 'warning':
+        clazz = 'cs-minisakai-warning';
+        titleTag = 'due5d';
+        break;
+      case 'success':
+        clazz = 'cs-minisakai-success';
+        titleTag = 'due14d';
+        break;
+      case 'other':
+        clazz = 'cs-minisakai-other';
+        titleTag = 'dueOver14d';
+        break;
+    }
+
+    let title = useTranslationDeps(titleTag, [titleTag]);
+
+    return (<div className={clazz}>
+      <span className="q">{title}</span>
+    </div>);
+  }
+
   return (
     <div className="cs-memo-box addMemoBox">
       <div className="cs-memo-item">
@@ -215,7 +257,7 @@ export function MiniSakaiRoot({ subset }: {
           }
         </>)
       )}
-      <AssignmentTab showMemoBox={memoBoxShown} isSubset={subset}/>
+      <AssignmentTab showMemoBox={memoBoxShown} isSubset={subset} />
     </MiniSakaiContext.Provider>
   );
 }
