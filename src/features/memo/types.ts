@@ -5,7 +5,11 @@ const MAX_TIMESTAMP = 99999999999999;
 export class MemoEntry implements Renderable {
   constructor(public id: string, public title: string, public dueTime: number | null, public hasFinished: boolean) { }
 
-  get getCloseDateTimestamp(): number {
+  getTimestamp(): number {
+    return this.getDueDateTimestamp;
+  }
+
+  get getDueDateTimestamp(): number {
     return this.dueTime ? this.dueTime : MAX_TIMESTAMP;
   }
 
