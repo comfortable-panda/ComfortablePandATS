@@ -13,7 +13,10 @@ import {
 } from "./eventListener";
 // @ts-ignore
 import Mustache from "mustache";
-import { loadConfigs } from "./settings";
+import { Config, loadConfigs } from "./settings";
+import React, { useEffect, useState } from "react";
+import { createRoot } from 'react-dom/client';
+import ReactDOM from "react-dom";
 
 /**
  * Create a button to open miniSakai
@@ -27,8 +30,54 @@ function createMiniSakaiBtn(): void {
   }
 }
 
+export interface Renderable {
+  render(): [React.Component, number][];
+}
+
+function MiniSakaiLogo() {
+  const src = chrome.runtime.getURL("img/logo.png");
+  return (
+    <img className="cs-minisakai-logo" alt="logo" src={src} />
+  );
+}
+
+function MiniSakaiVersion(props: { version: string }) {
+  return (
+    <p className="cs-version">Version {props.version}</p>
+  );
+}
+
+function MiniSakaiClose(props: {onClose: () => void}) {
+  return (
+    <a className="closebtn q" href="#" onClick={props.onClose}>x</a>
+  );
+}
+
+export function MiniSakaiRoot({subset}: {
+  subset: boolean
+}): JSX.Element {
+  // const [config, setConfig] = useState<Config|null>(null);
+  // useEffect(() => {
+  //   loadConfigs().then((c) => setConfig(c));
+  // }, []);
+  const config = {
+    version: 'foobar'
+  };
+
+  return (
+    <>
+      <MiniSakaiLogo />
+      <MiniSakaiVersion version={config === null ? "" : config.version} />
+      {(subset ? null : 
+        <MiniSakaiClose onClose={() => toggleMiniSakai()}/>
+      )}
+    </>
+  );
+}
+
 /**
  * Using template engine to generate miniSakai list.
+ * DEPRECATED
  */
 export async function createMiniSakaiGeneralized(root: Element, assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>, subset: boolean, insertionProcess: (rendered: string) => void): Promise<void> {
   const config = await loadConfigs();
@@ -192,13 +241,14 @@ export async function createMiniSakaiGeneralized(root: Element, assignmentList: 
 /**
  * Insert miniSakai into Sakai.
  */
-async function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void> {
-  await createMiniSakaiGeneralized(miniSakai, assignmentList, courseSiteInfos, false, (rendered) => {
-    miniSakai.innerHTML = rendered;
-    const parent = document.getElementById("pageBody");
-    const ref = document.getElementById("toolMenuWrap");
-    parent?.insertBefore(miniSakai, ref);
-  });
+function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>) {
+  const parent = document.getElementById("pageBody");
+  const ref = document.getElementById("toolMenuWrap");
+  parent?.insertBefore(miniSakai, ref);
+  const root = createRoot(miniSakai);
+  root.render(MiniSakaiRoot({
+    subset: false
+  }));
 }
 
 /**
@@ -244,16 +294,16 @@ function createSettingItem(root: Element, itemDescription: string, value: boolea
   switch (typeof value) {
     case "boolean":
       label.classList.add("cs-toggle-btn");
-      settingItem = cloneElem(SettingsDom.toggleBtn, {checked: value, id: id}, {"change": function (res: any) { updateSettings(res, "check");}});
+      settingItem = cloneElem(SettingsDom.toggleBtn, { checked: value, id: id }, { "change": function (res: any) { updateSettings(res, "check"); } });
       break;
     case "number":
-      settingItem = cloneElem(SettingsDom.inputBox, {value: value, id: id}, {"change": function (res: any) { updateSettings(res, "number");}});
+      settingItem = cloneElem(SettingsDom.inputBox, { value: value, id: id }, { "change": function (res: any) { updateSettings(res, "number"); } });
       break;
     case "string":
       if (id === "reset") {
-        settingItem = cloneElem(SettingsDom.resetBtn, {value: value, id: id}, {"click": function (res: any) { updateSettings(res, "reset");}});
+        settingItem = cloneElem(SettingsDom.resetBtn, { value: value, id: id }, { "click": function (res: any) { updateSettings(res, "reset"); } });
       } else {
-        settingItem = cloneElem(SettingsDom.stringBox, {value: value, id: id}, {"change": function (res: any) { updateSettings(res, "string");}});
+        settingItem = cloneElem(SettingsDom.stringBox, { value: value, id: id }, { "change": function (res: any) { updateSettings(res, "string"); } });
       }
       break;
     default:
@@ -273,7 +323,6 @@ function registerEventHandlers(root: Element) {
   root.querySelector("#assignmentTab")?.addEventListener("click", () => toggleAssignmentTab());
   root.querySelector("#settingsTab")?.addEventListener("click", () => toggleSettingsTab());
   root.querySelectorAll(".cs-checkbox").forEach((c) => c.addEventListener("change", (e) => toggleFinishedFlag(e)));
-  root.querySelector("#close_btn")?.addEventListener("click", () => toggleMiniSakai());
   root.querySelector("#cs-add-memo-btn")?.addEventListener("click", () => toggleMemoBox());
   root.querySelector("#todo-add")?.addEventListener("click", () => addMemo());
   root.querySelectorAll(".cs-del-memo-btn").forEach((b) => b.addEventListener("click", (e) => deleteMemo(e)));
@@ -294,8 +343,8 @@ function initState(root: Element) {
 /**
  * Display miniSakai
  */
-async function displayMiniSakai(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>): Promise<void>{
-  await createMiniSakai(mergedAssignmentList, courseSiteInfos);
+function displayMiniSakai(mergedAssignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>) {
+  createMiniSakai(mergedAssignmentList, courseSiteInfos);
 }
 
 /**
@@ -375,10 +424,10 @@ const overwriteborder = function (className: string, color: string | undefined) 
   for (let i = 0; i < element.length; i++) {
     const elem = element[i] as HTMLElement;
     const attr = "solid 2px " + color;
-    (<any>elem.style)["border-top"] = attr;
-    (<any>elem.style)["border-left"] = attr;
-    (<any>elem.style)["border-bottom"] = attr;
-    (<any>elem.style)["border-right"] = attr;
+    (elem.style as any)["border-top"] = attr;
+    (elem.style as any)["border-left"] = attr;
+    (elem.style as any)["border-bottom"] = attr;
+    (elem.style as any)["border-right"] = attr;
   }
 };
 const overwritebackground = function (className: string, color: string | undefined) {
@@ -401,7 +450,7 @@ const overwritecolor = function (className: string, color: string | undefined) {
  */
 async function overrideCSSColor() {
   const config = await loadConfigs();
-  
+
   // Overwrite colors
   overwritebackground("cs-course-danger", config.CSsettings.getMiniColorDanger);
   overwritebackground("cs-course-warning", config.CSsettings.getMiniColorWarning);
@@ -409,18 +458,18 @@ async function overrideCSSColor() {
   overwritebackground("cs-tab-danger", config.CSsettings.getTopColorDanger);
   overwritebackground("cs-tab-warning", config.CSsettings.getTopColorWarning);
   overwritebackground("cs-tab-success", config.CSsettings.getTopColorSuccess);
-  
+
   overwriteborder("cs-assignment-danger", config.CSsettings.getMiniColorDanger);
   overwriteborder("cs-assignment-warning", config.CSsettings.getMiniColorWarning);
   overwriteborder("cs-assignment-success", config.CSsettings.getMiniColorSuccess);
   overwriteborder("cs-tab-danger", config.CSsettings.getTopColorDanger);
   overwriteborder("cs-tab-warning", config.CSsettings.getTopColorWarning);
   overwriteborder("cs-tab-success", config.CSsettings.getTopColorSuccess);
-  
+
 }
 
-function overrideCSSDarkTheme(){
-  if(getSakaiTheme() == 'dark'){
+function overrideCSSDarkTheme() {
+  if (getSakaiTheme() == 'dark') {
     let foregroundColorDark = "#D4D4D4";
     let backgroundColorDark = "#555555";
     let dateColorDark = "#e07071";

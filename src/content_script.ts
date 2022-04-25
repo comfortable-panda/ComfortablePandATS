@@ -14,6 +14,9 @@ import {
   isUsingCache, miniSakaiReady
 } from "./utils";
 import { Config, loadConfigs } from "./settings";
+import { fetchAssignment } from "./features/api/fetch";
+import { Course } from "./features/course/types";
+import { getSakaiAssignments } from "./features/assignment/getAssignment";
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -26,7 +29,7 @@ export let mergedAssignmentListNoMemo: Array<Assignment>;
  * @param {boolean} useAssignmentCache
  * @param {boolean} useQuizCache
  */
-export async function loadAndMergeAssignmentList(config: Config ,courseSiteInfos: Array<CourseSiteInfo>, useAssignmentCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
+export async function loadAndMergeAssignmentList(config: Config, courseSiteInfos: Array<CourseSiteInfo>, useAssignmentCache: boolean, useQuizCache: boolean): Promise<Array<Assignment>> {
   // Load old assignments and quizzes from local storage
   const oldAssignmentList = convertArrayToAssignment(await loadFromLocalStorage("CS_AssignmentList"));
   const oldQuizList = convertArrayToAssignment(await loadFromLocalStorage("CS_QuizList"));
@@ -39,15 +42,23 @@ export async function loadAndMergeAssignmentList(config: Config ,courseSiteInfos
   } else {
     console.log("Fetching assignments...");
     const pendingList = [];
+    const courses: Array<Course> = [];
     // Add course sites to fetch-pending list
     for (const i of courseSiteInfos) {
       pendingList.push(getAssignmentByCourseID(config.baseURL, i.courseID));
+      //DEBUG:
+      courses.push(new Course(i.courseID, i.courseName));
     }
     // Wait until all assignments are fetched
     const result = await (Promise as any).allSettled(pendingList);
     for (const k of result) {
       if (k.status === "fulfilled") newAssignmentList.push(k.value);
     }
+
+    //DEBUG:
+    const assignments = await getSakaiAssignments(courses);
+    console.log(assignments);
+
     // Update assignment fetch timestamp
     await saveToLocalStorage("CS_AssignmentFetchTime", nowTime);
     config.fetchedTime.assignment = nowTime;
@@ -120,7 +131,7 @@ async function main() {
       isUsingCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
     );
     await addFavoritedCourseSites(config.baseURL);
-    await displayMiniSakai(mergedAssignmentList, courseIDList);
+    displayMiniSakai(mergedAssignmentList, courseIDList);
     await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
 
     miniSakaiReady();
