@@ -1,6 +1,10 @@
 import { Quiz } from "./types";
 import { Course } from "../course/types";
 import { fetchQuiz } from "../api/fetch";
+import { Assignment } from "../assignment/types";
+import { fromStorage } from "../storage/load";
+import { decodeAssignmentFromArray } from "../assignment/decode";
+import { decodeQuizFromArray } from "./decode";
 
 export const getSakaiQuizzes = async (courses: Array<Course>) => {
   const quizzes: Array<Quiz> = [];
@@ -15,6 +19,6 @@ export const getSakaiQuizzes = async (courses: Array<Course>) => {
   return quizzes;
 };
 
-// export const getStoredQuizzes = () => {
-//
-// }
+export const getStoredQuizzes = (hostname: string): Promise<Array<Quiz>> => {
+  return fromStorage<Quiz>(hostname, "CS_QuizList", decodeQuizFromArray);
+};

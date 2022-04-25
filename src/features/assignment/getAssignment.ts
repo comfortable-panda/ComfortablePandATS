@@ -1,6 +1,8 @@
 import { Assignment } from "./types";
+import { decodeAssignmentFromArray } from "./decode";
 import { Course } from "../course/types";
 import { fetchAssignment } from "../api/fetch";
+import { fromStorage } from "../storage/load";
 
 export const getSakaiAssignments = async (courses: Array<Course>) => {
   const assignments: Array<Assignment> = [];
@@ -15,6 +17,6 @@ export const getSakaiAssignments = async (courses: Array<Course>) => {
   return assignments;
 };
 
-// export const getStoredAssignments = () => {
-//
-// }
+export const getStoredAssignments = (hostname: string): Promise<Array<Assignment>> => {
+  return fromStorage<Assignment>(hostname, "CS_AssignmentList", decodeAssignmentFromArray);
+};
