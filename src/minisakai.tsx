@@ -188,22 +188,30 @@ function AssignmentTab(props: {
   return (
     <>
       <AddMemoBox shown={!props.isSubset && props.showMemoBox} courseSites={[]} />
-      <MiniSakaiEntryList
-        dueType="danger"
-        isSubset={props.isSubset}
-        entriesWithCourse={dangerElements} />
-      <MiniSakaiEntryList
-        dueType="warning"
-        isSubset={props.isSubset}
-        entriesWithCourse={warningElements} />
-      <MiniSakaiEntryList
-        dueType="success"
-        isSubset={props.isSubset}
-        entriesWithCourse={successElements} />
-      <MiniSakaiEntryList
-        dueType="other"
-        isSubset={props.isSubset}
-        entriesWithCourse={otherElements} />
+      {dangerElements.length === 0 ? null : (
+        <MiniSakaiEntryList
+          dueType="danger"
+          isSubset={props.isSubset}
+          entriesWithCourse={dangerElements} />
+      )}
+      {warningElements.length === 0 ? null : (
+        <MiniSakaiEntryList
+          dueType="warning"
+          isSubset={props.isSubset}
+          entriesWithCourse={warningElements} />
+      )}
+      {successElements.length === 0 ? null : (
+        <MiniSakaiEntryList
+          dueType="success"
+          isSubset={props.isSubset}
+          entriesWithCourse={successElements} />
+      )}
+      {otherElements.length === 0 ? null : (
+        <MiniSakaiEntryList
+          dueType="other"
+          isSubset={props.isSubset}
+          entriesWithCourse={otherElements} />
+      )}
       {/* TODO: handle late submits */}
     </>
   );
@@ -333,6 +341,7 @@ function MiniSakaiEntryList(props: {
     const courseName = courseNameMap.get(courseID) ?? '<unknown>';
     courses.push(
       <MiniSakaiCourse
+        key={courseID}
         courseID={courseID}
         courseName={courseName}
         coursePage={courseID} // TODO: change to coursePage
@@ -356,6 +365,7 @@ export interface IEntity {
 
 export interface IEntry {
   getDueDate(): number
+  getID(): string
 }
 
 export type EntityUnion = Assignment;
@@ -377,7 +387,7 @@ function MiniSakaiCourse(props: {
     for (const entry of props.entries) {
       if (entry instanceof AssignmentEntry) {
         elems.push(
-          <AssignmentEntryView isSubset={props.isSubset} assignment={entry} />
+          <AssignmentEntryView key={entry.getID()} isSubset={props.isSubset} assignment={entry} />
         );
       }
     }
@@ -454,7 +464,8 @@ function AssignmentEntryView(props: {
       {!props.isSubset ? (
         <>
           <label>
-            <input className="cs-checkbox" type="checkbox" checked={props.assignment.hasFinished}></input>
+            {/* TODO: set oncheck handler */}
+            <input className="cs-checkbox" type="checkbox" checked={props.assignment.hasFinished} readOnly={true}></input>
           </label>
           <p className="cs-assignment-date">{dueDateString}</p>
         </>

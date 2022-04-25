@@ -7,6 +7,10 @@ export class AssignmentEntry implements IEntry {
   constructor(public id: string, public title: string, public dueTime: number, public closeTime: number, public hasFinished: boolean) {
   }
 
+  getID(): string {
+    return this.id;
+  }
+
   getDueDate(): number {
     return this.dueTime;
   }
