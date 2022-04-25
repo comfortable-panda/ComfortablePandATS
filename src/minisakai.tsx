@@ -48,7 +48,7 @@ export function useTranslationArgsDeps(tag: string, args: any[], deps: React.Dep
 /**
  * Create a button to open miniSakai
  */
-function createMiniSakaiBtn(): void {
+export function createMiniSakaiBtn(): void {
   const topbar = document.getElementById("mastLogin");
   try {
     topbar?.appendChild(hamburger);
@@ -633,16 +633,16 @@ function AssignmentEntryView(props: {
 //     });
 // }
 
-// /**
-//  * Insert miniSakai into Sakai.
-//  */
-// function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>) {
-//   const parent = document.getElementById("pageBody");
-//   const ref = document.getElementById("toolMenuWrap");
-//   parent?.insertBefore(miniSakai, ref);
-//   const root = createRoot(miniSakai);
-//   root.render(<MiniSakaiRoot subset={false} />);
-// }
+/**
+ * Insert miniSakai into Sakai.
+ */
+export function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>) {
+  const parent = document.getElementById("pageBody");
+  const ref = document.getElementById("toolMenuWrap");
+  parent?.insertBefore(miniSakai, ref);
+  const root = createRoot(miniSakai);
+  root.render(<MiniSakaiRoot subset={false} />);
+}
 
 // /**
 //  * Initialize Settings tab.
@@ -881,11 +881,3 @@ function overrideCSSDarkTheme() {
     overwritecolor("cs-tab-success", backgroundColorDark);
   }
 }
-
-export {
-  createMiniSakaiBtn,
-  // createMiniSakai,
-  // displayMiniSakai,
-  // deleteFavoritesBarNotification,
-  // createFavoritesBarNotification,
-};

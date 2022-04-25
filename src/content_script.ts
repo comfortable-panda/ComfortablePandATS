@@ -1,7 +1,7 @@
 import { loadFromLocalStorage, saveHostName, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
 import { getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
-import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
+import { createMiniSakaiBtn, createMiniSakai } from "./minisakai";
 import { addFavoritedCourseSites } from "./favorites";
 import {
   compareAndMergeAssignmentList,
@@ -120,8 +120,9 @@ async function main() {
       isUsingCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
     );
     await addFavoritedCourseSites(config.baseURL);
-    displayMiniSakai(mergedAssignmentList, courseIDList);
-    await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
+    // displayMiniSakai(mergedAssignmentList, courseIDList);
+    createMiniSakai([], courseIDList);
+    // await createFavoritesBarNotification(courseIDList, mergedAssignmentList); // TODO: fix this
 
     miniSakaiReady();
     await updateReadFlag();

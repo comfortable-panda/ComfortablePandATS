@@ -1,7 +1,6 @@
 import { Assignment, CourseSiteInfo } from "./model";
 import { getHostName, loadFromLocalStorage2 } from "./storage";
 import { convertArrayToAssignment, mergeIntoAssignmentList, sortAssignmentList } from "./utils";
-import { createMiniSakaiGeneralized } from "./minisakai";
 
 const subSakaiRoot = document.querySelector("#sub-sakai");
 
@@ -20,10 +19,11 @@ async function updateSubSakai(root: Element) {
   mergedAssignmentList = mergeIntoAssignmentList(mergedAssignmentList, assignmentMemoList);
   mergedAssignmentList = sortAssignmentList(mergedAssignmentList);
 
-  await createMiniSakaiGeneralized(root, mergedAssignmentList, courseIDs, true, (rendered) => {
-    console.log(rendered);
-    root.innerHTML = rendered;
-  });
+  // FIXME
+  // await createMiniSakaiGeneralized(root, mergedAssignmentList, courseIDs, true, (rendered) => {
+  //   console.log(rendered);
+  //   root.innerHTML = rendered;
+  // });
 }
 
 function addSubSakaiToPopup(): Element | null {
