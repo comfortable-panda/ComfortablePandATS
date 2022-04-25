@@ -1,8 +1,8 @@
 import { Assignment } from "../assignment/types";
 import { Quiz } from "../quiz/types";
 import { Course } from "../course/types";
-import { assignmentFromAPI } from "../assignment/decode";
-import { quizFromAPI } from "../quiz/decode";
+import { decodeAssignmentFromAPI } from "../assignment/decode";
+import { decodeQuizFromAPI } from "../quiz/decode";
 
 /* Sakai のURLを取得する */
 const getBaseURL = (): string => {
@@ -41,7 +41,7 @@ export const fetchAssignment = (course: Course): Promise<Assignment> => {
       .then(async (response) => {
         if (response.ok) {
           const data = await response.json();
-          const assignmentEntries = assignmentFromAPI(data);
+          const assignmentEntries = decodeAssignmentFromAPI(data);
           resolve(new Assignment(course, assignmentEntries, false));
         } else {
           reject(`Request failed: ${response.status}`);
@@ -59,7 +59,7 @@ export const fetchQuiz = (course: Course): Promise<Quiz> => {
       .then(async (response) => {
         if (response.ok) {
           const data = await response.json();
-          const quizEntries = quizFromAPI(data);
+          const quizEntries = decodeQuizFromAPI(data);
           resolve(new Quiz(course, quizEntries, false));
         } else {
           reject(`Request failed: ${response.status}`);

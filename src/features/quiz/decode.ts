@@ -3,7 +3,7 @@ import { nowTime } from "../../utils";
 import { Course } from "../course/types";
 
 /* Sakai APIから取得した課題をQuizEntryに変換する */
-export const quizFromAPI = (data: Record<string, any>): Array<QuizEntry> => {
+export const decodeQuizFromAPI = (data: Record<string, any>): Array<QuizEntry> => {
   return data.sam_pub_collection
     .filter((json: any) => json.startDate < nowTime && (json.dueDate >= nowTime || json.dueDate == null))
     .map((json: any) => {
@@ -17,8 +17,9 @@ export const quizFromAPI = (data: Record<string, any>): Array<QuizEntry> => {
     });
 };
 
-export const quizFromStorage = (data: Array<any>): Array<Quiz> => {
+export const decodeQuizFromArray = (data: Array<any>): Array<Quiz> => {
   const quizzes: Array<Quiz> = [];
+  if (typeof data === "undefined") return quizzes;
   for (const quiz of data) {
     const course: Course = new Course(quiz.course.id, quiz.course.name);
     const isRead: boolean = quiz.isRead;
