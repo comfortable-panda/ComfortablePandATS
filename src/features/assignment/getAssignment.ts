@@ -20,5 +20,5 @@ export const getSakaiAssignments = async (hostname: string, courses: Array<Cours
 };
 
 export const getStoredAssignments = (hostname: string): Promise<Array<Assignment>> => {
-  return fromStorage<Assignment>(hostname, "CS_AssignmentList", decodeAssignmentFromArray);
+  return fromStorage<Array<Assignment>>(hostname, "CS_AssignmentList", decodeAssignmentFromArray);
 };

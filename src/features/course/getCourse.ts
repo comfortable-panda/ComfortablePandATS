@@ -8,5 +8,5 @@ export const getSakaiCourses = (): Array<Course> => {
 };
 
 export const getStoredCourses = (hostname: string): Promise<Array<Course>> => {
-  return fromStorage<Course>(hostname, "CS_CourseList", decodeCourseFromArray);
+  return fromStorage<Array<Course>>(hostname, "CS_CourseList", decodeCourseFromArray);
 };

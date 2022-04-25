@@ -20,5 +20,5 @@ export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>):
 };
 
 export const getStoredQuizzes = (hostname: string): Promise<Array<Quiz>> => {
-  return fromStorage<Quiz>(hostname, "CS_QuizList", decodeQuizFromArray);
+  return fromStorage<Array<Quiz>>(hostname, "CS_QuizList", decodeQuizFromArray);
 };
