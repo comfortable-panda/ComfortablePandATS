@@ -3,8 +3,9 @@ import { Course } from "../course/types";
 import { fetchQuiz } from "../api/fetch";
 import { fromStorage } from "../storage/load";
 import { decodeQuizFromArray } from "./decode";
+import { toStorage } from "../storage/save";
 
-export const getSakaiQuizzes = async (courses: Array<Course>): Promise<Array<Quiz>> => {
+export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>): Promise<Array<Quiz>> => {
   const quizzes: Array<Quiz> = [];
   const pending: Array<Promise<Quiz>> = [];
   for (const course of courses) {
@@ -14,6 +15,7 @@ export const getSakaiQuizzes = async (courses: Array<Course>): Promise<Array<Qui
   for (const quiz of result) {
     if (quiz.status === "fulfilled") quizzes.push(quiz.value);
   }
+  toStorage(hostname, "CS_QuizFetchTime", new Date().getTime());
   return quizzes;
 };
 
