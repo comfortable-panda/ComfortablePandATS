@@ -15,6 +15,13 @@ type CSColor = {
   miniDanger: string;
   miniWarning: string;
   miniSuccess: string;
+  textColor: string;
+  bgColor: string;
+};
+
+const CSTheme = {
+  light: { textColor: "#464646", bgColor: "#cacaca" },
+  dark: { textColor: "#d4d4d4", bgColor: "#555555" },
 };
 
 export class Settings {
@@ -32,7 +39,10 @@ export class Settings {
     topWarning: "#fdd783",
     topSuccess: "#8bd48d",
     miniDanger: "#e85555",
-    miniWarning: "#e85555",
+    miniWarning: "#d7aa57",
     miniSuccess: "#62b665",
+    // 下記2つは変更不可
+    textColor: this.useDarkTheme ? CSTheme.dark.textColor : CSTheme.light.textColor,
+    bgColor: this.useDarkTheme ? CSTheme.dark.bgColor : CSTheme.light.bgColor,
   };
 }
