@@ -1,4 +1,3 @@
-export type Course = {
-  id: string;
-  name: string;
-};
+export class Course {
+  constructor(public id: string, public name: string) {}
+}
