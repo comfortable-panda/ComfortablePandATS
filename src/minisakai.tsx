@@ -23,11 +23,7 @@ const MiniSakaiContext = React.createContext<{
   config: null
 });
 
-const DueDateContext = React.createContext<{
-  due: 'danger' | 'warning' | 'success' | 'other'
-}>({
-  due: 'other'
-});
+type DueType = 'danger' | 'warning' | 'success' | 'other';
 
 function useTranslation(tag: string): string {
   return useMemo(() => {
@@ -155,11 +151,12 @@ function AddMemoBox(props: {
     return <div></div>
   }
 
-  function MiniSakaiColoredTitle() {
-    const ty = useContext(DueDateContext);
+  function MiniSakaiColoredTitle(props: {
+    dueType: DueType
+  }) {
     let titleTag = '';
     let clazz = '';
-    switch (ty.due) {
+    switch (props.dueType) {
       case 'danger':
         clazz = 'cs-minisakai-danger';
         titleTag = 'due24h';
@@ -183,6 +180,34 @@ function AddMemoBox(props: {
     return (<div className={clazz}>
       <span className="q">{title}</span>
     </div>);
+  }
+
+  function MiniSakaiEntryList(props: {
+    dueType: DueType,
+    children: React.ReactNode
+  }) {
+    const baseClass = 'cs-minisakai-list';
+    let clazz = '';
+    switch (props.dueType) {
+      case 'danger':
+        clazz = 'cs-minisakai-list-danger';
+        break;
+      case 'warning':
+        clazz = 'cs-minisakai-list-warning';
+        break;
+      case 'success':
+        clazz = 'cs-minisakai-list-success';
+        break;
+      case 'other':
+        clazz = 'cs-minisakai-list-other';
+        break;
+    }
+    const className = `${baseClass} ${clazz}`;
+    return (
+      <div className={className}>
+        {props.children}
+      </div>
+    );
   }
 
   return (
