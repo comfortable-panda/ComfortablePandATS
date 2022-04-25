@@ -16,6 +16,7 @@ import Mustache from "mustache";
 import { Config, loadConfigs } from "./settings";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { createRoot } from 'react-dom/client';
+import { AssignmentEntry } from "./features/assignment/types";
 
 const MiniSakaiContext = React.createContext<{
   config: Config | null
@@ -25,15 +26,21 @@ const MiniSakaiContext = React.createContext<{
 
 type DueType = 'danger' | 'warning' | 'success' | 'other';
 
-function useTranslation(tag: string): string {
+export function useTranslation(tag: string): string {
   return useMemo(() => {
     return chrome.i18n.getMessage(tag);
   }, []);
 }
 
-function useTranslationDeps(tag: string, deps: React.DependencyList) {
+export function useTranslationDeps(tag: string, deps: React.DependencyList) {
   return useMemo(() => {
     return chrome.i18n.getMessage(tag);
+  }, deps);
+}
+
+export function useTranslationArgsDeps(tag: string, args: any[], deps: React.DependencyList) {
+  return useMemo(() => {
+    return chrome.i18n.getMessage(tag, args);
   }, deps);
 }
 
@@ -49,9 +56,14 @@ function createMiniSakaiBtn(): void {
   }
 }
 
-export interface Renderable {
-  render(): [React.Component, number][];
-}
+export type RenderProperty = {
+  dueType: DueType
+};
+
+export type RenderResult = {
+  component: React.ReactNode,
+  time: number
+};
 
 function MiniSakaiLogo() {
   const src = chrome.runtime.getURL("img/logo.png");
@@ -151,65 +163,6 @@ function AddMemoBox(props: {
     return <div></div>
   }
 
-  function MiniSakaiColoredTitle(props: {
-    dueType: DueType
-  }) {
-    let titleTag = '';
-    let clazz = '';
-    switch (props.dueType) {
-      case 'danger':
-        clazz = 'cs-minisakai-danger';
-        titleTag = 'due24h';
-        break;
-      case 'warning':
-        clazz = 'cs-minisakai-warning';
-        titleTag = 'due5d';
-        break;
-      case 'success':
-        clazz = 'cs-minisakai-success';
-        titleTag = 'due14d';
-        break;
-      case 'other':
-        clazz = 'cs-minisakai-other';
-        titleTag = 'dueOver14d';
-        break;
-    }
-
-    let title = useTranslationDeps(titleTag, [titleTag]);
-
-    return (<div className={clazz}>
-      <span className="q">{title}</span>
-    </div>);
-  }
-
-  function MiniSakaiEntryList(props: {
-    dueType: DueType,
-    children: React.ReactNode
-  }) {
-    const baseClass = 'cs-minisakai-list';
-    let clazz = '';
-    switch (props.dueType) {
-      case 'danger':
-        clazz = 'cs-minisakai-list-danger';
-        break;
-      case 'warning':
-        clazz = 'cs-minisakai-list-warning';
-        break;
-      case 'success':
-        clazz = 'cs-minisakai-list-success';
-        break;
-      case 'other':
-        clazz = 'cs-minisakai-list-other';
-        break;
-    }
-    const className = `${baseClass} ${clazz}`;
-    return (
-      <div className={className}>
-        {props.children}
-      </div>
-    );
-  }
-
   return (
     <div className="cs-memo-box addMemoBox">
       <div className="cs-memo-item">
@@ -241,6 +194,99 @@ function AddMemoBox(props: {
       <div className="cs-memo-item">
         <button type="submit" id="todo-add">{addBtnLabel}</button>
       </div>
+    </div>
+  );
+}
+
+function MiniSakaiColoredTitle(props: {
+  dueType: DueType
+}) {
+  let titleTag = '';
+  let clazz = '';
+  switch (props.dueType) {
+    case 'danger':
+      clazz = 'cs-minisakai-danger';
+      titleTag = 'due24h';
+      break;
+    case 'warning':
+      clazz = 'cs-minisakai-warning';
+      titleTag = 'due5d';
+      break;
+    case 'success':
+      clazz = 'cs-minisakai-success';
+      titleTag = 'due14d';
+      break;
+    case 'other':
+      clazz = 'cs-minisakai-other';
+      titleTag = 'dueOver14d';
+      break;
+  }
+
+  let title = useTranslationDeps(titleTag, [titleTag]);
+
+  return (<div className={clazz}>
+    <span className="q">{title}</span>
+  </div>);
+}
+
+function MiniSakaiEntryList(props: {
+  dueType: DueType,
+  children: React.ReactNode
+}) {
+  const baseClass = 'cs-minisakai-list';
+  let clazz = '';
+  switch (props.dueType) {
+    case 'danger':
+      clazz = 'cs-minisakai-list-danger';
+      break;
+    case 'warning':
+      clazz = 'cs-minisakai-list-warning';
+      break;
+    case 'success':
+      clazz = 'cs-minisakai-list-success';
+      break;
+    case 'other':
+      clazz = 'cs-minisakai-list-other';
+      break;
+  }
+  const className = `${baseClass} ${clazz}`;
+  return (
+    <div className={className}>
+      {props.children}
+    </div>
+  );
+}
+
+export type EntryUnion = AssignmentEntry; // TODO: add Quiz, Memo, ...
+
+function MiniSakaiCourse(props: {
+  courseID: string,
+  coursePage: string,
+  courseName: string,
+  entries: EntryUnion[],
+  dueType: DueType,
+  isSubset: boolean
+}) {
+  const divClass = useMemo(() => `cs-assignment-${props.dueType}`, [props.dueType]);
+  const aClass = useMemo(() => `cs-course-${props.dueType} cs-course-name`, [props.dueType]);
+
+  const elements = useMemo(() => {
+    const elems: JSX.Element[] = [];
+    for (const entry of props.entries) {
+      if (entry instanceof AssignmentEntry) {
+        elems.push(
+          <AssignmentEntryView isSubset={props.isSubset} assignment={entry} />
+        );
+      }
+    }
+    return elems;
+  }, [props.entries]);
+
+  return (
+    // TODO: style
+    <div className={divClass}>
+      <a className={aClass} href={props.coursePage}>{props.courseName}</a>
+      {elements}
     </div>
   );
 }
@@ -284,6 +330,39 @@ export function MiniSakaiRoot({ subset }: {
       )}
       <AssignmentTab showMemoBox={memoBoxShown} isSubset={subset} />
     </MiniSakaiContext.Provider>
+  );
+}
+
+function AssignmentEntryView(props: {
+  assignment: AssignmentEntry,
+  isSubset: boolean
+}) {
+  const dueNotSet = useTranslation("due_not_set");
+  // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime * 1000 - nowTime) / 1000);
+  const timeRemain = [0, 0, 0]; // TODO
+  const remainTime = useTranslationArgsDeps("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]], timeRemain);
+
+  const dueDateString = remainTime;
+  const remainTimeString = "TODO RemainTimeString"; // TODO
+
+  return (
+    <>
+      {!props.isSubset ? (
+        <>
+          <label>
+            <input className="cs-checkbox" type="checkbox" checked={props.assignment.hasFinished}></input>
+          </label>
+          <p className="cs-assignment-date">{dueDateString}</p>
+        </>
+      ) : (
+        <span className="cs-assignment-date cs-assignmate-date-padding">{dueDateString}</span>
+      )}
+      <span className="cs-assignment-time-remain">{remainTimeString}</span>
+
+      <p className="cs-assignment-title">
+        {props.assignment.title}
+      </p>
+    </>
   );
 }
 
