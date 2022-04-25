@@ -1,4 +1,4 @@
-import { Assignment, CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
+import { CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry } from "./model";
 import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime, miniSakaiReady, getSakaiTheme } from "./utils";
 import { appendChildAll, cloneElem, hamburger, miniSakai, SettingsDom } from "./dom";
 import {
@@ -16,7 +16,8 @@ import Mustache from "mustache";
 import { Config, loadConfigs } from "./settings";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { createRoot } from 'react-dom/client';
-import { AssignmentEntry } from "./features/assignment/types";
+import { AssignmentEntry, Assignment } from "./features/assignment/types";
+import { Course } from "./features/course/types";
 
 const MiniSakaiContext = React.createContext<{
   config: Config | null
@@ -130,12 +131,80 @@ function MiniSakaiQuizTime() {
 
 function AssignmentTab(props: {
   isSubset: boolean,
-  showMemoBox: boolean
+  showMemoBox: boolean,
+  entities: EntityUnion[]
 }) {
+  type EntryWithCourse = {
+    entry: EntryUnion,
+    course: Course
+  };
+
+  const dangerElements: EntryWithCourse[] = [];
+  const warningElements: EntryWithCourse[] = [];
+  const successElements: EntryWithCourse[] = [];
+  const otherElements: EntryWithCourse[] = [];
+  const lateElements: EntryWithCourse[] = [];
+
+  for (const entity of props.entities) {
+    const course = entity.getCourse();
+    for (const entry of entity.entries) {
+      const daysUntilDue = getDaysUntil(nowTime, entry.getDueDate() * 1000);
+
+      switch (daysUntilDue) {
+        case 'due24h':
+          dangerElements.push({
+            entry: entry,
+            course: course
+          });
+          break;
+        case 'due5d':
+          warningElements.push({
+            entry: entry,
+            course: course
+          });
+          break;
+        case 'due14d':
+          successElements.push({
+            entry: entry,
+            course: course
+          });
+          break;
+        case 'dueOver14d':
+          otherElements.push({
+            entry: entry,
+            course: course
+          });
+          break;
+        case 'duePassed':
+          lateElements.push({
+            entry: entry,
+            course: course
+          });
+          break;
+      }
+    }
+  }
 
   return (
     <>
       <AddMemoBox shown={!props.isSubset && props.showMemoBox} courseSites={[]} />
+      <MiniSakaiEntryList
+        dueType="danger"
+        isSubset={props.isSubset}
+        entriesWithCourse={dangerElements} />
+      <MiniSakaiEntryList
+        dueType="warning"
+        isSubset={props.isSubset}
+        entriesWithCourse={warningElements} />
+      <MiniSakaiEntryList
+        dueType="success"
+        isSubset={props.isSubset}
+        entriesWithCourse={successElements} />
+      <MiniSakaiEntryList
+        dueType="other"
+        isSubset={props.isSubset}
+        entriesWithCourse={otherElements} />
+      {/* TODO: handle late submits */}
     </>
   );
 }
@@ -231,32 +300,62 @@ function MiniSakaiColoredTitle(props: {
 
 function MiniSakaiEntryList(props: {
   dueType: DueType,
-  children: React.ReactNode
+  entriesWithCourse: {
+    entry: EntryUnion,
+    course: Course
+  }[],
+  isSubset: boolean
 }) {
-  const baseClass = 'cs-minisakai-list';
-  let clazz = '';
-  switch (props.dueType) {
-    case 'danger':
-      clazz = 'cs-minisakai-list-danger';
-      break;
-    case 'warning':
-      clazz = 'cs-minisakai-list-warning';
-      break;
-    case 'success':
-      clazz = 'cs-minisakai-list-success';
-      break;
-    case 'other':
-      clazz = 'cs-minisakai-list-other';
-      break;
+  const className = useMemo(() => {
+    const baseClass = 'cs-minisakai-list';
+    const clazz = `cs-minisakai-list-${props.dueType}`;
+    return `${baseClass} ${clazz}`;
+  }, [props.dueType]);
+
+  // group entries by course
+  const courseIdMap = new Map<string, EntryUnion[]>(); // map courseID -> EntryUnions
+  for (const ewc of props.entriesWithCourse) {
+    let entries: EntryUnion[];
+    const courseID = ewc.course.id;
+    if (!courseIdMap.has(courseID)) {
+      entries = [];
+      courseIdMap.set(courseID, entries);
+    } else {
+      entries = courseIdMap.get(courseID)!;
+    }
+    entries.push(ewc.entry);
   }
-  const className = `${baseClass} ${clazz}`;
+
+  const courses: JSX.Element[] = [];
+  for (const [courseID, entries] of courseIdMap.entries()) {
+    courses.push(
+      <MiniSakaiCourse
+        courseID={courseID}
+        courseName={courseID} // TODO: change to courseName
+        coursePage={courseID} // TODO: change to coursePage
+        isSubset={props.isSubset}
+        dueType={props.dueType}
+        entries={entries}
+      />
+    );
+  }
+
   return (
     <div className={className}>
-      {props.children}
+      {courses}
     </div>
   );
 }
 
+export interface IEntity {
+  getCourse(): Course
+}
+
+export interface IEntry {
+  getDueDate(): number
+}
+
+export type EntityUnion = Assignment;
 export type EntryUnion = AssignmentEntry; // TODO: add Quiz, Memo, ...
 
 function MiniSakaiCourse(props: {
