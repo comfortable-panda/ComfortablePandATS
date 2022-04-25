@@ -333,7 +333,7 @@ function MiniSakaiEntryList(props: {
       entries = courseIdMap.get(courseID)!;
     }
     entries.push(ewc.entry);
-    courseNameMap.set(courseID, ewc.course.name);
+    courseNameMap.set(courseID, ewc.course.name ?? 'unknown course');
   }
 
   const courses: JSX.Element[] = [];
