@@ -1,9 +1,7 @@
 import { Quiz } from "./types";
 import { Course } from "../course/types";
 import { fetchQuiz } from "../api/fetch";
-import { Assignment } from "../assignment/types";
 import { fromStorage } from "../storage/load";
-import { decodeAssignmentFromArray } from "../assignment/decode";
 import { decodeQuizFromArray } from "./decode";
 
 export const getSakaiQuizzes = async (courses: Array<Course>) => {

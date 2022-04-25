@@ -1,4 +1,4 @@
-export const toStorage = (hostname: string, key: string, value: any): Promise<any> => {
+export const toStorage = (hostname: string, key: string, value: any): Promise<string> => {
   const entity: { [key: string]: [value: any] } = {};
   entity[key] = value;
   return new Promise(function (resolve) {
