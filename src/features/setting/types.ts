@@ -22,10 +22,11 @@ export class Settings {
     assignment: 120,
     quiz: 600,
   };
-  displayOption: DisplayOption = {
+  miniSakaiOption: DisplayOption = {
     showCompletedEntry: true,
     showLateAcceptedEntry: false,
   };
+  useDarkTheme = false;
   color: CSColor = {
     topDanger: "#f78989",
     topWarning: "#fdd783",
