@@ -4,6 +4,16 @@ import { Course } from "../course/types";
 import { toAssignments } from "../assignment/convert";
 import { toQuizzes } from "../quiz/convert";
 
+/* Sakai のURLを取得する */
+const getBaseURL = (): string => {
+  let baseURL = "";
+  const match = location.href.match("(https?://[^/]+)/portal");
+  if (match) {
+    baseURL = match[1];
+  }
+  return baseURL;
+};
+
 /* Sakai のお気に入り欄からCourseを取得する */
 export const fetchCourse = (): Array<Course> => {
   const elementCollection = document.getElementsByClassName("fav-sites-entry");
@@ -24,8 +34,8 @@ export const fetchCourse = (): Array<Course> => {
 };
 
 /* Sakai APIから課題を取得する */
-export const fetchAssignment = (baseURL: string, course: Course): Promise<Assignment> => {
-  const queryURL = baseURL + "/direct/assignment/site/" + course.id + ".json";
+export const fetchAssignment = (course: Course): Promise<Assignment> => {
+  const queryURL = getBaseURL() + "/direct/assignment/site/" + course.id + ".json";
   return new Promise((resolve, reject) => {
     fetch(queryURL, { cache: "no-cache" })
       .then(async (response) => {
@@ -42,8 +52,8 @@ export const fetchAssignment = (baseURL: string, course: Course): Promise<Assign
 };
 
 /* Sakai APIからクイズを取得する */
-export const fetchQuiz = (baseURL: string, course: Course): Promise<Quiz> => {
-  const queryURL = baseURL + "/direct/sam_pub/context/" + course.id + ".json";
+export const fetchQuiz = (course: Course): Promise<Quiz> => {
+  const queryURL = getBaseURL() + "/direct/sam_pub/context/" + course.id + ".json";
   return new Promise((resolve, reject) => {
     fetch(queryURL, { cache: "no-cache" })
       .then(async (response) => {
