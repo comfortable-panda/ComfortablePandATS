@@ -314,6 +314,7 @@ function MiniSakaiEntryList(props: {
 
   // group entries by course
   const courseIdMap = new Map<string, EntryUnion[]>(); // map courseID -> EntryUnions
+  const courseNameMap = new Map<string, string>(); // map courseID -> courseName
   for (const ewc of props.entriesWithCourse) {
     let entries: EntryUnion[];
     const courseID = ewc.course.id;
@@ -324,14 +325,16 @@ function MiniSakaiEntryList(props: {
       entries = courseIdMap.get(courseID)!;
     }
     entries.push(ewc.entry);
+    courseNameMap.set(courseID, ewc.course.name);
   }
 
   const courses: JSX.Element[] = [];
   for (const [courseID, entries] of courseIdMap.entries()) {
+    const courseName = courseNameMap.get(courseID) ?? '<unknown>';
     courses.push(
       <MiniSakaiCourse
         courseID={courseID}
-        courseName={courseID} // TODO: change to courseName
+        courseName={courseName}
         coursePage={courseID} // TODO: change to coursePage
         isSubset={props.isSubset}
         dueType={props.dueType}
@@ -394,6 +397,8 @@ export function MiniSakaiRoot({ subset }: {
   subset: boolean,
 }): JSX.Element {
   const [config, setConfig] = useState<Config | null>(null);
+  const [entities, setEntities] = useState<EntityUnion[]>([]);
+  
   useEffect(() => {
     loadConfigs().then((c) => setConfig(c));
   }, []);
