@@ -393,11 +393,11 @@ function MiniSakaiCourse(props: {
   );
 }
 
-export function MiniSakaiRoot({ subset }: {
+export function MiniSakaiRoot(props: {
   subset: boolean,
+  entities: EntityUnion[]
 }): JSX.Element {
   const [config, setConfig] = useState<Config | null>(null);
-  const [entities, setEntities] = useState<EntityUnion[]>([]);
 
   useEffect(() => {
     loadConfigs().then((c) => setConfig(c));
@@ -412,7 +412,7 @@ export function MiniSakaiRoot({ subset }: {
     }}>
       <MiniSakaiLogo />
       <MiniSakaiVersion />
-      {(subset ? null :
+      {(props.subset ? null :
         (<>
           <MiniSakaiClose onClose={() => toggleMiniSakai()} />
           <MiniSakaiTabs
@@ -432,7 +432,7 @@ export function MiniSakaiRoot({ subset }: {
           }
         </>)
       )}
-      <AssignmentTab showMemoBox={memoBoxShown} isSubset={subset} entities={entities} />
+      <AssignmentTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={props.entities} />
     </MiniSakaiContext.Provider>
   );
 }
@@ -636,12 +636,12 @@ function AssignmentEntryView(props: {
 /**
  * Insert miniSakai into Sakai.
  */
-export function createMiniSakai(assignmentList: Array<Assignment>, courseSiteInfos: Array<CourseSiteInfo>) {
+export function createMiniSakai(entityList: Array<EntityUnion>) {
   const parent = document.getElementById("pageBody");
   const ref = document.getElementById("toolMenuWrap");
   parent?.insertBefore(miniSakai, ref);
   const root = createRoot(miniSakai);
-  root.render(<MiniSakaiRoot subset={false} />);
+  root.render(<MiniSakaiRoot subset={false} entities={entityList} />);
 }
 
 // /**

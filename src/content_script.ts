@@ -14,6 +14,7 @@ import {
   isUsingCache, miniSakaiReady
 } from "./utils";
 import { Config, loadConfigs } from "./settings";
+import {Assignment as NewAssignment, AssignmentEntry} from './features/assignment/types';
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -121,7 +122,15 @@ async function main() {
     );
     await addFavoritedCourseSites(config.baseURL);
     // displayMiniSakai(mergedAssignmentList, courseIDList);
-    createMiniSakai([], courseIDList);
+    createMiniSakai([
+      new NewAssignment(
+        {id: 'test-course-id', name: 'test-course-name'},
+        [
+          new AssignmentEntry('test-assign-id', 'test-title', 10000000000000, 10000000000001, false)
+        ],
+        false
+      )
+    ]);
     // await createFavoritesBarNotification(courseIDList, mergedAssignmentList); // TODO: fix this
 
     miniSakaiReady();
