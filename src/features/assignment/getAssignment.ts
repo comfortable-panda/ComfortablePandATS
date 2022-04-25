@@ -4,7 +4,7 @@ import { Course } from "../course/types";
 import { fetchAssignment } from "../api/fetch";
 import { fromStorage } from "../storage/load";
 
-export const getSakaiAssignments = async (courses: Array<Course>) => {
+export const getSakaiAssignments = async (courses: Array<Course>): Promise<Array<Assignment>> => {
   const assignments: Array<Assignment> = [];
   const pending: Array<Promise<Assignment>> = [];
   for (const course of courses) {
