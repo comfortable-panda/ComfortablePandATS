@@ -1,9 +1,16 @@
-import { Renderable } from "../../minisakai";
+import { IEntity, IEntry } from "../../minisakai";
 import { Course } from "../course/types";
 
 const MAX_TIMESTAMP = 99999999999999;
-export class MemoEntry implements Renderable {
-  constructor(public id: string, public title: string, public dueTime: number | null, public hasFinished: boolean) { }
+export class MemoEntry implements IEntry {
+  constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean) { }
+
+  getID(): string {
+    return this.id;
+  }
+  getDueDate(): number {
+    return this.dueTime;
+  }
 
   getTimestamp(): number {
     return this.getDueDateTimestamp;
@@ -18,8 +25,12 @@ export class MemoEntry implements Renderable {
   }
 };
 
-export class Memo implements Renderable {
+
+export class Memo implements IEntity {
   constructor(public course: Course, public entries: Array<MemoEntry>) { }
+  getCourse(): Course {
+    return this.course;
+  }
 
   render(): [React.Component<{}, {}, any>, number][] {
     return this.entries.map(e => e.render()).reduce((acc, val) => acc.concat(val), []);

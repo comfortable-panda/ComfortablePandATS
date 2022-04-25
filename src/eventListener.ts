@@ -4,7 +4,7 @@ import { CourseSiteInfo, Assignment, AssignmentEntry } from "./model";
 import { convertArrayToAssignment, genUniqueID, mergeIntoAssignmentList } from "./utils";
 import { courseIDList, loadAndMergeAssignmentList, mergedAssignmentListNoMemo } from "./content_script";
 import { DefaultSettings, loadConfigs } from "./settings";
-import { createFavoritesBarNotification, deleteFavoritesBarNotification, displayMiniSakai } from "./minisakai";
+// import { createFavoritesBarNotification, deleteFavoritesBarNotification, displayMiniSakai } from "./minisakai";
 
 let toggle = false;
 
@@ -200,7 +200,7 @@ async function addMemo(): Promise<void> {
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, memoList);
   const quizList = await loadFromLocalStorage("CS_QuizList");
   redrawMiniSakai();
-  await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
+  // await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   await redrawFavoritesBar(courseIDList, true);
 }
@@ -224,7 +224,7 @@ async function deleteMemo(event: any): Promise<void> {
   const assignmentList = mergeIntoAssignmentList(mergedAssignmentListNoMemo, deletedMemoList);
   const quizList = await loadFromLocalStorage("CS_QuizList");
   redrawMiniSakai();
-  await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
+  // await displayMiniSakai(mergeIntoAssignmentList(assignmentList, quizList), courseIDList);
 
   await redrawFavoritesBar(courseIDList, true);
 }
@@ -256,10 +256,10 @@ async function editFavoritesMessage(): Promise<void> {
  * @param {boolean} useCache
  */
 async function redrawFavoritesBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void> {
-  deleteFavoritesBarNotification();
+  // deleteFavoritesBarNotification();
   const config = await loadConfigs();
   const newAssignmentList = await loadAndMergeAssignmentList(config, courseIDList, useCache, useCache);
-  await createFavoritesBarNotification(courseIDList, newAssignmentList);
+  // await createFavoritesBarNotification(courseIDList, newAssignmentList);
 }
 
 /**

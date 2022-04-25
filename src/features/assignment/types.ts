@@ -1,9 +1,9 @@
-import { Renderable } from "../../minisakai";
+import { IEntity, IEntry } from "../../minisakai";
 import { Course } from "../course/types";
 
 const MAX_TIMESTAMP = 99999999999999;
-export class AssignmentEntry implements Renderable {
-  constructor(public id: string, public title: string, public dueTime: number | null, public closeTime: number | null, public hasFinished: boolean) {
+export class AssignmentEntry implements IEntry {
+  constructor(public id: string, public title: string, public dueTime: number, public closeTime: number, public hasFinished: boolean) {
   }
 
   getTimestamp(showLateAcceptedEntry: boolean): number {
@@ -18,15 +18,19 @@ export class AssignmentEntry implements Renderable {
     return this.closeTime ? this.closeTime : MAX_TIMESTAMP;
   }
 
-  render(): [React.Component<{}, {}, any>, number][] {
-    throw "not yet implemented";
+  getID(): string {
+    return this.id;
+  }
+
+  getDueDate(): number {
+    return this.dueTime;
   }
 };
 
-export class Assignment implements Renderable {
+export class Assignment implements IEntity {
   constructor(public course: Course, public entries: Array<AssignmentEntry>, public isRead: boolean) { }
 
-  render(): [React.Component<{}, {}, any>, number][] {
-    return this.entries.map(e => e.render()).reduce((acc, val) => acc.concat(val), []);
+  getCourse(): Course {
+    return this.course;
   }
 };

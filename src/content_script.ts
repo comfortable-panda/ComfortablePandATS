@@ -1,7 +1,7 @@
 import { loadFromLocalStorage, saveHostName, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
 import { getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
-import { createMiniSakaiBtn, createFavoritesBarNotification, displayMiniSakai } from "./minisakai";
+import { createMiniSakaiBtn, createMiniSakai } from "./minisakai";
 import { addFavoritedCourseSites } from "./favorites";
 import {
   compareAndMergeAssignmentList,
@@ -17,6 +17,7 @@ import { Config, loadConfigs } from "./settings";
 import { fetchAssignment } from "./features/api/fetch";
 import { Course } from "./features/course/types";
 import { getSakaiAssignments } from "./features/assignment/getAssignment";
+import { Assignment as NewAssignment, AssignmentEntry } from './features/assignment/types';
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -47,7 +48,7 @@ export async function loadAndMergeAssignmentList(config: Config, courseSiteInfos
     for (const i of courseSiteInfos) {
       pendingList.push(getAssignmentByCourseID(config.baseURL, i.courseID));
       //DEBUG:
-      courses.push(new Course(i.courseID, i.courseName));
+      courses.push(new Course(i.courseID, i.courseName, ''));
     }
     // Wait until all assignments are fetched
     const result = await (Promise as any).allSettled(pendingList);
@@ -56,8 +57,8 @@ export async function loadAndMergeAssignmentList(config: Config, courseSiteInfos
     }
 
     //DEBUG:
-    const assignments = await getSakaiAssignments(courses);
-    console.log(assignments);
+    // const assignments = await getSakaiAssignments(courses);
+    // console.log(assignments);
 
     // Update assignment fetch timestamp
     await saveToLocalStorage("CS_AssignmentFetchTime", nowTime);
@@ -131,8 +132,17 @@ async function main() {
       isUsingCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
     );
     await addFavoritedCourseSites(config.baseURL);
-    displayMiniSakai(mergedAssignmentList, courseIDList);
-    await createFavoritesBarNotification(courseIDList, mergedAssignmentList);
+    // displayMiniSakai(mergedAssignmentList, courseIDList);
+    createMiniSakai([
+      new NewAssignment(
+        new Course('test-course-id', 'test-course-name', ''),
+        [
+          new AssignmentEntry('test-assign-id', 'test-title', 10000000000000, 10000000000001, false)
+        ],
+        false
+      )
+    ]);
+    // await createFavoritesBarNotification(courseIDList, mergedAssignmentList); // TODO: fix this
 
     miniSakaiReady();
     await updateReadFlag();

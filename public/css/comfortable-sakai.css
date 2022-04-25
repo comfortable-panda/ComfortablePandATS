@@ -512,7 +512,7 @@
     cursor: pointer;
 }
 
-#cs-add-memo-btn {
+.cs-add-memo-btn {
     margin-left: 15px;
     margin-bottom: 2px;
     border: none;
