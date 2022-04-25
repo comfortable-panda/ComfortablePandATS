@@ -88,16 +88,20 @@ function MiniSakaiClose(props: { onClose: () => void }) {
 
 function MiniSakaiTabs(props: {
   onAssignment: () => void,
-  onSettings: () => void
+  onSettings: () => void,
+  selected: 'assignment' | 'settings'
 }) {
   const assignmentTab = useTranslation("tab_assignments");
   const settingsTab = useTranslation("tab_settings");
+
+  const assignmentClass = props.selected === 'assignment' ? 'cs-tab-selected' : 'cs-tab-not-selected';
+  const settingsClass = props.selected === 'settings' ? 'cs-tab-selected' : 'cs-tab-not-selected';
   return (
     <>
       <input id="assignmentTab" type="radio" name="cs-tab" onClick={props.onAssignment} />
-      <label htmlFor="assignmentTab"> {assignmentTab} </label>
+      <label htmlFor="assignmentTab" className={assignmentClass}> {assignmentTab} </label>
       <input id="settingsTab" type="radio" name="cs-tab" onClick={props.onSettings} />
-      <label htmlFor="settingsTab"> {settingsTab} </label>
+      <label htmlFor="settingsTab" className={settingsClass}> {settingsTab} </label>
     </>
   );
 }
@@ -416,6 +420,8 @@ export function MiniSakaiRoot(props: {
   const [shownTab, setShownTab] = useState<'assignment' | 'settings'>('assignment');
   const [memoBoxShown, setMemoBoxShown] = useState(false);
 
+  const assignmentTabShown = shownTab === 'assignment';
+
   return (
     <MiniSakaiContext.Provider value={{
       config: config
@@ -428,6 +434,7 @@ export function MiniSakaiRoot(props: {
           <MiniSakaiTabs
             onAssignment={() => setShownTab('assignment')}
             onSettings={() => setShownTab('settings')}
+            selected={shownTab}
           />
           {
             (shownTab === 'assignment') ?
@@ -442,7 +449,9 @@ export function MiniSakaiRoot(props: {
           }
         </>)
       )}
-      <AssignmentTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={props.entities} />
+      {assignmentTabShown ?
+        <AssignmentTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={props.entities} />
+        : null}
     </MiniSakaiContext.Provider>
   );
 }
