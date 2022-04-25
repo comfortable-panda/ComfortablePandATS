@@ -1,8 +1,13 @@
 import { Renderable } from "../../minisakai";
 import { Course } from "../course/types";
 
+const MAX_TIMESTAMP = 99999999999999;
 export class AssignmentEntry implements Renderable {
   constructor(public id: string, public title: string, public dueTime: number | null, public closeTime: number | null, public hasFinished: boolean) {
+  }
+
+  get getCloseDateTimestamp(): number {
+    return this.closeTime ? this.closeTime : MAX_TIMESTAMP;
   }
 
   render(): [React.Component<{}, {}, any>, number][] {
