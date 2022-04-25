@@ -21,7 +21,7 @@ export const decodeQuizFromArray = (data: Array<any>): Array<Quiz> => {
   const quizzes: Array<Quiz> = [];
   if (typeof data === "undefined") return quizzes;
   for (const quiz of data) {
-    const course: Course = new Course(quiz.course.id, quiz.course.name);
+    const course: Course = new Course(quiz.course.id, quiz.course.name, quiz.course.link);
     const isRead: boolean = quiz.isRead;
     const entries: Array<QuizEntry> = [];
     for (const e of quiz.entries) {

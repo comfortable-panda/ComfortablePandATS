@@ -16,6 +16,7 @@ const getBaseURL = (): string => {
 
 /* Sakai のお気に入り欄からCourseを取得する */
 export const fetchCourse = (): Array<Course> => {
+  const baseURL = getBaseURL();
   const elementCollection = document.getElementsByClassName("fav-sites-entry");
   const elements = Array.prototype.slice.call(elementCollection);
   const courses: Array<Course> = [];
@@ -26,6 +27,7 @@ export const fetchCourse = (): Array<Course> => {
       const course: Course = {
         id: m[2],
         name: name.title,
+        link: baseURL + "/portal/site/" + m[2],
       };
       courses.push(course);
     }

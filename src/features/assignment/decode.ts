@@ -22,7 +22,7 @@ export const decodeAssignmentFromArray = (data: Array<any>): Array<Assignment> =
   const assignments: Array<Assignment> = [];
   if (typeof data === "undefined") return assignments;
   for (const assignment of data) {
-    const course: Course = new Course(assignment.course.id, assignment.course.name);
+    const course: Course = new Course(assignment.course.id, assignment.course.name, assignment.course.link);
     const isRead: boolean = assignment.isRead;
     const entries: Array<AssignmentEntry> = [];
     for (const e of assignment.entries) {
