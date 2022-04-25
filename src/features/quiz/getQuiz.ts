@@ -1,8 +1,8 @@
 import { Quiz } from "./types";
+import { decodeQuizFromArray } from "./decode";
 import { Course } from "../course/types";
 import { fetchQuiz } from "../api/fetch";
 import { fromStorage } from "../storage/load";
-import { decodeQuizFromArray } from "./decode";
 import { toStorage } from "../storage/save";
 
 export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>): Promise<Array<Quiz>> => {
