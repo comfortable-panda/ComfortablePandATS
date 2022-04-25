@@ -24,21 +24,15 @@ export const fetchCourse = (): Array<Course> => {
 };
 
 /* Sakai APIから課題を取得する */
-export const fetchAssignment = (baseURL: string, courseID: string): Promise<(course: Course) => Assignment> => {
-  const queryURL = baseURL + "/direct/assignment/site/" + courseID + ".json";
+export const fetchAssignment = (baseURL: string, course: Course): Promise<Assignment> => {
+  const queryURL = baseURL + "/direct/assignment/site/" + course.id + ".json";
   return new Promise((resolve, reject) => {
     fetch(queryURL, { cache: "no-cache" })
       .then(async (response) => {
         if (response.ok) {
           const data = await response.json();
           const assignmentEntries = toAssignments(data);
-          resolve((course: Course) => {
-            return new Assignment(
-              course,
-              assignmentEntries,
-              false,
-            );
-          });
+          resolve(new Assignment(course, assignmentEntries, false));
         } else {
           reject(`Request failed: ${response.status}`);
         }
@@ -48,21 +42,15 @@ export const fetchAssignment = (baseURL: string, courseID: string): Promise<(cou
 };
 
 /* Sakai APIからクイズを取得する */
-export const fetchQuiz = (baseURL: string, courseID: string): Promise<(course: Course) => Quiz> => {
-  const queryURL = baseURL + "/direct/sam_pub/context/" + courseID + ".json";
+export const fetchQuiz = (baseURL: string, course: Course): Promise<Quiz> => {
+  const queryURL = baseURL + "/direct/sam_pub/context/" + course.id + ".json";
   return new Promise((resolve, reject) => {
     fetch(queryURL, { cache: "no-cache" })
       .then(async (response) => {
         if (response.ok) {
           const data = await response.json();
           const quizEntries = toQuizzes(data);
-          resolve((course: Course) => {
-            return new Quiz(
-              course,
-              quizEntries,
-              false,
-            );
-          });
+          resolve(new Quiz(course, quizEntries, false));
         } else {
           reject(`Request failed: ${response.status}`);
         }
