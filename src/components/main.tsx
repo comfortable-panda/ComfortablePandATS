@@ -25,6 +25,8 @@ export function MiniSakaiRoot(props: {
     const [shownTab, setShownTab] = useState<'assignment' | 'settings'>('assignment');
     const [memoBoxShown, setMemoBoxShown] = useState(false);
 
+    const entryTabShown = shownTab === 'assignment';
+
     return (
         <MiniSakaiContext.Provider value={{
             config: config
@@ -51,7 +53,9 @@ export function MiniSakaiRoot(props: {
                     }
                 </>)
             )}
-            <EntryTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={props.entities} />
+            {entryTabShown ?
+                <EntryTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={props.entities} />
+                : null}
         </MiniSakaiContext.Provider>
     );
 }
