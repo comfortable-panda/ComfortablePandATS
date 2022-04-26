@@ -33,4 +33,10 @@ export class Assignment implements IEntity {
   getCourse(): Course {
     return this.course;
   }
-};
+
+  getEntriesMap(): Map<string, AssignmentEntry> {
+    return this.entries.reduce((map, entry) => {
+      return map.set(entry.id, entry);
+    }, new Map<string, AssignmentEntry>());
+  }
+}

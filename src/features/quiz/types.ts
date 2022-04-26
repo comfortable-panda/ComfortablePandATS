@@ -1,5 +1,6 @@
 import { IEntity, IEntry } from "../../components/entryTab";
 import { Course } from "../course/types";
+import { MemoEntry } from "../memo/types";
 
 const MAX_TIMESTAMP = 99999999999999;
 export class QuizEntry implements IEntry {
@@ -32,5 +33,11 @@ export class Quiz implements IEntity {
 
   render(): [React.Component<{}, {}, any>, number][] {
     return this.entries.map(e => e.render()).reduce((acc, val) => acc.concat(val), []);
+  }
+
+  getEntriesMap(): Map<string, QuizEntry> {
+    return this.entries.reduce((map, entry) => {
+      return map.set(entry.id, entry);
+    }, new Map<string, QuizEntry>());
   }
 };
