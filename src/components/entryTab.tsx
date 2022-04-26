@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from "react";
 import { Assignment, AssignmentEntry } from "../features/assignment/types";
 import { Course } from "../features/course/types";
+import { Memo, MemoEntry } from "../features/memo/types";
 import { Quiz, QuizEntry } from "../features/quiz/types";
 import { CourseSiteInfo } from "../model";
 import { getDaysUntil, nowTime } from "../utils";
 import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";
+import MemoEntryView from "./memo";
 import QuizEntryView from "./quiz";
 
 
@@ -20,9 +22,9 @@ export interface IEntry {
 }
 
 // Every type in EntityUnion must implement IEntity
-export type EntityUnion = Assignment | Quiz;
+export type EntityUnion = Assignment | Quiz | Memo;
 // Every type in EntryUnion must implement IEntry
-export type EntryUnion = AssignmentEntry | QuizEntry; // TODO: add Quiz, Memo, ...
+export type EntryUnion = AssignmentEntry | QuizEntry | MemoEntry; // TODO: add Quiz, Memo, ...
 
 export type DueType = 'danger' | 'warning' | 'success' | 'other';
 
@@ -47,6 +49,10 @@ function MiniSakaiCourse(props: {
             } else if (entry instanceof QuizEntry) {
                 elems.push(
                     <QuizEntryView key={entry.getID()} isSubset={props.isSubset} quiz={entry} />
+                );
+            } else if (entry instanceof MemoEntry) {
+                elems.push(
+                    <MemoEntryView key={entry.getID()} isSubset={props.isSubset} memo={entry} />
                 );
             }
         }
