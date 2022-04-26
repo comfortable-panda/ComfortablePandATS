@@ -1,4 +1,4 @@
-import { IEntity, IEntry } from "../../minisakai";
+import { IEntity, IEntry } from "../../components/entryTab";
 import { Course } from "../course/types";
 
 const MAX_TIMESTAMP = 99999999999999;
