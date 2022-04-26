@@ -1,10 +1,13 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { Config, loadConfigs } from "../settings";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Config, DefaultSettings, loadConfigs } from "../settings";
 import React from 'react';
 import { useTranslation } from "./helper";
 import { formatTimestamp } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab } from "./entryTab";
+import { SettingsChange, SettingsTab } from "./settings";
+import _ from 'lodash';
+import { saveToLocalStorage } from "../storage";
 
 export const MiniSakaiContext = React.createContext<{
     config: Config | null
@@ -26,6 +29,33 @@ export function MiniSakaiRoot(props: {
     const [memoBoxShown, setMemoBoxShown] = useState(false);
 
     const entryTabShown = shownTab === 'assignment';
+    const settingsTabShown = shownTab === 'settings';
+
+    const onSettingsChange = useCallback((change: SettingsChange) => {
+        if (config === null) return;
+        const copiedConfig = _.cloneDeep(config);
+
+        if (change.type === 'reset-color') {
+            const colorList = [
+                "topColorDanger", "topColorWarning", "topColorSuccess",
+                "miniColorDanger", "miniColorWarning", "miniColorSuccess"
+            ];
+            for (const k of colorList) {
+                (copiedConfig.CSsettings as any)[k] = (DefaultSettings as any)[k];
+            }
+            saveToLocalStorage("CS_Settings", copiedConfig.CSsettings)
+            .then(() => {
+                setConfig(copiedConfig);
+            });
+            return;
+        }
+
+        (copiedConfig.CSsettings as any)[change.id] = change.newValue;
+        saveToLocalStorage("CS_Settings", copiedConfig.CSsettings)
+        .then(() => {
+            setConfig(copiedConfig);
+        });
+    }, [config]);
 
     return (
         <MiniSakaiContext.Provider value={{
@@ -56,6 +86,9 @@ export function MiniSakaiRoot(props: {
             {entryTabShown ?
                 <EntryTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={props.entities} />
                 : null}
+            {settingsTabShown && config !== null ?
+                <SettingsTab config={config} onSettingsChange={onSettingsChange} /> : null
+            }
         </MiniSakaiContext.Provider>
     );
 }
