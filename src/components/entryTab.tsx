@@ -1,14 +1,17 @@
 import React, { useMemo, useState } from "react";
 import { Assignment, AssignmentEntry } from "../features/assignment/types";
 import { Course } from "../features/course/types";
+import { Quiz, QuizEntry } from "../features/quiz/types";
 import { CourseSiteInfo } from "../model";
 import { getDaysUntil, nowTime } from "../utils";
 import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";
+import QuizEntryView from "./quiz";
 
 
-export interface IEntity {
+export interface IEntity<T extends EntryUnion> {
     getCourse(): Course
+    getEntries(): T[]
 }
 
 export interface IEntry {
@@ -16,8 +19,10 @@ export interface IEntry {
     getID(): string
 }
 
-export type EntityUnion = Assignment;
-export type EntryUnion = AssignmentEntry; // TODO: add Quiz, Memo, ...
+// Every type in EntityUnion must implement IEntity
+export type EntityUnion = Assignment | Quiz;
+// Every type in EntryUnion must implement IEntry
+export type EntryUnion = AssignmentEntry | QuizEntry; // TODO: add Quiz, Memo, ...
 
 export type DueType = 'danger' | 'warning' | 'success' | 'other';
 
@@ -38,6 +43,10 @@ function MiniSakaiCourse(props: {
             if (entry instanceof AssignmentEntry) {
                 elems.push(
                     <AssignmentEntryView key={entry.getID()} isSubset={props.isSubset} assignment={entry} />
+                );
+            } else if (entry instanceof QuizEntry) {
+                elems.push(
+                    <QuizEntryView key={entry.getID()} isSubset={props.isSubset} quiz={entry} />
                 );
             }
         }

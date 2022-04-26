@@ -24,8 +24,11 @@ export class QuizEntry implements IEntry {
   }
 };
 
-export class Quiz implements IEntity {
+export class Quiz implements IEntity<QuizEntry> {
   constructor(public course: Course, public entries: Array<QuizEntry>, public isRead: boolean) { }
+  getEntries(): QuizEntry[] {
+    return this.entries;
+  }
   getCourse(): Course {
     return this.course;
   }

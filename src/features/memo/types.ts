@@ -26,8 +26,11 @@ export class MemoEntry implements IEntry {
 };
 
 
-export class Memo implements IEntity {
+export class Memo implements IEntity<MemoEntry> {
   constructor(public course: Course, public entries: Array<MemoEntry>) { }
+  getEntries(): MemoEntry[] {
+    return this.entries;
+  }
   getCourse(): Course {
     return this.course;
   }

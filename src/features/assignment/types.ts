@@ -27,8 +27,11 @@ export class AssignmentEntry implements IEntry {
   }
 };
 
-export class Assignment implements IEntity {
+export class Assignment implements IEntity<AssignmentEntry> {
   constructor(public course: Course, public entries: Array<AssignmentEntry>, public isRead: boolean) { }
+  getEntries(): AssignmentEntry[] {
+    return this.entries;
+  }
 
   getCourse(): Course {
     return this.course;
