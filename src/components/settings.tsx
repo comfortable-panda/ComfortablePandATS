@@ -156,6 +156,7 @@ function BooleanItem(props: {
             display={props.display ?? true}
             labelClass="cs-toggle-btn">
             <input type="checkbox" checked={props.value} onChange={(ev) => props.onChange(ev.target.checked)}></input>
+            <span className="cs-toggle-slider round"></span>
         </SettingsItem>
     );
 }
