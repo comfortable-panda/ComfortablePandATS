@@ -18,7 +18,7 @@ import { fetchAssignment } from "./features/api/fetch";
 import { Course } from "./features/course/types";
 import { getSakaiAssignments } from "./features/assignment/getAssignment";
 import { Assignment as NewAssignment, AssignmentEntry } from './features/assignment/types';
-import { mergeAssignment } from "./features/merge";
+import { mergeAssignmentEntry } from "./features/merge";
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -172,5 +172,5 @@ const b = new NewAssignment(
   false
 );
 console.log("original: ", a);
-const merge = mergeAssignment(a.getEntriesMap(), b.getEntriesMap());
+const merge = mergeAssignmentEntry(a.getEntriesMap(), b.getEntriesMap());
 console.log("merge", merge);

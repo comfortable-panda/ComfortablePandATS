@@ -1,13 +1,35 @@
 import { Assignment, AssignmentEntry } from "../assignment/types";
+import { MemoEntry } from "../memo/types";
 
-export const mergeAssignment = (oldEntryMap: Map<string, AssignmentEntry>, newEntryMap: Map<string, AssignmentEntry>): Array<AssignmentEntry> => {
+const getEntitiesMap = (entities: Array<Assignment>): Map<string, Assignment> => {
+  return entities.reduce((map, entity) => {
+    return map.set(entity.course.id, entity);
+  }, new Map<string, Assignment>());
+};
+
+export const mergeAssignment = (oldEntities: Array<Assignment>, newEntities: Array<Assignment>): Array<Assignment> => {
+  const arr: Array<Assignment> = [];
+  const oldEntitiesMap = getEntitiesMap(oldEntities);
+  const newEntitiesMap = getEntitiesMap(newEntities);
+  newEntitiesMap.forEach((entity, id) => {
+    const oldEntity = oldEntitiesMap.get(id);
+    if (oldEntity !== undefined) {
+      entity.entries = mergeAssignmentEntry(oldEntity.getEntriesMap(), entity.getEntriesMap());
+      entity.isRead = oldEntity.isRead;
+    }
+    arr.push(entity);
+  });
+  return arr;
+};
+
+export const mergeAssignmentEntry = (oldEntryMap: Map<string, AssignmentEntry>, newEntryMap: Map<string, AssignmentEntry>): Array<AssignmentEntry> => {
   const arr: Array<AssignmentEntry> = [];
-  newEntryMap.forEach((assignment, id) => {
+  newEntryMap.forEach((entry, id) => {
     const oldEntry = oldEntryMap.get(id);
     if (oldEntry !== undefined) {
-      assignment.hasFinished = oldEntry.hasFinished;
+      entry.hasFinished = oldEntry.hasFinished;
     }
-    arr.push(assignment);
+    arr.push(entry);
   });
   return arr;
 };
