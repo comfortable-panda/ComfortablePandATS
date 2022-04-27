@@ -1,7 +1,7 @@
 import { loadFromLocalStorage, saveHostName, saveToLocalStorage } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
 import { getCourseIDList, getAssignmentByCourseID, getQuizFromCourseID } from "./network";
-import { createMiniSakaiBtn, createMiniSakai } from "./minisakai";
+import { createMiniSakaiBtn, createMiniSakai, createFavoritesBarNotification } from "./minisakai";
 import { addFavoritedCourseSites } from "./favorites";
 import {
   compareAndMergeAssignmentList,
@@ -19,6 +19,7 @@ import { Course } from "./features/course/types";
 import { getSakaiAssignments } from "./features/assignment/getAssignment";
 import { Assignment as NewAssignment, AssignmentEntry } from './features/assignment/types';
 import { mergeEntries } from "./features/merge";
+import { EntityUnion } from "./components/entryTab";
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -134,7 +135,7 @@ async function main() {
     );
     await addFavoritedCourseSites(config.baseURL);
     // displayMiniSakai(mergedAssignmentList, courseIDList);
-    createMiniSakai([
+    const entities: EntityUnion[] = [
       new NewAssignment(
         new Course('test-course-id', 'test-course-name', ''),
         [
@@ -156,8 +157,9 @@ async function main() {
         ],
         false
       )
-    ]);
-    // await createFavoritesBarNotification(courseIDList, mergedAssignmentList); // TODO: fix this
+    ];
+    createMiniSakai(entities);
+    await createFavoritesBarNotification(entities);
 
     miniSakaiReady();
     await updateReadFlag();
