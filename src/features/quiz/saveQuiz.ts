@@ -8,7 +8,7 @@ export const saveQuizzes = (hostname: string, quizzes: Array<Quiz>): Promise<str
 };
 
 export const saveQuizEntry = async (hostname: string, changedEntry: QuizEntry) => {
-  const quizzes = await fromStorage(hostname, "CS_MemoList", decodeQuizFromArray);
+  const quizzes = await fromStorage(hostname, "CS_QuizList", decodeQuizFromArray);
   LOOP:
   for (const quiz of quizzes) {
     const entries = quiz.getEntries();

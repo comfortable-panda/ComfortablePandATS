@@ -1,6 +1,7 @@
 import { Assignment, AssignmentEntry } from "./types";
 import { nowTime } from "../../utils";
 import { Course } from "../course/types";
+import { Quiz, QuizEntry } from "../quiz/types";
 
 /* Sakai APIから取得した課題をAssignmentEntryに変換する */
 export const decodeAssignmentFromAPI = (data: Record<string, any>): Array<AssignmentEntry> => {

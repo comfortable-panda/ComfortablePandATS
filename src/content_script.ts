@@ -1,4 +1,4 @@
-import { saveHostName, saveToLocalStorage } from "./storage";
+import { saveHostName } from "./storage";
 import { Assignment, CourseSiteInfo } from "./model";
 import { createMiniSakaiBtn, createMiniSakai, createFavoritesBarNotification } from "./minisakai";
 import { addFavoritedCourseSites } from "./favorites";
@@ -20,7 +20,7 @@ export let mergedAssignmentListNoMemo: Array<Assignment>;
 
 async function updateReadFlag() {
   const updatedAssignmentList = updateIsReadFlag(mergedAssignmentListNoMemo);
-  await saveToLocalStorage("CS_AssignmentList", updatedAssignmentList);
+  // await saveToLocalStorage("CS_AssignmentList", updatedAssignmentList);
 }
 
 async function main() {
@@ -29,7 +29,6 @@ async function main() {
     const config = await loadConfigs();
     await addFavoritedCourseSites(config.baseURL);
     // displayMiniSakai(mergedAssignmentList, courseIDList);
-    
     createMiniSakai();
 
     miniSakaiReady();
