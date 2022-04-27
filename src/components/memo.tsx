@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 import { MemoEntry } from "../features/memo/types";
 import { QuizEntry } from "../features/quiz/types";
 import { useTranslation, useTranslationArgsDeps } from "./helper";
@@ -6,6 +6,7 @@ import { useTranslation, useTranslationArgsDeps } from "./helper";
 export default function MemoEntryView(props: {
     memo: MemoEntry
     isSubset: boolean
+    onCheck: (checked: boolean) => void
 }) {
     const dueNotSet = useTranslation("due_not_set");
     // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime * 1000 - nowTime) / 1000);
@@ -17,14 +18,14 @@ export default function MemoEntryView(props: {
 
     const memoBadge = useTranslation('memo');
 
+    const labelId = useId();
+
     return (
         <>
             {!props.isSubset ? (
                 <>
-                    <label>
-                        {/* TODO: set oncheck handler */}
-                        <input className="cs-checkbox" type="checkbox" checked={props.memo.hasFinished} readOnly={true}></input>
-                    </label>
+                    <input id={labelId} className="cs-checkbox" type="checkbox" checked={props.memo.hasFinished} onChange={(ev)=>props.onCheck(ev.target.checked)}></input>
+                    <label htmlFor={labelId}></label>
                     <p className="cs-assignment-date">{dueDateString}</p>
                 </>
             ) : (

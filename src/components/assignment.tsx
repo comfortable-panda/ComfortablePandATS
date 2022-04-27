@@ -4,7 +4,8 @@ import React, { useId } from 'react';
 
 export default function AssignmentEntryView(props: {
     assignment: AssignmentEntry,
-    isSubset: boolean
+    isSubset: boolean,
+    onCheck: (checked: boolean) => void
 }) {
     const dueNotSet = useTranslation("due_not_set");
     // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime * 1000 - nowTime) / 1000);
@@ -20,7 +21,7 @@ export default function AssignmentEntryView(props: {
         <>
             {!props.isSubset ? (
                 <>
-                    <input id={labelId} className="cs-checkbox" type="checkbox" checked={props.assignment.hasFinished} readOnly={true}></input>
+                    <input id={labelId} className="cs-checkbox" type="checkbox" checked={props.assignment.hasFinished} onChange={(ev)=>props.onCheck(ev.target.checked)}></input>
                     <label htmlFor={labelId}></label>
                     <p className="cs-assignment-date">{dueDateString}</p>
                 </>

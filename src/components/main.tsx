@@ -17,7 +17,8 @@ export const MiniSakaiContext = React.createContext<{
 
 export function MiniSakaiRoot(props: {
     subset: boolean,
-    entities: EntityUnion[]
+    entities: EntityUnion[],
+    onCheck: (entryId: string, checked: boolean) => void
 }): JSX.Element {
     const [config, setConfig] = useState<Config | null>(null);
 
@@ -85,7 +86,7 @@ export function MiniSakaiRoot(props: {
                 </>)
             )}
             {entryTabShown ?
-                <EntryTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={props.entities} />
+                <EntryTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={props.entities} onCheck={props.onCheck} />
                 : null}
             {settingsTabShown && config !== null ?
                 <SettingsTab config={config} onSettingsChange={onSettingsChange} /> : null
