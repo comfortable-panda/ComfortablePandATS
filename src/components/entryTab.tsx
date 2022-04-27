@@ -10,12 +10,13 @@ import { useTranslation } from "./helper";
 import MemoEntryView from "./memo";
 import QuizEntryView from "./quiz";
 
-
+// TODO: Deprecated. Use `EntityProtocol` instead.
 export interface IEntity<T extends EntryUnion> {
     getCourse(): Course
     getEntries(): T[]
 }
 
+// TODO: Deprecated. Use `EntryProtocol` instead.
 export interface IEntry {
     getDueDate(): number
     getID(): string
