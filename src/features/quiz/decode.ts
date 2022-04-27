@@ -10,7 +10,7 @@ export const decodeQuizFromAPI = (data: Record<string, any>): Array<QuizEntry> =
       const entry = new QuizEntry(
         json.publishedAssessmentId,
         json.title,
-        json.dueDate ? json.dueDate / 1000 : null,
+        json.dueDate ? json.dueDate / 1000 : 999999999999,
         false,
       );
       return entry;

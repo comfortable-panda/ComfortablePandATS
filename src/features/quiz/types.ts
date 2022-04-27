@@ -1,15 +1,15 @@
 import { IEntity, IEntry } from "../../components/entryTab";
 import { Course } from "../course/types";
-import { MemoEntry } from "../memo/types";
+import { EntityProtocol, EntryProtocol } from "../entity/type";
 
 const MAX_TIMESTAMP = 99999999999999;
-export class QuizEntry implements IEntry {
-  constructor(public id: string, public title: string, public dueTime: number | null, public hasFinished: boolean) { }
+export class QuizEntry implements IEntry, EntryProtocol {
+  constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean) { }
   getID(): string {
     return this.id;
   }
   getDueDate(): number {
-    return this.dueTime ?? 9999999999999999;
+    return this.dueTime;
   }
 
   getTimestamp(): number {
@@ -25,7 +25,7 @@ export class QuizEntry implements IEntry {
   }
 };
 
-export class Quiz implements IEntity {
+export class Quiz implements IEntity, EntityProtocol {
   constructor(public course: Course, public entries: Array<QuizEntry>, public isRead: boolean) { }
   getCourse(): Course {
     return this.course;
