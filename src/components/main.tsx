@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from "./helper";
 import { formatTimestamp } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
-import { EntityUnion, EntryTab } from "./entryTab";
+import { EntityUnion, EntryTab, EntryUnion } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from 'lodash';
 import { saveToLocalStorage } from "../storage";
@@ -18,7 +18,7 @@ export const MiniSakaiContext = React.createContext<{
 export function MiniSakaiRoot(props: {
     subset: boolean,
     entities: EntityUnion[],
-    onCheck: (entryId: string, checked: boolean) => void
+    onCheck: (entryId: string, entry: EntryUnion, checked: boolean) => void
 }): JSX.Element {
     const [config, setConfig] = useState<Config | null>(null);
 

@@ -208,8 +208,8 @@ export function createMiniSakai(entityList: Array<EntityUnion>) {
   const ref = document.getElementById("toolMenuWrap");
   parent?.insertBefore(miniSakai, ref);
   const root = createRoot(miniSakai);
-  const onCheck = (entryId, checked)=>{
-
+  const onCheck = (entryId, entry, checked)=>{
+    
   };
   root.render(<MiniSakaiRoot subset={false} entities={entityList} onCheck={onCheck}/>);
 }

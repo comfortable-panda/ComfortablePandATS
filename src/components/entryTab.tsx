@@ -24,7 +24,7 @@ function MiniSakaiCourse(props: {
     entries: EntryUnion[],
     dueType: DueType,
     isSubset: boolean,
-    onCheck: (entryId: string, checked: boolean) => void
+    onCheck: (entryId: string, entry: EntryUnion, checked: boolean) => void
 }) {
     const divClass = useMemo(() => `cs-assignment-${props.dueType}`, [props.dueType]);
     const aClass = useMemo(() => `cs-course-${props.dueType} cs-course-name`, [props.dueType]);
@@ -34,15 +34,15 @@ function MiniSakaiCourse(props: {
         for (const entry of props.entries) {
             if (entry instanceof AssignmentEntry) {
                 elems.push(
-                    <AssignmentEntryView key={entry.getID()} isSubset={props.isSubset} assignment={entry} onCheck={(checked) => props.onCheck(entry.getID(), checked)} />
+                    <AssignmentEntryView key={entry.getID()} isSubset={props.isSubset} assignment={entry} onCheck={(checked) => props.onCheck(entry.getID(), entry, checked)} />
                 );
             } else if (entry instanceof QuizEntry) {
                 elems.push(
-                    <QuizEntryView key={entry.getID()} isSubset={props.isSubset} quiz={entry} onCheck={(checked) => props.onCheck(entry.getID(), checked)} />
+                    <QuizEntryView key={entry.getID()} isSubset={props.isSubset} quiz={entry} onCheck={(checked) => props.onCheck(entry.getID(), entry, checked)} />
                 );
             } else if (entry instanceof MemoEntry) {
                 elems.push(
-                    <MemoEntryView key={entry.getID()} isSubset={props.isSubset} memo={entry} onCheck={(checked) => props.onCheck(entry.getID(), checked)} />
+                    <MemoEntryView key={entry.getID()} isSubset={props.isSubset} memo={entry} onCheck={(checked) => props.onCheck(entry.getID(), entry, checked)} />
                 );
             }
         }
@@ -62,7 +62,7 @@ export function EntryTab(props: {
     isSubset: boolean,
     showMemoBox: boolean,
     entities: EntityUnion[],
-    onCheck: (entryId: string, checked: boolean) => void
+    onCheck: (entryId: string, entry: EntryUnion, checked: boolean) => void
 }) {
     type EntryWithCourse = {
         entry: EntryUnion,
@@ -216,7 +216,7 @@ function MiniSakaiEntryList(props: {
         course: Course
     }[],
     isSubset: boolean,
-    onCheck: (entryId: string, checked: boolean) => void
+    onCheck: (entryId: string, entry: EntryUnion, checked: boolean) => void
 }) {
     const className = useMemo(() => {
         const baseClass = 'cs-minisakai-list';
@@ -252,7 +252,7 @@ function MiniSakaiEntryList(props: {
                 isSubset={props.isSubset}
                 dueType={props.dueType}
                 entries={entries}
-                onCheck={(entryId, checked) => props.onCheck(entryId, checked)}
+                onCheck={(entryId, entry, checked) => props.onCheck(entryId, entry, checked)}
             />
         );
     }
