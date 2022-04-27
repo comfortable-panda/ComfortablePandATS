@@ -346,7 +346,7 @@ export async function createFavoritesBarNotification(entities: EntityProtocol[])
     isRead: boolean
   }>(); // courseID => DueCategory, isRead
   for (const [courseID, entries] of courseMap.entries()) {
-    if (entities.length === 0) continue;
+    if (entries.entries.length === 0) continue;
     const closestTime =
       entries.entries
         .filter(e => {
@@ -372,9 +372,10 @@ export async function createFavoritesBarNotification(entities: EntityProtocol[])
 
     const tabClass = dueCategoryClassMap[courseInfo.due];
     const aTagCount = defaultTab[j].getElementsByTagName("a").length;
-    for (let i=0; i<aTagCount; i++) {
+    for (let i = 0; i < aTagCount; i++) {
       defaultTab[j].getElementsByTagName("a")[i].classList.add(tabClass);
     }
+    defaultTab[j].classList.add(tabClass);
   }
 
   await overrideCSSColor();
