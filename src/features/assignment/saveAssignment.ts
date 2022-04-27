@@ -2,13 +2,14 @@ import { Assignment, AssignmentEntry } from "./types";
 import { toStorage } from "../storage/save";
 import { fromStorage } from "../storage/load";
 import { decodeAssignmentFromArray } from "./decode";
+import { AssignmentsStorage } from "../../constant";
 
 export const saveAssignments = (hostname: string, assignments: Array<Assignment>): Promise<string> => {
-  return toStorage(hostname, "CS_AssignmentList", assignments);
+  return toStorage(hostname, AssignmentsStorage, assignments);
 };
 
 export const saveAssignmentEntry = async (hostname: string, changedEntry: AssignmentEntry) => {
-  const assignments = await fromStorage(hostname, "CS_AssignmentList", decodeAssignmentFromArray);
+  const assignments = await fromStorage(hostname, AssignmentsStorage, decodeAssignmentFromArray);
   LOOP:
   for (const assignment of assignments) {
     const entries = assignment.getEntries();

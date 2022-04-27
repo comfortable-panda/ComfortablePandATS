@@ -9,6 +9,7 @@ import { getQuizzes } from "./features/quiz/getQuiz";
 import { getMemos } from "./features/memo/getMemo";
 import { fromStorage } from "./features/storage/load";
 import { getSakaiCourses } from "./features/course/getCourse";
+import { AssignmentFetchTimeStorage, QuizFetchTimeStorage } from "./constant";
 
 export const nowTime = new Date().getTime();
 
@@ -28,8 +29,8 @@ export async function getEntities(courses: Array<Course>) {
 
 export async function getLastCache() {
   const hostname = window.location.hostname;
-  const assignmentTime = await fromStorage<string>(hostname, "CS_AssignmentFetchTime", (time) => { return time as string });
-  const quizTime = await fromStorage<string>(hostname, "CS_QuizFetchTime", (time) => { return time as string });
+  const assignmentTime = await fromStorage<string>(hostname, AssignmentFetchTimeStorage, (time) => { return time as string });
+  const quizTime = await fromStorage<string>(hostname, QuizFetchTimeStorage, (time) => { return time as string });
   return {
     assignment: assignmentTime,
     quiz: quizTime,

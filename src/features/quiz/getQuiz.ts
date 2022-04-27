@@ -5,7 +5,7 @@ import { fetchQuiz } from "../api/fetch";
 import { fromStorage } from "../storage/load";
 import { toStorage } from "../storage/save";
 import { mergeEntities } from "../merge";
-import { Assignment } from "../assignment/types";
+import { QuizFetchTimeStorage, QuizzesStorage } from "../../constant";
 
 export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>): Promise<Array<Quiz>> => {
   const quizzes: Array<Quiz> = [];
@@ -17,12 +17,12 @@ export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>):
   for (const quiz of result) {
     if (quiz.status === "fulfilled") quizzes.push(quiz.value);
   }
-  await toStorage(hostname, "CS_QuizFetchTime", new Date().getTime());
+  await toStorage(hostname, QuizFetchTimeStorage, new Date().getTime());
   return quizzes;
 };
 
 export const getStoredQuizzes = (hostname: string): Promise<Array<Quiz>> => {
-  return fromStorage<Array<Quiz>>(hostname, "CS_QuizList", decodeQuizFromArray);
+  return fromStorage<Array<Quiz>>(hostname, QuizzesStorage, decodeQuizFromArray);
 };
 
 export const getQuizzes = async (hostname: string, courses: Array<Course>, useCache: boolean): Promise<Array<Quiz>> => {
@@ -30,6 +30,6 @@ export const getQuizzes = async (hostname: string, courses: Array<Course>, useCa
   const storedQuizzes = await getStoredQuizzes(hostname);
   if (useCache) return storedQuizzes;
   const merged = mergeEntities<Quiz>(storedQuizzes, sakaiQuizzes);
-  await toStorage(hostname, "CS_QuizList", merged);
+  await toStorage(hostname, QuizzesStorage, merged);
   return merged;
 };
