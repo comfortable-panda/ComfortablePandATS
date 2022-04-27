@@ -28,6 +28,7 @@ export function MiniSakaiRoot(props: {
     }, []);
 
     useEffect(() => {
+        chrome.storage.local.get(null, (e)=>{console.log(e)});
         getEntities(getCourses())
             .then((entities) => {
                 getLastCache()
