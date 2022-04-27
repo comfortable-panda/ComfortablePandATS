@@ -87,4 +87,4 @@ function getHostName(): Promise<any> {
   });
 }
 
-export { loadFromLocalStorage, loadFromLocalStorage2, saveToLocalStorage, getKeys, saveHostName, getHostName };
+export { loadFromLocalStorage, loadFromLocalStorage2, saveToLocalStorage, saveHostName, getHostName };
