@@ -4,6 +4,7 @@ import { Course } from "../course/types";
 import { fetchQuiz } from "../api/fetch";
 import { fromStorage } from "../storage/load";
 import { toStorage } from "../storage/save";
+import { mergeEntities } from "../merge";
 
 export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>): Promise<Array<Quiz>> => {
   const quizzes: Array<Quiz> = [];
@@ -21,4 +22,11 @@ export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>):
 
 export const getStoredQuizzes = (hostname: string): Promise<Array<Quiz>> => {
   return fromStorage<Array<Quiz>>(hostname, "CS_QuizList", decodeQuizFromArray);
+};
+
+export const getQuizzes = async (hostname: string, courses: Array<Course>, useCache: boolean): Promise<Array<Quiz>> => {
+  const sakaiQuizzes = await getSakaiQuizzes(hostname, courses);
+  const storedQuizzes = await getStoredQuizzes(hostname);
+  if (useCache) return storedQuizzes;
+  return mergeEntities<Quiz>(storedQuizzes, sakaiQuizzes);
 };

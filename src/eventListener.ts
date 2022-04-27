@@ -2,7 +2,7 @@ import { assignmentDiv, miniSakai } from "./dom";
 import { loadFromLocalStorage, saveToLocalStorage } from "./storage";
 import { CourseSiteInfo, Assignment, AssignmentEntry } from "./model";
 import { convertArrayToAssignment, genUniqueID, mergeIntoAssignmentList } from "./utils";
-import { courseIDList, loadAndMergeAssignmentList, mergedAssignmentListNoMemo } from "./content_script";
+import { courseIDList, mergedAssignmentListNoMemo } from "./content_script";
 import { DefaultSettings, loadConfigs } from "./settings";
 // import { createFavoritesBarNotification, deleteFavoritesBarNotification, displayMiniSakai } from "./minisakai";
 
@@ -258,7 +258,7 @@ async function editFavoritesMessage(): Promise<void> {
 async function redrawFavoritesBar(courseIDList: Array<CourseSiteInfo>, useCache: boolean): Promise<void> {
   // deleteFavoritesBarNotification();
   const config = await loadConfigs();
-  const newAssignmentList = await loadAndMergeAssignmentList(config, courseIDList, useCache, useCache);
+  // const newAssignmentList = await loadAndMergeAssignmentList(config, courseIDList, useCache, useCache);
   // await createFavoritesBarNotification(courseIDList, newAssignmentList);
 }
 

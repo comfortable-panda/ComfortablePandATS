@@ -1,23 +1,10 @@
 import { CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry, DueCategory } from "./model";
 import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime, miniSakaiReady, getSakaiTheme } from "./utils";
 import { appendChildAll, cloneElem, hamburger, miniSakai, SettingsDom } from "./dom";
-import {
-  addMemo,
-  deleteMemo,
-  toggleFinishedFlag,
-  toggleAssignmentTab,
-  toggleMemoBox,
-  toggleMiniSakai,
-  toggleSettingsTab,
-  updateSettings,
-} from "./eventListener";
 // @ts-ignore
-import Mustache from "mustache";
-import { Config, loadConfigs } from "./settings";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { loadConfigs } from "./settings";
+import React from "react";
 import { createRoot } from 'react-dom/client';
-import { AssignmentEntry, Assignment } from "./features/assignment/types";
-import { Course } from "./features/course/types";
 import { MiniSakaiRoot } from "./components/main";
 import { EntityUnion } from "./components/entryTab";
 import { EntityProtocol, EntryProtocol } from "./features/entity/type";
