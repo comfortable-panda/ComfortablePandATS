@@ -5,7 +5,7 @@
 import { Assignment, AssignmentEntry } from "../features/assignment/types";
 import { Course } from "../features/course/types";
 import { mockAssignmentEntry } from "./mock/generator";
-import { mergeAssignment, mergeAssignmentEntry } from "../features/merge";
+import { mergeEntities, mergeEntries } from "../features/merge";
 import _ from "lodash";
 
 describe("Asssignment", () => {
@@ -24,7 +24,7 @@ describe("Asssignment", () => {
       ),
     ];
     const expectAssignments = _.cloneDeep(newAssignments);
-    const mergedAssignments = mergeAssignment(oldAssignments, newAssignments);
+    const mergedAssignments = mergeEntities<Assignment>(oldAssignments, newAssignments);
     expect(mergedAssignments).toStrictEqual(expectAssignments);
   });
 
@@ -53,7 +53,7 @@ describe("Asssignment", () => {
       ),
     ];
     const expectAssignments = _.cloneDeep(newAssignments);
-    const mergedAssignments = mergeAssignment(oldAssignments, newAssignments);
+    const mergedAssignments = mergeEntities<Assignment>(oldAssignments, newAssignments);
     expect(mergedAssignments).toStrictEqual(expectAssignments);
   });
 
@@ -94,7 +94,7 @@ describe("Asssignment", () => {
         false
       ),
     ];
-    const mergedAssignments = mergeAssignment(oldAssignments, newAssignments);
+    const mergedAssignments = mergeEntities<Assignment>(oldAssignments, newAssignments);
     expect(mergedAssignments).toStrictEqual(expectAssignments);
   });
 
@@ -135,7 +135,7 @@ describe("Asssignment", () => {
         false
       ),
     ];
-    const mergedAssignments = mergeAssignment(oldAssignments, newAssignments);
+    const mergedAssignments = mergeEntities<Assignment>(oldAssignments, newAssignments);
     expect(mergedAssignments).toStrictEqual(expectAssignments);
   });
 
@@ -189,7 +189,7 @@ describe("Asssignment", () => {
         false
       ),
     ];
-    const mergedAssignments = mergeAssignment(oldAssignments, newAssignments);
+    const mergedAssignments = mergeEntities<Assignment>(oldAssignments, newAssignments);
     expect(mergedAssignments).toStrictEqual(expectAssignments);
   });
 
@@ -261,7 +261,7 @@ describe("Asssignment", () => {
         false
       ),
     ];
-    const mergedAssignments = mergeAssignment(oldAssignments, newAssignments);
+    const mergedAssignments = mergeEntities<Assignment>(oldAssignments, newAssignments);
     expect(mergedAssignments).toStrictEqual(expectAssignments);
   });
 });
