@@ -6,11 +6,12 @@ import { getDaysUntil, nowTime } from "../utils";
 import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";
 
-
+// TODO: Deprecated. Use `EntityProtocol` instead.
 export interface IEntity {
     getCourse(): Course
 }
 
+// TODO: Deprecated. Use `EntryProtocol` instead.
 export interface IEntry {
     getDueDate(): number
     getID(): string
