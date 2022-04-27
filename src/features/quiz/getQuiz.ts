@@ -16,7 +16,8 @@ export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>):
   for (const quiz of result) {
     if (quiz.status === "fulfilled") quizzes.push(quiz.value);
   }
-  toStorage(hostname, "CS_QuizFetchTime", new Date().getTime());
+  await toStorage(hostname, "CS_QuizList", quizzes);
+  await toStorage(hostname, "CS_QuizFetchTime", new Date().getTime());
   return quizzes;
 };
 

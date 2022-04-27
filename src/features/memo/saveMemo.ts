@@ -19,5 +19,5 @@ export const saveMemoEntry = async (hostname: string, changedEntry: MemoEntry) =
       }
     }
   }
-  saveMemos(hostname, memos);
+  await saveMemos(hostname, memos);
 };

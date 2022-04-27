@@ -19,5 +19,5 @@ export const saveQuizEntry = async (hostname: string, changedEntry: QuizEntry) =
       }
     }
   }
-  saveQuizzes(hostname, quizzes);
+  await saveQuizzes(hostname, quizzes);
 };

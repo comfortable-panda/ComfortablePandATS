@@ -16,7 +16,8 @@ export const getSakaiAssignments = async (hostname: string, courses: Array<Cours
   for (const assignment of result) {
     if (assignment.status === "fulfilled") assignments.push(assignment.value);
   }
-  toStorage(hostname, "CS_AssignmentFetchTime", new Date().getTime());
+  await toStorage(hostname, "CS_AssignmentList", assignments);
+  await toStorage(hostname, "CS_AssignmentFetchTime", new Date().getTime());
   return assignments;
 };
 
@@ -28,5 +29,8 @@ export const getAssignments = async (hostname: string, courses: Array<Course>, u
   const sakaiAssignments = await getSakaiAssignments(hostname, courses);
   const storedAssignments = await getStoredAssignments(hostname);
   if (useCache) return storedAssignments;
+  console.log("1", storedAssignments);
+  console.log("2", sakaiAssignments);
+  console.log("3", mergeEntities<Assignment>(storedAssignments, sakaiAssignments));
   return mergeEntities<Assignment>(storedAssignments, sakaiAssignments);
 };
