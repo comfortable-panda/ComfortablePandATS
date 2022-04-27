@@ -7,28 +7,28 @@ const getEntitiesMap = <Entity extends EntityProtocol>(entities: Array<Entity>):
 };
 
 export const mergeEntities = <Entity extends EntityProtocol>(oldEntities: Array<Entity>, newEntities: Array<Entity>): Array<Entity> => {
-  const arr: Array<Entity> = [];
-  const oldEntitiesMap = getEntitiesMap(oldEntities);
-  const newEntitiesMap = getEntitiesMap(newEntities);
-  newEntitiesMap.forEach((entity, id) => {
-    const oldEntity = oldEntitiesMap.get(id);
+  const entities: Array<Entity> = [];
+  const oldEntityMap = getEntitiesMap(oldEntities);
+  const newEntityMap = getEntitiesMap(newEntities);
+  newEntityMap.forEach((entity, id) => {
+    const oldEntity = oldEntityMap.get(id);
     if (oldEntity !== undefined) {
       entity.entries = mergeEntries(oldEntity.getEntriesMap(), entity.getEntriesMap());
       entity.isRead = oldEntity.isRead;
     }
-    arr.push(entity);
+    entities.push(entity);
   });
-  return arr;
+  return entities;
 };
 
 export const mergeEntries = <Entry extends EntryProtocol>(oldEntryMap: Map<string, Entry>, newEntryMap: Map<string, Entry>): Array<Entry> => {
-  const arr: Array<Entry> = [];
+  const entry: Array<Entry> = [];
   newEntryMap.forEach((entry, id) => {
     const oldEntry = oldEntryMap.get(id);
     if (oldEntry !== undefined) {
       entry.hasFinished = oldEntry.hasFinished;
     }
-    arr.push(entry);
+    entry.push(entry);
   });
-  return arr;
+  return entry;
 };
