@@ -14,11 +14,12 @@ import {
   isUsingCache, miniSakaiReady
 } from "./utils";
 import { Config, loadConfigs } from "./settings";
-import { fetchAssignment } from "./features/api/fetch";
 import { Course } from "./features/course/types";
-import { getSakaiAssignments } from "./features/assignment/getAssignment";
 import { Assignment as NewAssignment, AssignmentEntry } from './features/assignment/types';
-import { mergeEntries } from "./features/merge";
+import { getAssignments } from "./features/assignment/getAssignment";
+import { getQuizzes } from "./features/quiz/getQuiz";
+import { getMemos } from "./features/memo/getMemo";
+import { getSakaiCourses } from "./features/course/getCourse";
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -167,24 +168,18 @@ async function main() {
 
 main();
 
-const a = new NewAssignment(
-  new Course("", "", ""),
-  [
-    new AssignmentEntry("1", "`title1", 10, 10, true),
-    new AssignmentEntry("2", "`title2", 10, 10, true),
-    new AssignmentEntry("3", "`title3", 10, 10, true),
-  ],
-  false
-);
-const b = new NewAssignment(
-  new Course("", "", ""),
-  [
-    new AssignmentEntry("1", "`title1", 10, 10, false),
-    new AssignmentEntry("4", "`title4", 10, 10, false),
-    new AssignmentEntry("3", "`title3", 10, 10, false),
-  ],
-  false
-);
-console.log("original: ", a);
-const merge = mergeEntries(a.getEntriesMap(), b.getEntriesMap());
-console.log("merge", merge);
+function getCourses(): Array<Course> {
+  return getSakaiCourses();
+}
+
+function getEntities(courses: Array<Course>) {
+  const hostname = window.location.hostname;
+  const assignment = getAssignments(hostname, courses, false);
+  const quiz = getQuizzes(hostname, courses, false);
+  const memo = getMemos(hostname);
+  return {
+    assignment: assignment,
+    quiz: quiz,
+    memo: memo,
+  };
+}
