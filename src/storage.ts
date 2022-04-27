@@ -1,15 +1,4 @@
 /**
- * Get all keys in local storage
- */
-function getKeys(): Promise<any> {
-  return new Promise(function (resolve, reject) {
-    chrome.storage.local.get(null, function (keys: any) {
-      resolve(Object.keys(keys));
-    });
-  });
-}
-
-/**
  * Load from local storage
  * @param {string} key
  * @param {string} ifUndefinedType Can specify response type if result was undefined
@@ -98,4 +87,4 @@ function getHostName(): Promise<any> {
   });
 }
 
-export { loadFromLocalStorage, loadFromLocalStorage2, saveToLocalStorage, getKeys, saveHostName, getHostName };
+export { loadFromLocalStorage, loadFromLocalStorage2, saveToLocalStorage, saveHostName, getHostName };

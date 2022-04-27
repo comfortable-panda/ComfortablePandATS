@@ -158,77 +158,6 @@ function convertArrayToAssignment(arr: Array<any>): Array<Assignment> {
   return assignmentList;
 }
 
-/**
- * Compare old and new AssignmentList and merge them.
- * @param {Assignment[]} oldAssignmentiList
- * @param {Assignment[]} newAssignmentList
- */
-function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment> {
-  const mergedAssignmentList = [];
-
-  // Merge Assignments based on newAssignmentList
-  for (const newAssignment of newAssignmentList) {
-    const idx = oldAssignmentiList.findIndex((oldAssignment: Assignment) => {
-      return oldAssignment.courseSiteInfo.courseID === newAssignment.courseSiteInfo.courseID;
-    });
-
-    // If this courseID is **NOT** in oldAssignmentList:
-    if (idx === -1) {
-      // Since this course site has a first assignment, set isRead flags to false.
-      const isRead = newAssignment.assignmentEntries.length === 0;
-
-      // Sort and add this to AssignmentList
-      newAssignment.assignmentEntries.sort((a, b) => {
-        return a.getDueDateTimestamp - b.getDueDateTimestamp;
-      });
-      mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, newAssignment.assignmentEntries, isRead));
-    }
-
-    // If this courseID **IS** in oldAssignmentList:
-    else {
-      // Take over isRead flag
-      let isRead = oldAssignmentiList[idx].isRead;
-      // Just in case if AssignmentList is empty, set flag to true
-      if (newAssignment.assignmentEntries.length === 0) isRead = true;
-
-      const mergedAssignmentEntries = [];
-      for (const newAssignmentEntry of newAssignment.assignmentEntries) {
-        // Find if this new assignment is in old AssignmentList
-        const oldAssignment = oldAssignmentiList[idx] as Assignment;
-        const q = oldAssignment.assignmentEntries.findIndex((oldAssignmentEntry) => {
-          return oldAssignmentEntry.assignmentID === newAssignmentEntry.assignmentID;
-        });
-        // If there is same assignmentID, update it.
-        if (q === -1) {
-          // Set isRead flag to false since there might be some updates in assignment.
-          isRead = false;
-          mergedAssignmentEntries.push(newAssignmentEntry);
-        }
-        // If there is not, create a new AssignmentEntry for the course site.
-        else {
-          const entry = new AssignmentEntry(
-            newAssignmentEntry.assignmentID,
-            newAssignmentEntry.assignmentTitle,
-            newAssignmentEntry.dueDateTimestamp,
-            newAssignmentEntry.closeDateTimestamp,
-            newAssignmentEntry.isMemo,
-            oldAssignment.assignmentEntries[q].isFinished,
-            newAssignmentEntry.isQuiz,
-            newAssignmentEntry.assignmentDetail
-          );
-          entry.assignmentPage = newAssignmentEntry.assignmentPage;
-          mergedAssignmentEntries.push(entry);
-        }
-      }
-      // Sort AssignmentList
-      mergedAssignmentEntries.sort((a, b) => {
-        return a.getDueDateTimestamp - b.getDueDateTimestamp;
-      });
-      mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, mergedAssignmentEntries, isRead));
-    }
-  }
-  return mergedAssignmentList;
-}
 
 /**
  * Merge Assignments, Quizzes, Memos together.
@@ -265,16 +194,6 @@ function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment
     if (a.closestDueDateTimestamp < b.closestDueDateTimestamp) return -1;
     return 0;
   });
-}
-
-/**
- * Decides whether to use cache
- * @param {number | undefined} fetchedTime
- * @param {number} cacheInterval
- */
-function isUsingCache(fetchedTime: number | undefined, cacheInterval: number): boolean {
-  if (fetchedTime) return (nowTime - fetchedTime) / 1000 <= cacheInterval;
-  else return false;
 }
 
 /**
@@ -317,8 +236,6 @@ export {
   miniSakaiReady,
   convertArrayToSettings,
   convertArrayToAssignment,
-  compareAndMergeAssignmentList,
-  isUsingCache,
   genUniqueID,
   mergeIntoAssignmentList,
   sortAssignmentList,
