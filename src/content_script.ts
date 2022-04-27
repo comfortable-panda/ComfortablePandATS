@@ -20,6 +20,7 @@ import { getAssignments } from "./features/assignment/getAssignment";
 import { getQuizzes } from "./features/quiz/getQuiz";
 import { getMemos } from "./features/memo/getMemo";
 import { getSakaiCourses } from "./features/course/getCourse";
+import { fromStorage } from "./features/storage/load";
 
 export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentList: Array<Assignment>;
@@ -127,12 +128,12 @@ async function main() {
     createMiniSakaiBtn();
     const config = await loadConfigs();
     await loadCourseIDList();
-    mergedAssignmentList = await loadAndMergeAssignmentList(
-      config,
-      courseIDList,
-      isUsingCache(config.fetchedTime.assignment, config.cacheInterval.assignment),
-      isUsingCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
-    );
+    // mergedAssignmentList = await loadAndMergeAssignmentList(
+    //   config,
+    //   courseIDList,
+    //   isUsingCache(config.fetchedTime.assignment, config.cacheInterval.assignment),
+    //   isUsingCache(config.fetchedTime.quiz, config.cacheInterval.quiz)
+    // );
     await addFavoritedCourseSites(config.baseURL);
     // displayMiniSakai(mergedAssignmentList, courseIDList);
     createMiniSakai([
@@ -163,20 +164,34 @@ async function main() {
     miniSakaiReady();
     await updateReadFlag();
     await saveHostName();
+
+    await getEntities(getCourses());
+    await getLastCache();
   }
 }
 
 main();
 
+async function getLastCache() {
+  const hostname = window.location.hostname;
+  const assignmentTime = await fromStorage<string>(hostname, "CS_AssignmentFetchTime", (time) => { return time as string });
+  const quizTime = await fromStorage<string>(hostname, "CS_QuizFetchTime", (time) => { return time as string });
+  return {
+    assignment: assignmentTime,
+    quiz: quizTime,
+  };
+}
+
 function getCourses(): Array<Course> {
   return getSakaiCourses();
 }
 
-function getEntities(courses: Array<Course>) {
+async function getEntities(courses: Array<Course>) {
   const hostname = window.location.hostname;
-  const assignment = getAssignments(hostname, courses, false);
-  const quiz = getQuizzes(hostname, courses, false);
-  const memo = getMemos(hostname);
+  // TODO: 並列化する
+  const assignment = await getAssignments(hostname, courses, false);
+  const quiz = await getQuizzes(hostname, courses, false);
+  const memo = await getMemos(hostname);
   return {
     assignment: assignment,
     quiz: quiz,
