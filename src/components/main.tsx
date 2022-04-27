@@ -125,9 +125,9 @@ function MiniSakaiTabs(props: {
     const settingsChecked = props.selection === 'settings';
     return (
         <>
-            <input id="assignmentTab" type="radio" name="cs-tab" onClick={props.onAssignment} checked={assignmentChecked} />
+            <input id="assignmentTab" type="radio" name="cs-tab" onClick={props.onAssignment} defaultChecked={assignmentChecked} />
             <label htmlFor="assignmentTab"> {assignmentTab} </label>
-            <input id="settingsTab" type="radio" name="cs-tab" onClick={props.onSettings} checked={settingsChecked} />
+            <input id="settingsTab" type="radio" name="cs-tab" onClick={props.onSettings} defaultChecked={settingsChecked} />
             <label htmlFor="settingsTab"> {settingsTab} </label>
         </>
     );
