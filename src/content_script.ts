@@ -17,7 +17,7 @@ import { Config, loadConfigs } from "./settings";
 import { Course } from "./features/course/types";
 import { Assignment as NewAssignment, AssignmentEntry } from './features/assignment/types';
 import { Quiz as NewQuiz, QuizEntry } from './features/quiz/types';
-import { Memo as NewMemo, MemoEntry } from './features/quiz/types';
+import { Memo as NewMemo, MemoEntry } from './features/memo/types';
 import { getAssignments } from "./features/assignment/getAssignment";
 import { getQuizzes } from "./features/quiz/getQuiz";
 import { getMemos } from "./features/memo/getMemo";
@@ -138,37 +138,39 @@ async function main() {
     // );
     await addFavoritedCourseSites(config.baseURL);
     // displayMiniSakai(mergedAssignmentList, courseIDList);
-    createMiniSakai([
-      new NewAssignment(
-        new Course('test-course-id', 'test-course-name', ''),
-        [
-          new AssignmentEntry('test-assign-id', 'test-title', 10000000000000, 10000000000001, false)
-        ],
-        false
-      ),
-      new NewAssignment(
-        new Course('test-course-id', 'test-course-name', ''),
-        [
-          new AssignmentEntry('test-assign-id3', 'test-titlefoobar', 10000000000003, 10000000000004, false)
-        ],
-        false
-      ),
-      new NewAssignment(
-        new Course('test-course-id2', 'test-course-name2', ''),
-        [
-          new AssignmentEntry('test-assign-ida46bhs346h', 'test-titasfvsflefoobar', 10000000000005, 10000000000006, false)
-        ],
-        false
-      )
-    ]);
+    const entities = await getEntities(getCourses());
+    await getLastCache();
+    console.log("entities", entities);
+    createMiniSakai([...entities.assignment, ...entities.quiz, ...entities.memo]);
+
+    // createMiniSakai([
+    //   new NewAssignment(
+    //     new Course('test-course-id', 'test-course-name', ''),
+    //     [
+    //       new AssignmentEntry('test-assign-id', 'test-title', 10000000000000, 10000000000001, false)
+    //     ],
+    //     false
+    //   ),
+    //   new NewAssignment(
+    //     new Course('test-course-id', 'test-course-name', ''),
+    //     [
+    //       new AssignmentEntry('test-assign-id3', 'test-titlefoobar', 10000000000003, 10000000000004, false)
+    //     ],
+    //     false
+    //   ),
+    //   new NewAssignment(
+    //     new Course('test-course-id2', 'test-course-name2', ''),
+    //     [
+    //       new AssignmentEntry('test-assign-ida46bhs346h', 'test-titasfvsflefoobar', 10000000000005, 10000000000006, false)
+    //     ],
+    //     false
+    //   )
+    // ]);
     // await createFavoritesBarNotification(courseIDList, mergedAssignmentList); // TODO: fix this
 
     miniSakaiReady();
     await updateReadFlag();
     await saveHostName();
-
-    await getEntities(getCourses());
-    await getLastCache();
   }
 }
 
