@@ -1,9 +1,8 @@
-import { IEntity, IEntry } from "../../components/entryTab";
 import { Course } from "../course/types";
 import { EntityProtocol, EntryProtocol } from "../entity/type";
 
 const MAX_TIMESTAMP = 99999999999999;
-export class MemoEntry implements IEntry, EntryProtocol {
+export class MemoEntry implements EntryProtocol {
   constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean) { }
 
   getID(): string {
@@ -27,7 +26,7 @@ export class MemoEntry implements IEntry, EntryProtocol {
 };
 
 
-export class Memo implements IEntity<MemoEntry>, EntityProtocol {
+export class Memo implements EntityProtocol {
   readonly isRead = true;
 
   constructor(public course: Course, public entries: Array<MemoEntry>) { }
