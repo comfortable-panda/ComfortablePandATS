@@ -141,6 +141,20 @@ async function main() {
           new AssignmentEntry('test-assign-id', 'test-title', 10000000000000, 10000000000001, false)
         ],
         false
+      ),
+      new NewAssignment(
+        new Course('test-course-id', 'test-course-name', ''),
+        [
+          new AssignmentEntry('test-assign-id3', 'test-titlefoobar', 10000000000003, 10000000000004, false)
+        ],
+        false
+      ),
+      new NewAssignment(
+        new Course('test-course-id2', 'test-course-name2', ''),
+        [
+          new AssignmentEntry('test-assign-ida46bhs346h', 'test-titasfvsflefoobar', 10000000000005, 10000000000006, false)
+        ],
+        false
       )
     ]);
     // await createFavoritesBarNotification(courseIDList, mergedAssignmentList); // TODO: fix this
