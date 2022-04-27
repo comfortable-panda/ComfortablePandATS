@@ -4,6 +4,7 @@ import { Course } from "../course/types";
 import { fetchAssignment } from "../api/fetch";
 import { fromStorage } from "../storage/load";
 import { toStorage } from "../storage/save";
+import { mergeEntities } from "../merge";
 
 export const getSakaiAssignments = async (hostname: string, courses: Array<Course>): Promise<Array<Assignment>> => {
   const assignments: Array<Assignment> = [];
@@ -21,4 +22,11 @@ export const getSakaiAssignments = async (hostname: string, courses: Array<Cours
 
 export const getStoredAssignments = (hostname: string): Promise<Array<Assignment>> => {
   return fromStorage<Array<Assignment>>(hostname, "CS_AssignmentList", decodeAssignmentFromArray);
+};
+
+export const getAssignments = async (hostname: string, courses: Array<Course>, useCache: boolean): Promise<Array<Assignment>> => {
+  const sakaiAssignments = await getSakaiAssignments(hostname, courses);
+  const storedAssignments = await getStoredAssignments(hostname);
+  if (useCache) return storedAssignments;
+  return mergeEntities<Assignment>(storedAssignments, sakaiAssignments);
 };
