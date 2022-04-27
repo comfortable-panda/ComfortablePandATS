@@ -1,7 +1,44 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
 import { Settings } from "./settings";
+import { Course } from "./features/course/types";
+import { Assignment as NewAssignment } from './features/assignment/types';
+import { Quiz as NewQuiz } from "./features/quiz/types";
+import { Memo as NewMemo } from "./features/memo/types";
+import { getAssignments } from "./features/assignment/getAssignment";
+import { getQuizzes } from "./features/quiz/getQuiz";
+import { getMemos } from "./features/memo/getMemo";
+import { fromStorage } from "./features/storage/load";
+import { getSakaiCourses } from "./features/course/getCourse";
 
 export const nowTime = new Date().getTime();
+
+
+export async function getEntities(courses: Array<Course>) {
+  const hostname = window.location.hostname;
+  // TODO: 並列化する
+  const assignment: Array<NewAssignment> = await getAssignments(hostname, courses, false);
+  const quiz: Array<NewQuiz> = await getQuizzes(hostname, courses, false);
+  const memo: Array<NewMemo> = await getMemos(hostname);
+  return {
+    assignment: assignment,
+    quiz: quiz,
+    memo: memo,
+  };
+}
+
+export async function getLastCache() {
+  const hostname = window.location.hostname;
+  const assignmentTime = await fromStorage<string>(hostname, "CS_AssignmentFetchTime", (time) => { return time as string });
+  const quizTime = await fromStorage<string>(hostname, "CS_QuizFetchTime", (time) => { return time as string });
+  return {
+    assignment: assignmentTime,
+    quiz: quizTime,
+  };
+}
+
+export function getCourses(): Array<Course> {
+  return getSakaiCourses();
+}
 
 /**
  * Calculate category of assignment due date

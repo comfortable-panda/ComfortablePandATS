@@ -2,12 +2,13 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Config, DefaultSettings, loadConfigs } from "../settings";
 import React from 'react';
 import { useTranslation } from "./helper";
-import { formatTimestamp } from "../utils";
+import { formatTimestamp, getCourses, getEntities, getLastCache } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from 'lodash';
 import { saveToLocalStorage } from "../storage";
+import { createFavoritesBarNotification } from "../minisakai";
 
 export const MiniSakaiContext = React.createContext<{
     config: Config | null
@@ -16,15 +17,40 @@ export const MiniSakaiContext = React.createContext<{
 });
 
 export function MiniSakaiRoot(props: {
-    subset: boolean,
-    entities: EntityUnion[],
-    onCheck: (entryId: string, entry: EntryUnion, checked: boolean) => void
+    subset: boolean
 }): JSX.Element {
     const [config, setConfig] = useState<Config | null>(null);
+    const [entities, setEntities] = useState<EntityUnion[]>([]);
+    const [entityChangeTrigger, triggerEntityChange] = useState({});
 
     useEffect(() => {
         loadConfigs().then((c) => setConfig(c));
     }, []);
+
+    useEffect(() => {
+        getEntities(getCourses())
+            .then((entities) => {
+                getLastCache()
+                    .then(() => {
+                        console.log("entities", entities);
+
+                        const allEntities = [...entities.assignment, ...entities.quiz, ...entities.memo];
+                        setEntities(allEntities);
+                    });
+            });
+    }, [entityChangeTrigger]);
+
+    useEffect(() => {
+        createFavoritesBarNotification(entities);
+    }, [entities]);
+
+    const onCheck = useCallback((entry: EntryUnion, checked: boolean) => {
+        entry.hasFinished = checked;
+        entry.save(window.location.hostname)
+        .then(() => {
+            triggerEntityChange({});
+        });
+    }, [setEntities, triggerEntityChange]);
 
     const [shownTab, setShownTab] = useState<'assignment' | 'settings'>('assignment');
     const [memoBoxShown, setMemoBoxShown] = useState(false);
@@ -86,7 +112,7 @@ export function MiniSakaiRoot(props: {
                 </>)
             )}
             {entryTabShown ?
-                <EntryTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={props.entities} onCheck={props.onCheck} />
+                <EntryTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={entities} onCheck={onCheck} />
                 : null}
             {settingsTabShown && config !== null ?
                 <SettingsTab config={config} onSettingsChange={onSettingsChange} /> : null

@@ -1,5 +1,6 @@
 import { Course } from "../course/types";
 import { EntityProtocol, EntryProtocol } from "../entity/type";
+import { saveAssignmentEntry } from "./saveAssignment";
 
 const MAX_TIMESTAMP = 99999999999999;
 export class AssignmentEntry implements EntryProtocol {
@@ -24,6 +25,10 @@ export class AssignmentEntry implements EntryProtocol {
 
   getDueDate(): number {
     return this.dueTime;
+  }
+
+  save(hostname: string): Promise<void> {
+      return saveAssignmentEntry(hostname, this);
   }
 };
 

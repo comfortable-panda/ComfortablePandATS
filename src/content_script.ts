@@ -29,13 +29,8 @@ async function main() {
     const config = await loadConfigs();
     await addFavoritedCourseSites(config.baseURL);
     // displayMiniSakai(mergedAssignmentList, courseIDList);
-    const entities = await getEntities(getCourses());
-    await getLastCache();
-    console.log("entities", entities);
-
-    const allEntities = [...entities.assignment, ...entities.quiz, ...entities.memo]
-    createMiniSakai(allEntities);
-    await createFavoritesBarNotification(allEntities);
+    
+    createMiniSakai();
 
     miniSakaiReady();
     await updateReadFlag();
@@ -45,29 +40,29 @@ async function main() {
 
 main();
 
-async function getLastCache() {
-  const hostname = window.location.hostname;
-  const assignmentTime = await fromStorage<string>(hostname, "CS_AssignmentFetchTime", (time) => { return time as string });
-  const quizTime = await fromStorage<string>(hostname, "CS_QuizFetchTime", (time) => { return time as string });
-  return {
-    assignment: assignmentTime,
-    quiz: quizTime,
-  };
-}
+// async function getLastCache() {
+//   const hostname = window.location.hostname;
+//   const assignmentTime = await fromStorage<string>(hostname, "CS_AssignmentFetchTime", (time) => { return time as string });
+//   const quizTime = await fromStorage<string>(hostname, "CS_QuizFetchTime", (time) => { return time as string });
+//   return {
+//     assignment: assignmentTime,
+//     quiz: quizTime,
+//   };
+// }
 
-function getCourses(): Array<Course> {
-  return getSakaiCourses();
-}
+// function getCourses(): Array<Course> {
+//   return getSakaiCourses();
+// }
 
-async function getEntities(courses: Array<Course>) {
-  const hostname = window.location.hostname;
-  // TODO: 並列化する
-  const assignment: Array<NewAssignment> = await getAssignments(hostname, courses, false);
-  const quiz: Array<NewQuiz> = await getQuizzes(hostname, courses, false);
-  const memo: Array<NewMemo> = await getMemos(hostname);
-  return {
-    assignment: assignment,
-    quiz: quiz,
-    memo: memo,
-  };
-}
+// async function getEntities(courses: Array<Course>) {
+//   const hostname = window.location.hostname;
+//   // TODO: 並列化する
+//   const assignment: Array<NewAssignment> = await getAssignments(hostname, courses, false);
+//   const quiz: Array<NewQuiz> = await getQuizzes(hostname, courses, false);
+//   const memo: Array<NewMemo> = await getMemos(hostname);
+//   return {
+//     assignment: assignment,
+//     quiz: quiz,
+//     memo: memo,
+//   };
+// }
