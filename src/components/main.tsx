@@ -44,17 +44,17 @@ export function MiniSakaiRoot(props: {
                 (copiedConfig.CSsettings as any)[k] = (DefaultSettings as any)[k];
             }
             saveToLocalStorage("CS_Settings", copiedConfig.CSsettings)
-            .then(() => {
-                setConfig(copiedConfig);
-            });
+                .then(() => {
+                    setConfig(copiedConfig);
+                });
             return;
         }
 
         (copiedConfig.CSsettings as any)[change.id] = change.newValue;
         saveToLocalStorage("CS_Settings", copiedConfig.CSsettings)
-        .then(() => {
-            setConfig(copiedConfig);
-        });
+            .then(() => {
+                setConfig(copiedConfig);
+            });
     }, [config]);
 
     return (
@@ -69,6 +69,7 @@ export function MiniSakaiRoot(props: {
                     <MiniSakaiTabs
                         onAssignment={() => setShownTab('assignment')}
                         onSettings={() => setShownTab('settings')}
+                        selection={shownTab}
                     />
                     {
                         (shownTab === 'assignment') ?
@@ -115,15 +116,18 @@ function MiniSakaiClose(props: { onClose: () => void }) {
 
 function MiniSakaiTabs(props: {
     onAssignment: () => void,
-    onSettings: () => void
+    onSettings: () => void,
+    selection: 'assignment' | 'settings'
 }) {
     const assignmentTab = useTranslation("tab_assignments");
     const settingsTab = useTranslation("tab_settings");
+    const assignmentChecked = props.selection === 'assignment';
+    const settingsChecked = props.selection === 'settings';
     return (
         <>
-            <input id="assignmentTab" type="radio" name="cs-tab" onClick={props.onAssignment} />
+            <input id="assignmentTab" type="radio" name="cs-tab" onClick={props.onAssignment} checked={assignmentChecked} />
             <label htmlFor="assignmentTab"> {assignmentTab} </label>
-            <input id="settingsTab" type="radio" name="cs-tab" onClick={props.onSettings} />
+            <input id="settingsTab" type="radio" name="cs-tab" onClick={props.onSettings} checked={settingsChecked} />
             <label htmlFor="settingsTab"> {settingsTab} </label>
         </>
     );
