@@ -1,12 +1,13 @@
-import { getSakaiTheme } from "./utils";
-import { hamburger, miniSakai } from "./dom";
+import { CourseSiteInfo, DisplayAssignment, DisplayAssignmentEntry, DueCategory } from "./model";
+import { createCourseIDMap, getDaysUntil, formatTimestamp, nowTime, miniSakaiReady, getSakaiTheme } from "./utils";
+import { appendChildAll, cloneElem, hamburger, miniSakai, SettingsDom } from "./dom";
 // @ts-ignore
-import Mustache from "mustache";
 import { loadConfigs } from "./settings";
 import React from "react";
 import { createRoot } from 'react-dom/client';
 import { MiniSakaiRoot } from "./components/main";
 import { EntityUnion } from "./components/entryTab";
+import { EntityProtocol, EntryProtocol } from "./features/entity/type";
 
 
 /**
@@ -306,62 +307,80 @@ export function createMiniSakai(entityList: Array<EntityUnion>) {
 //   createMiniSakai(mergedAssignmentList, courseSiteInfos);
 // }
 
-// /**
-//  * Add notification badge for new Assignment/Quiz
-//  */
-// async function createFavoritesBarNotification(courseSiteInfos: Array<CourseSiteInfo>, assignmentList: Array<Assignment>): Promise<void> {
-//   const config = await loadConfigs();
-//   const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
-//   const defaultTabCount = Object.keys(defaultTab).length;
+const dueCategoryClassMap: { [key in DueCategory]: string } = {
+  "due24h": "cs-tab-danger",
+  "due5d": "cs-tab-warning",
+  "due14d": "cs-tab-success",
+  "dueOver14d": "cs-tab-other",
+  "duePassed": ""
+};
 
-//   for (const courseSiteInfo of courseSiteInfos) {
-//     for (let j = 2; j < defaultTabCount; j++) {
-//       // @ts-ignore
-//       const courseID = defaultTab[j].getElementsByClassName("link-container")[0].href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
+/**
+ * Add notification badge for new Assignment/Quiz
+ */
+export async function createFavoritesBarNotification(entities: EntityProtocol[]): Promise<void> {
+  const config = await loadConfigs();
+  const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
+  const defaultTabCount = Object.keys(defaultTab).length;
 
-//       const q = assignmentList.findIndex((assignment: Assignment) => {
-//         return assignment.courseSiteInfo.courseID === courseID;
-//       });
-//       if (q !== -1) {
-//         const closestTime = (config.CSsettings.displayCheckedAssignment) ? assignmentList[q].closestDueDateTimestamp : assignmentList[q].closestDueDateTimestampExcludeFinished;
-//         if (!assignmentList[q].isRead && closestTime !== -1) {
-//           defaultTab[j].classList.add("cs-notification-badge");
-//         }
-//         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
-//         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
+  const courseMap = new Map<string, {
+    entries: EntryProtocol[],
+    isRead: boolean
+  }>(); // courseID => {EntryProtocol[], isRead}
+  for (const entity of entities) {
+    let entries = courseMap.get(entity.course.id);
+    if (entries === undefined) {
+      entries = {
+        entries: [],
+        isRead: true
+      };
+      courseMap.set(entity.course.id, entries);
+    }
 
-//         switch (daysUntilDue) {
-//           case "due24h":
-//             defaultTab[j].classList.add("cs-tab-danger");
-//             for (let i = 0; i < aTagCount; i++) {
-//               defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-danger");
-//             }
-//             break;
-//           case "due5d":
-//             defaultTab[j].classList.add("cs-tab-warning");
-//             for (let i = 0; i < aTagCount; i++) {
-//               defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-warning");
-//             }
-//             break;
-//           case "due14d":
-//             defaultTab[j].classList.add("cs-tab-success");
-//             for (let i = 0; i < aTagCount; i++) {
-//               defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-success");
-//             }
-//             break;
-//           case "dueOver14d":
-//             defaultTab[j].classList.add("cs-tab-other");
-//             for (let i = 0; i < aTagCount; i++) {
-//               defaultTab[j].getElementsByTagName("a")[i].classList.add("cs-tab-other");
-//             }
-//             break;
-//         }
-//       }
-//     }
-//   }
-//   await overrideCSSColor();
-//   overrideCSSDarkTheme();
-// }
+    entries.entries.push(...entity.entries);
+    entries.isRead = entries.isRead && entity.isRead;
+  }
+
+  const dueMap = new Map<string, {
+    due: DueCategory,
+    isRead: boolean
+  }>(); // courseID => DueCategory, isRead
+  for (const [courseID, entries] of courseMap.entries()) {
+    if (entries.entries.length === 0) continue;
+    const closestTime =
+      entries.entries
+        .filter(e => {
+          return config.CSsettings.displayCheckedAssignment || !e.hasFinished;
+        })
+        .reduce((prev, e) => Math.min(e.dueTime, prev), Number.MAX_SAFE_INTEGER);
+    const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
+    dueMap.set(courseID, {
+      due: daysUntilDue,
+      isRead: entries.isRead
+    });
+  }
+
+  for (let j = 2; j < defaultTabCount; j++) {
+    const courseID: string | undefined = (defaultTab[j].getElementsByClassName("link-container")[0] as any).href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
+    if (courseID === undefined) continue;
+    const courseInfo = dueMap.get(courseID);
+    if (courseInfo === undefined) continue;
+
+    if (!courseInfo.isRead) {
+      defaultTab[j].classList.add("cs-notification-badge");
+    }
+
+    const tabClass = dueCategoryClassMap[courseInfo.due];
+    const aTagCount = defaultTab[j].getElementsByTagName("a").length;
+    for (let i = 0; i < aTagCount; i++) {
+      defaultTab[j].getElementsByTagName("a")[i].classList.add(tabClass);
+    }
+    defaultTab[j].classList.add(tabClass);
+  }
+
+  await overrideCSSColor();
+  overrideCSSDarkTheme();
+}
 
 // /**
 //  * Delete notification badge for new Assignment/Quiz
