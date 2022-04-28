@@ -81,7 +81,8 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
  * @param {number | undefined} timestamp
  */
 function formatTimestamp(timestamp: number | undefined): string {
-    const date = new Date(timestamp ? timestamp : nowTime);
+    if (timestamp === undefined) return "---";
+    const date = new Date(timestamp);
     return (
         date.toLocaleDateString() +
         " " +

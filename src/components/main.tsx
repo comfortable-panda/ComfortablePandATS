@@ -31,9 +31,14 @@ export function MiniSakaiRoot(props: {
 
     useEffect(() => {
         (async () => {
+            const _settings = _.cloneDeep(settings);
             const entities = await getEntities(settings, getCourses());
+            // TODO: Not working
             const fetchTime = await getFetchTime(settings.appInfo.hostname);
-            settings.setFetchtime(fetchTime); // TODO: 不要かも
+            _settings.setFetchtime(fetchTime);
+            setSettings(_settings);
+            console.log("_settings", _settings);
+
             const allEntities = [...entities.assignment, ...entities.quiz, ...entities.memo];
             setEntities(allEntities);
         })();
