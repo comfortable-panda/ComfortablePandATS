@@ -1,4 +1,4 @@
-import { saveHostName } from "./features/storage/save";
+import { saveHostName } from "./features/storage";
 import { createMiniSakai, createMiniSakaiBtn } from "./minisakai";
 import { isLoggedIn, miniSakaiReady } from "./utils";
 

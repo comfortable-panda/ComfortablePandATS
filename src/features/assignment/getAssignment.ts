@@ -2,8 +2,7 @@ import { Assignment } from "./types";
 import { decodeAssignmentFromArray } from "./decode";
 import { Course } from "../course/types";
 import { fetchAssignment } from "../api/fetch";
-import { fromStorage } from "../storage/load";
-import { toStorage } from "../storage/save";
+import { toStorage, fromStorage } from "../storage";
 import { mergeEntities } from "../merge";
 import { AssignmentFetchTimeStorage, AssignmentsStorage } from "../../constant";
 

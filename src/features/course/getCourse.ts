@@ -1,7 +1,7 @@
 import { Course } from "./types";
 import { decodeCourseFromArray } from "./decode";
 import { fetchCourse } from "../api/fetch";
-import { fromStorage } from "../storage/load";
+import { fromStorage } from "../storage";
 import { CoursesStorage } from "../../constant";
 
 export const getSakaiCourses = (): Array<Course> => {

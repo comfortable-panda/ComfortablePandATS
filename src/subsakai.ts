@@ -1,4 +1,4 @@
-import { loadHostName } from "./features/storage/load";
+import { loadHostName } from "./features/storage";
 
 const subSakaiRoot = document.querySelector("#sub-sakai");
 

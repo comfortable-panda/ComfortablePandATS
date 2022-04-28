@@ -1,7 +1,6 @@
 import { Quiz, QuizEntry } from "./types";
-import { toStorage } from "../storage/save";
+import { toStorage, fromStorage } from "../storage";
 import { decodeQuizFromArray } from "./decode";
-import { fromStorage } from "../storage/load";
 import { QuizzesStorage } from "../../constant";
 
 export const saveQuizzes = (hostname: string, quizzes: Array<Quiz>): Promise<string> => {

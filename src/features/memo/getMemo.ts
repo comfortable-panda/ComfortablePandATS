@@ -1,6 +1,6 @@
 import { Memo } from "./types";
 import { decodeMemoFromArray } from "./decode";
-import { fromStorage } from "../storage/load";
+import { fromStorage } from "../storage";
 import { MemosStorage } from "../../constant";
 
 export const getStoredMemos = (hostname: string): Promise<Array<Memo>> => {

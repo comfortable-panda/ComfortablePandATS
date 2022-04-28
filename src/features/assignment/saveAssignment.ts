@@ -1,6 +1,5 @@
 import { Assignment, AssignmentEntry } from './types';
-import { toStorage } from '../storage/save';
-import { fromStorage } from '../storage/load';
+import { toStorage, fromStorage } from '../storage';
 import { decodeAssignmentFromArray } from './decode';
 import { AssignmentsStorage } from '../../constant';
 

@@ -6,7 +6,7 @@ import { Memo as NewMemo } from "./features/memo/types";
 import { getAssignments } from "./features/assignment/getAssignment";
 import { getQuizzes } from "./features/quiz/getQuiz";
 import { getMemos } from "./features/memo/getMemo";
-import { fromStorage } from "./features/storage/load";
+import { fromStorage } from "./features/storage";
 import { getSakaiCourses } from "./features/course/getCourse";
 import { AssignmentFetchTimeStorage, QuizFetchTimeStorage } from "./constant";
 import { saveAssignments } from "./features/assignment/saveAssignment";

@@ -1,6 +1,6 @@
 import { Settings } from "./types";
 import { decodeSettings } from "./decode";
-import { fromStorage } from "../storage/load";
+import { fromStorage } from "../storage";
 import { SettingsStorage } from "../../constant";
 import { getFetchTime } from "../../utils";
 
