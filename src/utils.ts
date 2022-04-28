@@ -1,5 +1,4 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
-import { Settings } from "./settings";
 import { Settings as NewSettings } from "./features/setting/types";
 import { Course } from "./features/course/types";
 import { Assignment as NewAssignment } from "./features/assignment/types";
@@ -173,25 +172,6 @@ function miniSakaiReady(): void {
 }
 
 /**
- * Convert array to Settings class
- * @param {any} arr
- */
-function convertArrayToSettings(arr: any): Settings {
-    const settings = new Settings();
-    settings.assignmentCacheInterval = arr.assignmentCacheInterval;
-    settings.quizCacheInterval = arr.quizCacheInterval;
-    settings.displayCheckedAssignment = arr.displayCheckedAssignment;
-    settings.displayLateSubmitAssignment = arr.displayLateSubmitAssignment;
-    settings.topColorDanger = arr.topColorDanger;
-    settings.topColorWarning = arr.topColorWarning;
-    settings.topColorSuccess = arr.topColorSuccess;
-    settings.miniColorDanger = arr.miniColorDanger;
-    settings.miniColorWarning = arr.miniColorWarning;
-    settings.miniColorSuccess = arr.miniColorSuccess;
-    return settings;
-}
-
-/**
  * Convert array to Assignment class
  * @param {any} arr
  */
@@ -277,7 +257,6 @@ export {
     formatTimestamp,
     isLoggedIn,
     miniSakaiReady,
-    convertArrayToSettings,
     convertArrayToAssignment,
     mergeIntoAssignmentList,
     sortAssignmentList,

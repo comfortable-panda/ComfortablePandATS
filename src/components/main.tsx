@@ -1,12 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { DefaultSettings } from "../settings";
 import { useTranslation } from "./helper";
 import { formatTimestamp, getCourses, getEntities, getFetchTime } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
-import { saveToLocalStorage } from "../storage";
 import { createFavoritesBarNotification } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
