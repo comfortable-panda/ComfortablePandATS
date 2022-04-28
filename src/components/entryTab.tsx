@@ -117,7 +117,7 @@ export function EntryTab(props: {
 
     return (
         <>
-            <AddMemoBox shown={!props.isSubset && props.showMemoBox} courseSites={[]} />
+            <AddMemoBox shown={!props.isSubset && props.showMemoBox} courses={[]} />
             {dangerElements.length === 0 ? null : (
                 <MiniSakaiEntryList
                     dueType="danger"
@@ -154,7 +154,7 @@ export function EntryTab(props: {
 // TODO
 function AddMemoBox(props: {
     shown: boolean,
-    courseSites: CourseSiteInfo[] // TODO: do not use CourseSiteInfo
+    courses: Course[] // TODO: do not use CourseSiteInfo
 }) {
     const courseName = useTranslation("todo_box_course_name");
     const memoLabel = useTranslation("todo_box_memo");
@@ -165,10 +165,10 @@ function AddMemoBox(props: {
     const [todoDue, setTodoDue] = useState("");
 
     const options = useMemo(() => {
-        return props.courseSites.map(site => {
-            return <option value={site.courseID}>{site.courseName}</option>;
+        return props.courses.map((course) => {
+            return <option value={course.id}>{course.name}</option>;
         });
-    }, [props.courseSites]);
+    }, [props.courses]);
 
     if (!props.shown) {
         return <div></div>
