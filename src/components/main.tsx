@@ -9,7 +9,7 @@ import { createFavoritesBarNotification } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
 import { saveSettings } from "../features/setting/saveSetting";
-import { addFavoritedCourseSites } from "../favorites";
+import { addFavoritedCourseSites } from "../features/favorite";
 import { getBaseURL } from "../features/api/fetch";
 
 export const MiniSakaiContext = React.createContext<{
