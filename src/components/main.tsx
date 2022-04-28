@@ -46,12 +46,11 @@ export function MiniSakaiRoot(props: {
     }, [entityChangeTrigger]);
 
     useEffect(() => {
-        createFavoritesBarNotification(settings, entities);
+        (async () => {
+            await addFavoritedCourseSites(getBaseURL());
+            await createFavoritesBarNotification(settings, entities);
+        })();
     }, [entities]);
-
-    useEffect(() => {
-        addFavoritedCourseSites(getBaseURL());
-    }, []);
 
     const onCheck = useCallback((entry: EntryUnion, checked: boolean) => {
         entry.hasFinished = checked;
