@@ -8,6 +8,8 @@ import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
 import { saveToLocalStorage } from "../storage";
 import { createFavoritesBarNotification } from "../minisakai";
+import { Settings } from "../features/setting/types";
+import { getStoredSettings } from "../features/setting/getSetting";
 
 export const MiniSakaiContext = React.createContext<{
     config: Config | null
@@ -19,17 +21,19 @@ export function MiniSakaiRoot(props: {
     subset: boolean
 }): JSX.Element {
     const [config, setConfig] = useState<Config | null>(null);
+    const [settings, setSettings] = useState<Settings>(new Settings());
     const [entities, setEntities] = useState<EntityUnion[]>([]);
     const [entityChangeTrigger, triggerEntityChange] = useState({});
 
     useEffect(() => {
         loadConfigs().then((c) => setConfig(c));
+        getStoredSettings(window.location.hostname).then((s) => setSettings(s));
     }, []);
 
     useEffect(() => {
         (async () => {
-            const entities = await getEntities(getCourses());
-            await getLastCache();
+            const entities = await getEntities(settings, getCourses());
+            // await getLastCache();
             const allEntities = [...entities.assignment, ...entities.quiz, ...entities.memo];
             setEntities(allEntities);
         })();
