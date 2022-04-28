@@ -26,27 +26,18 @@ export function MiniSakaiRoot(props: {
     const [entityChangeTrigger, triggerEntityChange] = useState({});
 
     useEffect(() => {
-        getStoredSettings(window.location.hostname).then((s) => setSettings(s));
-    }, []);
-
-    useEffect(() => {
         (async () => {
-            const _settings = _.cloneDeep(settings);
             const entities = await getEntities(settings, getCourses());
-            updateIsReadFlag(window.location.href, entities.assignment);
-            // TODO: Not working
-            const fetchTime = await getFetchTime(settings.appInfo.hostname);
-            _settings.setFetchtime(fetchTime);
-            setSettings(_settings);
-            console.log("_settings", _settings);
-
             const allEntities = [...entities.assignment, ...entities.quiz, ...entities.memo];
             setEntities(allEntities);
+            updateIsReadFlag(window.location.href, entities.assignment);
         })();
     }, [entityChangeTrigger]);
 
     useEffect(() => {
         (async () => {
+            const s = await getStoredSettings(window.location.hostname);
+            setSettings(s);
             await addFavoritedCourseSites(getBaseURL());
             await createFavoritesBarNotification(settings, entities);
         })();
