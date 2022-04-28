@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Config, DefaultSettings, loadConfigs } from "../settings";
+import { DefaultSettings } from "../settings";
 import { useTranslation } from "./helper";
 import { formatTimestamp, getCourses, getEntities, getFetchTime } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
@@ -12,21 +12,19 @@ import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
 
 export const MiniSakaiContext = React.createContext<{
-    config: Config | null
+    settings: Settings;
 }>({
-    config: null
+    settings: new Settings()
 });
 
 export function MiniSakaiRoot(props: {
     subset: boolean
 }): JSX.Element {
-    const [config, setConfig] = useState<Config | null>(null);
     const [settings, setSettings] = useState<Settings>(new Settings());
     const [entities, setEntities] = useState<EntityUnion[]>([]);
     const [entityChangeTrigger, triggerEntityChange] = useState({});
 
     useEffect(() => {
-        loadConfigs().then((c) => setConfig(c));
         getStoredSettings(window.location.hostname).then((s) => setSettings(s));
     }, []);
 
@@ -59,7 +57,6 @@ export function MiniSakaiRoot(props: {
     const settingsTabShown = shownTab === "settings";
 
     const onSettingsChange = useCallback((change: SettingsChange) => {
-        if (config === null) return;
         const copiedConfig = _.cloneDeep(config);
 
         if (change.type === "reset-color") {
@@ -82,11 +79,11 @@ export function MiniSakaiRoot(props: {
             .then(() => {
                 setConfig(copiedConfig);
             });
-    }, [config]);
+    }, [settings]);
 
     return (
         <MiniSakaiContext.Provider value={{
-            config: config
+            settings: settings
         }}>
             <MiniSakaiLogo />
             <MiniSakaiVersion />
@@ -115,8 +112,8 @@ export function MiniSakaiRoot(props: {
             {entryTabShown ?
                 <EntryTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={entities} onCheck={onCheck} />
                 : null}
-            {settingsTabShown && config !== null ?
-                <SettingsTab config={config} onSettingsChange={onSettingsChange} /> : null
+            {settingsTabShown ?
+                <SettingsTab settings={settings} onSettingsChange={onSettingsChange} /> : null
             }
         </MiniSakaiContext.Provider>
     );
@@ -132,7 +129,7 @@ function MiniSakaiLogo() {
 function MiniSakaiVersion() {
     const ctx = useContext(MiniSakaiContext);
     return (
-        <p className='cs-version'>Version {ctx.config === null ? "" : ctx.config.version}</p>
+        <p className='cs-version'>Version {ctx.settings.appInfo.version}</p>
     );
 }
 
@@ -179,13 +176,13 @@ function MiniSakaiTimeBox(props: {
 function MiniSakaiAssignmentTime() {
     const ctx = useContext(MiniSakaiContext);
     const title = useTranslation("assignment_acquisition_date");
-    const time = ctx.config === null ? "" : formatTimestamp(ctx.config.fetchedTime.assignment);
+    const time = formatTimestamp(ctx.settings.fetchTime.assignment);
     return <MiniSakaiTimeBox clazz='cs-assignment-time' title={title} time={time} />;
 }
 
 function MiniSakaiQuizTime() {
     const ctx = useContext(MiniSakaiContext);
     const title = useTranslation("testquiz_acquisition_date");
-    const time = ctx.config === null ? "" : formatTimestamp(ctx.config.fetchedTime.quiz);
+    const time = formatTimestamp(ctx.settings.fetchTime.quiz);
     return <MiniSakaiTimeBox clazz='cs-quiz-time' title={title} time={time} />;
 }

@@ -1,6 +1,6 @@
 import React from "react";
-import { Config } from "../settings";
 import { useTranslation, useTranslationArgsDeps, useTranslationDeps } from "./helper";
+import { Settings } from "../features/setting/types";
 
 export type SettingsChange = {
     type: 'number',
@@ -20,9 +20,9 @@ export type SettingsChange = {
 
 export function SettingsTab(props: {
     onSettingsChange: (change: SettingsChange) => void,
-    config: Config
+    settings: Settings
 }) {
-    let config = props.config;
+    let settings = props.settings;
 
     const topColorDangerDesc = useTranslationArgsDeps("settings_colors_hour", ["Tab Bar", "24"], []);
     const topColorWarningDesc = useTranslationArgsDeps("settings_colors_day", ["Tab Bar", "5"], []);
@@ -36,7 +36,7 @@ export function SettingsTab(props: {
         <div className="cs-settings-tab">
             <TranslatedBooleanItem
                 descriptionTag="settings_color_checked_item"
-                value={config.CSsettings.getDisplayCheckedAssignment}
+                value={settings.miniSakaiOption.showCompletedEntry}
                 onChange={(v) => props.onSettingsChange({
                     type: 'boolean',
                     id: 'displayCheckedAssignment',
@@ -44,7 +44,7 @@ export function SettingsTab(props: {
                 })} />
             <TranslatedBooleanItem
                 descriptionTag="settings_display_late_submit_assignment"
-                value={config.CSsettings.getDisplayLateSubmitAssignment}
+                value={settings.miniSakaiOption.showLateAcceptedEntry}
                 onChange={(v) => props.onSettingsChange({
                     type: 'boolean',
                     id: "displayLateSubmitAssignment",
@@ -52,7 +52,7 @@ export function SettingsTab(props: {
                 })} />
             <TranslatedNumberItem
                 descriptionTag="settings_assignment_cache"
-                value={config.CSsettings.getAssignmentCacheInterval}
+                value={settings.cacheInterval.assignment}
                 onChange={(v) => props.onSettingsChange({
                     type: 'number',
                     id: "assignmentCacheInterval",
@@ -60,7 +60,7 @@ export function SettingsTab(props: {
                 })} />
             <TranslatedNumberItem
                 descriptionTag="settings_quizzes_cache"
-                value={config.CSsettings.getQuizCacheInterval}
+                value={settings.cacheInterval.quiz}
                 onChange={(v) => props.onSettingsChange({
                     type: 'number',
                     id: "quizCahceInterval",
@@ -69,7 +69,7 @@ export function SettingsTab(props: {
 
             <StringItem
                 description={topColorDangerDesc}
-                value={config.CSsettings.getTopColorDanger}
+                value={settings.color.topDanger}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
                     id: "topColorDanger",
@@ -77,7 +77,7 @@ export function SettingsTab(props: {
                 })} />
             <StringItem
                 description={topColorWarningDesc}
-                value={config.CSsettings.getTopColorWarning}
+                value={settings.color.topWarning}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
                     id: "topColorWarning",
@@ -85,7 +85,7 @@ export function SettingsTab(props: {
                 })} />
             <StringItem
                 description={topColorSuccessDesc}
-                value={config.CSsettings.getTopColorSuccess}
+                value={settings.color.topSuccess}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
                     id: "topColorSuccess",
@@ -94,7 +94,7 @@ export function SettingsTab(props: {
 
             <StringItem
                 description={miniColorDangerDesc}
-                value={config.CSsettings.getMiniColorDanger}
+                value={settings.color.miniDanger}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
                     id: "miniColorDanger",
@@ -102,7 +102,7 @@ export function SettingsTab(props: {
                 })} />
             <StringItem
                 description={miniColorWarningDesc}
-                value={config.CSsettings.getMiniColorWarning}
+                value={settings.color.miniWarning}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
                     id: "miniColorWarning",
@@ -110,7 +110,7 @@ export function SettingsTab(props: {
                 })} />
             <StringItem
                 description={miniColorSuccessDesc}
-                value={config.CSsettings.getMiniColorSuccess}
+                value={settings.color.miniSuccess}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
                     id: "miniColorSuccess",
