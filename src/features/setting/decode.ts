@@ -7,7 +7,6 @@ export const decodeSettings = (data: any): Settings => {
     settings.fetchTime = data.fetchTime;
     settings.cacheInterval = data.cacheInterval;
     settings.miniSakaiOption = data.miniSakaiOption;
-    settings.useDarkTheme = data.useDarkTheme;
     settings.color = data.color;
     return settings;
 };
