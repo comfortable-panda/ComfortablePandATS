@@ -1,8 +1,8 @@
 import { FetchTime, Settings as NewSettings } from "./features/setting/types";
 import { Course } from "./features/course/types";
-import { Assignment as NewAssignment } from "./features/assignment/types";
-import { Quiz as NewQuiz } from "./features/quiz/types";
-import { Memo as NewMemo } from "./features/memo/types";
+import { Assignment } from "./features/assignment/types";
+import { Quiz } from "./features/quiz/types";
+import { Memo } from "./features/memo/types";
 import { getAssignments } from "./features/assignment/getAssignment";
 import { getQuizzes } from "./features/quiz/getQuiz";
 import { getMemos } from "./features/memo/getMemo";
@@ -19,9 +19,9 @@ export async function getEntities(settings: NewSettings, courses: Array<Course>)
     const hostname = settings.appInfo.hostname;
     const currentTime = settings.appInfo.currentTime;
     const fetchTime = await getFetchTime(hostname);
-    const assignment: Array<NewAssignment> = await getAssignments(hostname, courses, shouldUseCache(fetchTime.assignment, currentTime, settings.cacheInterval.assignment));
-    const quiz: Array<NewQuiz> = await getQuizzes(hostname, courses, shouldUseCache(fetchTime.quiz, currentTime, settings.cacheInterval.quiz));
-    const memo: Array<NewMemo> = await getMemos(hostname);
+    const assignment: Array<Assignment> = await getAssignments(hostname, courses, shouldUseCache(fetchTime.assignment, currentTime, settings.cacheInterval.assignment));
+    const quiz: Array<Quiz> = await getQuizzes(hostname, courses, shouldUseCache(fetchTime.quiz, currentTime, settings.cacheInterval.quiz));
+    const memo: Array<Memo> = await getMemos(hostname);
     return {
         assignment: assignment,
         quiz: quiz,
@@ -121,7 +121,7 @@ export const getCourseSiteID = (url: string): string | undefined => {
     return courseID;
 };
 
-export const updateIsReadFlag = (currentHref: string, assignments: Array<NewAssignment>) => {
+export const updateIsReadFlag = (currentHref: string, assignments: Array<Assignment>) => {
     const courseID = getCourseSiteID(currentHref);
     if (courseID === undefined) return;
     for (const assignment of assignments) {
