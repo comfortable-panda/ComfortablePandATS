@@ -42,6 +42,7 @@ const dueCategoryClassMap: { [key in DueCategory]: string } = {
  * Add notification badge for new Assignment/Quiz
  */
 export async function createFavoritesBarNotification(settings: Settings, entities: EntityProtocol[]): Promise<void> {
+    console.log("entities in create fav", entities)
     const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
     const defaultTabCount = Object.keys(defaultTab).length;
 
@@ -53,7 +54,7 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
             courseMap.set(entity.course.id, entries);
         }
         entries.entries.push(...entity.entries);
-        entries.isRead = entries.isRead && entity.isRead;
+        entries.isRead = entries.isRead && (entity.isRead || entity.entries.length === 0);
     }
 
     const dueMap = new Map<string, { due: DueCategory, isRead: boolean }>(); // courseID => DueCategory, isRead

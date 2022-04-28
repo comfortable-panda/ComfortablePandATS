@@ -1,4 +1,4 @@
-import { Assignment, CourseSiteInfo, DueCategory } from "./model";
+import { DueCategory } from "./model";
 import { FetchTime, Settings as NewSettings } from "./features/setting/types";
 import { Course } from "./features/course/types";
 import { Assignment as NewAssignment } from "./features/assignment/types";
@@ -10,6 +10,7 @@ import { getMemos } from "./features/memo/getMemo";
 import { fromStorage } from "./features/storage/load";
 import { getSakaiCourses } from "./features/course/getCourse";
 import { AssignmentFetchTimeStorage, QuizFetchTimeStorage } from "./constant";
+import { saveAssignments } from "./features/assignment/saveAssignment";
 
 export const nowTime = new Date().getTime();
 
@@ -111,7 +112,7 @@ function isLoggedIn(): boolean {
 /**
  * Get courseID of current site.
  */
-export const getSiteCourseID = (url: string): string | undefined => {
+export const getCourseSiteID = (url: string): string | undefined => {
     let courseID: string | undefined;
     const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
     if (url.match(reg)) {
@@ -120,27 +121,15 @@ export const getSiteCourseID = (url: string): string | undefined => {
     return courseID;
 };
 
-/**
- * Update new-assignment notification flags.
- * @param {Assignment[]} assignmentList
- */
-export const updateIsReadFlag = (assignmentList: Array<Assignment>): Array<Assignment> => {
-    const courseID = getSiteCourseID(location.href);
-    let updatedAssignmentList = [];
-    // TODO: Review this process
-    if (courseID && courseID.length >= 17) {
-        for (const assignment of assignmentList) {
-            if (assignment.courseSiteInfo.courseID === courseID) {
-                updatedAssignmentList.push(new Assignment(assignment.courseSiteInfo, assignment.assignmentEntries, true));
-            } else {
-                updatedAssignmentList.push(assignment);
-            }
+export const updateIsReadFlag = (currentHref: string, assignments: Array<NewAssignment>) => {
+    const courseID = getCourseSiteID(currentHref);
+    if (courseID === undefined) return;
+    for (const assignment of assignments) {
+        if (assignment.course.id === courseID && assignment.entries.length > 0) {
+            assignment.isRead = true;
+            saveAssignments(window.location.hostname, assignments);
         }
-    } else {
-        updatedAssignmentList = assignmentList;
     }
-
-    return updatedAssignmentList;
 };
 
 /**
