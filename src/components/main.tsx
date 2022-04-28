@@ -10,6 +10,7 @@ import { saveToLocalStorage } from "../storage";
 import { createFavoritesBarNotification } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
+import { saveSettings } from "../features/setting/saveSetting";
 
 export const MiniSakaiContext = React.createContext<{
     settings: Settings;
@@ -57,27 +58,21 @@ export function MiniSakaiRoot(props: {
     const settingsTabShown = shownTab === "settings";
 
     const onSettingsChange = useCallback((change: SettingsChange) => {
-        const copiedConfig = _.cloneDeep(config);
-
+        const newSettings = _.cloneDeep(settings);
         if (change.type === "reset-color") {
-            const colorList = [
-                "topColorDanger", "topColorWarning", "topColorSuccess",
-                "miniColorDanger", "miniColorWarning", "miniColorSuccess"
-            ];
-            for (const k of colorList) {
-                (copiedConfig.CSsettings as any)[k] = (DefaultSettings as any)[k];
-            }
-            saveToLocalStorage("CS_Settings", copiedConfig.CSsettings)
+            const _settings = new Settings();
+            newSettings.color = _settings.color;
+            saveSettings(settings.appInfo.hostname, newSettings)
                 .then(() => {
-                    setConfig(copiedConfig);
+                    setSettings(newSettings);
                 });
             return;
         }
 
-        (copiedConfig.CSsettings as any)[change.id] = change.newValue;
-        saveToLocalStorage("CS_Settings", copiedConfig.CSsettings)
+        _.set(newSettings, change.id, change.newValue);
+        saveSettings(settings.appInfo.hostname, newSettings)
             .then(() => {
-                setConfig(copiedConfig);
+                setSettings(newSettings);
             });
     }, [settings]);
 
