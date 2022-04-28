@@ -19,7 +19,7 @@ export async function getEntities(settings: NewSettings, courses: Array<Course>)
     // TODO: 並列化する
     const hostname = settings.appInfo.hostname;
     const currentTime = settings.appInfo.currentTime;
-    const fetchTime = await getLastCache(hostname);
+    const fetchTime = await getFetchTime(hostname);
     const assignment: Array<NewAssignment> = await getAssignments(hostname, courses, shouldUseCache(fetchTime.assignment, currentTime, settings.cacheInterval.assignment));
     const quiz: Array<NewQuiz> = await getQuizzes(hostname, courses, shouldUseCache(fetchTime.quiz, currentTime, settings.cacheInterval.quiz));
     const memo: Array<NewMemo> = await getMemos(hostname);
@@ -37,10 +37,10 @@ const decodeTimestamp = (data: any): number | undefined => {
 
 export const shouldUseCache = (fetchTime: number | undefined, currentTime: number, cacheInterval: number): boolean => {
     if (fetchTime === undefined) return false;
-    return (fetchTime - currentTime) / 1000 <= cacheInterval;
+    return (currentTime - fetchTime) / 1000 <= cacheInterval;
 };
 
-export async function getLastCache(hostname: string): Promise<FetchTime> {
+export async function getFetchTime(hostname: string): Promise<FetchTime> {
     const assignmentTime = await fromStorage<number | undefined>(hostname, AssignmentFetchTimeStorage, decodeTimestamp);
     const quizTime = await fromStorage<number | undefined>(hostname, QuizFetchTimeStorage, decodeTimestamp);
     return {

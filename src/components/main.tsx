@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Config, DefaultSettings, loadConfigs } from "../settings";
 import { useTranslation } from "./helper";
-import { formatTimestamp, getCourses, getEntities, getLastCache } from "../utils";
+import { formatTimestamp, getCourses, getEntities, getFetchTime } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
@@ -33,7 +33,8 @@ export function MiniSakaiRoot(props: {
     useEffect(() => {
         (async () => {
             const entities = await getEntities(settings, getCourses());
-            // await getLastCache();
+            const fetchTime = await getFetchTime(settings.appInfo.hostname);
+            settings.setFetchtime(fetchTime); // TODO: 不要かも
             const allEntities = [...entities.assignment, ...entities.quiz, ...entities.memo];
             setEntities(allEntities);
         })();

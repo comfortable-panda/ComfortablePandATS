@@ -65,4 +65,8 @@ export class Settings {
         textColor: this.useDarkTheme ? CSTheme.dark.textColor : CSTheme.light.textColor,
         bgColor: this.useDarkTheme ? CSTheme.dark.bgColor : CSTheme.light.bgColor
     };
+
+    setFetchtime(fetchTime: FetchTime) {
+        this.fetchTime = fetchTime;
+    }
 }
