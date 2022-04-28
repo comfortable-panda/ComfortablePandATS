@@ -6,7 +6,7 @@ import { loadConfigs } from "./settings";
 import React from "react";
 import { createRoot } from 'react-dom/client';
 import { MiniSakaiRoot } from "./components/main";
-import { EntityUnion } from "./components/entryTab";
+import { EntryUnion, EntityUnion } from "./components/entryTab";
 import { EntityProtocol, EntryProtocol } from "./features/entity/type";
 
 
@@ -203,12 +203,12 @@ export function createMiniSakaiBtn(): void {
 /**
  * Insert miniSakai into Sakai.
  */
-export function createMiniSakai(entityList: Array<EntityUnion>) {
+export function createMiniSakai() {
   const parent = document.getElementById("pageBody");
   const ref = document.getElementById("toolMenuWrap");
   parent?.insertBefore(miniSakai, ref);
   const root = createRoot(miniSakai);
-  root.render(<MiniSakaiRoot subset={false} entities={entityList} />);
+  root.render(<MiniSakaiRoot subset={false} />);
 }
 
 // /**

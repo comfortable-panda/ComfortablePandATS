@@ -1,5 +1,6 @@
 import { Course } from "../course/types";
 import { EntityProtocol, EntryProtocol } from "../entity/type";
+import { saveQuizEntry } from "./saveQuiz";
 
 const MAX_TIMESTAMP = 99999999999999;
 export class QuizEntry implements EntryProtocol {
@@ -21,6 +22,10 @@ export class QuizEntry implements EntryProtocol {
 
   render(): [React.Component<{}, {}, any>, number][] {
     throw "aaa";
+  }
+
+  save(hostname: string): Promise<void> {
+    return saveQuizEntry(hostname, this);
   }
 };
 

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useId } from 'react';
 import { QuizEntry } from "../features/quiz/types";
 import { useTranslation, useTranslationArgsDeps } from "./helper";
 
 export default function QuizEntryView(props: {
     quiz: QuizEntry,
-    isSubset: boolean
+    isSubset: boolean,
+    onCheck: (checked: boolean) => void
 }) {
     const dueNotSet = useTranslation("due_not_set");
     // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime * 1000 - nowTime) / 1000);
@@ -16,14 +17,14 @@ export default function QuizEntryView(props: {
 
     const quizBadge = useTranslation('quiz');
 
+    const labelId = useId();
+
     return (
         <>
             {!props.isSubset ? (
                 <>
-                    <label>
-                        {/* TODO: set oncheck handler */}
-                        <input className="cs-checkbox" type="checkbox" checked={props.quiz.hasFinished} readOnly={true}></input>
-                    </label>
+                    <input id={labelId} className="cs-checkbox" type="checkbox" checked={props.quiz.hasFinished} onChange={(ev)=>props.onCheck(ev.target.checked)}></input>
+                    <label htmlFor={labelId}></label>
                     <p className="cs-assignment-date">{dueDateString}</p>
                 </>
             ) : (
