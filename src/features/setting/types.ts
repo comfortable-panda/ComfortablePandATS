@@ -1,3 +1,15 @@
+type AppInfo = {
+    version: string;
+    hostname: string;
+    currentTime: number;
+    useDarkTheme: boolean;
+};
+
+export type FetchTime = {
+    assignment: number | undefined;
+    quiz: number | undefined;
+};
+
 type CacheInterval = {
     assignment: number;
     quiz: number;
@@ -15,8 +27,6 @@ type CSColor = {
     miniDanger: string;
     miniWarning: string;
     miniSuccess: string;
-    textColor: string;
-    bgColor: string;
 };
 
 const CSTheme = {
@@ -25,6 +35,16 @@ const CSTheme = {
 };
 
 export class Settings {
+    appInfo: AppInfo = {
+        version: chrome.runtime.getManifest().version,
+        hostname: window.location.hostname,
+        currentTime: new Date().getTime(),
+        useDarkTheme: false
+    };
+    fetchTime: FetchTime = {
+        assignment: undefined,
+        quiz: undefined
+    };
     cacheInterval: CacheInterval = {
         assignment: 120,
         quiz: 600
@@ -33,7 +53,6 @@ export class Settings {
         showCompletedEntry: true,
         showLateAcceptedEntry: false
     };
-    useDarkTheme = false;
     color: CSColor = {
         topDanger: "#f78989",
         topWarning: "#fdd783",
@@ -41,8 +60,17 @@ export class Settings {
         miniDanger: "#e85555",
         miniWarning: "#d7aa57",
         miniSuccess: "#62b665",
-        // 下記2つは変更不可
-        textColor: this.useDarkTheme ? CSTheme.dark.textColor : CSTheme.light.textColor,
-        bgColor: this.useDarkTheme ? CSTheme.dark.bgColor : CSTheme.light.bgColor
     };
+
+    setFetchtime(fetchTime: FetchTime) {
+        this.fetchTime = fetchTime;
+    }
+
+    getTextColor() {
+        return this.appInfo.useDarkTheme ? CSTheme.dark.textColor : CSTheme.light.textColor;
+    }
+
+    getBgColor() {
+        return this.appInfo.useDarkTheme ? CSTheme.dark.bgColor : CSTheme.light.bgColor;
+    }
 }

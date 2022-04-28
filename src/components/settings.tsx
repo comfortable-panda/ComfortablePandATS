@@ -1,6 +1,6 @@
 import React from "react";
-import { Config } from "../settings";
 import { useTranslation, useTranslationArgsDeps, useTranslationDeps } from "./helper";
+import { Settings } from "../features/setting/types";
 
 export type SettingsChange = {
     type: 'number',
@@ -20,9 +20,9 @@ export type SettingsChange = {
 
 export function SettingsTab(props: {
     onSettingsChange: (change: SettingsChange) => void,
-    config: Config
+    settings: Settings
 }) {
-    let config = props.config;
+    let settings = props.settings;
 
     const topColorDangerDesc = useTranslationArgsDeps("settings_colors_hour", ["Tab Bar", "24"], []);
     const topColorWarningDesc = useTranslationArgsDeps("settings_colors_day", ["Tab Bar", "5"], []);
@@ -36,84 +36,84 @@ export function SettingsTab(props: {
         <div className="cs-settings-tab">
             <TranslatedBooleanItem
                 descriptionTag="settings_color_checked_item"
-                value={config.CSsettings.getDisplayCheckedAssignment}
+                value={settings.miniSakaiOption.showCompletedEntry}
                 onChange={(v) => props.onSettingsChange({
                     type: 'boolean',
-                    id: 'displayCheckedAssignment',
+                    id: 'miniSakaiOption.showCompletedEntry',
                     newValue: v
                 })} />
             <TranslatedBooleanItem
                 descriptionTag="settings_display_late_submit_assignment"
-                value={config.CSsettings.getDisplayLateSubmitAssignment}
+                value={settings.miniSakaiOption.showLateAcceptedEntry}
                 onChange={(v) => props.onSettingsChange({
                     type: 'boolean',
-                    id: "displayLateSubmitAssignment",
+                    id: "miniSakaiOption.showLateAcceptedEntry",
                     newValue: v
                 })} />
             <TranslatedNumberItem
                 descriptionTag="settings_assignment_cache"
-                value={config.CSsettings.getAssignmentCacheInterval}
+                value={settings.cacheInterval.assignment}
                 onChange={(v) => props.onSettingsChange({
                     type: 'number',
-                    id: "assignmentCacheInterval",
+                    id: "cacheInterval.assignment",
                     newValue: v
                 })} />
             <TranslatedNumberItem
                 descriptionTag="settings_quizzes_cache"
-                value={config.CSsettings.getQuizCacheInterval}
+                value={settings.cacheInterval.quiz}
                 onChange={(v) => props.onSettingsChange({
                     type: 'number',
-                    id: "quizCahceInterval",
+                    id: "cacheInterval.quiz",
                     newValue: v
                 })} />
 
             <StringItem
                 description={topColorDangerDesc}
-                value={config.CSsettings.getTopColorDanger}
+                value={settings.color.topDanger}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
-                    id: "topColorDanger",
+                    id: "color.topDanger",
                     newValue: v
                 })} />
             <StringItem
                 description={topColorWarningDesc}
-                value={config.CSsettings.getTopColorWarning}
+                value={settings.color.topWarning}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
-                    id: "topColorWarning",
+                    id: "color.topWarning",
                     newValue: v
                 })} />
             <StringItem
                 description={topColorSuccessDesc}
-                value={config.CSsettings.getTopColorSuccess}
+                value={settings.color.topSuccess}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
-                    id: "topColorSuccess",
+                    id: "color.topSuccess",
                     newValue: v
                 })} />
 
             <StringItem
                 description={miniColorDangerDesc}
-                value={config.CSsettings.getMiniColorDanger}
+                value={settings.color.miniDanger}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
-                    id: "miniColorDanger",
+                    id: "color.miniDanger",
                     newValue: v
                 })} />
             <StringItem
                 description={miniColorWarningDesc}
-                value={config.CSsettings.getMiniColorWarning}
+                value={settings.color.miniWarning}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
-                    id: "miniColorWarning",
+                    id: "color.miniWarning",
                     newValue: v
                 })} />
             <StringItem
                 description={miniColorSuccessDesc}
-                value={config.CSsettings.getMiniColorSuccess}
+                value={settings.color.miniSuccess}
                 onChange={(v) => props.onSettingsChange({
                     type: 'string',
-                    id: "miniColorSuccess",
+                    id: "color.miniSuccess",
                     newValue: v
                 })} />
 

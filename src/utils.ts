@@ -1,5 +1,6 @@
 import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
 import { Settings } from "./settings";
+import { Settings as NewSettings } from "./features/setting/types";
 import { Course } from "./features/course/types";
 import { Assignment as NewAssignment } from "./features/assignment/types";
 import { Quiz as NewQuiz } from "./features/quiz/types";
@@ -10,15 +11,17 @@ import { getMemos } from "./features/memo/getMemo";
 import { fromStorage } from "./features/storage/load";
 import { getSakaiCourses } from "./features/course/getCourse";
 import { AssignmentFetchTimeStorage, QuizFetchTimeStorage } from "./constant";
+import { FetchTime } from "./features/setting/types";
 
 export const nowTime = new Date().getTime();
 
-
-export async function getEntities(courses: Array<Course>) {
-    const hostname = window.location.hostname;
+export async function getEntities(settings: NewSettings, courses: Array<Course>) {
     // TODO: 並列化する
-    const assignment: Array<NewAssignment> = await getAssignments(hostname, courses, false);
-    const quiz: Array<NewQuiz> = await getQuizzes(hostname, courses, false);
+    const hostname = settings.appInfo.hostname;
+    const currentTime = settings.appInfo.currentTime;
+    const fetchTime = await getFetchTime(hostname);
+    const assignment: Array<NewAssignment> = await getAssignments(hostname, courses, shouldUseCache(fetchTime.assignment, currentTime, settings.cacheInterval.assignment));
+    const quiz: Array<NewQuiz> = await getQuizzes(hostname, courses, shouldUseCache(fetchTime.quiz, currentTime, settings.cacheInterval.quiz));
     const memo: Array<NewMemo> = await getMemos(hostname);
     return {
         assignment: assignment,
@@ -27,14 +30,19 @@ export async function getEntities(courses: Array<Course>) {
     };
 }
 
-export async function getLastCache() {
-    const hostname = window.location.hostname;
-    const assignmentTime = await fromStorage<string>(hostname, AssignmentFetchTimeStorage, (time) => {
-        return time as string;
-    });
-    const quizTime = await fromStorage<string>(hostname, QuizFetchTimeStorage, (time) => {
-        return time as string;
-    });
+const decodeTimestamp = (data: any): number | undefined => {
+    if (data === undefined) return undefined;
+    return data as number;
+};
+
+export const shouldUseCache = (fetchTime: number | undefined, currentTime: number, cacheInterval: number): boolean => {
+    if (fetchTime === undefined) return false;
+    return (currentTime - fetchTime) / 1000 <= cacheInterval;
+};
+
+export async function getFetchTime(hostname: string): Promise<FetchTime> {
+    const assignmentTime = await fromStorage<number | undefined>(hostname, AssignmentFetchTimeStorage, decodeTimestamp);
+    const quizTime = await fromStorage<number | undefined>(hostname, QuizFetchTimeStorage, decodeTimestamp);
     return {
         assignment: assignmentTime,
         quiz: quizTime
@@ -73,7 +81,8 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
  * @param {number | undefined} timestamp
  */
 function formatTimestamp(timestamp: number | undefined): string {
-    const date = new Date(timestamp ? timestamp : nowTime);
+    if (timestamp === undefined) return "---";
+    const date = new Date(timestamp);
     return (
         date.toLocaleDateString() +
         " " +
