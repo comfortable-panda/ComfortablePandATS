@@ -3,7 +3,7 @@ import { Assignment, AssignmentEntry } from "../features/entity/assignment/types
 import { Course } from "../features/course/types";
 import { Memo, MemoEntry } from "../features/entity/memo/types";
 import { Quiz, QuizEntry } from "../features/entity/quiz/types";
-import { getDaysUntil, nowTime } from "../utils";
+import { getCourses, getDaysUntil, nowTime } from "../utils";
 import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";
 import MemoEntryView from "./memo";
@@ -116,7 +116,7 @@ export function EntryTab(props: {
 
     return (
         <>
-            <AddMemoBox shown={!props.isSubset && props.showMemoBox} courses={[]} />
+            <AddMemoBox shown={!props.isSubset && props.showMemoBox} courses={getCourses()} />
             {dangerElements.length === 0 ? null : (
                 <MiniSakaiEntryList
                     dueType="danger"
@@ -153,7 +153,7 @@ export function EntryTab(props: {
 // TODO
 function AddMemoBox(props: {
     shown: boolean,
-    courses: Course[] // TODO: do not use CourseSiteInfo
+    courses: Course[]
 }) {
     const courseName = useTranslation("todo_box_course_name");
     const memoLabel = useTranslation("todo_box_memo");
