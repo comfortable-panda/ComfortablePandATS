@@ -1,6 +1,7 @@
 type AppInfo = {
     version: string;
     hostname: string;
+    currentTime: number;
 };
 
 export type FetchTime = {
@@ -37,7 +38,8 @@ const CSTheme = {
 export class Settings {
     appInfo: AppInfo = {
         version: chrome.runtime.getManifest().version,
-        hostname: window.location.hostname
+        hostname: window.location.hostname,
+        currentTime: new Date().getTime()
     };
     fetchTime: FetchTime = {
         assignment: undefined,
