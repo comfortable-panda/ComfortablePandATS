@@ -11,6 +11,8 @@ import { createFavoritesBarNotification } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
 import { saveSettings } from "../features/setting/saveSetting";
+import { addFavoritedCourseSites } from "../favorites";
+import { getBaseURL } from "../features/api/fetch";
 
 export const MiniSakaiContext = React.createContext<{
     settings: Settings;
@@ -47,6 +49,10 @@ export function MiniSakaiRoot(props: {
     useEffect(() => {
         createFavoritesBarNotification(settings, entities);
     }, [entities]);
+
+    useEffect(() => {
+        addFavoritedCourseSites(getBaseURL());
+    }, []);
 
     const onCheck = useCallback((entry: EntryUnion, checked: boolean) => {
         entry.hasFinished = checked;

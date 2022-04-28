@@ -5,7 +5,7 @@ import { decodeAssignmentFromAPI } from "../assignment/decode";
 import { decodeQuizFromAPI } from "../quiz/decode";
 
 /* Sakai のURLを取得する */
-const getBaseURL = (): string => {
+export const getBaseURL = (): string => {
     let baseURL = "";
     const match = location.href.match("(https?://[^/]+)/portal");
     if (match) {
