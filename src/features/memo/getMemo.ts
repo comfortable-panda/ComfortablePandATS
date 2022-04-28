@@ -4,9 +4,9 @@ import { fromStorage } from "../storage/load";
 import { MemosStorage } from "../../constant";
 
 export const getStoredMemos = (hostname: string): Promise<Array<Memo>> => {
-  return fromStorage<Array<Memo>>(hostname, MemosStorage, decodeMemoFromArray);
+    return fromStorage<Array<Memo>>(hostname, MemosStorage, decodeMemoFromArray);
 };
 
 export const getMemos = async (hostname: string): Promise<Array<Memo>> => {
-  return await getStoredMemos(hostname);
+    return await getStoredMemos(hostname);
 };
