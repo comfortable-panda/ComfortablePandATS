@@ -5,7 +5,6 @@ import { addFavoritedCourseSites } from "./favorites";
 import { isLoggedIn, miniSakaiReady, updateIsReadFlag } from "./utils";
 import { loadConfigs } from "./settings";
 
-export let courseIDList: Array<CourseSiteInfo>;
 export let mergedAssignmentListNoMemo: Array<Assignment>;
 
 async function updateReadFlag() {

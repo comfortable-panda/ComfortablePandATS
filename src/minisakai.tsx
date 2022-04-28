@@ -8,7 +8,6 @@ import { createRoot } from "react-dom/client";
 import { MiniSakaiRoot } from "./components/main";
 import { EntityProtocol, EntryProtocol } from "./features/entity/type";
 
-
 /**
  * Create a button to open miniSakai
  */
