@@ -45,7 +45,7 @@ export function MiniSakaiRoot(props: {
     }, [entityChangeTrigger]);
 
     useEffect(() => {
-        createFavoritesBarNotification(entities);
+        createFavoritesBarNotification(settings, entities);
     }, [entities]);
 
     const onCheck = useCallback((entry: EntryUnion, checked: boolean) => {
