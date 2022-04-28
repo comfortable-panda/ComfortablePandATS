@@ -62,7 +62,7 @@ export const fetchQuiz = (course: Course): Promise<Quiz> => {
                 if (response.ok) {
                     const data = await response.json();
                     const quizEntries = decodeQuizFromAPI(data);
-                    resolve(new Quiz(course, quizEntries, false));
+                    resolve(new Quiz(course, quizEntries, true));
                 } else {
                     reject(`Request failed: ${response.status}`);
                 }

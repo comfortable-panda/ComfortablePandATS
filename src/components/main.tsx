@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "./helper";
-import { formatTimestamp, getCourses, getEntities, getFetchTime } from "../utils";
+import { formatTimestamp, getCourses, getEntities, getFetchTime, updateIsReadFlag } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
@@ -33,6 +33,7 @@ export function MiniSakaiRoot(props: {
         (async () => {
             const _settings = _.cloneDeep(settings);
             const entities = await getEntities(settings, getCourses());
+            updateIsReadFlag(window.location.href, entities.assignment);
             // TODO: Not working
             const fetchTime = await getFetchTime(settings.appInfo.hostname);
             _settings.setFetchtime(fetchTime);
