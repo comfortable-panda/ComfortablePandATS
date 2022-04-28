@@ -30,9 +30,10 @@ export const getAssignments = async (
     courses: Array<Course>,
     useCache: boolean
 ): Promise<Array<Assignment>> => {
-    const sakaiAssignments = await getSakaiAssignments(hostname, courses);
     const storedAssignments = await getStoredAssignments(hostname);
+    console.log("getAssignment, useCache:", useCache);
     if (useCache) return storedAssignments;
+    const sakaiAssignments = await getSakaiAssignments(hostname, courses);
     const merged = mergeEntities<Assignment>(storedAssignments, sakaiAssignments);
     await toStorage(hostname, AssignmentsStorage, merged);
     return merged;
