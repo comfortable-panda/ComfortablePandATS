@@ -5,3 +5,4 @@ export const CoursesStorage = "CS_Courses";
 export const SettingsStorage = "CS_Settings";
 export const AssignmentFetchTimeStorage = "CS_AssignmentFetchTime";
 export const QuizFetchTimeStorage = "CS_QuizFetchTime";
+export const HostnameStorage = "CS_Hostname";
