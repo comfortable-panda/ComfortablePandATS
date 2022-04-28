@@ -1,15 +1,15 @@
 import { FetchTime, Settings as NewSettings } from "./features/setting/types";
 import { Course } from "./features/course/types";
-import { Assignment } from "./features/assignment/types";
-import { Quiz } from "./features/quiz/types";
-import { Memo } from "./features/memo/types";
-import { getAssignments } from "./features/assignment/getAssignment";
-import { getQuizzes } from "./features/quiz/getQuiz";
-import { getMemos } from "./features/memo/getMemo";
+import { Assignment } from "./features/entity/assignment/types";
+import { Quiz } from "./features/entity/quiz/types";
+import { Memo } from "./features/entity/memo/types";
+import { getAssignments } from "./features/entity/assignment/getAssignment";
+import { getQuizzes } from "./features/entity/quiz/getQuiz";
+import { getMemos } from "./features/entity/memo/getMemo";
 import { fromStorage } from "./features/storage";
 import { getSakaiCourses } from "./features/course/getCourse";
 import { AssignmentFetchTimeStorage, QuizFetchTimeStorage } from "./constant";
-import { saveAssignments } from "./features/assignment/saveAssignment";
+import { saveAssignments } from "./features/entity/assignment/saveAssignment";
 
 export const nowTime = new Date().getTime();
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";

@@ -1,5 +1,5 @@
 import React, { useId } from 'react';
-import { QuizEntry } from "../features/quiz/types";
+import { QuizEntry } from "../features/entity/quiz/types";
 import { useTranslation, useTranslationArgsDeps } from "./helper";
 
 export default function QuizEntryView(props: {

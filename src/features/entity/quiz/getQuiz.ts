@@ -1,10 +1,10 @@
 import { Quiz } from "./types";
 import { decodeQuizFromArray } from "./decode";
-import { Course } from "../course/types";
-import { fetchQuiz } from "../api/fetch";
-import { toStorage, fromStorage } from "../storage";
-import { mergeEntities } from "../merge";
-import { QuizFetchTimeStorage, QuizzesStorage } from "../../constant";
+import { Course } from "../../course/types";
+import { fetchQuiz } from "../../api/fetch";
+import { toStorage, fromStorage } from "../../storage";
+import { mergeEntities } from "../../merge";
+import { QuizFetchTimeStorage, QuizzesStorage } from "../../../constant";
 
 export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>): Promise<Array<Quiz>> => {
     const quizzes: Array<Quiz> = [];

@@ -1,6 +1,6 @@
 import { Quiz, QuizEntry } from "./types";
-import { Course } from "../course/types";
-import { nowTime } from "../../utils";
+import { Course } from "../../course/types";
+import { nowTime } from "../../../utils";
 
 /* Sakai APIから取得した課題をQuizEntryに変換する */
 export const decodeQuizFromAPI = (data: Record<string, any>): Array<QuizEntry> => {

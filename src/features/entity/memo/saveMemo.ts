@@ -1,7 +1,7 @@
 import { Memo, MemoEntry } from "./types";
-import { toStorage, fromStorage } from "../storage";
+import { toStorage, fromStorage } from "../../storage";
 import { decodeMemoFromArray } from "./decode";
-import { MemosStorage } from "../../constant";
+import { MemosStorage } from "../../../constant";
 
 export const saveMemos = (hostname: string, memos: Array<Memo>): Promise<string> => {
     return toStorage(hostname, MemosStorage, memos);

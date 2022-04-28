@@ -1,6 +1,6 @@
 import React, { useId } from "react";
-import { MemoEntry } from "../features/memo/types";
-import { QuizEntry } from "../features/quiz/types";
+import { MemoEntry } from "../features/entity/memo/types";
+import { QuizEntry } from "../features/entity/quiz/types";
 import { useTranslation, useTranslationArgsDeps } from "./helper";
 
 export default function MemoEntryView(props: {

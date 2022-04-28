@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { Assignment, AssignmentEntry } from "../features/assignment/types";
+import { Assignment, AssignmentEntry } from "../features/entity/assignment/types";
 import { Course } from "../features/course/types";
 import { mockAssignmentEntry } from "./mock/generator";
 import { mergeEntities, mergeEntries } from "../features/merge";

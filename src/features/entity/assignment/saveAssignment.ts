@@ -1,7 +1,7 @@
 import { Assignment, AssignmentEntry } from './types';
-import { toStorage, fromStorage } from '../storage';
+import { toStorage, fromStorage } from '../../storage';
 import { decodeAssignmentFromArray } from './decode';
-import { AssignmentsStorage } from '../../constant';
+import { AssignmentsStorage } from '../../../constant';
 
 export const saveAssignments = (hostname: string, assignments: Array<Assignment>): Promise<string> => {
     return toStorage(hostname, AssignmentsStorage, assignments);
