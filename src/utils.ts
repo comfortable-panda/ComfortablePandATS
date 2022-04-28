@@ -235,14 +235,6 @@ function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment
 }
 
 /**
- * Generate unique ID
- * @param {string} prefix
- */
-function genUniqueID(prefix: string): string {
-  return prefix + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
-}
-
-/**
  * Get the current Sakai theme.
  * @returns 'light' or 'dark'. Returns null on failure.
  */
@@ -274,7 +266,6 @@ export {
   miniSakaiReady,
   convertArrayToSettings,
   convertArrayToAssignment,
-  genUniqueID,
   mergeIntoAssignmentList,
   sortAssignmentList,
   getSakaiTheme,
