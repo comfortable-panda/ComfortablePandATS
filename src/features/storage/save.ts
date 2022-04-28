@@ -1,3 +1,5 @@
+import { HostnameStorage } from "../../constant";
+
 export const toStorage = (hostname: string, key: string, value: any): Promise<string> => {
     const entity: { [key: string]: [value: any] } = {};
     entity[key] = value;
@@ -10,6 +12,14 @@ export const toStorage = (hostname: string, key: string, value: any): Promise<st
             chrome.storage.local.set({ [hostname]: items[hostname] }, () => {
                 resolve("saved");
             });
+        });
+    });
+};
+
+export const saveHostName = (hostname: string): Promise<string> => {
+    return new Promise(function (resolve) {
+        chrome.storage.local.set({ [HostnameStorage]: hostname }, () => {
+            resolve("saved");
         });
     });
 };
