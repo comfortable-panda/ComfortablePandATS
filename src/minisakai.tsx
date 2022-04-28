@@ -1,12 +1,11 @@
 import { DueCategory } from "./model";
 import { getDaysUntil, getSakaiTheme, nowTime } from "./utils";
 import { hamburger, miniSakai } from "./dom";
-// @ts-ignore
-import { loadConfigs } from "./settings";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { MiniSakaiRoot } from "./components/main";
 import { EntityProtocol, EntryProtocol } from "./features/entity/type";
+import { Settings } from "./features/setting/types";
 
 /**
  * Create a button to open miniSakai
@@ -42,46 +41,31 @@ const dueCategoryClassMap: { [key in DueCategory]: string } = {
 /**
  * Add notification badge for new Assignment/Quiz
  */
-export async function createFavoritesBarNotification(entities: EntityProtocol[]): Promise<void> {
-    const config = await loadConfigs();
+export async function createFavoritesBarNotification(settings: Settings, entities: EntityProtocol[]): Promise<void> {
     const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
     const defaultTabCount = Object.keys(defaultTab).length;
 
-    const courseMap = new Map<string, {
-        entries: EntryProtocol[],
-        isRead: boolean
-    }>(); // courseID => {EntryProtocol[], isRead}
+    const courseMap = new Map<string, { entries: EntryProtocol[], isRead: boolean }>(); // courseID => {EntryProtocol[], isRead}
     for (const entity of entities) {
         let entries = courseMap.get(entity.course.id);
         if (entries === undefined) {
-            entries = {
-                entries: [],
-                isRead: true
-            };
+            entries = { entries: [], isRead: true };
             courseMap.set(entity.course.id, entries);
         }
-
         entries.entries.push(...entity.entries);
         entries.isRead = entries.isRead && entity.isRead;
     }
 
-    const dueMap = new Map<string, {
-        due: DueCategory,
-        isRead: boolean
-    }>(); // courseID => DueCategory, isRead
+    const dueMap = new Map<string, { due: DueCategory, isRead: boolean }>(); // courseID => DueCategory, isRead
     for (const [courseID, entries] of courseMap.entries()) {
         if (entries.entries.length === 0) continue;
-        const closestTime =
-            entries.entries
-                .filter(e => {
-                    return config.CSsettings.displayCheckedAssignment || !e.hasFinished;
-                })
-                .reduce((prev, e) => Math.min(e.dueTime, prev), Number.MAX_SAFE_INTEGER);
+        const closestTime = entries.entries
+            .filter((e) => {
+                return settings.miniSakaiOption.showLateAcceptedEntry || !e.hasFinished;
+            })
+            .reduce((prev, e) => Math.min(e.dueTime, prev), Number.MAX_SAFE_INTEGER);
         const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
-        dueMap.set(courseID, {
-            due: daysUntilDue,
-            isRead: entries.isRead
-        });
+        dueMap.set(courseID, { due: daysUntilDue, isRead: entries.isRead });
     }
 
     for (let j = 2; j < defaultTabCount; j++) {
@@ -102,7 +86,7 @@ export async function createFavoritesBarNotification(entities: EntityProtocol[])
         defaultTab[j].classList.add(tabClass);
     }
 
-    await overrideCSSColor();
+    await overrideCSSColor(settings);
     overrideCSSDarkTheme();
 }
 
@@ -135,24 +119,21 @@ const overwritecolor = function(className: string, color: string | undefined) {
 /**
  * Override CSS of favorites bar and miniSakai.
  */
-async function overrideCSSColor() {
-    const config = await loadConfigs();
-
+async function overrideCSSColor(settings: Settings) {
     // Overwrite colors
-    overwritebackground("cs-course-danger", config.CSsettings.getMiniColorDanger);
-    overwritebackground("cs-course-warning", config.CSsettings.getMiniColorWarning);
-    overwritebackground("cs-course-success", config.CSsettings.getMiniColorSuccess);
-    overwritebackground("cs-tab-danger", config.CSsettings.getTopColorDanger);
-    overwritebackground("cs-tab-warning", config.CSsettings.getTopColorWarning);
-    overwritebackground("cs-tab-success", config.CSsettings.getTopColorSuccess);
+    overwritebackground("cs-course-danger", settings.color.miniDanger);
+    overwritebackground("cs-course-warning", settings.color.miniWarning);
+    overwritebackground("cs-course-success", settings.color.miniSuccess);
+    overwritebackground("cs-tab-danger", settings.color.topDanger);
+    overwritebackground("cs-tab-warning", settings.color.topWarning);
+    overwritebackground("cs-tab-success", settings.color.topSuccess);
 
-    overwriteborder("cs-assignment-danger", config.CSsettings.getMiniColorDanger);
-    overwriteborder("cs-assignment-warning", config.CSsettings.getMiniColorWarning);
-    overwriteborder("cs-assignment-success", config.CSsettings.getMiniColorSuccess);
-    overwriteborder("cs-tab-danger", config.CSsettings.getTopColorDanger);
-    overwriteborder("cs-tab-warning", config.CSsettings.getTopColorWarning);
-    overwriteborder("cs-tab-success", config.CSsettings.getTopColorSuccess);
-
+    overwriteborder("cs-assignment-danger", settings.color.miniDanger);
+    overwriteborder("cs-assignment-warning", settings.color.miniWarning);
+    overwriteborder("cs-assignment-success", settings.color.miniSuccess);
+    overwriteborder("cs-tab-danger", settings.color.topDanger);
+    overwriteborder("cs-tab-warning", settings.color.topWarning);
+    overwriteborder("cs-tab-success", settings.color.topSuccess);
 }
 
 function overrideCSSDarkTheme() {

@@ -1,6 +1,5 @@
-import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
-import { Settings } from "./settings";
-import { Settings as NewSettings } from "./features/setting/types";
+import { Assignment, CourseSiteInfo, DueCategory } from "./model";
+import { FetchTime, Settings as NewSettings } from "./features/setting/types";
 import { Course } from "./features/course/types";
 import { Assignment as NewAssignment } from "./features/assignment/types";
 import { Quiz as NewQuiz } from "./features/quiz/types";
@@ -11,7 +10,6 @@ import { getMemos } from "./features/memo/getMemo";
 import { fromStorage } from "./features/storage/load";
 import { getSakaiCourses } from "./features/course/getCourse";
 import { AssignmentFetchTimeStorage, QuizFetchTimeStorage } from "./constant";
-import { FetchTime } from "./features/setting/types";
 
 export const nowTime = new Date().getTime();
 
@@ -94,21 +92,6 @@ function formatTimestamp(timestamp: number | undefined): string {
     );
 }
 
-/**
- * Creates a Map of courseID and course name.
- * @param {CourseSiteInfo[]} courseSiteInfos
- */
-function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
-    const courseIDMap = new Map<string, string>();
-    for (const courseSiteInfo of courseSiteInfos) {
-        let courseName;
-        if (courseSiteInfo.courseName === undefined) courseName = "";
-        else courseName = courseSiteInfo.courseName;
-        courseIDMap.set(courseSiteInfo.courseID, courseName);
-    }
-    return courseIDMap;
-}
-
 export const getLoggedInInfoFromScript = (): Array<HTMLScriptElement> => {
     return Array.from(document.getElementsByTagName("script"));
 };
@@ -173,81 +156,6 @@ function miniSakaiReady(): void {
 }
 
 /**
- * Convert array to Settings class
- * @param {any} arr
- */
-function convertArrayToSettings(arr: any): Settings {
-    const settings = new Settings();
-    settings.assignmentCacheInterval = arr.assignmentCacheInterval;
-    settings.quizCacheInterval = arr.quizCacheInterval;
-    settings.displayCheckedAssignment = arr.displayCheckedAssignment;
-    settings.displayLateSubmitAssignment = arr.displayLateSubmitAssignment;
-    settings.topColorDanger = arr.topColorDanger;
-    settings.topColorWarning = arr.topColorWarning;
-    settings.topColorSuccess = arr.topColorSuccess;
-    settings.miniColorDanger = arr.miniColorDanger;
-    settings.miniColorWarning = arr.miniColorWarning;
-    settings.miniColorSuccess = arr.miniColorSuccess;
-    return settings;
-}
-
-/**
- * Convert array to Assignment class
- * @param {any} arr
- */
-function convertArrayToAssignment(arr: Array<any>): Array<Assignment> {
-    const assignmentList = [];
-    for (const i of arr) {
-        const assignmentEntries = [];
-        for (const e of i.assignmentEntries) {
-            const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.closeDateTimestamp, e.isMemo, e.isFinished, e.isQuiz, e.assignmentDetail);
-            entry.assignmentPage = e.assignmentPage;
-            if (entry.getCloseDateTimestamp * 1000 > nowTime) assignmentEntries.push(entry);
-        }
-        assignmentList.push(new Assignment(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), assignmentEntries, i.isRead));
-    }
-    return assignmentList;
-}
-
-
-/**
- * Merge Assignments, Quizzes, Memos together.
- * @param {Assignment[]} targetAssignmentList
- * @param {Assignment[]} newAssignmentList
- */
-function mergeIntoAssignmentList(targetAssignmentList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment> {
-    const mergedAssignmentList = [];
-    for (const assignment of targetAssignmentList) {
-        mergedAssignmentList.push(new Assignment(assignment.courseSiteInfo, assignment.assignmentEntries, assignment.isRead));
-    }
-    for (const newAssignment of newAssignmentList) {
-        const idx = targetAssignmentList.findIndex((assignment: Assignment) => {
-            return newAssignment.courseSiteInfo.courseID === assignment.courseSiteInfo.courseID;
-        });
-
-        const mergedAssignment = mergedAssignmentList[idx] as Assignment;
-        if (idx !== -1) {
-            mergedAssignment.assignmentEntries = mergedAssignment.assignmentEntries.concat(newAssignment.assignmentEntries);
-        } else {
-            mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, newAssignment.assignmentEntries, true));
-        }
-    }
-    return mergedAssignmentList;
-}
-
-/**
- * Function for sorting Assignments
- * @param {Assignment[]} assignmentList
- */
-function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment> {
-    return Array.from(assignmentList).sort((a, b) => {
-        if (a.closestDueDateTimestamp > b.closestDueDateTimestamp) return 1;
-        if (a.closestDueDateTimestamp < b.closestDueDateTimestamp) return -1;
-        return 0;
-    });
-}
-
-/**
  * Get the current Sakai theme.
  * @returns 'light' or 'dark'. Returns null on failure.
  */
@@ -273,13 +181,8 @@ function getSakaiTheme(): "light" | "dark" | null {
 
 export {
     getDaysUntil,
-    createCourseIDMap,
     formatTimestamp,
     isLoggedIn,
     miniSakaiReady,
-    convertArrayToSettings,
-    convertArrayToAssignment,
-    mergeIntoAssignmentList,
-    sortAssignmentList,
     getSakaiTheme
 };

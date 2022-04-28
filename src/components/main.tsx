@@ -1,16 +1,16 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { DefaultSettings } from "../settings";
 import { useTranslation } from "./helper";
 import { formatTimestamp, getCourses, getEntities, getFetchTime } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
-import { saveToLocalStorage } from "../storage";
 import { createFavoritesBarNotification } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
 import { saveSettings } from "../features/setting/saveSetting";
+import { addFavoritedCourseSites } from "../favorites";
+import { getBaseURL } from "../features/api/fetch";
 
 export const MiniSakaiContext = React.createContext<{
     settings: Settings;
@@ -45,8 +45,12 @@ export function MiniSakaiRoot(props: {
     }, [entityChangeTrigger]);
 
     useEffect(() => {
-        createFavoritesBarNotification(entities);
+        createFavoritesBarNotification(settings, entities);
     }, [entities]);
+
+    useEffect(() => {
+        addFavoritedCourseSites(getBaseURL());
+    }, []);
 
     const onCheck = useCallback((entry: EntryUnion, checked: boolean) => {
         entry.hasFinished = checked;
