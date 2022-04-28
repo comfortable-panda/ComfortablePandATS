@@ -1,4 +1,4 @@
-import { saveHostName } from "./storage";
+import { saveHostName } from "./features/storage/save";
 import { createMiniSakai, createMiniSakaiBtn } from "./minisakai";
 import { isLoggedIn, miniSakaiReady } from "./utils";
 
@@ -8,7 +8,7 @@ async function main() {
         createMiniSakai();
 
         miniSakaiReady();
-        await saveHostName();
+        await saveHostName(window.location.hostname);
     }
 }
 

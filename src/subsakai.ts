@@ -1,4 +1,4 @@
-import { getHostName } from "./storage";
+import { loadHostName } from "./features/storage/load";
 
 const subSakaiRoot = document.querySelector("#sub-sakai");
 
@@ -6,7 +6,7 @@ const subSakaiRoot = document.querySelector("#sub-sakai");
  * Update subSakai to latest info
  */
 async function updateSubSakai(root: Element) {
-    const hostname = await getHostName();
+    const hostname = await loadHostName();
     // let mergedAssignmentList: Array<Assignment>;
     //
     // const assignmentList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "CS_AssignmentList"));
