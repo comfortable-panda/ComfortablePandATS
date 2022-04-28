@@ -1,8 +1,8 @@
-import { Assignment } from "../assignment/types";
-import { Quiz } from "../quiz/types";
+import { Assignment } from "../entity/assignment/types";
+import { Quiz } from "../entity/quiz/types";
 import { Course } from "../course/types";
-import { decodeAssignmentFromAPI } from "../assignment/decode";
-import { decodeQuizFromAPI } from "../quiz/decode";
+import { decodeAssignmentFromAPI } from "../entity/assignment/decode";
+import { decodeQuizFromAPI } from "../entity/quiz/decode";
 
 /* Sakai のURLを取得する */
 export const getBaseURL = (): string => {

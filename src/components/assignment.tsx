@@ -1,4 +1,4 @@
-import { AssignmentEntry } from "../features/assignment/types";
+import { AssignmentEntry } from "../features/entity/assignment/types";
 import { useTranslation, useTranslationArgsDeps } from "./helper";
 import React, { useId } from 'react';
 

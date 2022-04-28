@@ -1,10 +1,10 @@
 import { Assignment } from "./types";
 import { decodeAssignmentFromArray } from "./decode";
-import { Course } from "../course/types";
-import { fetchAssignment } from "../api/fetch";
-import { toStorage, fromStorage } from "../storage";
-import { mergeEntities } from "../merge";
-import { AssignmentFetchTimeStorage, AssignmentsStorage } from "../../constant";
+import { Course } from "../../course/types";
+import { fetchAssignment } from "../../api/fetch";
+import { toStorage, fromStorage } from "../../storage";
+import { mergeEntities } from "../../merge";
+import { AssignmentFetchTimeStorage, AssignmentsStorage } from "../../../constant";
 
 export const getSakaiAssignments = async (hostname: string, courses: Array<Course>): Promise<Array<Assignment>> => {
     const assignments: Array<Assignment> = [];

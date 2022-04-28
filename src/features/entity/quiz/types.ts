@@ -1,5 +1,5 @@
-import { Course } from "../course/types";
-import { EntityProtocol, EntryProtocol } from "../entity/type";
+import { Course } from "../../course/types";
+import { EntityProtocol, EntryProtocol } from "../type";
 import { saveQuizEntry } from "./saveQuiz";
 
 const MAX_TIMESTAMP = 99999999999999;

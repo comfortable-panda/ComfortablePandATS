@@ -1,6 +1,6 @@
 import { Memo, MemoEntry } from "./types";
-import { Course } from "../course/types";
-import { nowTime } from "../../utils";
+import { Course } from "../../course/types";
+import { nowTime } from "../../../utils";
 
 export const decodeMemoFromArray = (data: Array<any>): Array<Memo> => {
     const memos: Array<Memo> = [];

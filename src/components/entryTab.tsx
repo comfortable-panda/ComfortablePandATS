@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { Assignment, AssignmentEntry } from "../features/assignment/types";
+import { Assignment, AssignmentEntry } from "../features/entity/assignment/types";
 import { Course } from "../features/course/types";
-import { Memo, MemoEntry } from "../features/memo/types";
-import { Quiz, QuizEntry } from "../features/quiz/types";
+import { Memo, MemoEntry } from "../features/entity/memo/types";
+import { Quiz, QuizEntry } from "../features/entity/quiz/types";
 import { getDaysUntil, nowTime } from "../utils";
 import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";
