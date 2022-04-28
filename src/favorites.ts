@@ -1,4 +1,5 @@
 import { editFavoritesMessage } from "./eventListener";
+import { getCourseSiteID } from "./utils";
 
 /**
  * Limit maximum number of course sites
@@ -17,16 +18,6 @@ function getSiteIdAndHrefSiteNameMap(): Map<string, { href: string, title: strin
         map.set(siteId, { href: href, title: title });
     });
     return map;
-}
-
-/**
- * Check if current site-id is given site-id
- * @param {string} siteId
- */
-function isCurrentSite(siteId: string): boolean {
-    const currentSiteIdM = window.location.href.match(/https?:\/\/[^\/]+\/portal\/site\/([^\/]+)/);
-    if (currentSiteIdM == null) return false;
-    return currentSiteIdM[1] == siteId;
 }
 
 /**
@@ -50,7 +41,7 @@ function getCurrentFavoritesSite(): Array<string> {
  */
 function addFavoritedCourseSites(baseURL: string): Promise<void> {
     const topnav = document.querySelector("#topnav");
-    if (topnav == null) return new Promise((resolve, reject) => resolve());
+    if (topnav == null) return new Promise((resolve) => resolve());
     const request = new XMLHttpRequest();
     request.open("GET", baseURL + "/portal/favorites/list");
     request.responseType = "json";
@@ -68,10 +59,10 @@ function addFavoritedCourseSites(baseURL: string): Promise<void> {
             const currentFavoriteSite = getCurrentFavoritesSite();
             for (const favorite of favorites.slice(0, MAX_FAVORITES)) {
                 // skip if favorite is the current site
-                if (isCurrentSite(favorite)) continue;
+                if (getCourseSiteID(window.location.href) === favorite) continue;
 
                 const siteInfo = sitesInfo.get(favorite);
-                if (siteInfo == undefined) continue;
+                if (siteInfo === undefined) continue;
                 const href = siteInfo.href;
                 const title = siteInfo.title;
 
