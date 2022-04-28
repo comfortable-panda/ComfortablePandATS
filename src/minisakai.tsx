@@ -1,5 +1,4 @@
-import { DueCategory } from "./model";
-import { getDaysUntil, getSakaiTheme, nowTime } from "./utils";
+import { getDaysUntil, getSakaiTheme, nowTime, DueCategory } from "./utils";
 import { hamburger, miniSakai } from "./dom";
 import React from "react";
 import { createRoot } from "react-dom/client";

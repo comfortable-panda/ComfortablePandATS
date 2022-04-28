@@ -3,7 +3,6 @@ import { Assignment, AssignmentEntry } from "../features/assignment/types";
 import { Course } from "../features/course/types";
 import { Memo, MemoEntry } from "../features/memo/types";
 import { Quiz, QuizEntry } from "../features/quiz/types";
-import { CourseSiteInfo } from "../model";
 import { getDaysUntil, nowTime } from "../utils";
 import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";

@@ -1,4 +1,3 @@
-import { DueCategory } from "./model";
 import { FetchTime, Settings as NewSettings } from "./features/setting/types";
 import { Course } from "./features/course/types";
 import { Assignment as NewAssignment } from "./features/assignment/types";
@@ -13,6 +12,7 @@ import { AssignmentFetchTimeStorage, QuizFetchTimeStorage } from "./constant";
 import { saveAssignments } from "./features/assignment/saveAssignment";
 
 export const nowTime = new Date().getTime();
+export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
 
 export async function getEntities(settings: NewSettings, courses: Array<Course>) {
     // TODO: 並列化する
