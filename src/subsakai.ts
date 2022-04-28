@@ -1,6 +1,4 @@
-import { Assignment, CourseSiteInfo } from "./model";
-import { getHostName, loadFromLocalStorage2 } from "./storage";
-import { convertArrayToAssignment, mergeIntoAssignmentList, sortAssignmentList } from "./utils";
+import { getHostName } from "./storage";
 
 const subSakaiRoot = document.querySelector("#sub-sakai");
 
@@ -9,15 +7,15 @@ const subSakaiRoot = document.querySelector("#sub-sakai");
  */
 async function updateSubSakai(root: Element) {
     const hostname = await getHostName();
-    let mergedAssignmentList: Array<Assignment>;
-
-    const assignmentList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "CS_AssignmentList"));
-    const quizList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "CS_QuizList"));
-    const assignmentMemoList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "CS_MemoList"));
-    const courseIDs = (await loadFromLocalStorage2(hostname, "CS_CourseInfo")) as Array<CourseSiteInfo>;
-    mergedAssignmentList = mergeIntoAssignmentList(assignmentList, quizList);
-    mergedAssignmentList = mergeIntoAssignmentList(mergedAssignmentList, assignmentMemoList);
-    mergedAssignmentList = sortAssignmentList(mergedAssignmentList);
+    // let mergedAssignmentList: Array<Assignment>;
+    //
+    // const assignmentList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "CS_AssignmentList"));
+    // const quizList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "CS_QuizList"));
+    // const assignmentMemoList = convertArrayToAssignment(await loadFromLocalStorage2(hostname, "CS_MemoList"));
+    // const courseIDs = (await loadFromLocalStorage2(hostname, "CS_CourseInfo")) as Array<CourseSiteInfo>;
+    // mergedAssignmentList = mergeIntoAssignmentList(assignmentList, quizList);
+    // mergedAssignmentList = mergeIntoAssignmentList(mergedAssignmentList, assignmentMemoList);
+    // mergedAssignmentList = sortAssignmentList(mergedAssignmentList);
 
     // FIXME
     // await createMiniSakaiGeneralized(root, mergedAssignmentList, courseIDs, true, (rendered) => {
