@@ -1,3 +1,13 @@
+type AppInfo = {
+    version: string;
+    hostname: string;
+};
+
+export type FetchTime = {
+    assignment: number | undefined;
+    quiz: number | undefined;
+};
+
 type CacheInterval = {
     assignment: number;
     quiz: number;
@@ -25,6 +35,14 @@ const CSTheme = {
 };
 
 export class Settings {
+    appInfo: AppInfo = {
+        version: chrome.runtime.getManifest().version,
+        hostname: window.location.hostname
+    };
+    fetchTime: FetchTime = {
+        assignment: undefined,
+        quiz: undefined
+    };
     cacheInterval: CacheInterval = {
         assignment: 120,
         quiz: 600
