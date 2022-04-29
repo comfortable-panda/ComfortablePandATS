@@ -2,7 +2,6 @@ import { DueCategory, getDaysUntil } from "../utils";
 import { Settings } from "../features/setting/types";
 import { EntityProtocol, EntryProtocol } from "../features/entity/type";
 import { MaxTimestamp } from "../constant";
-import { Course } from "../features/course/types";
 
 const dueCategoryClassMap: { [key in DueCategory]: string } = {
     due24h: "cs-tab-danger",
@@ -72,20 +71,21 @@ export async function createFavoritesBar(settings: Settings, entities: EntityPro
         const courseInfo = dueMap.get(courseID);
         if (courseInfo === undefined) continue;
 
-        if (!courseInfo.isRead) {
-            defaultTab[j].classList.add("cs-notification-badge");
-        }
-
         const tabClass = dueCategoryClassMap[courseInfo.due];
         const aTagCount = defaultTab[j].getElementsByTagName("a").length;
+        // Apply color to course button
         for (let i = 0; i < aTagCount; i++) {
             defaultTab[j].getElementsByTagName("a")[i].classList.add(tabClass);
         }
         defaultTab[j].classList.add(tabClass);
+        // Put notification badge
+        if (!courseInfo.isRead) {
+            defaultTab[j].classList.add("cs-notification-badge");
+        }
     }
 }
 
-export const deleteFavoritesBar = (): void => {
+export const resetFavoritesBar = (): void => {
     const classList = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success", "cs-tab-other"];
     for (const c of classList) {
         const q = document.querySelectorAll(`.${c}`);

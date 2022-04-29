@@ -14,7 +14,7 @@ import { getBaseURL } from "../features/api/fetch";
 import { v4 as uuidv4 } from "uuid";
 import { MemoEntry } from "../features/entity/memo/types";
 import { removeMemoEntry, saveNewMemoEntry } from "../features/entity/memo/saveMemo";
-import { createFavoritesBar, deleteFavoritesBar } from "./favoritesBar";
+import { createFavoritesBar, resetFavoritesBar } from "./favoritesBar";
 
 export const MiniSakaiContext = React.createContext<{
     settings: Settings;
@@ -108,13 +108,13 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                     settings: s
                 });
                 addFavoritedCourseSites(getBaseURL()).then(() => {
-                    deleteFavoritesBar();
+                    resetFavoritesBar();
                     createFavoritesBar(s, this.state.entities);
                 });
             });
         }
         if (!_.isEqual(prevState.settings, this.state.settings)) {
-            deleteFavoritesBar();
+            resetFavoritesBar();
             createFavoritesBar(this.state.settings, this.state.entities);
             applyColorSettings(this.state.settings);
         }
