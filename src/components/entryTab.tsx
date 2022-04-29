@@ -74,11 +74,14 @@ function MiniSakaiCourse(props: {
     );
 }
 
+export type MemoAddInfo = { course: Course; content: string; due: number };
+
 export function EntryTab(props: {
     isSubset: boolean;
     showMemoBox: boolean;
     entities: EntityUnion[];
     onCheck: (entry: EntryUnion, checked: boolean) => void;
+    onMemoAdd: (memo: MemoAddInfo) => void;
 }) {
     type EntryWithCourse = {
         entry: EntryUnion;
@@ -133,7 +136,11 @@ export function EntryTab(props: {
 
     return (
         <>
-            <AddMemoBox shown={!props.isSubset && props.showMemoBox} courses={getCourses()} />
+            <AddMemoBox
+                shown={!props.isSubset && props.showMemoBox}
+                courses={getCourses()}
+                onMemoAdd={props.onMemoAdd}
+            />
             {dangerElements.length === 0 ? null : (
                 <MiniSakaiEntryList
                     dueType="danger"
@@ -172,12 +179,13 @@ export function EntryTab(props: {
 }
 
 // TODO
-function AddMemoBox(props: { shown: boolean; courses: Course[] }) {
+function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo: MemoAddInfo) => void }) {
     const courseName = useTranslation("todo_box_course_name");
     const memoLabel = useTranslation("todo_box_memo");
     const dueDate = useTranslation("todo_box_due_date");
     const addBtnLabel = useTranslation("todo_box_add");
 
+    const [selectedCourseID, setSelectedCourseID] = useState(props.courses[0].id ?? "");
     const [todoContent, setTodoContent] = useState("");
     const [todoDue, setTodoDue] = useState("");
 
@@ -200,7 +208,13 @@ function AddMemoBox(props: { shown: boolean; courses: Course[] }) {
             <div className="cs-memo-item">
                 <p>{courseName}</p>
                 <label>
-                    <select className="todoLecName">{options}</select>
+                    <select
+                        className="todoLecName"
+                        value={selectedCourseID}
+                        onChange={(ev) => setSelectedCourseID(ev.target.value)}
+                    >
+                        {options}
+                    </select>
                 </label>
             </div>
             <div className="cs-memo-item">
@@ -226,7 +240,29 @@ function AddMemoBox(props: { shown: boolean; courses: Course[] }) {
                 </label>
             </div>
             <div className="cs-memo-item">
-                <button type="submit" id="todo-add">
+                <button
+                    type="submit"
+                    id="todo-add"
+                    onClick={() => {
+                        if (selectedCourseID === "" || todoDue === "") return;
+
+                        let selectedCourse: Course | undefined = undefined;
+                        for (const course of props.courses) {
+                            if (course.id === selectedCourseID) {
+                                selectedCourse = course;
+                                break;
+                            }
+                        }
+                        if (selectedCourse === undefined) return;
+
+                        props.onMemoAdd({
+                            course: selectedCourse,
+                            content: todoContent,
+                            due: Date.parse(todoDue)
+                        });
+                    }}
+                    disabled={selectedCourseID === "" || todoDue === ""}
+                >
                     {addBtnLabel}
                 </button>
             </div>

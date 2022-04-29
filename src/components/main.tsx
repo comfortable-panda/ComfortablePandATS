@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "./helper";
 import { formatTimestamp, getCourses, getEntities, updateIsReadFlag } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
-import { EntityUnion, EntryTab, EntryUnion } from "./entryTab";
+import { EntityUnion, EntryTab, EntryUnion, MemoAddInfo } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
 import { createFavoritesBarNotification } from "../minisakai";
@@ -11,6 +11,9 @@ import { getStoredSettings } from "../features/setting/getSetting";
 import { saveSettings } from "../features/setting/saveSetting";
 import { addFavoritedCourseSites } from "../features/favorite";
 import { getBaseURL } from "../features/api/fetch";
+import { v4 as uuidv4 } from "uuid";
+import { MemoEntry } from "../features/entity/memo/types";
+import { saveNewMemoEntry } from "../features/entity/memo/saveMemo";
 
 export const MiniSakaiContext = React.createContext<{
     settings: Settings;
@@ -37,7 +40,7 @@ export function MiniSakaiRoot(props: { subset: boolean }): JSX.Element {
             const s = await getStoredSettings(window.location.hostname);
             setSettings(s);
             await addFavoritedCourseSites(getBaseURL());
-            await createFavoritesBarNotification(settings, entities);
+            await createFavoritesBarNotification(s, entities);
         })();
     }, [entities]);
 
@@ -48,8 +51,15 @@ export function MiniSakaiRoot(props: { subset: boolean }): JSX.Element {
                 triggerEntityChange({});
             });
         },
-        [setEntities, triggerEntityChange]
+        [triggerEntityChange]
     );
+
+    const onMemoAdd = useCallback((memo: MemoAddInfo) => {
+        const newMemo = new MemoEntry(uuidv4(), memo.content, memo.due, false);
+        saveNewMemoEntry(settings.appInfo.hostname, newMemo, memo.course).then(() => {
+            triggerEntityChange({});
+        });
+    }, []);
 
     const [shownTab, setShownTab] = useState<"assignment" | "settings">("assignment");
     const [memoBoxShown, setMemoBoxShown] = useState(false);
