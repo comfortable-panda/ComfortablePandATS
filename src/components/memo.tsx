@@ -40,7 +40,7 @@ export default function MemoEntryView(props: {
 
             <p className="cs-assignment-title">
                 <span className="cs-badge cs-badge-memo">{memoBadge}</span>
-                <button className="cs-del-memo-btn" onClick={() => props.onDelete()}>x</button> {/* TODO: del button */}
+                <span className="cs-del-memo-btn" onClick={() => props.onDelete()}>x</span> {/* TODO: del button */}
                 {props.memo.title}
             </p>
         </>
