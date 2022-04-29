@@ -96,6 +96,8 @@ export const applyColorSettings = (settings: Settings): void => {
         const color = settings.color[colorName];
         document.documentElement.style.setProperty(`--${colorName}`, color);
     }
+    document.documentElement.style.setProperty("--textColor", settings.getTextColor());
+    document.documentElement.style.setProperty("--bgColor", settings.getBgColor());
 };
 
 const overwriteborder = function(className: string, color: string | undefined) {
