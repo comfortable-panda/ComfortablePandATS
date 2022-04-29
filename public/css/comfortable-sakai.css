@@ -1,21 +1,27 @@
+
+
 .cs-tab-danger {
-    background: #f78989 !important;
-    border: 0 solid #f78989 !important;
+    background: var(--topDanger) !important;
+    color: #333435 !important;
+    border: 0 solid var(--topDanger) !important;
 }
 
 .cs-tab-warning {
-    background: #fdd783 !important;
-    border: 0 solid #fdd783 !important;
+    background: var(--topWarning) !important;
+    color: #333435 !important;
+    border: 0 solid var(--topWarning) !important;
 }
 
 .cs-tab-success {
-    background: #8bd48d !important;
-    border: 0 solid #8bd48d !important;
+    background: var(--topSuccess) !important;
+    color: #333435 !important;
+    border: 0 solid var(--topSuccess) !important;
 }
 
 .cs-tab-other {
-    background: #adadad !important;
-    border: 0 solid #adadad !important;
+    background: var(--topOther) !important;
+    color: #333435 !important;
+    border: 0 solid var(--topOther) !important;
 }
 
 .cs-notification-badge::after {
@@ -42,13 +48,26 @@
 }
 
 .cs-minisakai {
+    --topDanger: #f78989;
+    --topWarning: #fdd783;
+    --topSuccess: #8bd48d;
+    --topOther: #adadad;
+    --miniDanger: #e85555;
+    --miniWarning: #d7aa57;
+    --miniSuccess: #62b665;
+    --miniOther: #777777;
+    --miniLate: #212121;
+    --textColor: #464646;
+    --bgColor: #cacaca;
+    --dateColor: #b01011;
+
     height: 95vh;
     width: 0;
     position: absolute;
     z-index: 1;
     top: 0;
     right: 0;
-    background-color: #cacaca;
+    background-color: var(--bgColor);
     transition: 0.5s;
     padding-top: 60px;
     overflow: auto;
@@ -57,6 +76,10 @@
 
 .cs-minisakai::-webkit-scrollbar {
     display: none;
+}
+
+.cs-minisakai > p {
+    color: var(--textColor);
 }
 
 .cs-minisakai .q {
@@ -79,8 +102,8 @@
 .cs-minisakai-danger {
     position: relative;
     padding: 0.1em 0.5em;
-    border-left: solid 6px #e85555;
-    border-bottom: solid 2px #e85555;
+    border-left: solid 6px var(--miniDanger);
+    border-bottom: solid 2px var(--miniDanger);
     background: #f1cdcd;
     border-radius: 5px;
 }
@@ -88,8 +111,8 @@
 .cs-minisakai-warning {
     position: relative;
     padding: 0.1em 0.5em;
-    border-left: solid 6px #d7aa57;
-    border-bottom: solid 2px #d7aa57;
+    border-left: solid 6px var(--miniWarning);
+    border-bottom: solid 2px var(--miniWarning);
     background: #e2d4bf;
     border-radius: 5px;
 }
@@ -97,8 +120,8 @@
 .cs-minisakai-success {
     position: relative;
     padding: 0.1em 0.5em;
-    border-left: solid 6px #62b665;
-    border-bottom: solid 2px #62b665;
+    border-left: solid 6px var(--miniSuccess);
+    border-bottom: solid 2px var(--miniSuccess);
     background: #cce6cf;
     border-radius: 5px;
 }
@@ -106,8 +129,8 @@
 .cs-minisakai-other {
     position: relative;
     padding: 0.1em 0.5em;
-    border-left: solid 6px #777777;
-    border-bottom: solid 2px #777777;
+    border-left: solid 6px var(--miniOther);
+    border-bottom: solid 2px var(--miniOther);
     background: #dad6d6;
     border-radius: 5px;
 }
@@ -115,8 +138,8 @@
 .cs-minisakai-late {
     position: relative;
     padding: 0.1em 0.5em;
-    border-left: solid 6px #212121;
-    border-bottom: solid 2px #212121;
+    border-left: solid 6px var(--miniLate);
+    border-bottom: solid 2px var(--miniLate);
     background: #dad6d6;
     border-radius: 5px;
 }
@@ -144,7 +167,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #e85555;
+    background: var(--miniDanger);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -155,7 +178,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #e85555;
+    background: var(--miniDanger);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -166,7 +189,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #d7aa57;
+    background: var(--miniWarning);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -177,7 +200,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #d7aa57;
+    background: var(--miniWarning);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -188,7 +211,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #62b665;
+    background: var(--miniSuccess);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -199,7 +222,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #62b665;
+    background: var(--miniSuccess);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -210,7 +233,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #777777;
+    background: var(--miniOther);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -221,7 +244,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #777777;
+    background: var(--miniOther);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -232,7 +255,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #212121;
+    background: var(--miniLate);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -243,7 +266,7 @@
     width: max-content;
     padding: 3px 10px;
     margin: -12px 0 0 -5px;
-    background: #212121;
+    background: var(--miniLate);
     border-radius: 20px 20px 20px 20px;
 }
 
@@ -258,46 +281,31 @@
 }
 
 .cs-assignment-danger {
-    border-top: solid 2px #e85555;
-    border-left: solid 2px #e85555;
-    border-bottom: solid 2px #e85555;
-    border-right: solid 2px #e85555;
+    border: solid 2px var(--miniDanger);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
 }
 
 .cs-assignment-warning {
-    border-top: solid 2px #d7aa57;
-    border-left: solid 2px #d7aa57;
-    border-bottom: solid 2px #d7aa57;
-    border-right: solid 2px #d7aa57;
+    border: solid 2px var(--miniWarning);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
 }
 
 .cs-assignment-success {
-    border-top: solid 2px #62b665;
-    border-left: solid 2px #62b665;
-    border-bottom: solid 2px #62b665;
-    border-right: solid 2px #62b665;
+    border: solid 2px var(--miniSuccess);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
 }
 
 .cs-assignment-other {
-    border-top: solid 2px #777777;
-    border-left: solid 2px #777777;
-    border-bottom: solid 2px #777777;
-    border-right: solid 2px #777777;
+    border: solid 2px var(--miniOther);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
 }
 
 .cs-assignment-late {
-    border-top: solid 2px #212121;
-    border-left: solid 2px #212121;
-    border-bottom: solid 2px #212121;
-    border-right: solid 2px #212121;
+    border: solid 2px var(--miniLate);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
 }
@@ -305,7 +313,7 @@
 .cs-assignment-date {
     font-size: 12px !important;
     font-weight: bold;
-    color: #b01011
+    color: var(--dateColor);
 }
 
 .cs-assignmate-date-padding {
@@ -314,7 +322,7 @@
 
 .cs-assignment-title {
     font-size: 12px !important;
-    color: #524e4e;
+    color: var(--textColor);
     padding-left: 20px;
     word-break: break-word;
 }
@@ -438,6 +446,7 @@
 .cs-tab > label {
     position: relative;
     display: inline-block;
+    color: var(--textColor);
     padding: 10px 15px;
     cursor: pointer;
     border-bottom: 0;
@@ -541,6 +550,7 @@
 
 .cs-assignment-time-text {
     margin-bottom: 0;
+    color: var(--textColor);
 }
 
 .cs-quiz-time {

@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "./helper";
 import { formatTimestamp, getCourses, getEntities, updateIsReadFlag } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion, MemoAddInfo } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
-import { createFavoritesBarNotification } from "../minisakai";
+import { applyColorSettings, createFavoritesBarNotification } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
 import { saveSettings } from "../features/setting/saveSetting";
@@ -102,6 +102,9 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                     createFavoritesBarNotification(s, this.state.entities);
                 });
             });
+        }
+        if (!_.isEqual(prevState.settings, this.state.settings)) {
+            applyColorSettings(this.state.settings);
         }
     }
 

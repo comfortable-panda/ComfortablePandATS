@@ -22,8 +22,8 @@ export function createMiniSakaiBtn(): void {
  * Insert miniSakai into Sakai.
  */
 export function createMiniSakai() {
-    const parent = document.getElementById("pageBody");
-    const ref = document.getElementById("toolMenuWrap");
+    const parent = document.getElementsByClassName("Mrphs-mainHeader")[0];
+    const ref = document.getElementsByClassName("Mrphs-sites-nav")[0];
     parent?.insertBefore(miniSakai, ref);
     const root = createRoot(miniSakai);
     root.render(<MiniSakaiRoot subset={false} />);
@@ -92,9 +92,21 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
         defaultTab[j].classList.add(tabClass);
     }
 
-    await overrideCSSColor(settings);
-    overrideCSSDarkTheme();
+    // await overrideCSSColor(settings);
+    // overrideCSSDarkTheme();
 }
+
+export const applyColorSettings = (settings: Settings): void => {
+    const bodyStyles = document.querySelector(".Mrphs-mainHeader") as HTMLElement;
+    for (const colorName of Object.getOwnPropertyNames(settings.color)) {
+        // @ts-ignore
+        const color = settings.color[colorName];
+        bodyStyles.style.setProperty(`--${colorName}`, color);
+    }
+    bodyStyles.style.setProperty("--textColor", settings.getTextColor());
+    bodyStyles.style.setProperty("--bgColor", settings.getBgColor());
+    bodyStyles.style.setProperty("--dateColor", settings.getDateColor());
+};
 
 const overwriteborder = function (className: string, color: string | undefined) {
     const element = document.getElementsByClassName(className);

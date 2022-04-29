@@ -28,10 +28,12 @@ export function SettingsTab(props: { onSettingsChange: (change: SettingsChange) 
     const topColorDangerDesc = useTranslationArgsDeps("settings_colors_hour", ["Tab Bar", "24"], []);
     const topColorWarningDesc = useTranslationArgsDeps("settings_colors_day", ["Tab Bar", "5"], []);
     const topColorSuccessDesc = useTranslationArgsDeps("settings_colors_day", ["Tab Bar", "14"], []);
+    const topColorOtherDesc = useTranslationArgsDeps("settings_colors_day", ["Tab Bar", "14"], []);
 
     const miniColorDangerDesc = useTranslationArgsDeps("settings_colors_hour", ["miniPandA", "24"], []);
     const miniColorWarningDesc = useTranslationArgsDeps("settings_colors_day", ["miniPandA", "5"], []);
     const miniColorSuccessDesc = useTranslationArgsDeps("settings_colors_day", ["miniPandA", "14"], []);
+    const miniColorOtherDesc = useTranslationArgsDeps("settings_colors_day", ["miniPandA", "14"], []);
 
     return (
         <div className="cs-settings-tab">
@@ -113,6 +115,17 @@ export function SettingsTab(props: { onSettingsChange: (change: SettingsChange) 
                     })
                 }
             />
+            <StringItem
+                description={topColorOtherDesc}
+                value={settings.color.topOther}
+                onChange={(v) =>
+                    props.onSettingsChange({
+                        type: "string",
+                        id: "color.topOther",
+                        newValue: v
+                    })
+                }
+            />
 
             <StringItem
                 description={miniColorDangerDesc}
@@ -143,6 +156,17 @@ export function SettingsTab(props: { onSettingsChange: (change: SettingsChange) 
                     props.onSettingsChange({
                         type: "string",
                         id: "color.miniSuccess",
+                        newValue: v
+                    })
+                }
+            />
+            <StringItem
+                description={miniColorOtherDesc}
+                value={settings.color.miniOther}
+                onChange={(v) =>
+                    props.onSettingsChange({
+                        type: "string",
+                        id: "color.miniOther",
                         newValue: v
                     })
                 }
