@@ -258,7 +258,7 @@ function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo
                         props.onMemoAdd({
                             course: selectedCourse,
                             content: todoContent,
-                            due: Date.parse(todoDue)
+                            due: Date.parse(todoDue) / 1000
                         });
                     }}
                     disabled={selectedCourseID === "" || todoDue === ""}
