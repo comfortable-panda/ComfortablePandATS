@@ -183,7 +183,11 @@ function AddMemoBox(props: { shown: boolean; courses: Course[] }) {
 
     const options = useMemo(() => {
         return props.courses.map((course) => {
-            return <option value={course.id}>{course.name}</option>;
+            return (
+                <option value={course.id} key={`memo-option-${course.id}`}>
+                    {course.name}
+                </option>
+            );
         });
     }, [props.courses]);
 
