@@ -71,7 +71,7 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
             })
             .reduce((prev, e) => Math.min(e.dueTime, prev), MaxTimestamp);
         if (closestTime === MaxTimestamp) continue;
-        const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
+        const daysUntilDue = getDaysUntil(settings.appInfo.currentTime, closestTime * 1000);
         dueMap.set(courseID, { due: daysUntilDue, isRead: entries.isRead });
     }
 
@@ -101,6 +101,18 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
 
     // await overrideCSSColor(settings);
     // overrideCSSDarkTheme();
+}
+
+export const deleteFavoritesBarNotification = (): void => {
+    const classlist = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success"];
+    for (const c of classlist) {
+        const q = document.querySelectorAll(`.${c}`);
+        // @ts-ignore
+        for (const _ of q) {
+            _.classList.remove(`${c}`);
+            _.style = "";
+        }
+    }
 }
 
 export const applyColorSettings = (settings: Settings): void => {
