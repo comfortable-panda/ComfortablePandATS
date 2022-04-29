@@ -1,8 +1,8 @@
 import { Course } from "../../course/types";
 import { EntityProtocol, EntryProtocol } from "../type";
 import { saveAssignmentEntry } from "./saveAssignment";
+import { MaxTimestamp } from "../../../constant";
 
-const MAX_TIMESTAMP = 99999999999999;
 
 export class AssignmentEntry implements EntryProtocol {
     constructor(
@@ -18,11 +18,11 @@ export class AssignmentEntry implements EntryProtocol {
     }
 
     get getDueDateTimestamp(): number {
-        return this.dueTime ? this.dueTime : MAX_TIMESTAMP;
+        return this.dueTime ? this.dueTime : MaxTimestamp;
     }
 
     get getCloseDateTimestamp(): number {
-        return this.closeTime ? this.closeTime : MAX_TIMESTAMP;
+        return this.closeTime ? this.closeTime : MaxTimestamp;
     }
 
     getID(): string {
