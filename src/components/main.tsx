@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "./helper";
 import { formatTimestamp, getCourses, getEntities, updateIsReadFlag } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
@@ -21,110 +21,153 @@ export const MiniSakaiContext = React.createContext<{
     settings: new Settings()
 });
 
-export function MiniSakaiRoot(props: { subset: boolean }): JSX.Element {
-    const [settings, setSettings] = useState<Settings>(new Settings());
-    const [entities, setEntities] = useState<EntityUnion[]>([]);
-    const [entityChangeTrigger, triggerEntityChange] = useState({});
+type MiniSakaiRootProps = { subset: boolean };
+type MiniSakaiRootState = {
+    settings: Settings;
+    entities: EntityUnion[];
+    shownTab: "assignment" | "settings";
+    memoBoxShown: boolean;
+};
+export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakaiRootState> {
+    constructor(props: MiniSakaiRootProps) {
+        super(props);
+        this.state = {
+            settings: new Settings(),
+            entities: new Array<EntityUnion>(),
+            shownTab: "assignment",
+            memoBoxShown: false
+        };
 
-    useEffect(() => {
-        (async () => {
-            const entities = await getEntities(settings, getCourses());
+        this.onCheck = this.onCheck.bind(this);
+        this.onMemoAdd = this.onMemoAdd.bind(this);
+        this.onSettingsChange = this.onSettingsChange.bind(this);
+    }
+
+    componentDidMount() {
+        this.reloadEntities();
+    }
+
+    reloadEntities() {
+        getEntities(this.state.settings, getCourses()).then((entities) => {
             const allEntities = [...entities.assignment, ...entities.quiz, ...entities.memo];
-            setEntities(allEntities);
+            this.setState({
+                entities: allEntities
+            });
             updateIsReadFlag(window.location.href, entities.assignment);
-        })();
-    }, [entityChangeTrigger]);
-
-    useEffect(() => {
-        (async () => {
-            const s = await getStoredSettings(window.location.hostname);
-            setSettings(s);
-            await addFavoritedCourseSites(getBaseURL());
-            await createFavoritesBarNotification(s, entities);
-        })();
-    }, [entities]);
-
-    const onCheck = useCallback(
-        (entry: EntryUnion, checked: boolean) => {
-            entry.hasFinished = checked;
-            entry.save(window.location.hostname).then(() => {
-                triggerEntityChange({});
-            });
-        },
-        [triggerEntityChange]
-    );
-
-    const onMemoAdd = useCallback((memo: MemoAddInfo) => {
-        const newMemo = new MemoEntry(uuidv4(), memo.content, memo.due, false);
-        saveNewMemoEntry(settings.appInfo.hostname, newMemo, memo.course).then(() => {
-            triggerEntityChange({});
         });
-    }, []);
+    }
 
-    const [shownTab, setShownTab] = useState<"assignment" | "settings">("assignment");
-    const [memoBoxShown, setMemoBoxShown] = useState(false);
+    private onCheck(entry: EntryUnion, checked: boolean) {
+        entry.hasFinished = checked;
+        entry.save(window.location.hostname).then(() => {
+            this.reloadEntities();
+        });
+    }
 
-    const entryTabShown = shownTab === "assignment";
-    const settingsTabShown = shownTab === "settings";
+    private onMemoAdd(memo: MemoAddInfo) {
+        const newMemo = new MemoEntry(uuidv4(), memo.content, memo.due, false);
+        saveNewMemoEntry(this.state.settings.appInfo.hostname, newMemo, memo.course).then(() => {
+            this.reloadEntities();
+        });
+    }
 
-    const onSettingsChange = useCallback(
-        (change: SettingsChange) => {
-            const newSettings = _.cloneDeep(settings);
-            if (change.type === "reset-color") {
-                const _settings = new Settings();
-                newSettings.color = _settings.color;
-                saveSettings(settings.appInfo.hostname, newSettings).then(() => {
-                    setSettings(newSettings);
+    private onSettingsChange(change: SettingsChange) {
+        const newSettings = _.cloneDeep(this.state.settings);
+        if (change.type === "reset-color") {
+            const _settings = new Settings();
+            newSettings.color = _settings.color;
+            saveSettings(this.state.settings.appInfo.hostname, newSettings).then(() => {
+                this.setState({
+                    settings: newSettings
                 });
-                return;
-            }
-
-            _.set(newSettings, change.id, change.newValue);
-            saveSettings(settings.appInfo.hostname, newSettings).then(() => {
-                setSettings(newSettings);
             });
-        },
-        [settings]
-    );
+            return;
+        }
 
-    return (
-        <MiniSakaiContext.Provider
-            value={{
-                settings: settings
-            }}
-        >
-            <MiniSakaiLogo />
-            <MiniSakaiVersion />
-            {props.subset ? null : (
-                <>
-                    <MiniSakaiClose onClose={() => toggleMiniSakai()} /> {/* TODO: replace toggleMiniSakai */}
-                    <MiniSakaiTabs
-                        onAssignment={() => setShownTab("assignment")}
-                        onSettings={() => setShownTab("settings")}
-                        selection={shownTab}
+        _.set(newSettings, change.id, change.newValue);
+        saveSettings(this.state.settings.appInfo.hostname, newSettings).then(() => {
+            this.setState({
+                settings: newSettings
+            });
+        });
+    }
+
+    componentDidUpdate(prevProps: MiniSakaiRootProps, prevState: MiniSakaiRootState) {
+        if (!_.isEqual(prevState.entities, this.state.entities)) {
+            getStoredSettings(window.location.hostname).then((s) => {
+                this.setState({
+                    settings: s
+                });
+                addFavoritedCourseSites(getBaseURL()).then(() => {
+                    createFavoritesBarNotification(s, this.state.entities);
+                });
+            });
+        }
+    }
+
+    render(): React.ReactNode {
+        const entryTabShown = this.state.shownTab === "assignment";
+        const settingsTabShown = this.state.shownTab === "settings";
+
+        return (
+            <MiniSakaiContext.Provider
+                value={{
+                    settings: this.state.settings
+                }}
+            >
+                <MiniSakaiLogo />
+                <MiniSakaiVersion />
+                {this.props.subset ? null : (
+                    <>
+                        <MiniSakaiClose onClose={() => toggleMiniSakai()} /> {/* TODO: replace toggleMiniSakai */}
+                        <MiniSakaiTabs
+                            onAssignment={() =>
+                                this.setState({
+                                    shownTab: "assignment"
+                                })
+                            }
+                            onSettings={() =>
+                                this.setState({
+                                    shownTab: "settings"
+                                })
+                            }
+                            selection={this.state.shownTab}
+                        />
+                        {this.state.shownTab === "assignment" ? (
+                            <>
+                                <button
+                                    className="cs-add-memo-btn"
+                                    onClick={() => {
+                                        this.setState((state) => {
+                                            return {
+                                                memoBoxShown: !state.memoBoxShown
+                                            };
+                                        });
+                                    }}
+                                >
+                                    +
+                                </button>
+                                <MiniSakaiAssignmentTime />
+                                <MiniSakaiQuizTime />
+                            </>
+                        ) : null}
+                    </>
+                )}
+                {entryTabShown ? (
+                    <EntryTab
+                        showMemoBox={this.state.memoBoxShown}
+                        isSubset={this.props.subset}
+                        entities={this.state.entities}
+                        onCheck={this.onCheck}
+                        onMemoAdd={this.onMemoAdd}
                     />
-                    {shownTab === "assignment" ? (
-                        <>
-                            <button
-                                className="cs-add-memo-btn"
-                                onClick={() => {
-                                    setMemoBoxShown((s) => !s);
-                                }}
-                            >
-                                +
-                            </button>
-                            <MiniSakaiAssignmentTime />
-                            <MiniSakaiQuizTime />
-                        </>
-                    ) : null}
-                </>
-            )}
-            {entryTabShown ? (
-                <EntryTab showMemoBox={memoBoxShown} isSubset={props.subset} entities={entities} onCheck={onCheck} />
-            ) : null}
-            {settingsTabShown ? <SettingsTab settings={settings} onSettingsChange={onSettingsChange} /> : null}
-        </MiniSakaiContext.Provider>
-    );
+                ) : null}
+                {settingsTabShown ? (
+                    <SettingsTab settings={this.state.settings} onSettingsChange={this.onSettingsChange} />
+                ) : null}
+            </MiniSakaiContext.Provider>
+        );
+    }
 }
 
 function MiniSakaiLogo() {
