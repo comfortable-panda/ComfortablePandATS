@@ -29,6 +29,8 @@ type CSColor = {
     miniSuccess: string;
 };
 
+type ThemeType = "light" | "dark";
+
 const CSTheme = {
     light: { textColor: "#464646", bgColor: "#cacaca", dateColor: "#b01011" },
     dark: { textColor: "#d4d4d4", bgColor: "#555555", dateColor: "#ff7475" }
@@ -64,6 +66,10 @@ export class Settings {
 
     setFetchtime(fetchTime: FetchTime) {
         this.fetchTime = fetchTime;
+    }
+
+    setTheme(useDark: boolean) {
+        this.appInfo.useDarkTheme = useDark;
     }
 
     getTextColor() {
