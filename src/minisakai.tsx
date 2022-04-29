@@ -1,11 +1,8 @@
-import { getDaysUntil, getSakaiTheme, nowTime, DueCategory } from "./utils";
 import { hamburger, miniSakai } from "./dom";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { MiniSakaiRoot } from "./components/main";
-import { EntityProtocol, EntryProtocol } from "./features/entity/type";
 import { Settings } from "./features/setting/types";
-import { MaxTimestamp } from "./constant";
 
 /**
  * Create a button to open miniSakai
@@ -30,7 +27,6 @@ export function createMiniSakai() {
     root.render(<MiniSakaiRoot subset={false} />);
 }
 
-
 export const applyColorSettings = (settings: Settings): void => {
     const bodyStyles = document.querySelector(".Mrphs-mainHeader") as HTMLElement;
     for (const colorName of Object.getOwnPropertyNames(settings.color)) {
@@ -42,74 +38,3 @@ export const applyColorSettings = (settings: Settings): void => {
     bodyStyles.style.setProperty("--bgColor", settings.getBgColor());
     bodyStyles.style.setProperty("--dateColor", settings.getDateColor());
 };
-
-const overwriteborder = function (className: string, color: string | undefined) {
-    const element = document.getElementsByClassName(className);
-    for (let i = 0; i < element.length; i++) {
-        const elem = element[i] as HTMLElement;
-        const attr = "solid 2px " + color;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (elem.style as any)["border-top"] = attr;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (elem.style as any)["border-left"] = attr;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (elem.style as any)["border-bottom"] = attr;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (elem.style as any)["border-right"] = attr;
-    }
-};
-const overwritebackground = function (className: string, color: string | undefined) {
-    const element = document.getElementsByClassName(className);
-    for (let i = 0; i < element.length; i++) {
-        const elem = element[i] as HTMLElement;
-        elem.setAttribute("style", "background:" + color + "!important");
-    }
-};
-const overwritecolor = function (className: string, color: string | undefined) {
-    const element = document.getElementsByClassName(className);
-    for (let i = 0; i < element.length; i++) {
-        const elem = element[i] as HTMLElement;
-        elem.setAttribute("style", elem.getAttribute("style") + ";color:" + color + "!important");
-    }
-};
-
-/**
- * Override CSS of favorites bar and miniSakai.
- */
-async function overrideCSSColor(settings: Settings) {
-    // Overwrite colors
-    overwritebackground("cs-course-danger", settings.color.miniDanger);
-    overwritebackground("cs-course-warning", settings.color.miniWarning);
-    overwritebackground("cs-course-success", settings.color.miniSuccess);
-    overwritebackground("cs-tab-danger", settings.color.topDanger);
-    overwritebackground("cs-tab-warning", settings.color.topWarning);
-    overwritebackground("cs-tab-success", settings.color.topSuccess);
-
-    overwriteborder("cs-assignment-danger", settings.color.miniDanger);
-    overwriteborder("cs-assignment-warning", settings.color.miniWarning);
-    overwriteborder("cs-assignment-success", settings.color.miniSuccess);
-    overwriteborder("cs-tab-danger", settings.color.topDanger);
-    overwriteborder("cs-tab-warning", settings.color.topWarning);
-    overwriteborder("cs-tab-success", settings.color.topSuccess);
-}
-
-function overrideCSSDarkTheme() {
-    if (getSakaiTheme() == "dark") {
-        const foregroundColorDark = "#D4D4D4";
-        const backgroundColorDark = "#555555";
-        const dateColorDark = "#e07071";
-        overwritebackground("cs-minisakai", backgroundColorDark);
-        overwritecolor("cs-assignment-time", foregroundColorDark);
-        overwritecolor("cs-assignment-date", dateColorDark);
-        overwritecolor("cs-quiz-time", foregroundColorDark);
-        overwritecolor("cs-minipanda", foregroundColorDark);
-        overwritecolor("cs-settings-tab", foregroundColorDark);
-        overwritecolor("cs-memo-item", foregroundColorDark);
-        overwritecolor("cs-minisakai-list", foregroundColorDark);
-        overwritecolor("cs-assignment-title", foregroundColorDark);
-        overwritecolor("cs-noassignment-p", foregroundColorDark);
-        overwritecolor("cs-tab-danger", backgroundColorDark);
-        overwritecolor("cs-tab-warning", backgroundColorDark);
-        overwritecolor("cs-tab-success", backgroundColorDark);
-    }
-}
