@@ -14,16 +14,16 @@ export type EntityUnion = Assignment | Quiz | Memo;
 // Every type in EntryUnion must implement IEntry
 export type EntryUnion = AssignmentEntry | QuizEntry | MemoEntry; // TODO: add Quiz, Memo, ...
 
-export type DueType = 'danger' | 'warning' | 'success' | 'other';
+export type DueType = "danger" | "warning" | "success" | "other";
 
 function MiniSakaiCourse(props: {
-    courseID: string,
-    coursePage: string,
-    courseName: string,
-    entries: EntryUnion[],
-    dueType: DueType,
-    isSubset: boolean,
-    onCheck: (entry: EntryUnion, checked: boolean) => void
+    courseID: string;
+    coursePage: string;
+    courseName: string;
+    entries: EntryUnion[];
+    dueType: DueType;
+    isSubset: boolean;
+    onCheck: (entry: EntryUnion, checked: boolean) => void;
 }) {
     const divClass = useMemo(() => `cs-assignment-${props.dueType}`, [props.dueType]);
     const aClass = useMemo(() => `cs-course-${props.dueType} cs-course-name`, [props.dueType]);
@@ -33,15 +33,30 @@ function MiniSakaiCourse(props: {
         for (const entry of props.entries) {
             if (entry instanceof AssignmentEntry) {
                 elems.push(
-                    <AssignmentEntryView key={entry.getID()} isSubset={props.isSubset} assignment={entry} onCheck={(checked) => props.onCheck(entry, checked)} />
+                    <AssignmentEntryView
+                        key={entry.getID()}
+                        isSubset={props.isSubset}
+                        assignment={entry}
+                        onCheck={(checked) => props.onCheck(entry, checked)}
+                    />
                 );
             } else if (entry instanceof QuizEntry) {
                 elems.push(
-                    <QuizEntryView key={entry.getID()} isSubset={props.isSubset} quiz={entry} onCheck={(checked) => props.onCheck(entry, checked)} />
+                    <QuizEntryView
+                        key={entry.getID()}
+                        isSubset={props.isSubset}
+                        quiz={entry}
+                        onCheck={(checked) => props.onCheck(entry, checked)}
+                    />
                 );
             } else if (entry instanceof MemoEntry) {
                 elems.push(
-                    <MemoEntryView key={entry.getID()} isSubset={props.isSubset} memo={entry} onCheck={(checked) => props.onCheck(entry, checked)} />
+                    <MemoEntryView
+                        key={entry.getID()}
+                        isSubset={props.isSubset}
+                        memo={entry}
+                        onCheck={(checked) => props.onCheck(entry, checked)}
+                    />
                 );
             }
         }
@@ -51,21 +66,23 @@ function MiniSakaiCourse(props: {
     return (
         // TODO: style
         <div className={divClass}>
-            <a className={aClass} href={props.coursePage}>{props.courseName}</a>
+            <a className={aClass} href={props.coursePage}>
+                {props.courseName}
+            </a>
             {elements}
         </div>
     );
 }
 
 export function EntryTab(props: {
-    isSubset: boolean,
-    showMemoBox: boolean,
-    entities: EntityUnion[],
-    onCheck: (entry: EntryUnion, checked: boolean) => void
+    isSubset: boolean;
+    showMemoBox: boolean;
+    entities: EntityUnion[];
+    onCheck: (entry: EntryUnion, checked: boolean) => void;
 }) {
     type EntryWithCourse = {
-        entry: EntryUnion,
-        course: Course
+        entry: EntryUnion;
+        course: Course;
     };
 
     const dangerElements: EntryWithCourse[] = [];
@@ -80,31 +97,31 @@ export function EntryTab(props: {
             const daysUntilDue = getDaysUntil(nowTime, entry.getDueDate() * 1000);
 
             switch (daysUntilDue) {
-                case 'due24h':
+                case "due24h":
                     dangerElements.push({
                         entry: entry,
                         course: course
                     });
                     break;
-                case 'due5d':
+                case "due5d":
                     warningElements.push({
                         entry: entry,
                         course: course
                     });
                     break;
-                case 'due14d':
+                case "due14d":
                     successElements.push({
                         entry: entry,
                         course: course
                     });
                     break;
-                case 'dueOver14d':
+                case "dueOver14d":
                     otherElements.push({
                         entry: entry,
                         course: course
                     });
                     break;
-                case 'duePassed':
+                case "duePassed":
                     lateElements.push({
                         entry: entry,
                         course: course
@@ -122,28 +139,32 @@ export function EntryTab(props: {
                     dueType="danger"
                     isSubset={props.isSubset}
                     entriesWithCourse={dangerElements}
-                    onCheck={props.onCheck} />
+                    onCheck={props.onCheck}
+                />
             )}
             {warningElements.length === 0 ? null : (
                 <MiniSakaiEntryList
                     dueType="warning"
                     isSubset={props.isSubset}
                     entriesWithCourse={warningElements}
-                    onCheck={props.onCheck} />
+                    onCheck={props.onCheck}
+                />
             )}
             {successElements.length === 0 ? null : (
                 <MiniSakaiEntryList
                     dueType="success"
                     isSubset={props.isSubset}
                     entriesWithCourse={successElements}
-                    onCheck={props.onCheck} />
+                    onCheck={props.onCheck}
+                />
             )}
             {otherElements.length === 0 ? null : (
                 <MiniSakaiEntryList
                     dueType="other"
                     isSubset={props.isSubset}
                     entriesWithCourse={otherElements}
-                    onCheck={props.onCheck} />
+                    onCheck={props.onCheck}
+                />
             )}
             {/* TODO: handle late submits */}
         </>
@@ -151,10 +172,7 @@ export function EntryTab(props: {
 }
 
 // TODO
-function AddMemoBox(props: {
-    shown: boolean,
-    courses: Course[]
-}) {
+function AddMemoBox(props: { shown: boolean; courses: Course[] }) {
     const courseName = useTranslation("todo_box_course_name");
     const memoLabel = useTranslation("todo_box_memo");
     const dueDate = useTranslation("todo_box_due_date");
@@ -170,7 +188,7 @@ function AddMemoBox(props: {
     }, [props.courses]);
 
     if (!props.shown) {
-        return <div></div>
+        return <div></div>;
     }
 
     return (
@@ -178,15 +196,15 @@ function AddMemoBox(props: {
             <div className="cs-memo-item">
                 <p>{courseName}</p>
                 <label>
-                    <select className="todoLecName">
-                        {options}
-                    </select>
+                    <select className="todoLecName">{options}</select>
                 </label>
             </div>
             <div className="cs-memo-item">
                 <p>{memoLabel}</p>
                 <label>
-                    <input type="text" className="todoContent"
+                    <input
+                        type="text"
+                        className="todoContent"
                         value={todoContent}
                         onChange={(ev) => setTodoContent(ev.target.value)}
                     />
@@ -195,30 +213,34 @@ function AddMemoBox(props: {
             <div className="cs-memo-item">
                 <p>{dueDate}</p>
                 <label>
-                    <input type="datetime-local" className="todoDue"
+                    <input
+                        type="datetime-local"
+                        className="todoDue"
                         value={todoDue}
                         onChange={(ev) => setTodoDue(ev.target.value)}
                     />
                 </label>
             </div>
             <div className="cs-memo-item">
-                <button type="submit" id="todo-add">{addBtnLabel}</button>
+                <button type="submit" id="todo-add">
+                    {addBtnLabel}
+                </button>
             </div>
         </div>
     );
 }
 
 function MiniSakaiEntryList(props: {
-    dueType: DueType,
+    dueType: DueType;
     entriesWithCourse: {
-        entry: EntryUnion,
-        course: Course
-    }[],
-    isSubset: boolean,
-    onCheck: (entry: EntryUnion, checked: boolean) => void
+        entry: EntryUnion;
+        course: Course;
+    }[];
+    isSubset: boolean;
+    onCheck: (entry: EntryUnion, checked: boolean) => void;
 }) {
     const className = useMemo(() => {
-        const baseClass = 'cs-minisakai-list';
+        const baseClass = "cs-minisakai-list";
         const clazz = `cs-minisakai-list-${props.dueType}`;
         return `${baseClass} ${clazz}`;
     }, [props.dueType]);
@@ -233,15 +255,16 @@ function MiniSakaiEntryList(props: {
             entries = [];
             courseIdMap.set(courseID, entries);
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             entries = courseIdMap.get(courseID)!;
         }
         entries.push(ewc.entry);
-        courseNameMap.set(courseID, ewc.course.name ?? 'unknown course');
+        courseNameMap.set(courseID, ewc.course.name ?? "unknown course");
     }
 
     const courses: JSX.Element[] = [];
     for (const [courseID, entries] of courseIdMap.entries()) {
-        const courseName = courseNameMap.get(courseID) ?? '<unknown>';
+        const courseName = courseNameMap.get(courseID) ?? "<unknown>";
         courses.push(
             <MiniSakaiCourse
                 key={courseID}
@@ -256,9 +279,5 @@ function MiniSakaiEntryList(props: {
         );
     }
 
-    return (
-        <div className={className}>
-            {courses}
-        </div>
-    );
+    return <div className={className}>{courses}</div>;
 }

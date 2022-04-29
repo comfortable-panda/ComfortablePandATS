@@ -30,22 +30,22 @@ export function createMiniSakai() {
 }
 
 const dueCategoryClassMap: { [key in DueCategory]: string } = {
-    "due24h": "cs-tab-danger",
-    "due5d": "cs-tab-warning",
-    "due14d": "cs-tab-success",
-    "dueOver14d": "cs-tab-other",
-    "duePassed": ""
+    due24h: "cs-tab-danger",
+    due5d: "cs-tab-warning",
+    due14d: "cs-tab-success",
+    dueOver14d: "cs-tab-other",
+    duePassed: ""
 };
 
 /**
  * Add notification badge for new Assignment/Quiz
  */
 export async function createFavoritesBarNotification(settings: Settings, entities: EntityProtocol[]): Promise<void> {
-    console.log("entities in create fav", entities)
+    console.log("entities in create fav", entities);
     const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
     const defaultTabCount = Object.keys(defaultTab).length;
 
-    const courseMap = new Map<string, { entries: EntryProtocol[], isRead: boolean }>(); // courseID => {EntryProtocol[], isRead}
+    const courseMap = new Map<string, { entries: EntryProtocol[]; isRead: boolean }>(); // courseID => {EntryProtocol[], isRead}
     for (const entity of entities) {
         let entries = courseMap.get(entity.course.id);
         if (entries === undefined) {
@@ -56,7 +56,7 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
         entries.isRead = entries.isRead && (entity.isRead || entity.entries.length === 0);
     }
 
-    const dueMap = new Map<string, { due: DueCategory, isRead: boolean }>(); // courseID => DueCategory, isRead
+    const dueMap = new Map<string, { due: DueCategory; isRead: boolean }>(); // courseID => DueCategory, isRead
     for (const [courseID, entries] of courseMap.entries()) {
         if (entries.entries.length === 0) continue;
         const closestTime = entries.entries
@@ -69,7 +69,13 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
     }
 
     for (let j = 2; j < defaultTabCount; j++) {
-        const courseID: string | undefined = (defaultTab[j].getElementsByClassName("link-container")[0] as any).href.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)")[2];
+        const aTag = defaultTab[j].getElementsByClassName("link-container")[0] as HTMLAnchorElement | undefined;
+        const href = aTag?.href;
+        const hrefContent = href?.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)");
+        if (hrefContent === undefined || hrefContent === null) {
+            continue;
+        }
+        const courseID = hrefContent[2];
         if (courseID === undefined) continue;
         const courseInfo = dueMap.get(courseID);
         if (courseInfo === undefined) continue;
@@ -90,25 +96,29 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
     overrideCSSDarkTheme();
 }
 
-const overwriteborder = function(className: string, color: string | undefined) {
+const overwriteborder = function (className: string, color: string | undefined) {
     const element = document.getElementsByClassName(className);
     for (let i = 0; i < element.length; i++) {
         const elem = element[i] as HTMLElement;
         const attr = "solid 2px " + color;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (elem.style as any)["border-top"] = attr;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (elem.style as any)["border-left"] = attr;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (elem.style as any)["border-bottom"] = attr;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (elem.style as any)["border-right"] = attr;
     }
 };
-const overwritebackground = function(className: string, color: string | undefined) {
+const overwritebackground = function (className: string, color: string | undefined) {
     const element = document.getElementsByClassName(className);
     for (let i = 0; i < element.length; i++) {
         const elem = element[i] as HTMLElement;
         elem.setAttribute("style", "background:" + color + "!important");
     }
 };
-const overwritecolor = function(className: string, color: string | undefined) {
+const overwritecolor = function (className: string, color: string | undefined) {
     const element = document.getElementsByClassName(className);
     for (let i = 0; i < element.length; i++) {
         const elem = element[i] as HTMLElement;
@@ -138,9 +148,9 @@ async function overrideCSSColor(settings: Settings) {
 
 function overrideCSSDarkTheme() {
     if (getSakaiTheme() == "dark") {
-        let foregroundColorDark = "#D4D4D4";
-        let backgroundColorDark = "#555555";
-        let dateColorDark = "#e07071";
+        const foregroundColorDark = "#D4D4D4";
+        const backgroundColorDark = "#555555";
+        const dateColorDark = "#e07071";
         overwritebackground("cs-minisakai", backgroundColorDark);
         overwritecolor("cs-assignment-time", foregroundColorDark);
         overwritecolor("cs-assignment-date", dateColorDark);
