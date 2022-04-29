@@ -47,7 +47,7 @@ export async function createFavoritesBar(settings: Settings, entities: EntityPro
         dueMap.set(courseID, { due: daysUntilDue, isRead: entries.isRead });
     }
 
-    for (let j = 2; j < defaultTabCount; j++) {
+    for (let j = 0; j < defaultTabCount; j++) {
         const aTag = defaultTab[j].getElementsByClassName("link-container")[0] as HTMLAnchorElement | undefined;
         const href = aTag?.href;
         const hrefContent = href?.match("(https?://[^/]+)/portal/site-?[a-z]*/([^/]+)");
