@@ -30,8 +30,8 @@ type CSColor = {
 };
 
 const CSTheme = {
-    light: { textColor: "#464646", bgColor: "#cacaca" },
-    dark: { textColor: "#d4d4d4", bgColor: "#555555" }
+    light: { textColor: "#464646", bgColor: "#cacaca", dateColor: "#b01011" },
+    dark: { textColor: "#d4d4d4", bgColor: "#555555", dateColor: "#ff7475" }
 };
 
 export class Settings {
@@ -72,5 +72,9 @@ export class Settings {
 
     getBgColor() {
         return this.appInfo.useDarkTheme ? CSTheme.dark.bgColor : CSTheme.light.bgColor;
+    }
+
+    getDateColor() {
+        return this.appInfo.useDarkTheme ? CSTheme.dark.dateColor : CSTheme.light.dateColor;
     }
 }

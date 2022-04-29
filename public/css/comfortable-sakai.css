@@ -10,25 +10,30 @@
     --miniLate: #212121;
     --textColor: #464646;
     --bgColor: #cacaca;
+    --dateColor: #b01011;
 }
 
 .cs-tab-danger {
     background: var(--topDanger) !important;
+    color: #333435 !important;
     border: 0 solid var(--topDanger) !important;
 }
 
 .cs-tab-warning {
     background: var(--topWarning) !important;
+    color: #333435 !important;
     border: 0 solid var(--topWarning) !important;
 }
 
 .cs-tab-success {
     background: var(--topSuccess) !important;
+    color: #333435 !important;
     border: 0 solid var(--topSuccess) !important;
 }
 
 .cs-tab-other {
     background: var(--topOther) !important;
+    color: #333435 !important;
     border: 0 solid var(--topOther) !important;
 }
 
@@ -308,7 +313,7 @@
 .cs-assignment-date {
     font-size: 12px !important;
     font-weight: bold;
-    color: #b01011
+    color: var(--dateColor);
 }
 
 .cs-assignmate-date-padding {
