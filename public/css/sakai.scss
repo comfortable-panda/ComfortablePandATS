@@ -1,0 +1,34 @@
+$theme-colors: (
+        primary: #333333,
+        secondary: #cccccc,
+        success: #16b43b,
+        warning: #f8c11a,
+        danger: #f13245,
+        background: #e9e9e9,
+        base: #f7f7f7,
+);
+
+$dark-theme-colors: (
+        primary: #f7f7f7,
+        secondary: #cccccc,
+        success: #33e65d,
+        warning: #f1c339,
+        danger: #f74254,
+        background: #1a1a1a,
+        base: #333333,
+);
+
+/* CSS Variables */
+:root {
+  // Light Mode
+  @each $key, $color in $theme-colors {
+    --color-#{$key}: #{$color};
+  }
+
+  // Dark Mode
+  &[data-theme='dark'] {
+    @each $key, $color in $dark-theme-colors {
+      --color-#{$key}: #{$color};
+    }
+  }
+}
