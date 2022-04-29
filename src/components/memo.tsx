@@ -6,6 +6,7 @@ export default function MemoEntryView(props: {
     memo: MemoEntry;
     isSubset: boolean;
     onCheck: (checked: boolean) => void;
+    onDelete: () => void;
 }) {
     // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime * 1000 - nowTime) / 1000);
     const timeRemain = [0, 0, 0]; // TODO
@@ -39,7 +40,7 @@ export default function MemoEntryView(props: {
 
             <p className="cs-assignment-title">
                 <span className="cs-badge cs-badge-memo">{memoBadge}</span>
-                <span className="cs-del-memo-btn"></span> {/* TODO: del button */}
+                <span className="cs-del-memo-btn" onClick={() => props.onDelete()}>x</span> {/* TODO: del button */}
                 {props.memo.title}
             </p>
         </>

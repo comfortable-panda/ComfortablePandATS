@@ -24,6 +24,7 @@ function MiniSakaiCourse(props: {
     dueType: DueType;
     isSubset: boolean;
     onCheck: (entry: EntryUnion, checked: boolean) => void;
+    onDelete: (entry: EntryUnion) => void;
 }) {
     const divClass = useMemo(() => `cs-assignment-${props.dueType}`, [props.dueType]);
     const aClass = useMemo(() => `cs-course-${props.dueType} cs-course-name`, [props.dueType]);
@@ -56,6 +57,7 @@ function MiniSakaiCourse(props: {
                         isSubset={props.isSubset}
                         memo={entry}
                         onCheck={(checked) => props.onCheck(entry, checked)}
+                        onDelete={() => props.onDelete(entry)}
                     />
                 );
             }
@@ -81,6 +83,7 @@ export function EntryTab(props: {
     showMemoBox: boolean;
     entities: EntityUnion[];
     onCheck: (entry: EntryUnion, checked: boolean) => void;
+    onDelete: (entry: EntryUnion) => void;
     onMemoAdd: (memo: MemoAddInfo) => void;
 }) {
     type EntryWithCourse = {
@@ -147,6 +150,7 @@ export function EntryTab(props: {
                     isSubset={props.isSubset}
                     entriesWithCourse={dangerElements}
                     onCheck={props.onCheck}
+                    onDelete={props.onDelete}
                 />
             )}
             {warningElements.length === 0 ? null : (
@@ -155,6 +159,7 @@ export function EntryTab(props: {
                     isSubset={props.isSubset}
                     entriesWithCourse={warningElements}
                     onCheck={props.onCheck}
+                    onDelete={props.onDelete}
                 />
             )}
             {successElements.length === 0 ? null : (
@@ -163,6 +168,7 @@ export function EntryTab(props: {
                     isSubset={props.isSubset}
                     entriesWithCourse={successElements}
                     onCheck={props.onCheck}
+                    onDelete={props.onDelete}
                 />
             )}
             {otherElements.length === 0 ? null : (
@@ -171,6 +177,7 @@ export function EntryTab(props: {
                     isSubset={props.isSubset}
                     entriesWithCourse={otherElements}
                     onCheck={props.onCheck}
+                    onDelete={props.onDelete}
                 />
             )}
             {/* TODO: handle late submits */}
@@ -278,6 +285,7 @@ function MiniSakaiEntryList(props: {
     }[];
     isSubset: boolean;
     onCheck: (entry: EntryUnion, checked: boolean) => void;
+    onDelete: (entry: EntryUnion) => void;
 }) {
     const className = useMemo(() => {
         const baseClass = "cs-minisakai-list";
@@ -315,6 +323,7 @@ function MiniSakaiEntryList(props: {
                 dueType={props.dueType}
                 entries={entries}
                 onCheck={(entry, checked) => props.onCheck(entry, checked)}
+                onDelete={(entry) => props.onDelete(entry)}
             />
         );
     }

@@ -39,3 +39,14 @@ export const saveNewMemoEntry = async (hostname: string, memoEntry: MemoEntry, c
 
     await saveMemos(hostname, memos);
 };
+
+export const removeMemoEntry = async (hostname: string, memoEntry: MemoEntry) => {
+    const memos = await fromStorage(hostname, MemosStorage, decodeMemoFromArray);
+    for (const memo of memos) {
+        memo.entries = memo.entries.filter((m) => {
+            return m.id != memoEntry.id;
+        });
+    }
+
+    await saveMemos(hostname, memos);
+};

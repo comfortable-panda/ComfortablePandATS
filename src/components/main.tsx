@@ -13,7 +13,7 @@ import { addFavoritedCourseSites } from "../features/favorite";
 import { getBaseURL } from "../features/api/fetch";
 import { v4 as uuidv4 } from "uuid";
 import { MemoEntry } from "../features/entity/memo/types";
-import { saveNewMemoEntry } from "../features/entity/memo/saveMemo";
+import { removeMemoEntry, saveNewMemoEntry } from "../features/entity/memo/saveMemo";
 
 export const MiniSakaiContext = React.createContext<{
     settings: Settings;
@@ -40,6 +40,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
 
         this.onCheck = this.onCheck.bind(this);
         this.onMemoAdd = this.onMemoAdd.bind(this);
+        this.onMemoDelete = this.onMemoDelete.bind(this);
         this.onSettingsChange = this.onSettingsChange.bind(this);
     }
 
@@ -68,6 +69,12 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
     private onMemoAdd(memo: MemoAddInfo) {
         const newMemo = new MemoEntry(uuidv4(), memo.content, memo.due, false);
         saveNewMemoEntry(this.state.settings.appInfo.hostname, newMemo, memo.course).then(() => {
+            this.reloadEntities();
+        });
+    }
+
+    private onMemoDelete(entry: EntryUnion) {
+        removeMemoEntry(this.state.settings.appInfo.hostname, entry as MemoEntry).then(() => {
             this.reloadEntities();
         });
     }
@@ -167,6 +174,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                         entities={this.state.entities}
                         onCheck={this.onCheck}
                         onMemoAdd={this.onMemoAdd}
+                        onDelete={this.onMemoDelete}
                     />
                 ) : null}
                 {settingsTabShown ? (
