@@ -86,9 +86,17 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
         defaultTab[j].classList.add(tabClass);
     }
 
-    await overrideCSSColor(settings);
-    overrideCSSDarkTheme();
+    // await overrideCSSColor(settings);
+    // overrideCSSDarkTheme();
 }
+
+export const applyColorSettings = (settings: Settings): void => {
+    for (const colorName of Object.getOwnPropertyNames(settings.color)) {
+        // @ts-ignore
+        const color = settings.color[colorName];
+        document.documentElement.style.setProperty(`--${colorName}`, color);
+    }
+};
 
 const overwriteborder = function(className: string, color: string | undefined) {
     const element = document.getElementsByClassName(className);

@@ -5,7 +5,7 @@ import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
-import { createFavoritesBarNotification } from "../minisakai";
+import { applyColorSettings, createFavoritesBarNotification } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
 import { saveSettings } from "../features/setting/saveSetting";
@@ -42,6 +42,10 @@ export function MiniSakaiRoot(props: {
             await createFavoritesBarNotification(settings, entities);
         })();
     }, [entities]);
+
+    useEffect(() => {
+        applyColorSettings(settings);
+    }, [settings]);
 
     const onCheck = useCallback((entry: EntryUnion, checked: boolean) => {
         entry.hasFinished = checked;
