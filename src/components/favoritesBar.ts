@@ -2,6 +2,7 @@ import { DueCategory, getDaysUntil } from "../utils";
 import { Settings } from "../features/setting/types";
 import { EntityProtocol, EntryProtocol } from "../features/entity/type";
 import { MaxTimestamp } from "../constant";
+import { Course } from "../features/course/types";
 
 const dueCategoryClassMap: { [key in DueCategory]: string } = {
     due24h: "cs-tab-danger",
@@ -11,14 +12,11 @@ const dueCategoryClassMap: { [key in DueCategory]: string } = {
     duePassed: ""
 };
 
-/**
- * Add notification badge for new Assignment/Quiz
- */
-export async function createFavoritesBar(settings: Settings, entities: EntityProtocol[]): Promise<void> {
-    const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
-    const defaultTabCount = Object.keys(defaultTab).length;
+type CourseMap = Map<string, { entries: EntryProtocol[]; isRead: boolean }>;
+type DueMap = Map<string, { due: DueCategory; isRead: boolean }>;
 
-    const courseMap = new Map<string, { entries: EntryProtocol[]; isRead: boolean }>(); // courseID => {EntryProtocol[], isRead}
+const createCourseMap = (entities: EntityProtocol[]): CourseMap => {
+    const courseMap = new Map<string, { entries: EntryProtocol[]; isRead: boolean }>();
     for (const entity of entities) {
         let entries = courseMap.get(entity.course.id);
         if (entries === undefined) {
@@ -28,8 +26,11 @@ export async function createFavoritesBar(settings: Settings, entities: EntityPro
         entries.entries.push(...entity.entries);
         entries.isRead = entries.isRead && (entity.isRead || entity.entries.length === 0);
     }
+    return courseMap;
+};
 
-    const dueMap = new Map<string, { due: DueCategory; isRead: boolean }>(); // courseID => DueCategory, isRead
+const createDueMap = (settings: Settings, courseMap: CourseMap): DueMap => {
+    const dueMap = new Map<string, { due: DueCategory; isRead: boolean }>();
     for (const [courseID, entries] of courseMap.entries()) {
         if (entries.entries.length === 0) continue;
         const closestTime = entries.entries
@@ -46,6 +47,18 @@ export async function createFavoritesBar(settings: Settings, entities: EntityPro
         const daysUntilDue = getDaysUntil(settings.appInfo.currentTime, closestTime * 1000);
         dueMap.set(courseID, { due: daysUntilDue, isRead: entries.isRead });
     }
+    return dueMap;
+};
+
+/**
+ * Add notification badge for new Assignment/Quiz
+ */
+export async function createFavoritesBar(settings: Settings, entities: EntityProtocol[]): Promise<void> {
+    const defaultTab = document.querySelectorAll(".Mrphs-sitesNav__menuitem");
+    const defaultTabCount = Object.keys(defaultTab).length;
+
+    const courseMap = createCourseMap(entities);
+    const dueMap = createDueMap(settings, courseMap);
 
     for (let j = 0; j < defaultTabCount; j++) {
         const aTag = defaultTab[j].getElementsByClassName("link-container")[0] as HTMLAnchorElement | undefined;
