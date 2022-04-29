@@ -5,7 +5,7 @@ import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion, MemoAddInfo } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
-import { applyColorSettings, createFavoritesBarNotification } from "../minisakai";
+import { applyColorSettings, createFavoritesBarNotification, deleteFavoritesBarNotification } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
 import { saveSettings } from "../features/setting/saveSetting";
@@ -58,8 +58,9 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
     }
 
     private onCheck(entry: EntryUnion, checked: boolean) {
-        entry.hasFinished = checked;
-        entry.save(window.location.hostname).then(() => {
+        const newEntry = _.cloneDeep(entry);
+        newEntry.hasFinished = checked;
+        newEntry.save(window.location.hostname).then(() => {
             this.reloadEntities();
         });
     }
@@ -99,11 +100,14 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                     settings: s
                 });
                 addFavoritedCourseSites(getBaseURL()).then(() => {
+                    deleteFavoritesBarNotification();
                     createFavoritesBarNotification(s, this.state.entities);
                 });
             });
         }
         if (!_.isEqual(prevState.settings, this.state.settings)) {
+            deleteFavoritesBarNotification();
+            createFavoritesBarNotification(this.state.settings, this.state.entities);
             applyColorSettings(this.state.settings);
         }
     }

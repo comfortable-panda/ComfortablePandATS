@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { MiniSakaiRoot } from "./components/main";
 import { EntityProtocol, EntryProtocol } from "./features/entity/type";
 import { Settings } from "./features/setting/types";
+import { MaxTimestamp } from "./constant";
 
 /**
  * Create a button to open miniSakai
@@ -61,10 +62,16 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
         if (entries.entries.length === 0) continue;
         const closestTime = entries.entries
             .filter((e) => {
-                return settings.miniSakaiOption.showLateAcceptedEntry || !e.hasFinished;
+                if (settings.miniSakaiOption.showCompletedEntry) {
+                    if (!settings.miniSakaiOption.showLateAcceptedEntry) return settings.appInfo.currentTime < e.dueTime * 1000;
+                } else {
+                    if (e.hasFinished) return false;
+                }
+                return true;
             })
-            .reduce((prev, e) => Math.min(e.dueTime, prev), Number.MAX_SAFE_INTEGER);
-        const daysUntilDue = getDaysUntil(nowTime, closestTime * 1000);
+            .reduce((prev, e) => Math.min(e.dueTime, prev), MaxTimestamp);
+        if (closestTime === MaxTimestamp) continue;
+        const daysUntilDue = getDaysUntil(settings.appInfo.currentTime, closestTime * 1000);
         dueMap.set(courseID, { due: daysUntilDue, isRead: entries.isRead });
     }
 
@@ -94,6 +101,18 @@ export async function createFavoritesBarNotification(settings: Settings, entitie
 
     // await overrideCSSColor(settings);
     // overrideCSSDarkTheme();
+}
+
+export const deleteFavoritesBarNotification = (): void => {
+    const classlist = ["cs-notification-badge", "cs-tab-danger", "cs-tab-warning", "cs-tab-success"];
+    for (const c of classlist) {
+        const q = document.querySelectorAll(`.${c}`);
+        // @ts-ignore
+        for (const _ of q) {
+            _.classList.remove(`${c}`);
+            _.style = "";
+        }
+    }
 }
 
 export const applyColorSettings = (settings: Settings): void => {

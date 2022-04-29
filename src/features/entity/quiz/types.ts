@@ -1,8 +1,7 @@
 import { Course } from "../../course/types";
 import { EntityProtocol, EntryProtocol } from "../type";
 import { saveQuizEntry } from "./saveQuiz";
-
-const MAX_TIMESTAMP = 99999999999999;
+import { MaxTimestamp } from "../../../constant";
 
 export class QuizEntry implements EntryProtocol {
     constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean) {}
@@ -20,7 +19,7 @@ export class QuizEntry implements EntryProtocol {
     }
 
     get getDueDateTimestamp(): number {
-        return this.dueTime ? this.dueTime : MAX_TIMESTAMP;
+        return this.dueTime ? this.dueTime : MaxTimestamp;
     }
 
     render(): [React.Component<{}, {}, any>, number][] {

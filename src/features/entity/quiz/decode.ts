@@ -1,6 +1,7 @@
 import { Quiz, QuizEntry } from "./types";
 import { Course } from "../../course/types";
 import { nowTime } from "../../../utils";
+import { MaxTimestamp } from "../../../constant";
 
 /* Sakai APIから取得した課題をQuizEntryに変換する */
 export const decodeQuizFromAPI = (data: Record<string, any>): Array<QuizEntry> => {
@@ -10,7 +11,7 @@ export const decodeQuizFromAPI = (data: Record<string, any>): Array<QuizEntry> =
             const entry = new QuizEntry(
                 json.publishedAssessmentId,
                 json.title,
-                json.dueDate ? json.dueDate / 1000 : 999999999999,
+                json.dueDate ? json.dueDate / 1000 : MaxTimestamp,
                 false
             );
             return entry;

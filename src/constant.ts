@@ -6,3 +6,4 @@ export const SettingsStorage = "CS_Settings";
 export const AssignmentFetchTimeStorage = "CS_AssignmentFetchTime";
 export const QuizFetchTimeStorage = "CS_QuizFetchTime";
 export const HostnameStorage = "CS_Hostname";
+export const MaxTimestamp = 99999999999999;

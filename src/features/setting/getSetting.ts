@@ -7,6 +7,7 @@ import { getFetchTime } from "../../utils";
 export const getStoredSettings = async (hostname: string): Promise<Settings> => {
     const settings = await fromStorage<Settings>(hostname, SettingsStorage, decodeSettings);
     const fetchTime = await getFetchTime(settings.appInfo.hostname);
+    settings.appInfo.currentTime = new Date().getTime();
     settings.setFetchtime(fetchTime);
 
     return settings;
