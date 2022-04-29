@@ -5,7 +5,7 @@ import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion, MemoAddInfo } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
-import { applyColorSettings, createFavoritesBarNotification, deleteFavoritesBarNotification } from "../minisakai";
+import { applyColorSettings } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
 import { saveSettings } from "../features/setting/saveSetting";
@@ -14,6 +14,7 @@ import { getBaseURL } from "../features/api/fetch";
 import { v4 as uuidv4 } from "uuid";
 import { MemoEntry } from "../features/entity/memo/types";
 import { removeMemoEntry, saveNewMemoEntry } from "../features/entity/memo/saveMemo";
+import { createFavoritesBar, deleteFavoritesBar } from "./favoritesBar";
 
 export const MiniSakaiContext = React.createContext<{
     settings: Settings;
@@ -107,14 +108,14 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                     settings: s
                 });
                 addFavoritedCourseSites(getBaseURL()).then(() => {
-                    deleteFavoritesBarNotification();
-                    createFavoritesBarNotification(s, this.state.entities);
+                    deleteFavoritesBar();
+                    createFavoritesBar(s, this.state.entities);
                 });
             });
         }
         if (!_.isEqual(prevState.settings, this.state.settings)) {
-            deleteFavoritesBarNotification();
-            createFavoritesBarNotification(this.state.settings, this.state.entities);
+            deleteFavoritesBar();
+            createFavoritesBar(this.state.settings, this.state.entities);
             applyColorSettings(this.state.settings);
         }
     }
