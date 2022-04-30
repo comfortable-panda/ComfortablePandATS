@@ -63,3 +63,18 @@ span {
     padding-left: 5px;
     font-weight: bold;
 }
+
+#subSakai {
+    --topDanger: #f78989;
+    --topWarning: #fdd783;
+    --topSuccess: #8bd48d;
+    --topOther: #adadad;
+    --miniDanger: #e85555;
+    --miniWarning: #d7aa57;
+    --miniSuccess: #62b665;
+    --miniOther: #777777;
+    --miniLate: #212121;
+    --textColor: #464646;
+    --bgColor: #cacaca;
+    --dateColor: #b01011;
+}

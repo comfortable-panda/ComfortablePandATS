@@ -1,7 +1,60 @@
-import { Assignment, AssignmentEntry, CourseSiteInfo, DueCategory } from "./model";
-import { Settings } from "./settings";
+import { FetchTime, Settings } from "./features/setting/types";
+import { Course } from "./features/course/types";
+import { Assignment } from "./features/entity/assignment/types";
+import { Quiz } from "./features/entity/quiz/types";
+import { Memo } from "./features/entity/memo/types";
+import { getAssignments } from "./features/entity/assignment/getAssignment";
+import { getQuizzes } from "./features/entity/quiz/getQuiz";
+import { getMemos } from "./features/entity/memo/getMemo";
+import { fromStorage } from "./features/storage";
+import { AssignmentFetchTimeStorage, CurrentTime, MaxTimestamp, QuizFetchTimeStorage } from "./constant";
+import { saveAssignments } from "./features/entity/assignment/saveAssignment";
+import { EntryProtocol } from "./features/entity/type";
 
-export const nowTime = new Date().getTime();
+export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
+
+export async function getEntities(settings: Settings, courses: Array<Course>, cacheOnly = false) {
+    // TODO: 並列化する
+    const hostname = settings.appInfo.hostname;
+    const currentTime = settings.appInfo.currentTime;
+    const fetchTime = await getFetchTime(hostname);
+    const assignment: Array<Assignment> = await getAssignments(
+        hostname,
+        courses,
+        cacheOnly || shouldUseCache(fetchTime.assignment, currentTime, settings.cacheInterval.assignment)
+    );
+    const quiz: Array<Quiz> = await getQuizzes(
+        hostname,
+        courses,
+        cacheOnly || shouldUseCache(fetchTime.quiz, currentTime, settings.cacheInterval.quiz)
+    );
+    const memo: Array<Memo> = await getMemos(hostname);
+    return {
+        assignment: assignment,
+        quiz: quiz,
+        memo: memo
+    };
+}
+
+const decodeTimestamp = (data: any): number | undefined => {
+    if (data === undefined) return undefined;
+    return data as number;
+};
+
+export const shouldUseCache = (fetchTime: number | undefined, currentTime: number, cacheInterval: number): boolean => {
+    if (fetchTime === undefined) return false;
+    console.log(currentTime, fetchTime);
+    return currentTime - fetchTime <= cacheInterval;
+};
+
+export async function getFetchTime(hostname: string): Promise<FetchTime> {
+    const assignmentTime = await fromStorage<number | undefined>(hostname, AssignmentFetchTimeStorage, decodeTimestamp);
+    const quizTime = await fromStorage<number | undefined>(hostname, QuizFetchTimeStorage, decodeTimestamp);
+    return {
+        assignment: assignmentTime,
+        quiz: quizTime
+    };
+}
 
 /**
  * Calculate category of assignment due date
@@ -9,21 +62,21 @@ export const nowTime = new Date().getTime();
  * @param {number} dt2 target time
  */
 function getDaysUntil(dt1: number, dt2: number): DueCategory {
-  let diff = (dt2 - dt1) / 1000;
-  diff /= 3600 * 24;
-  let category: DueCategory;
-  if (diff > 0 && diff <= 1) {
-    category = "due24h";
-  } else if (diff > 1 && diff <= 5) {
-    category = "due5d";
-  } else if (diff > 5 && diff <= 14) {
-    category = "due14d";
-  } else if (diff > 14) {
-    category = "dueOver14d";
-  } else {
-    category = "duePassed";
-  }
-  return category;
+    let diff = dt2 - dt1;
+    diff /= 3600 * 24;
+    let category: DueCategory;
+    if (diff > 0 && diff <= 1) {
+        category = "due24h";
+    } else if (diff > 1 && diff <= 5) {
+        category = "due5d";
+    } else if (diff > 5 && diff <= 14) {
+        category = "due14d";
+    } else if (diff > 14) {
+        category = "dueOver14d";
+    } else {
+        category = "duePassed";
+    }
+    return category;
 }
 
 /**
@@ -31,296 +84,100 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
  * @param {number | undefined} timestamp
  */
 function formatTimestamp(timestamp: number | undefined): string {
-  const date = new Date(timestamp ? timestamp : nowTime);
-  return (
-    date.toLocaleDateString() +
-    " " +
-    date.getHours() +
-    ":" +
-    ("00" + date.getMinutes()).slice(-2) +
-    ":" +
-    ("00" + date.getSeconds()).slice(-2)
-  );
+    if (timestamp === undefined) return "---";
+    const date = new Date(timestamp * 1000);
+    return (
+        date.toLocaleDateString() +
+        " " +
+        date.getHours() +
+        ":" +
+        ("00" + date.getMinutes()).slice(-2) +
+        ":" +
+        ("00" + date.getSeconds()).slice(-2)
+    );
 }
 
-/**
- * Creates a Map of courseID and course name.
- * @param {CourseSiteInfo[]} courseSiteInfos
- */
-function createCourseIDMap(courseSiteInfos: Array<CourseSiteInfo>): Map<string, string> {
-  const courseIDMap = new Map<string, string>();
-  for (const courseSiteInfo of courseSiteInfos) {
-    let courseName;
-    if (courseSiteInfo.courseName === undefined) courseName = "";
-    else courseName = courseSiteInfo.courseName;
-    courseIDMap.set(courseSiteInfo.courseID, courseName);
-  }
-  return courseIDMap;
-}
+export const getClosestTime = (settings: Settings, entries: Array<EntryProtocol>): number => {
+    const option = settings.miniSakaiOption;
+    const appInfo = settings.appInfo;
+    return entries
+        .filter((e) => {
+            if (!option.showCompletedEntry) {
+                if (e.hasFinished) return false;
+            }
+            return settings.appInfo.currentTime <= e.getTimestamp(appInfo.currentTime, option.showLateAcceptedEntry);
+        })
+        .reduce(
+            (prev, e) => Math.min(e.getTimestamp(appInfo.currentTime, option.showLateAcceptedEntry), prev),
+            MaxTimestamp
+        );
+};
 
 export const getLoggedInInfoFromScript = (): Array<HTMLScriptElement> => {
-  return Array.from(document.getElementsByTagName("script"));
-}
+    return Array.from(document.getElementsByTagName("script"));
+};
 
 /**
  * Check if user is loggend in to Sakai.
  */
 function isLoggedIn(): boolean {
-  const scripts = getLoggedInInfoFromScript();
-  let loggedIn = false;
-  for (const script of scripts) {
-    if (script.text.match('"loggedIn": true')) loggedIn = true;
-  }
-  return loggedIn;
+    const scripts = getLoggedInInfoFromScript();
+    let loggedIn = false;
+    for (const script of scripts) {
+        if (script.text.match("\"loggedIn\": true")) loggedIn = true;
+    }
+    return loggedIn;
 }
 
 /**
  * Get courseID of current site.
  */
-export const getSiteCourseID = (url: string): string | undefined => {
-  let courseID: string | undefined;
-  const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
-  if (url.match(reg)) {
-    courseID = url.match(reg)?.[2];
-  }
-  return courseID;
+export const getCourseSiteID = (url: string): string | undefined => {
+    let courseID: string | undefined;
+    const reg = new RegExp("(https?://[^/]+)/portal/site/([^/]+)");
+    if (url.match(reg)) {
+        courseID = url.match(reg)?.[2];
+    }
+    return courseID;
 };
 
-/**
- * Update new-assignment notification flags.
- * @param {Assignment[]} assignmentList
- */
-export const updateIsReadFlag = (assignmentList: Array<Assignment>): Array<Assignment> => {
-  const courseID = getSiteCourseID(location.href);
-  let updatedAssignmentList = [];
-  // TODO: Review this process
-  if (courseID && courseID.length >= 17) {
-    for (const assignment of assignmentList) {
-      if (assignment.courseSiteInfo.courseID === courseID) {
-        updatedAssignmentList.push(new Assignment(assignment.courseSiteInfo, assignment.assignmentEntries, true));
-      } else {
-        updatedAssignmentList.push(assignment);
-      }
+export const updateIsReadFlag = (currentHref: string, assignments: Array<Assignment>, hostname: string) => {
+    const courseID = getCourseSiteID(currentHref);
+    if (courseID === undefined) return;
+    for (const assignment of assignments) {
+        if (assignment.course.id === courseID && assignment.entries.length > 0) {
+            assignment.isRead = true;
+            saveAssignments(hostname, assignments);
+        }
     }
-  } else {
-    updatedAssignmentList = assignmentList;
-  }
-
-  return updatedAssignmentList;
-}
+};
 
 /**
  * Change loading icon to hamburger button.
  */
 function miniSakaiReady(): void {
-  const loadingIcon = document.getElementsByClassName("cs-loading")[0];
-  const hamburgerIcon = document.createElement("img");
-  hamburgerIcon.src = chrome.runtime.getURL("img/miniSakaiBtn.png");
-  hamburgerIcon.className = "cs-minisakai-btn";
-  loadingIcon.className = "cs-minisakai-btn-div";
-  loadingIcon.append(hamburgerIcon);
+    const loadingIcon = document.getElementsByClassName("cs-loading")[0];
+    const hamburgerIcon = document.createElement("img");
+    hamburgerIcon.src = chrome.runtime.getURL("img/miniSakaiBtn.png");
+    hamburgerIcon.className = "cs-minisakai-btn";
+    loadingIcon.className = "cs-minisakai-btn-div";
+    loadingIcon.append(hamburgerIcon);
 }
 
-/**
- * Convert array to Settings class
- * @param {any} arr
- */
-function convertArrayToSettings(arr: any): Settings {
-  const settings = new Settings();
-  settings.assignmentCacheInterval = arr.assignmentCacheInterval;
-  settings.quizCacheInterval = arr.quizCacheInterval;
-  settings.displayCheckedAssignment = arr.displayCheckedAssignment;
-  settings.displayLateSubmitAssignment = arr.displayLateSubmitAssignment;
-  settings.topColorDanger = arr.topColorDanger;
-  settings.topColorWarning = arr.topColorWarning;
-  settings.topColorSuccess = arr.topColorSuccess;
-  settings.miniColorDanger = arr.miniColorDanger;
-  settings.miniColorWarning = arr.miniColorWarning;
-  settings.miniColorSuccess = arr.miniColorSuccess;
-  return settings;
+export function getRemainTimeString(dueInSeconds: number): string {
+    if (dueInSeconds === MaxTimestamp) return chrome.i18n.getMessage("due_not_set");
+    const seconds = dueInSeconds - CurrentTime;
+    const day = Math.floor(seconds / (3600 * 24));
+    const hours = Math.floor((seconds - day * 3600 * 24) / 3600);
+    const minutes = Math.floor((seconds - (day * 3600 * 24 + hours * 3600)) / 60);
+    const args = [day.toString(), hours.toString(), minutes.toString()];
+    return chrome.i18n.getMessage("remain_time", args);
 }
 
-/**
- * Convert array to Assignment class
- * @param {any} arr
- */
-function convertArrayToAssignment(arr: Array<any>): Array<Assignment> {
-  const assignmentList = [];
-  for (const i of arr) {
-    const assignmentEntries = [];
-    for (const e of i.assignmentEntries) {
-      const entry = new AssignmentEntry(e.assignmentID, e.assignmentTitle, e.dueDateTimestamp, e.closeDateTimestamp, e.isMemo, e.isFinished, e.isQuiz, e.assignmentDetail);
-      entry.assignmentPage = e.assignmentPage;
-      if (entry.getCloseDateTimestamp * 1000 > nowTime) assignmentEntries.push(entry);
-    }
-    assignmentList.push(new Assignment(new CourseSiteInfo(i.courseSiteInfo.courseID, i.courseSiteInfo.courseName), assignmentEntries, i.isRead))
-  }
-  return assignmentList;
+export function createDateString(seconds: number | null | undefined): string {
+    if (seconds === MaxTimestamp || seconds === undefined || seconds === null) return "----/--/--";
+    const date = new Date(seconds * 1000);
+    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
 }
 
-/**
- * Compare old and new AssignmentList and merge them.
- * @param {Assignment[]} oldAssignmentiList
- * @param {Assignment[]} newAssignmentList
- */
-function compareAndMergeAssignmentList(oldAssignmentiList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment> {
-  const mergedAssignmentList = [];
-
-  // Merge Assignments based on newAssignmentList
-  for (const newAssignment of newAssignmentList) {
-    const idx = oldAssignmentiList.findIndex((oldAssignment: Assignment) => {
-      return oldAssignment.courseSiteInfo.courseID === newAssignment.courseSiteInfo.courseID;
-    });
-
-    // If this courseID is **NOT** in oldAssignmentList:
-    if (idx === -1) {
-      // Since this course site has a first assignment, set isRead flags to false.
-      const isRead = newAssignment.assignmentEntries.length === 0;
-
-      // Sort and add this to AssignmentList
-      newAssignment.assignmentEntries.sort((a, b) => {
-        return a.getDueDateTimestamp - b.getDueDateTimestamp;
-      });
-      mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, newAssignment.assignmentEntries, isRead));
-    }
-
-    // If this courseID **IS** in oldAssignmentList:
-    else {
-      // Take over isRead flag
-      let isRead = oldAssignmentiList[idx].isRead;
-      // Just in case if AssignmentList is empty, set flag to true
-      if (newAssignment.assignmentEntries.length === 0) isRead = true;
-
-      const mergedAssignmentEntries = [];
-      for (const newAssignmentEntry of newAssignment.assignmentEntries) {
-        // Find if this new assignment is in old AssignmentList
-        const oldAssignment = oldAssignmentiList[idx] as Assignment;
-        const q = oldAssignment.assignmentEntries.findIndex((oldAssignmentEntry) => {
-          return oldAssignmentEntry.assignmentID === newAssignmentEntry.assignmentID;
-        });
-        // If there is same assignmentID, update it.
-        if (q === -1) {
-          // Set isRead flag to false since there might be some updates in assignment.
-          isRead = false;
-          mergedAssignmentEntries.push(newAssignmentEntry);
-        }
-        // If there is not, create a new AssignmentEntry for the course site.
-        else {
-          const entry = new AssignmentEntry(
-            newAssignmentEntry.assignmentID,
-            newAssignmentEntry.assignmentTitle,
-            newAssignmentEntry.dueDateTimestamp,
-            newAssignmentEntry.closeDateTimestamp,
-            newAssignmentEntry.isMemo,
-            oldAssignment.assignmentEntries[q].isFinished,
-            newAssignmentEntry.isQuiz,
-            newAssignmentEntry.assignmentDetail
-          );
-          entry.assignmentPage = newAssignmentEntry.assignmentPage;
-          mergedAssignmentEntries.push(entry);
-        }
-      }
-      // Sort AssignmentList
-      mergedAssignmentEntries.sort((a, b) => {
-        return a.getDueDateTimestamp - b.getDueDateTimestamp;
-      });
-      mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, mergedAssignmentEntries, isRead));
-    }
-  }
-  return mergedAssignmentList;
-}
-
-/**
- * Merge Assignments, Quizzes, Memos together.
- * @param {Assignment[]} targetAssignmentList
- * @param {Assignment[]} newAssignmentList
- */
-function mergeIntoAssignmentList(targetAssignmentList: Array<Assignment>, newAssignmentList: Array<Assignment>): Array<Assignment> {
-  const mergedAssignmentList = [];
-  for (const assignment of targetAssignmentList) {
-    mergedAssignmentList.push(new Assignment(assignment.courseSiteInfo, assignment.assignmentEntries, assignment.isRead));
-  }
-  for (const newAssignment of newAssignmentList) {
-    const idx = targetAssignmentList.findIndex((assignment: Assignment) => {
-      return newAssignment.courseSiteInfo.courseID === assignment.courseSiteInfo.courseID;
-    });
-
-    const mergedAssignment = mergedAssignmentList[idx] as Assignment;
-    if (idx !== -1) {
-      mergedAssignment.assignmentEntries = mergedAssignment.assignmentEntries.concat(newAssignment.assignmentEntries);
-    } else {
-      mergedAssignmentList.push(new Assignment(newAssignment.courseSiteInfo, newAssignment.assignmentEntries, true));
-    }
-  }
-  return mergedAssignmentList;
-}
-
-/**
- * Function for sorting Assignments
- * @param {Assignment[]} assignmentList
- */
-function sortAssignmentList(assignmentList: Array<Assignment>): Array<Assignment> {
-  return Array.from(assignmentList).sort((a, b) => {
-    if (a.closestDueDateTimestamp > b.closestDueDateTimestamp) return 1;
-    if (a.closestDueDateTimestamp < b.closestDueDateTimestamp) return -1;
-    return 0;
-  });
-}
-
-/**
- * Decides whether to use cache
- * @param {number | undefined} fetchedTime
- * @param {number} cacheInterval
- */
-function isUsingCache(fetchedTime: number | undefined, cacheInterval: number): boolean {
-  if (fetchedTime) return (nowTime - fetchedTime) / 1000 <= cacheInterval;
-  else return false;
-}
-
-/**
- * Generate unique ID
- * @param {string} prefix
- */
-function genUniqueID(prefix: string): string {
-  return prefix + new Date().getTime().toString(16) + Math.floor(123456 * Math.random()).toString(16);
-}
-
-/**
- * Get the current Sakai theme.
- * @returns 'light' or 'dark'. Returns null on failure.
- */
-function getSakaiTheme(): 'light' | 'dark' | null {
-  // Get the 'background-color' property of #topnav_container
-  const topnavContainer = document.querySelector('#topnav_container');
-  if (topnavContainer === null) {
-    return null;
-  }
-
-  const color = window.getComputedStyle(topnavContainer).backgroundColor;
-  if (!(color as any).startsWith('rgb')) {
-    // backgroundColor is not defined properly
-    return null;
-  }
-
-  if (color === "rgb(255, 255, 255)") {
-    return 'light';
-  } else {
-    return 'dark';
-  }
-}
-
-export {
-  getDaysUntil,
-  createCourseIDMap,
-  formatTimestamp,
-  isLoggedIn,
-  miniSakaiReady,
-  convertArrayToSettings,
-  convertArrayToAssignment,
-  compareAndMergeAssignmentList,
-  isUsingCache,
-  genUniqueID,
-  mergeIntoAssignmentList,
-  sortAssignmentList,
-  getSakaiTheme,
-};
+export { getDaysUntil, formatTimestamp, isLoggedIn, miniSakaiReady };

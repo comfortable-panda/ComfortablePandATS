@@ -1,47 +1,6 @@
-<img class="cs-minisakai-logo" alt="logo" src="{{miniSakaiLogo}}">
-<p class="cs-version">Version {{VERSION}}</p>
-{{^subset}}
-<a id="close_btn" class="closebtn q" href="#">x</a>
-<input id="assignmentTab" type="radio" name="cs-tab">
-<label for="assignmentTab"> {{titles.assignmentTab}} </label>
-<input id="settingsTab" type="radio" name="cs-tab">
-<label for="settingsTab"> {{titles.settingsTab}} </label>
-<button id="cs-add-memo-btn">+</button>
 
-<div class="cs-assignment-time">
-    <p class="cs-assignment-time-text">{{titles.assignmentFetchedTime}}</p>
-    <p class="cs-assignment-time-text">{{fetchedTime.assignment}}</p>
-</div>
-<div class="cs-quiz-time">
-    <p class="cs-assignment-time-text">{{titles.quizFetchedTime}}</p>
-    <p class="cs-assignment-time-text">{{fetchedTime.quiz}}</p>
-</div>
-{{/subset}}
 
 <div class="cs-assignment-tab">
-    {{^subset}}
-    <div class="cs-memo-box addMemoBox" style="display: none;">
-        <div class="cs-memo-item">
-            <p>{{todoBox.courseName}}</p>
-            <label><select class="todoLecName">
-                {{#todoBox.courseSiteList}}
-                    <option id="{{courseID}}">{{courseName}}</option>
-                {{/todoBox.courseSiteList}}
-            </select></label>
-        </div>
-        <div class="cs-memo-item">
-            <p>{{todoBox.memoLabel}}</p>
-            <label><input type="text" class="todoContent"></label>
-        </div>
-        <div class="cs-memo-item">
-            <p>{{todoBox.dueDate}}</p>
-            <label><input type="datetime-local" class="todoDue"></label>
-        </div>
-        <div class="cs-memo-item">
-            <button type="submit" id="todo-add">{{todoBox.addBtnLabel}}</button>
-        </div>
-    </div>
-    {{/subset}}
 
     {{#display.danger}}
     <div class="cs-minisakai-danger">

@@ -4,12 +4,17 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
-    "prettier"
+    "prettier",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "plugins": [
     "@typescript-eslint"
   ],
-  "env": { "node": true, "es6": true },
+  "env": {
+    "node": true,
+    "es6": true
+  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",

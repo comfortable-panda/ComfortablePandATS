@@ -8,6 +8,7 @@
   "todo_box_add": {"message": "メモを追加"},
   "quiz": {"message": "クイズ"},
   "memo": {"message": "メモ"},
+  "settings_enable_dark_theme": {"message": "ダークテーマを有効にする"},
   "settings_assignment_cache": {"message": "課題キャッシュ時間 [秒]"},
   "settings_quizzes_cache": {"message": "クイズキャッシュ時間 [秒]"},
   "settings_color_checked_item": {"message": "チェック済の課題も色付けする"},
@@ -20,6 +21,12 @@
     }
   },
   "settings_colors_day": { "message": "【$color_type$】 締切$time$日前",
+    "placeholders": {
+      "color_type": { "content": "$1" },
+      "time": { "content": "$2" }
+    }
+  },
+  "settings_colors_day_more": { "message": "【$color_type$】 締切$time$日以上",
     "placeholders": {
       "color_type": { "content": "$1" },
       "time": { "content": "$2" }

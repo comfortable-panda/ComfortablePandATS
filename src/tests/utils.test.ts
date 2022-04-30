@@ -2,373 +2,214 @@
  * @jest-environment jsdom
  */
 
-import * as utils from "../utils";
-import { Assignment, AssignmentEntry, CourseSiteInfo } from "../model";
-import _ from "lodash";
+import { mockAssignmentEntry } from "./mock/generator";
+import { Settings } from "../features/setting/types";
+import { getClosestTime } from "../utils";
+import { EntryProtocol } from "../features/entity/type";
+import { MaxTimestamp } from "../constant";
 
-// Declare toBeWithinRange as global method.
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeWithinRange(a: number, b: number): R;
+const mockVersion = jest.fn();
+jest.mock("../constant", () => ({
+    get VERSION() {
+        return mockVersion();
+    },
+    get MaxTimestamp() {
+        return 99999999999999;
     }
-  }
-}
+}));
 
-// Declare toBeWithinRange method.
-expect.extend({
-  toBeWithinRange(received, floor, ceiling) {
-    const pass = received >= floor && received <= ceiling;
-    if (pass) {
-      return {
-        message: () => `expected ${received} not to be within range ${floor} - ${ceiling}`,
-        pass: true,
-      };
-    } else {
-      return {
-        message: () => `expected ${received} to be within range ${floor} - ${ceiling}`,
-        pass: false,
-      };
-    }
-  },
+describe("getFetchTime(showCompleted)", () => {
+    test("All greater than or equal to currentTime", () => {
+        const settings = new Settings();
+        settings.miniSakaiOption = {
+            showCompletedEntry: true,
+            showLateAcceptedEntry: false
+        };
+        settings.appInfo.currentTime = 100;
+        const input: Array<EntryProtocol> = [
+            mockAssignmentEntry("id1", 300, 300, false),
+            mockAssignmentEntry("id2", 200, 300, false),
+            mockAssignmentEntry("id3", 100, 300, false)
+        ];
+        const output = getClosestTime(settings, input);
+        expect(output).toBe(100);
+    });
+
+    test("All greater than or equal to currentTime(showLate)", () => {
+        const settings = new Settings();
+        settings.miniSakaiOption = {
+            showCompletedEntry: true,
+            showLateAcceptedEntry: true
+        };
+        settings.appInfo.currentTime = 100;
+        const input: Array<EntryProtocol> = [
+            mockAssignmentEntry("id1", 300, 300, false),
+            mockAssignmentEntry("id2", 200, 300, false),
+            mockAssignmentEntry("id3", 100, 300, false)
+        ];
+        const output = getClosestTime(settings, input);
+        expect(output).toBe(100);
+    });
+
+    test("Some older than currentTime", () => {
+        const settings = new Settings();
+        settings.miniSakaiOption = {
+            showCompletedEntry: true,
+            showLateAcceptedEntry: false
+        };
+        settings.appInfo.currentTime = 100;
+        const input: Array<EntryProtocol> = [
+            mockAssignmentEntry("id1", 300, 300, false),
+            mockAssignmentEntry("id2", 200, 250, false),
+            mockAssignmentEntry("id3", 50, 250, false)
+        ];
+        const output = getClosestTime(settings, input);
+        expect(output).toBe(200);
+    });
+
+    test("Some older than currentTime(showLate)", () => {
+        const settings = new Settings();
+        settings.miniSakaiOption = {
+            showCompletedEntry: true,
+            showLateAcceptedEntry: true
+        };
+        settings.appInfo.currentTime = 100;
+        const input: Array<EntryProtocol> = [
+            mockAssignmentEntry("id1", 300, 300, false),
+            mockAssignmentEntry("id2", 200, 250, false),
+            mockAssignmentEntry("id3", 50, 250, false)
+        ];
+        const output = getClosestTime(settings, input);
+        expect(output).toBe(200);
+    });
+
+    test("All older than currentTime", () => {
+        const settings = new Settings();
+        settings.miniSakaiOption = {
+            showCompletedEntry: true,
+            showLateAcceptedEntry: false
+        };
+        settings.appInfo.currentTime = 500;
+        const input: Array<EntryProtocol> = [
+            mockAssignmentEntry("id1", 300, 600, false),
+            mockAssignmentEntry("id2", 200, 600, false),
+            mockAssignmentEntry("id3", 50, 600, false)
+        ];
+        const output = getClosestTime(settings, input);
+        expect(output).toBe(MaxTimestamp);
+    });
+
+    test("All older than currentTime(show Late)", () => {
+        const settings = new Settings();
+        settings.miniSakaiOption = {
+            showCompletedEntry: true,
+            showLateAcceptedEntry: true
+        };
+        settings.appInfo.currentTime = 500;
+        const input: Array<EntryProtocol> = [
+            mockAssignmentEntry("id1", 300, 600, false),
+            mockAssignmentEntry("id2", 200, 700, false),
+            mockAssignmentEntry("id3", 50, 800, false)
+        ];
+        const output = getClosestTime(settings, input);
+        expect(output).toBe(600);
+    });
 });
 
-describe("getDaysUntil()", (): void => {
-  test("days: 0 <= x <= 1", (): void => {
-    expect(utils.getDaysUntil(1634893200000, 1634911200000)).toBe("due24h");
-  });
-  test("days: 1 <= x <= 5", (): void => {
-    expect(utils.getDaysUntil(1634893200000, 1635084000000)).toBe("due5d");
-  });
-  test("days: 5 <= x <= 14", (): void => {
-    expect(utils.getDaysUntil(1634893200000, 1635498000000)).toBe("due14d");
-  });
-  test("days: 14 <= x", (): void => {
-    expect(utils.getDaysUntil(1634893200000, 1638176400000)).toBe("dueOver14d");
-  });
-  test("days: 14 <= x", (): void => {
-    expect(utils.getDaysUntil(1634893200000, 9999999990000)).toBe("dueOver14d");
-  });
-  test("days: x < 0", (): void => {
-    expect(utils.getDaysUntil(1634893200000, -1000)).toBe("duePassed");
-  });
-  test("days: x < 0", (): void => {
-    expect(utils.getDaysUntil(1634893200000, -1000)).not.toBe("due5d");
-  });
-});
-
-describe("updateIsReadFlag()", (): void => {
-  const sampleAssignmentEntry = new AssignmentEntry("id1", "title", 1000000, 100000, false, false, false);
-  const inputAssignmentList = [
-    new Assignment(
-      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
-      [sampleAssignmentEntry],
-      false
-    ),
-    new Assignment(
-      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course1"),
-      [sampleAssignmentEntry],
-      false
-    ),
-  ];
-  const expectAssignmentList = [
-    new Assignment(
-      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
-      [sampleAssignmentEntry],
-      true
-    ),
-    new Assignment(
-      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course1"),
-      [sampleAssignmentEntry],
-      false
-    ),
-  ];
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test("doesMatchCourseID", (): void => {
-    const spyGetSiteCourseID = jest
-      .spyOn(utils, "getSiteCourseID")
-      .mockReturnValueOnce("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109")
-      .mockReturnValueOnce("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1");
-
-    let result = utils.updateIsReadFlag(inputAssignmentList);
-    expect(result).toStrictEqual(expectAssignmentList);
-    expect(spyGetSiteCourseID).toBeCalledTimes(1);
-
-    result = utils.updateIsReadFlag(inputAssignmentList);
-    expectAssignmentList[0].isRead = false;
-    expectAssignmentList[1].isRead = true;
-    expect(result).toStrictEqual(expectAssignmentList);
-    expect(spyGetSiteCourseID).toBeCalledTimes(2);
-  });
-
-  test("doesNOTMatchCourseID", (): void => {
-    const spyGetSiteCourseID = jest
-      .spyOn(utils, "getSiteCourseID")
-      .mockReturnValueOnce("FC0DDCE7-EFE5-446A-A928-A4857A7C63A8")
-      .mockReturnValueOnce("")
-      .mockReturnValueOnce(undefined);
-
-    let result = utils.updateIsReadFlag(inputAssignmentList);
-    expectAssignmentList[0].isRead = false;
-    expectAssignmentList[1].isRead = false;
-    expect(result).toStrictEqual(expectAssignmentList);
-    expect(spyGetSiteCourseID).toBeCalledTimes(1);
-
-    result = utils.updateIsReadFlag(inputAssignmentList);
-    expect(result).toStrictEqual(expectAssignmentList);
-    expect(spyGetSiteCourseID).toBeCalledTimes(2);
-
-    result = utils.updateIsReadFlag(inputAssignmentList);
-    expect(result).toStrictEqual(expectAssignmentList);
-    expect(spyGetSiteCourseID).toBeCalledTimes(3);
-  });
-
-  test("alreadyIsRead", (): void => {
-    const spyGetSiteCourseID = jest
-      .spyOn(utils, "getSiteCourseID")
-      .mockReturnValueOnce("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109")
-      .mockReturnValueOnce("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1");
-
-    inputAssignmentList[0].isRead = true;
-    inputAssignmentList[1].isRead = true;
-
-    let result = utils.updateIsReadFlag(inputAssignmentList);
-    expectAssignmentList[0].isRead = true;
-    expectAssignmentList[1].isRead = true;
-    expect(result).toStrictEqual(expectAssignmentList);
-    expect(spyGetSiteCourseID).toBeCalledTimes(1);
-
-    result = utils.updateIsReadFlag(inputAssignmentList);
-    expect(result).toStrictEqual(expectAssignmentList);
-    expect(spyGetSiteCourseID).toBeCalledTimes(2);
-  });
-});
-
-describe("compareAndMergeAssignmentList()", (): void => {
-  const _oldAssignmentList = [
-    new Assignment(
-      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
-      [
-        new AssignmentEntry("id1", "title", 1668611800, 1668611800, false, false, false),
-        new AssignmentEntry("id2", "title2", 1668612800, 1668612800, false, false, false),
-      ],
-      false
-    ),
-    new Assignment(
-      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course2"),
-      [
-        new AssignmentEntry("id3", "title3", 1668613800, 1668613800, false, false, false)
-      ],
-      false
-    ),
-  ];
-  const _newAssignmentList = [
-    new Assignment(
-      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
-      [
-        new AssignmentEntry("id1", "title", 1668611800, 1668611800, false, false, false),
-        new AssignmentEntry("id2", "title2", 1668612800, 1668612800, false, false, false),
-      ],
-      false
-    ),
-    new Assignment(
-      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course2"),
-      [
-        new AssignmentEntry("id3", "title3", 1668613800, 1668613800, false, false, false)
-      ],
-      false
-    ),
-  ];
-
-  const _expectAssignmentList = [
-    new Assignment(
-      new CourseSiteInfo("59F7CE3C-5C9A-44A0-963B-E64C0D0A9109", "course1"),
-      [
-        new AssignmentEntry("id1", "title", 1668611800, 1668611800, false, false, false),
-        new AssignmentEntry("id2", "title2", 1668612800, 1668612800, false, false, false),
-      ],
-      false
-    ),
-    new Assignment(
-      new CourseSiteInfo("EC6C945C-BBCC-4B84-9A89-06C3FFF3DFA1", "course2"),
-      [
-        new AssignmentEntry("id3", "title3", 1668613800, 1668613800, false, false, false)
-      ],
-      false
-    ),
-  ];
-
-  test("hasNoChange", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
-  });
-
-  test("hasANewAssignment", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    const newAssignmentEntry = new AssignmentEntry("id4", "title4", 1668613800, 1668613800, false, false, false);
-    newAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
-    expectAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
-
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
-  });
-
-  test("hasUpdatesOnTitle", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    newAssignmentList[0].assignmentEntries[0].assignmentTitle = "new title1";
-    newAssignmentList[1].assignmentEntries[0].assignmentTitle = "new title3";
-    expectAssignmentList[0].assignmentEntries[0].assignmentTitle = "new title1";
-    expectAssignmentList[1].assignmentEntries[0].assignmentTitle = "new title3";
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
-  });
-
-  test("oldAssignments>newAssignments", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    const newAssignmentEntry = new AssignmentEntry("id4", "title4", 1668613800, 1668613800, false, false, false);
-    oldAssignmentList[1].assignmentEntries.push(newAssignmentEntry);
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
-  });
-
-  test("oldAssignments<newAssignments", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    const newAssignmentEntry = new AssignmentEntry("id4", "title4", 1668613800, 1668613800, false, false, false);
-    newAssignmentList[1].assignmentEntries.push(newAssignmentEntry);
-    expectAssignmentList[1].assignmentEntries.push(newAssignmentEntry);
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
-  });
-
-  test("noOldAssignments", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    oldAssignmentList[0].assignmentEntries = [];
-    oldAssignmentList[1].assignmentEntries = [];
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
-  });
-
-  test("noNewAssignments", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    newAssignmentList[0].assignmentEntries = [];
-    newAssignmentList[1].assignmentEntries = [];
-    expectAssignmentList[0].assignmentEntries = [];
-    expectAssignmentList[1].assignmentEntries = [];
-
-    const result = utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList);
-    expect(result[0].assignmentEntries).toStrictEqual(expectAssignmentList[0].assignmentEntries);
-    expect(result[1].assignmentEntries).toStrictEqual(expectAssignmentList[1].assignmentEntries);
-    expect(result[0].isRead).not.toBe(false);
-    expect(result[1].isRead).toBe(true);
-  });
-
-  test("updateIsReadFlag", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    const newAssignmentEntry = new AssignmentEntry("id4", "title4", 1668613800, 1668613800, false, false, false);
-    expectAssignmentList[0].isRead = true;
-    newAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
-    expectAssignmentList[0].assignmentEntries.push(newAssignmentEntry);
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[0].isRead).toBe(false);
-  });
-
-  test("newCourses", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    const assignment = new Assignment(
-      new CourseSiteInfo("8D479860-44DA-4531-8739-3ECD68A546F4", "course4"),
-      [
-        new AssignmentEntry("id5", "title5", 1668613800, 1668613800, false, false, false)
-      ],
-      false
-    );
-    newAssignmentList.push(assignment);
-    expectAssignmentList.push(assignment);
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)).toStrictEqual(expectAssignmentList);
-    expect(utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList)[2].isRead).toBe(false);
-  });
-
-  test("newCoursesWithNoAssignment", (): void => {
-    const oldAssignmentList = _.cloneDeep(_oldAssignmentList);
-    const newAssignmentList = _.cloneDeep(_newAssignmentList);
-    const expectAssignmentList = _.cloneDeep(_expectAssignmentList);
-    const assignment = new Assignment(
-      new CourseSiteInfo("8D479860-44DA-4531-8739-3ECD68A546F4", "course4"),
-      [],
-      false
-    );
-    newAssignmentList.push(assignment);
-    expectAssignmentList.push(assignment);
-    const result = utils.compareAndMergeAssignmentList(oldAssignmentList, newAssignmentList);
-    expect(result[2].assignmentEntries).toStrictEqual(expectAssignmentList[2].assignmentEntries);
-    expect(result[2].isRead).toBe(true);
-  });
-
-});
-
-describe("formatTimestamp()", (): void => {
-  // TODO: Consider timezone
-  // test("randomTimestamp", (): void => {
-  //   expect(utils.formatTimestamp(1634893200000)).toBe("10/22/2021 18:00:00");
-  // });
-
-  // test("randomTimestamp", (): void => {
-  //   // mock time
-  //   Object.defineProperty(utils, "nowTime", { value: 1634893000000 });
-  //   expect(utils.formatTimestamp(undefined)).toBe("10/22/2021 17:56:40");
-  // });
-});
-
-describe("createCourseIDMap()", (): void => {
-  const courseSiteList = [
-      new CourseSiteInfo("course1", "alpha"),
-      new CourseSiteInfo("course2", undefined),
-      new CourseSiteInfo("course3", "gamma"),
-  ];
-  const expectResult = new Map([["course1", "alpha"], ["course2", ""], ["course3", "gamma"]]);
-
-  test("createCourseIDMap", (): void => {
-    expect(utils.createCourseIDMap(courseSiteList)).toStrictEqual(expectResult);
-  });
-});
-
-describe("isLoggedIn()", (): void => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-  const mockResponseLoggedIn = document.createElement("script");
-  mockResponseLoggedIn.text = "\"i18n\": {},\n" +
-      "                \"loggedIn\": true,\n" +
-      "                \"portalPath\": \"https://****.****/portal\","
-  const mockResponseNotLoggedIn = document.createElement("script");
-  mockResponseNotLoggedIn.text = "\"i18n\": {},\n" +
-      "                \"loggedIn\": false,\n" +
-      "                \"portalPath\": \"https://****.****/portal\","
-  test("logged in", (): void => {
-    const spyGetSiteCourseID = jest
-        .spyOn(utils, "getLoggedInInfoFromScript")
-        .mockReturnValueOnce([mockResponseLoggedIn]);
-    expect(utils.isLoggedIn()).toBe(true);
-  });
-
-  test("NOT logged in", (): void => {
-    const spyGetSiteCourseID = jest
-        .spyOn(utils, "getLoggedInInfoFromScript")
-        .mockReturnValueOnce([mockResponseNotLoggedIn]);
-    expect(utils.isLoggedIn()).toBe(false);
-  });
-});
+// describe("getFetchTime(hideCompleted)", () => {
+//     test("All greater than or equal to currentTime", () => {
+//         const settings = new Settings();
+//         settings.miniSakaiOption = {
+//             showCompletedEntry: false,
+//             showLateAcceptedEntry: false
+//         };
+//         settings.appInfo.currentTime = 100;
+//         const input: Array<EntryProtocol> = [
+//             mockAssignmentEntry("id1", 300, 300, false),
+//             mockAssignmentEntry("id2", 200, 300, false),
+//             mockAssignmentEntry("id3", 100, 300, false)
+//         ];
+//         const output = getClosestTime(settings, input);
+//         expect(output).toBe(100);
+//     });
+//
+//     test("All greater than or equal to currentTime(showLate)", () => {
+//         const settings = new Settings();
+//         settings.miniSakaiOption = {
+//             showCompletedEntry: false,
+//             showLateAcceptedEntry: true
+//         };
+//         settings.appInfo.currentTime = 100;
+//         const input: Array<EntryProtocol> = [
+//             mockAssignmentEntry("id1", 300, 300, false),
+//             mockAssignmentEntry("id2", 200, 300, false),
+//             mockAssignmentEntry("id3", 100, 300, false)
+//         ];
+//         const output = getClosestTime(settings, input);
+//         expect(output).toBe(100);
+//     });
+//
+//     test("Some older than currentTime", () => {
+//         const settings = new Settings();
+//         settings.miniSakaiOption = {
+//             showCompletedEntry: false,
+//             showLateAcceptedEntry: false
+//         };
+//         settings.appInfo.currentTime = 100;
+//         const input: Array<EntryProtocol> = [
+//             mockAssignmentEntry("id1", 300, 300, false),
+//             mockAssignmentEntry("id2", 200, 250, false),
+//             mockAssignmentEntry("id3", 50, 250, false)
+//         ];
+//         const output = getClosestTime(settings, input);
+//         expect(output).toBe(200);
+//     });
+//
+//     test("Some older than currentTime(showLate)", () => {
+//         const settings = new Settings();
+//         settings.miniSakaiOption = {
+//             showCompletedEntry: false,
+//             showLateAcceptedEntry: true
+//         };
+//         settings.appInfo.currentTime = 100;
+//         const input: Array<EntryProtocol> = [
+//             mockAssignmentEntry("id1", 300, 300, false),
+//             mockAssignmentEntry("id2", 200, 250, false),
+//             mockAssignmentEntry("id3", 50, 250, false)
+//         ];
+//         const output = getClosestTime(settings, input);
+//         expect(output).toBe(200);
+//     });
+//
+//     test("All older than currentTime", () => {
+//         const settings = new Settings();
+//         settings.miniSakaiOption = {
+//             showCompletedEntry: false,
+//             showLateAcceptedEntry: false
+//         };
+//         settings.appInfo.currentTime = 500;
+//         const input: Array<EntryProtocol> = [
+//             mockAssignmentEntry("id1", 300, 600, false),
+//             mockAssignmentEntry("id2", 200, 600, false),
+//             mockAssignmentEntry("id3", 50, 600, false)
+//         ];
+//         const output = getClosestTime(settings, input);
+//         expect(output).toBe(MaxTimestamp);
+//     });
+//
+//     test("All older than currentTime(show Late)", () => {
+//         const settings = new Settings();
+//         settings.miniSakaiOption = {
+//             showCompletedEntry: false,
+//             showLateAcceptedEntry: true
+//         };
+//         settings.appInfo.currentTime = 500;
+//         const input: Array<EntryProtocol> = [
+//             mockAssignmentEntry("id1", 300, 600, false),
+//             mockAssignmentEntry("id2", 200, 700, false),
+//             mockAssignmentEntry("id3", 50, 800, false)
+//         ];
+//         const output = getClosestTime(settings, input);
+//         expect(output).toBe(600);
+//     });
+// });
