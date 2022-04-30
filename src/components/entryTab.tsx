@@ -64,14 +64,20 @@ function MiniSakaiCourse(props: {
             }
         }
         return elems;
-    }, [props.entries]);
+    }, [props]);
 
     return (
         // TODO: style
         <div className={divClass}>
-            <a className={aClass} href={props.coursePage}>
-                {props.courseName}
-            </a>
+            {/* TODO: subset a tag */}
+            {props.isSubset ? (
+                <div className={aClass}>{props.courseName}</div>
+            ) : (
+                <a className={aClass} href={props.coursePage}>
+                    {props.courseName}
+                </a>
+            )}
+
             {elements}
         </div>
     );
