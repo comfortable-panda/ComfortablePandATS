@@ -140,7 +140,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                 <MiniSakaiVersion />
                 {this.props.subset ? null : (
                     <>
-                        <MiniSakaiClose onClose={() => toggleMiniSakai()} /> {/* TODO: replace toggleMiniSakai */}
+                        <MiniSakaiClose onClose={() => toggleMiniSakai()} />
                         <MiniSakaiTabs
                             onAssignment={() =>
                                 this.setState({

@@ -18,7 +18,6 @@ export interface EntryProtocol {
 
     getTimestamp(currentTime: number, showLateAcceptedEntry: boolean): number;
 
-    // TODO: Deprecated: Use `getTimestamp()` instead.
     getDueDate(): number;
 
     getCloseDate(): number;
