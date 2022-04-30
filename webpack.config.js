@@ -8,7 +8,7 @@ module.exports = {
   entry: {
     background: `${__dirname}/src/background.ts`,
     content_script: `${__dirname}/src/content_script.ts`,
-    subsakai: `${__dirname}/src/subsakai.ts`
+    subsakai: `${__dirname}/src/subsakai.tsx`
   },
   module: {
     rules: [

@@ -64,14 +64,20 @@ function MiniSakaiCourse(props: {
             }
         }
         return elems;
-    }, [props.entries]);
+    }, [props]);
 
     return (
         // TODO: style
         <div className={divClass}>
-            <a className={aClass} href={props.coursePage}>
-                {props.courseName}
-            </a>
+            {/* TODO: subset a tag */}
+            {props.isSubset ? (
+                <div className={aClass}>{props.courseName}</div>
+            ) : (
+                <a className={aClass} href={props.coursePage}>
+                    {props.courseName}
+                </a>
+            )}
+
             {elements}
         </div>
     );
@@ -140,11 +146,13 @@ export function EntryTab(props: {
 
     return (
         <>
-            <AddMemoBox
-                shown={!props.isSubset && props.showMemoBox}
-                courses={getCourses()}
-                onMemoAdd={props.onMemoAdd}
-            />
+            {props.isSubset ? null : (
+                <AddMemoBox
+                    shown={!props.isSubset && props.showMemoBox}
+                    courses={getCourses()}
+                    onMemoAdd={props.onMemoAdd}
+                />
+            )}
             {dangerElements.length === 0 ? null : (
                 <MiniSakaiEntryList
                     dueType="danger"

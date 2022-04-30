@@ -5,6 +5,11 @@
             "type": "shell",
             "label": "Chrome build",
             "command": "npm run build:chrome"
+        },
+        {
+            "type": "shell",
+            "label": "Firefox build",
+            "command": "npm run build:firefox"
         }
     ]
 }

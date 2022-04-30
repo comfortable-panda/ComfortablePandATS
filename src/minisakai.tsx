@@ -19,16 +19,21 @@ export function createMiniSakaiBtn(): void {
 /**
  * Insert miniSakai into Sakai.
  */
-export function createMiniSakai() {
+export function createMiniSakai(hostname: string) {
     const parent = document.getElementsByClassName("Mrphs-mainHeader")[0];
     const ref = document.getElementsByClassName("Mrphs-sites-nav")[0];
     parent?.insertBefore(miniSakai, ref);
     const root = createRoot(miniSakai);
-    root.render(<MiniSakaiRoot subset={false} />);
+    root.render(<MiniSakaiRoot subset={false} hostname={hostname} />);
 }
 
-export const applyColorSettings = (settings: Settings): void => {
-    const bodyStyles = document.querySelector(".Mrphs-mainHeader") as HTMLElement;
+export const applyColorSettings = (settings: Settings, isSubSakai: boolean): void => {
+    let bodyStyles: HTMLElement;
+    if (!isSubSakai) {
+        bodyStyles = document.querySelector(".Mrphs-mainHeader") as HTMLElement;
+    } else {
+        bodyStyles = document.querySelector("#subSakai") as HTMLElement;
+    }
     for (const colorName of Object.getOwnPropertyNames(settings.color)) {
         // @ts-ignore
         const color = settings.color[colorName];
