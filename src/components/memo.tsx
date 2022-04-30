@@ -1,5 +1,7 @@
 import React, { useId } from "react";
+import { CurrentTime } from "../constant";
 import { MemoEntry } from "../features/entity/memo/types";
+import { createDateString, getRemainTimeString } from "../utils";
 import { useTranslation, useTranslationArgsDeps } from "./helper";
 
 export default function MemoEntryView(props: {
@@ -8,12 +10,13 @@ export default function MemoEntryView(props: {
     onCheck: (checked: boolean) => void;
     onDelete: () => void;
 }) {
-    // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime - nowTime) / 1000);
-    const timeRemain = [0, 0, 0]; // TODO
-    const remainTime = useTranslationArgsDeps("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]], timeRemain);
-
-    const dueDateString = remainTime;
-    const remainTimeString = "TODO RemainTimeString"; // TODO
+    const dueDateString = createDateString(props.memo.dueTime);
+    const timeRemain = getRemainTimeString(props.memo.dueTime - CurrentTime);
+    const remainTimeString = useTranslationArgsDeps(
+        "remain_time",
+        [timeRemain[0], timeRemain[1], timeRemain[2]],
+        timeRemain
+    );
 
     const memoBadge = useTranslation("memo");
 
@@ -40,7 +43,10 @@ export default function MemoEntryView(props: {
 
             <p className="cs-assignment-title">
                 <span className="cs-badge cs-badge-memo">{memoBadge}</span>
-                <span className="cs-del-memo-btn" onClick={() => props.onDelete()}>x</span> {/* TODO: del button */}
+                <span className="cs-del-memo-btn" onClick={() => props.onDelete()}>
+                    x
+                </span>{" "}
+                {/* TODO: del button */}
                 {props.memo.title}
             </p>
         </>

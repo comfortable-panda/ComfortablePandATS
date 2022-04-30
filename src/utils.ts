@@ -203,4 +203,17 @@ function getSakaiTheme(): "light" | "dark" | null {
     }
 }
 
+export function getRemainTimeString(seconds: number): [string, string, string] {
+    const day = Math.floor(seconds / (3600 * 24));
+    const hours = Math.floor((seconds - day * 3600 * 24) / 3600);
+    const minutes = Math.floor((seconds - (day * 3600 * 24 + hours * 3600)) / 60);
+    return [day.toString(), hours.toString(), minutes.toString()];
+}
+
+export function createDateString(seconds: number | null | undefined): string {
+    if (seconds === undefined || seconds === null) return "----/--/--";
+    const date = new Date(seconds * 1000);
+    return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
+}
+
 export { getDaysUntil, formatTimestamp, isLoggedIn, miniSakaiReady, getSakaiTheme };

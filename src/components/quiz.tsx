@@ -1,5 +1,7 @@
 import React, { useId } from "react";
+import { CurrentTime } from "../constant";
 import { QuizEntry } from "../features/entity/quiz/types";
+import { createDateString, getRemainTimeString } from "../utils";
 import { useTranslation, useTranslationArgsDeps } from "./helper";
 
 export default function QuizEntryView(props: {
@@ -7,12 +9,13 @@ export default function QuizEntryView(props: {
     isSubset: boolean;
     onCheck: (checked: boolean) => void;
 }) {
-    // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime - nowTime) / 1000);
-    const timeRemain = [0, 0, 0]; // TODO
-    const remainTime = useTranslationArgsDeps("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]], timeRemain);
-
-    const dueDateString = remainTime;
-    const remainTimeString = "TODO RemainTimeString"; // TODO
+    const dueDateString = createDateString(props.quiz.dueTime);
+    const timeRemain = getRemainTimeString(props.quiz.dueTime - CurrentTime);
+    const remainTimeString = useTranslationArgsDeps(
+        "remain_time",
+        [timeRemain[0], timeRemain[1], timeRemain[2]],
+        timeRemain
+    );
 
     const quizBadge = useTranslation("quiz");
 

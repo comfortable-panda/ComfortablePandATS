@@ -1,18 +1,21 @@
 import { AssignmentEntry } from "../features/entity/assignment/types";
 import { useTranslationArgsDeps } from "./helper";
 import React, { useId } from "react";
+import { createDateString, getRemainTimeString } from "../utils";
+import { CurrentTime } from "../constant";
 
 export default function AssignmentEntryView(props: {
     assignment: AssignmentEntry;
     isSubset: boolean;
     onCheck: (checked: boolean) => void;
 }) {
-    // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime - nowTime) / 1000);
-    const timeRemain = [0, 0, 0]; // TODO
-    const remainTime = useTranslationArgsDeps("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]], timeRemain);
-
-    const dueDateString = remainTime;
-    const remainTimeString = "TODO RemainTimeString"; // TODO
+    const dueDateString = createDateString(props.assignment.dueTime);
+    const timeRemain = getRemainTimeString(props.assignment.dueTime - CurrentTime);
+    const remainTimeString = useTranslationArgsDeps(
+        "remain_time",
+        [timeRemain[0], timeRemain[1], timeRemain[2]],
+        timeRemain
+    );
 
     const labelId = useId();
 
