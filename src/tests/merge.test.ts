@@ -8,6 +8,13 @@ import { mockAssignmentEntry } from "./mock/generator";
 import { mergeEntities, mergeEntries } from "../features/merge";
 import _ from "lodash";
 
+const mockVersion = jest.fn();
+jest.mock("../constant", () => ({
+    get VERSION() {
+        return mockVersion();
+    },
+}));
+
 describe("Asssignment", () => {
   test("Has no old assignment", () => {
     const oldAssignments: Array<Assignment> = [];
