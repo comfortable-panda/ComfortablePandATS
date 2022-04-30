@@ -195,7 +195,6 @@ export function EntryTab(props: {
     );
 }
 
-// TODO
 function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo: MemoAddInfo) => void }) {
     const courseName = useTranslation("todo_box_course_name");
     const memoLabel = useTranslation("todo_box_memo");

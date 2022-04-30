@@ -40,7 +40,6 @@ export default function MemoEntryView(props: {
                 <span className="cs-del-memo-btn" onClick={() => props.onDelete()}>
                     x
                 </span>{" "}
-                {/* TODO: del button */}
                 {props.memo.title}
             </p>
         </>
