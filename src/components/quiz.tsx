@@ -7,7 +7,7 @@ export default function QuizEntryView(props: {
     isSubset: boolean;
     onCheck: (checked: boolean) => void;
 }) {
-    // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime * 1000 - nowTime) / 1000);
+    // const timeRemain = AssignmentEntry.getTimeRemain((this.dueTime - nowTime) / 1000);
     const timeRemain = [0, 0, 0]; // TODO
     const remainTime = useTranslationArgsDeps("remain_time", [timeRemain[0], timeRemain[1], timeRemain[2]], timeRemain);
 

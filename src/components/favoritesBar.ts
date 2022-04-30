@@ -34,7 +34,7 @@ const createDueMap = (settings: Settings, courseMap: CourseMap): DueMap => {
         if (entries.entries.length === 0) continue;
         const closestTime = getClosestTime(settings, entries.entries);
         if (closestTime === MaxTimestamp) continue;
-        const daysUntilDue = getDaysUntil(settings.appInfo.currentTime, closestTime * 1000);
+        const daysUntilDue = getDaysUntil(settings.appInfo.currentTime, closestTime);
         dueMap.set(courseID, { due: daysUntilDue, isRead: entries.isRead });
     }
     return dueMap;

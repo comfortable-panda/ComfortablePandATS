@@ -1,3 +1,4 @@
+export const CurrentTime = new Date().getTime() / 1000;
 export const AssignmentsStorage = "CS_Assignments";
 export const QuizzesStorage = "CS_Quizzes";
 export const MemosStorage = "CS_Memos";

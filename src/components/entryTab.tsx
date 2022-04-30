@@ -3,11 +3,12 @@ import { Assignment, AssignmentEntry } from "../features/entity/assignment/types
 import { Course } from "../features/course/types";
 import { Memo, MemoEntry } from "../features/entity/memo/types";
 import { Quiz, QuizEntry } from "../features/entity/quiz/types";
-import { getCourses, getDaysUntil, nowTime } from "../utils";
+import { getCourses, getDaysUntil } from "../utils";
 import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";
 import MemoEntryView from "./memo";
 import QuizEntryView from "./quiz";
+import { CurrentTime } from "../constant";
 
 // Every type in EntityUnion must implement IEntity
 export type EntityUnion = Assignment | Quiz | Memo;
@@ -100,7 +101,7 @@ export function EntryTab(props: {
     for (const entity of props.entities) {
         const course = entity.getCourse();
         for (const entry of entity.entries) {
-            const daysUntilDue = getDaysUntil(nowTime, entry.getDueDate() * 1000);
+            const daysUntilDue = getDaysUntil(CurrentTime, entry.getDueDate());
 
             switch (daysUntilDue) {
                 case "due24h":

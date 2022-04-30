@@ -12,7 +12,6 @@ import { AssignmentFetchTimeStorage, MaxTimestamp, QuizFetchTimeStorage } from "
 import { saveAssignments } from "./features/entity/assignment/saveAssignment";
 import { EntryProtocol } from "./features/entity/type";
 
-export const nowTime = new Date().getTime();
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
 
 export async function getEntities(settings: Settings, courses: Array<Course>) {
@@ -37,7 +36,8 @@ const decodeTimestamp = (data: any): number | undefined => {
 
 export const shouldUseCache = (fetchTime: number | undefined, currentTime: number, cacheInterval: number): boolean => {
     if (fetchTime === undefined) return false;
-    return (currentTime - fetchTime) / 1000 <= cacheInterval;
+    console.log(currentTime,fetchTime)
+    return (currentTime - fetchTime)<= cacheInterval;
 };
 
 export async function getFetchTime(hostname: string): Promise<FetchTime> {
@@ -59,7 +59,7 @@ export function getCourses(): Array<Course> {
  * @param {number} dt2 target time
  */
 function getDaysUntil(dt1: number, dt2: number): DueCategory {
-    let diff = (dt2 - dt1) / 1000;
+    let diff = dt2 - dt1;
     diff /= 3600 * 24;
     let category: DueCategory;
     if (diff > 0 && diff <= 1) {
@@ -82,7 +82,7 @@ function getDaysUntil(dt1: number, dt2: number): DueCategory {
  */
 function formatTimestamp(timestamp: number | undefined): string {
     if (timestamp === undefined) return "---";
-    const date = new Date(timestamp);
+    const date = new Date(timestamp * 1000);
     return (
         date.toLocaleDateString() +
         " " +
@@ -98,7 +98,7 @@ export const getClosestTime = (settings: Settings, entries: Array<EntryProtocol>
     return entries
         .filter((e) => {
             if (settings.miniSakaiOption.showCompletedEntry) {
-                if (!settings.miniSakaiOption.showLateAcceptedEntry) return settings.appInfo.currentTime < e.dueTime * 1000;
+                if (!settings.miniSakaiOption.showLateAcceptedEntry) return settings.appInfo.currentTime < e.dueTime;
             } else {
                 if (e.hasFinished) return false;
             }

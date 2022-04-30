@@ -1,12 +1,11 @@
 import { Quiz, QuizEntry } from "./types";
 import { Course } from "../../course/types";
-import { nowTime } from "../../../utils";
-import { MaxTimestamp } from "../../../constant";
+import { CurrentTime, MaxTimestamp } from "../../../constant";
 
 /* Sakai APIから取得した課題をQuizEntryに変換する */
 export const decodeQuizFromAPI = (data: Record<string, any>): Array<QuizEntry> => {
     return data.sam_pub_collection
-        .filter((json: any) => json.startDate < nowTime && (json.dueDate >= nowTime || json.dueDate == null))
+        .filter((json: any) => json.startDate < CurrentTime * 1000 && (json.dueDate >= CurrentTime * 1000 || json.dueDate == null))
         .map((json: any) => {
             const entry = new QuizEntry(
                 json.publishedAssessmentId,
@@ -27,7 +26,7 @@ export const decodeQuizFromArray = (data: Array<any>): Array<Quiz> => {
         const entries: Array<QuizEntry> = [];
         for (const e of quiz.entries) {
             const entry = new QuizEntry(e.id, e.title, e.dueTime, e.hasFinished);
-            if (entry.getDueDateTimestamp * 1000 > nowTime) entries.push(entry);
+            if (entry.getDueDateTimestamp > CurrentTime) entries.push(entry);
         }
         quizzes.push(new Quiz(course, entries, isRead));
     }

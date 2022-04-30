@@ -1,6 +1,6 @@
 import { Memo, MemoEntry } from "./types";
 import { Course } from "../../course/types";
-import { nowTime } from "../../../utils";
+import { CurrentTime } from "../../../constant";
 
 export const decodeMemoFromArray = (data: Array<any>): Array<Memo> => {
     const memos: Array<Memo> = [];
@@ -10,7 +10,7 @@ export const decodeMemoFromArray = (data: Array<any>): Array<Memo> => {
         const entries: Array<MemoEntry> = [];
         for (const e of memo.entries) {
             const entry = new MemoEntry(e.id, e.title, e.dueTime, e.hasFinished);
-            if (entry.getDueDateTimestamp * 1000 > nowTime) entries.push(entry);
+            if (entry.getDueDateTimestamp > CurrentTime) entries.push(entry);
         }
         memos.push(new Memo(course, entries));
     }

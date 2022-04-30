@@ -16,7 +16,7 @@ export const getSakaiAssignments = async (hostname: string, courses: Array<Cours
     for (const assignment of result) {
         if (assignment.status === "fulfilled") assignments.push(assignment.value);
     }
-    await toStorage(hostname, AssignmentFetchTimeStorage, new Date().getTime());
+    await toStorage(hostname, AssignmentFetchTimeStorage, new Date().getTime() / 1000);
     return assignments;
 };
 

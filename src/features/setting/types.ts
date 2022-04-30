@@ -1,3 +1,5 @@
+import { CurrentTime } from "../../constant";
+
 type AppInfo = {
     version: string;
     hostname: string;
@@ -40,7 +42,7 @@ export class Settings {
     appInfo: AppInfo = {
         version: chrome.runtime.getManifest().version,
         hostname: window.location.hostname,
-        currentTime: new Date().getTime(),
+        currentTime: CurrentTime,
         useDarkTheme: false
     };
     fetchTime: FetchTime = {

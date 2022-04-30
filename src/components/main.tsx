@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "./helper";
 import { formatTimestamp, getCourses, getEntities, updateIsReadFlag } from "../utils";
 import { toggleMiniSakai } from "../eventListener";
@@ -46,7 +46,11 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
     }
 
     componentDidMount() {
-        this.reloadEntities();
+        getStoredSettings(window.location.hostname).then((s) => {
+            this.setState({ settings: s }, () => {
+                this.reloadEntities();
+            });
+        });
     }
 
     reloadEntities() {

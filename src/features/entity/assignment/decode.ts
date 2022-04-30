@@ -1,11 +1,11 @@
 import { Assignment, AssignmentEntry } from "./types";
-import { nowTime } from "../../../utils";
 import { Course } from "../../course/types";
+import { CurrentTime } from "../../../constant";
 
 /* Sakai APIから取得した課題をAssignmentEntryに変換する */
 export const decodeAssignmentFromAPI = (data: Record<string, any>): Array<AssignmentEntry> => {
     return data.assignment_collection
-        .filter((json: any) => json.closeTime.epochSecond * 1000 >= nowTime)
+        .filter((json: any) => json.closeTime.epochSecond >= CurrentTime)
         .map((json: any) => {
             const entry = new AssignmentEntry(
                 json.id,
@@ -27,7 +27,7 @@ export const decodeAssignmentFromArray = (data: Array<any>): Array<Assignment> =
         const entries: Array<AssignmentEntry> = [];
         for (const e of assignment.entries) {
             const entry = new AssignmentEntry(e.id, e.title, e.dueTime, e.closeTime, e.hasFinished);
-            if (entry.getCloseDateTimestamp * 1000 > nowTime) entries.push(entry);
+            if (entry.getCloseDateTimestamp > CurrentTime) entries.push(entry);
         }
         assignments.push(new Assignment(course, entries, isRead));
     }
