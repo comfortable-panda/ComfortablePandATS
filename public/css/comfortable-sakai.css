@@ -48,7 +48,7 @@
 }
 
 .cs-minisakai {
-    --topDanger: #f78989;
+    /* --topDanger: #f78989;
     --topWarning: #fdd783;
     --topSuccess: #8bd48d;
     --topOther: #adadad;
@@ -59,7 +59,7 @@
     --miniLate: #212121;
     --textColor: #464646;
     --bgColor: #cacaca;
-    --dateColor: #b01011;
+    --dateColor: #b01011; */
 
     height: 95vh;
     width: 0;
@@ -650,6 +650,8 @@
 .cp-settings {
     padding-left: 20px;
     padding-top: 10px;
+    color: var(--textColor);
+    background-color: var(--bgColor);
 }
 
 .cp-settings-text {
