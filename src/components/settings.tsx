@@ -39,11 +39,11 @@ export function SettingsTab(props: { onSettingsChange: (change: SettingsChange) 
         <div className="cs-settings-tab">
             <TranslatedBooleanItem
                 descriptionTag="settings_enable_dark_theme"
-                value={settings.appearance.darkTheme}
+                value={settings.appInfo.useDarkTheme}
                 onChange={(v) =>
                     props.onSettingsChange({
                         type: "boolean",
-                        id: "appearance.darkTheme",
+                        id: "appInfo.useDarkTheme",
                         newValue: v
                     })
                 }
