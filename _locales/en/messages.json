@@ -26,6 +26,12 @@
       "time": { "content": "$2" }
     }
   },
+  "settings_colors_day_more": { "message": "[$color_type$] $time$+ days before due",
+    "placeholders": {
+      "color_type": { "content": "$1" },
+      "time": { "content": "$2" }
+    }
+  },
   "assignment_acquisition_date": {"message": "Assignment Acquisition Date: "},
   "testquiz_acquisition_date": {"message": "Test&Quiz Acquisition Date: "},
   "due24h": {"message": "Due within 24hrs"},
