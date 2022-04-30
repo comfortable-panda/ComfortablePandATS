@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import { useTranslation } from "./helper";
 import { formatTimestamp, getCourses, getEntities, updateIsReadFlag } from "../utils";
-import { toggleMiniSakai } from "../eventListener";
 import { EntityUnion, EntryTab, EntryUnion, MemoAddInfo } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
-import { applyColorSettings } from "../minisakai";
+import { applyColorSettings, toggleMiniSakai } from "../minisakai";
 import { Settings } from "../features/setting/types";
 import { getStoredSettings } from "../features/setting/getSetting";
 import { saveSettings } from "../features/setting/saveSetting";
