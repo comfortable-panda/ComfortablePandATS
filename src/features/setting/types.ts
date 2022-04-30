@@ -65,7 +65,7 @@ export class Settings {
         miniDanger: "#e85555",
         miniWarning: "#d7aa57",
         miniSuccess: "#62b665",
-        miniOther: "#777777",
+        miniOther: "#777777"
     };
 
     setFetchtime(fetchTime: FetchTime) {
