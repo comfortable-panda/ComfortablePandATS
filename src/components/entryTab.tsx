@@ -140,11 +140,13 @@ export function EntryTab(props: {
 
     return (
         <>
-            <AddMemoBox
-                shown={!props.isSubset && props.showMemoBox}
-                courses={getCourses()}
-                onMemoAdd={props.onMemoAdd}
-            />
+            {props.isSubset ? null : (
+                <AddMemoBox
+                    shown={!props.isSubset && props.showMemoBox}
+                    courses={getCourses()}
+                    onMemoAdd={props.onMemoAdd}
+                />
+            )}
             {dangerElements.length === 0 ? null : (
                 <MiniSakaiEntryList
                     dueType="danger"
