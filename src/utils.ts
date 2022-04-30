@@ -99,6 +99,7 @@ export const getClosestTime = (settings: Settings, entries: Array<EntryProtocol>
         .filter((e) => {
             if (settings.miniSakaiOption.showCompletedEntry) {
                 if (!settings.miniSakaiOption.showLateAcceptedEntry) return settings.appInfo.currentTime < e.dueTime;
+                // else return settings.appInfo.currentTime < e.closeTime
             } else {
                 if (e.hasFinished) return false;
             }
