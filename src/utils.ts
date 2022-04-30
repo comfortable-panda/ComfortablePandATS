@@ -179,30 +179,6 @@ function miniSakaiReady(): void {
     loadingIcon.append(hamburgerIcon);
 }
 
-/**
- * Get the current Sakai theme.
- * @returns 'light' or 'dark'. Returns null on failure.
- */
-function getSakaiTheme(): "light" | "dark" | null {
-    // Get the 'background-color' property of #topnav_container
-    const topnavContainer = document.querySelector("#topnav_container");
-    if (topnavContainer === null) {
-        return null;
-    }
-
-    const color = window.getComputedStyle(topnavContainer).backgroundColor;
-    if (!(color as any).startsWith("rgb")) {
-        // backgroundColor is not defined properly
-        return null;
-    }
-
-    if (color === "rgb(255, 255, 255)") {
-        return "light";
-    } else {
-        return "dark";
-    }
-}
-
 export function getRemainTimeString(dueInSeconds: number): string {
     if (dueInSeconds === MaxTimestamp) return chrome.i18n.getMessage("due_not_set");
     const seconds = dueInSeconds - CurrentTime;
@@ -219,4 +195,4 @@ export function createDateString(seconds: number | null | undefined): string {
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
 }
 
-export { getDaysUntil, formatTimestamp, isLoggedIn, miniSakaiReady, getSakaiTheme };
+export { getDaysUntil, formatTimestamp, isLoggedIn, miniSakaiReady };
