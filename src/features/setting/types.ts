@@ -1,4 +1,4 @@
-import { CurrentTime } from "../../constant";
+import { CurrentTime, VERSION } from "../../constant";
 
 type AppInfo = {
     version: string;
@@ -40,7 +40,7 @@ const CSTheme = {
 
 export class Settings {
     appInfo: AppInfo = {
-        version: chrome.runtime.getManifest().version,
+        version: VERSION,
         hostname: window.location.hostname,
         currentTime: CurrentTime,
         useDarkTheme: false
