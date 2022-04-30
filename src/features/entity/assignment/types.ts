@@ -11,8 +11,17 @@ export class AssignmentEntry implements EntryProtocol {
         public hasFinished: boolean
     ) {}
 
-    getTimestamp(showLateAcceptedEntry: boolean): number {
-        return showLateAcceptedEntry ? this.getCloseDateTimestamp : this.getDueDateTimestamp;
+    getTimestamp(currentTime: number, showLateAcceptedEntry: boolean): number {
+        if (showLateAcceptedEntry) {
+            const closestTimestamp = Math.min(this.getCloseDateTimestamp, this.getDueDateTimestamp);
+            if (closestTimestamp < currentTime) {
+                return this.getCloseDateTimestamp;
+            } else {
+                return closestTimestamp;
+            }
+        } else {
+            return this.getDueDateTimestamp;
+        }
     }
 
     get getDueDateTimestamp(): number {
