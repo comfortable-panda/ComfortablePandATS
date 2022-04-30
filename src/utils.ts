@@ -8,8 +8,9 @@ import { getQuizzes } from "./features/entity/quiz/getQuiz";
 import { getMemos } from "./features/entity/memo/getMemo";
 import { fromStorage } from "./features/storage";
 import { getSakaiCourses } from "./features/course/getCourse";
-import { AssignmentFetchTimeStorage, QuizFetchTimeStorage } from "./constant";
+import { AssignmentFetchTimeStorage, MaxTimestamp, QuizFetchTimeStorage } from "./constant";
 import { saveAssignments } from "./features/entity/assignment/saveAssignment";
+import { EntryProtocol } from "./features/entity/type";
 
 export const nowTime = new Date().getTime();
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
@@ -92,6 +93,19 @@ function formatTimestamp(timestamp: number | undefined): string {
         ("00" + date.getSeconds()).slice(-2)
     );
 }
+
+export const getClosestTime = (settings: NewSettings, entries: Array<EntryProtocol>): number => {
+    return entries
+        .filter((e) => {
+            if (settings.miniSakaiOption.showCompletedEntry) {
+                if (!settings.miniSakaiOption.showLateAcceptedEntry) return settings.appInfo.currentTime < e.dueTime * 1000;
+            } else {
+                if (e.hasFinished) return false;
+            }
+            return true;
+        })
+        .reduce((prev, e) => Math.min(e.dueTime, prev), MaxTimestamp);
+};
 
 export const getLoggedInInfoFromScript = (): Array<HTMLScriptElement> => {
     return Array.from(document.getElementsByTagName("script"));

@@ -1,4 +1,4 @@
-import { DueCategory, getDaysUntil } from "../utils";
+import { DueCategory, getClosestTime, getDaysUntil } from "../utils";
 import { Settings } from "../features/setting/types";
 import { EntityProtocol, EntryProtocol } from "../features/entity/type";
 import { MaxTimestamp } from "../constant";
@@ -32,16 +32,7 @@ const createDueMap = (settings: Settings, courseMap: CourseMap): DueMap => {
     const dueMap = new Map<string, { due: DueCategory; isRead: boolean }>();
     for (const [courseID, entries] of courseMap.entries()) {
         if (entries.entries.length === 0) continue;
-        const closestTime = entries.entries
-            .filter((e) => {
-                if (settings.miniSakaiOption.showCompletedEntry) {
-                    if (!settings.miniSakaiOption.showLateAcceptedEntry) return settings.appInfo.currentTime < e.dueTime * 1000;
-                } else {
-                    if (e.hasFinished) return false;
-                }
-                return true;
-            })
-            .reduce((prev, e) => Math.min(e.dueTime, prev), MaxTimestamp);
+        const closestTime = getClosestTime(settings, entries.entries);
         if (closestTime === MaxTimestamp) continue;
         const daysUntilDue = getDaysUntil(settings.appInfo.currentTime, closestTime * 1000);
         dueMap.set(courseID, { due: daysUntilDue, isRead: entries.isRead });
