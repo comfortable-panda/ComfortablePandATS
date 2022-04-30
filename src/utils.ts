@@ -7,7 +7,6 @@ import { getAssignments } from "./features/entity/assignment/getAssignment";
 import { getQuizzes } from "./features/entity/quiz/getQuiz";
 import { getMemos } from "./features/entity/memo/getMemo";
 import { fromStorage } from "./features/storage";
-import { getSakaiCourses } from "./features/course/getCourse";
 import { AssignmentFetchTimeStorage, CurrentTime, MaxTimestamp, QuizFetchTimeStorage } from "./constant";
 import { saveAssignments } from "./features/entity/assignment/saveAssignment";
 import { EntryProtocol } from "./features/entity/type";
@@ -55,10 +54,6 @@ export async function getFetchTime(hostname: string): Promise<FetchTime> {
         assignment: assignmentTime,
         quiz: quizTime
     };
-}
-
-export function getCourses(): Array<Course> {
-    return getSakaiCourses();
 }
 
 /**
@@ -129,7 +124,7 @@ function isLoggedIn(): boolean {
     const scripts = getLoggedInInfoFromScript();
     let loggedIn = false;
     for (const script of scripts) {
-        if (script.text.match('"loggedIn": true')) loggedIn = true;
+        if (script.text.match("\"loggedIn\": true")) loggedIn = true;
     }
     return loggedIn;
 }
