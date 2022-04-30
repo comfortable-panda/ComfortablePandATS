@@ -121,7 +121,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
         if (!_.isEqual(prevState.settings, this.state.settings)) {
             resetFavoritesBar();
             createFavoritesBar(this.state.settings, this.state.entities);
-            applyColorSettings(this.state.settings);
+            applyColorSettings(this.state.settings, this.props.subset);
         }
     }
 
