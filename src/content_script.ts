@@ -5,10 +5,11 @@ import { isLoggedIn, miniSakaiReady } from "./utils";
 async function main() {
     if (isLoggedIn()) {
         createMiniSakaiBtn();
-        createMiniSakai();
+        const hostname = window.location.hostname;
+        createMiniSakai(hostname);
 
         miniSakaiReady();
-        await saveHostName(window.location.hostname);
+        await saveHostName(hostname);
     }
 }
 

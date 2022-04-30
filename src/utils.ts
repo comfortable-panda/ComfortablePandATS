@@ -156,13 +156,13 @@ export const getCourseSiteID = (url: string): string | undefined => {
     return courseID;
 };
 
-export const updateIsReadFlag = (currentHref: string, assignments: Array<Assignment>) => {
+export const updateIsReadFlag = (currentHref: string, assignments: Array<Assignment>, hostname: string) => {
     const courseID = getCourseSiteID(currentHref);
     if (courseID === undefined) return;
     for (const assignment of assignments) {
         if (assignment.course.id === courseID && assignment.entries.length > 0) {
             assignment.isRead = true;
-            saveAssignments(window.location.hostname, assignments);
+            saveAssignments(hostname, assignments);
         }
     }
 };

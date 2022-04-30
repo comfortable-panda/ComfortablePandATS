@@ -19,12 +19,12 @@ export function createMiniSakaiBtn(): void {
 /**
  * Insert miniSakai into Sakai.
  */
-export function createMiniSakai() {
+export function createMiniSakai(hostname: string) {
     const parent = document.getElementsByClassName("Mrphs-mainHeader")[0];
     const ref = document.getElementsByClassName("Mrphs-sites-nav")[0];
     parent?.insertBefore(miniSakai, ref);
     const root = createRoot(miniSakai);
-    root.render(<MiniSakaiRoot subset={false} />);
+    root.render(<MiniSakaiRoot subset={false} hostname={hostname}/>);
 }
 
 export const applyColorSettings = (settings: Settings): void => {

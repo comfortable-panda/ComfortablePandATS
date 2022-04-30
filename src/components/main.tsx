@@ -22,7 +22,7 @@ export const MiniSakaiContext = React.createContext<{
     settings: new Settings()
 });
 
-type MiniSakaiRootProps = { subset: boolean };
+type MiniSakaiRootProps = { subset: boolean; hostname: string };
 type MiniSakaiRootState = {
     settings: Settings;
     entities: EntityUnion[];
@@ -46,7 +46,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
     }
 
     componentDidMount() {
-        getStoredSettings(window.location.hostname).then((s) => {
+        getStoredSettings(this.props.hostname).then((s) => {
             this.setState({ settings: s }, () => {
                 this.reloadEntities();
             });
@@ -60,14 +60,14 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
             this.setState({
                 entities: allEntities
             });
-            updateIsReadFlag(window.location.href, entities.assignment);
+            updateIsReadFlag(window.location.href, entities.assignment, this.props.hostname);
         });
     }
 
     private onCheck(entry: EntryUnion, checked: boolean) {
         const newEntry = _.cloneDeep(entry);
         newEntry.hasFinished = checked;
-        newEntry.save(window.location.hostname).then(() => {
+        newEntry.save(this.props.hostname).then(() => {
             this.reloadEntities();
         });
     }
@@ -108,7 +108,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
 
     componentDidUpdate(prevProps: MiniSakaiRootProps, prevState: MiniSakaiRootState) {
         if (!_.isEqual(prevState.entities, this.state.entities)) {
-            getStoredSettings(window.location.hostname).then((s) => {
+            getStoredSettings(this.props.hostname).then((s) => {
                 this.setState({
                     settings: s
                 });

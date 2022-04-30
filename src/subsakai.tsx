@@ -19,7 +19,7 @@ async function initSubSakai() {
         return;
     }
     const root = createRoot(domRoot);
-    root.render(<MiniSakaiRoot subset={true} />);
+    root.render(<MiniSakaiRoot subset={true} hostname={hostname} />);
 }
 
 initSubSakai();
