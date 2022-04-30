@@ -1,8 +1,7 @@
 import React, { useId } from "react";
-import { CurrentTime } from "../constant";
 import { MemoEntry } from "../features/entity/memo/types";
 import { createDateString, getRemainTimeString } from "../utils";
-import { useTranslation, useTranslationArgsDeps } from "./helper";
+import { useTranslation } from "./helper";
 
 export default function MemoEntryView(props: {
     memo: MemoEntry;
@@ -11,12 +10,7 @@ export default function MemoEntryView(props: {
     onDelete: () => void;
 }) {
     const dueDateString = createDateString(props.memo.dueTime);
-    const timeRemain = getRemainTimeString(props.memo.dueTime - CurrentTime);
-    const remainTimeString = useTranslationArgsDeps(
-        "remain_time",
-        [timeRemain[0], timeRemain[1], timeRemain[2]],
-        timeRemain
-    );
+    const remainTimeString = getRemainTimeString(props.memo.dueTime);
 
     const memoBadge = useTranslation("memo");
 

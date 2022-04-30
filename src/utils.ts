@@ -8,7 +8,7 @@ import { getQuizzes } from "./features/entity/quiz/getQuiz";
 import { getMemos } from "./features/entity/memo/getMemo";
 import { fromStorage } from "./features/storage";
 import { getSakaiCourses } from "./features/course/getCourse";
-import { AssignmentFetchTimeStorage, MaxTimestamp, QuizFetchTimeStorage } from "./constant";
+import { AssignmentFetchTimeStorage, CurrentTime, MaxTimestamp, QuizFetchTimeStorage } from "./constant";
 import { saveAssignments } from "./features/entity/assignment/saveAssignment";
 import { EntryProtocol } from "./features/entity/type";
 
@@ -203,15 +203,18 @@ function getSakaiTheme(): "light" | "dark" | null {
     }
 }
 
-export function getRemainTimeString(seconds: number): [string, string, string] {
+export function getRemainTimeString(dueInSeconds: number): string {
+    if (dueInSeconds === MaxTimestamp) return chrome.i18n.getMessage("due_not_set");
+    const seconds = dueInSeconds - CurrentTime;
     const day = Math.floor(seconds / (3600 * 24));
     const hours = Math.floor((seconds - day * 3600 * 24) / 3600);
     const minutes = Math.floor((seconds - (day * 3600 * 24 + hours * 3600)) / 60);
-    return [day.toString(), hours.toString(), minutes.toString()];
+    const args = [day.toString(), hours.toString(), minutes.toString()];
+    return chrome.i18n.getMessage("remain_time", args);
 }
 
 export function createDateString(seconds: number | null | undefined): string {
-    if (seconds === undefined || seconds === null) return "----/--/--";
+    if (seconds === MaxTimestamp || seconds === undefined || seconds === null) return "----/--/--";
     const date = new Date(seconds * 1000);
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
 }

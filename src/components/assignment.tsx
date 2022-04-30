@@ -1,8 +1,6 @@
 import { AssignmentEntry } from "../features/entity/assignment/types";
-import { useTranslationArgsDeps } from "./helper";
 import React, { useId } from "react";
 import { createDateString, getRemainTimeString } from "../utils";
-import { CurrentTime } from "../constant";
 
 export default function AssignmentEntryView(props: {
     assignment: AssignmentEntry;
@@ -10,12 +8,7 @@ export default function AssignmentEntryView(props: {
     onCheck: (checked: boolean) => void;
 }) {
     const dueDateString = createDateString(props.assignment.dueTime);
-    const timeRemain = getRemainTimeString(props.assignment.dueTime - CurrentTime);
-    const remainTimeString = useTranslationArgsDeps(
-        "remain_time",
-        [timeRemain[0], timeRemain[1], timeRemain[2]],
-        timeRemain
-    );
+    const remainTimeString = getRemainTimeString(props.assignment.dueTime);
 
     const labelId = useId();
 

@@ -1,8 +1,7 @@
 import React, { useId } from "react";
-import { CurrentTime } from "../constant";
 import { QuizEntry } from "../features/entity/quiz/types";
 import { createDateString, getRemainTimeString } from "../utils";
-import { useTranslation, useTranslationArgsDeps } from "./helper";
+import { useTranslation } from "./helper";
 
 export default function QuizEntryView(props: {
     quiz: QuizEntry;
@@ -10,12 +9,7 @@ export default function QuizEntryView(props: {
     onCheck: (checked: boolean) => void;
 }) {
     const dueDateString = createDateString(props.quiz.dueTime);
-    const timeRemain = getRemainTimeString(props.quiz.dueTime - CurrentTime);
-    const remainTimeString = useTranslationArgsDeps(
-        "remain_time",
-        [timeRemain[0], timeRemain[1], timeRemain[2]],
-        timeRemain
-    );
+    const remainTimeString = getRemainTimeString(props.quiz.dueTime);
 
     const quizBadge = useTranslation("quiz");
 
