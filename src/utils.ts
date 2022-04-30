@@ -101,8 +101,8 @@ export const getClosestTime = (settings: Settings, entries: Array<EntryProtocol>
                 return settings.appInfo.currentTime <= e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry);
             } else {
                 if (e.hasFinished) return false;
+                return settings.appInfo.currentTime <= e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry);
             }
-            return true;
         })
         .reduce((prev, e) => Math.min(e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry), prev), MaxTimestamp);
 };
