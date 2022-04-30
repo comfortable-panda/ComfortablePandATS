@@ -3,12 +3,13 @@ import { Assignment, AssignmentEntry } from "../features/entity/assignment/types
 import { Course } from "../features/course/types";
 import { Memo, MemoEntry } from "../features/entity/memo/types";
 import { Quiz, QuizEntry } from "../features/entity/quiz/types";
-import { getCourses, getDaysUntil } from "../utils";
+import { getDaysUntil } from "../utils";
 import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";
 import MemoEntryView from "./memo";
 import QuizEntryView from "./quiz";
 import { CurrentTime } from "../constant";
+import { getSakaiCourses } from "../features/course/getCourse";
 
 // Every type in EntityUnion must implement IEntity
 export type EntityUnion = Assignment | Quiz | Memo;
@@ -149,13 +150,13 @@ export function EntryTab(props: {
             {props.isSubset ? null : (
                 <AddMemoBox
                     shown={!props.isSubset && props.showMemoBox}
-                    courses={getCourses()}
+                    courses={getSakaiCourses()}
                     onMemoAdd={props.onMemoAdd}
                 />
             )}
             {dangerElements.length === 0 ? null : (
                 <MiniSakaiEntryList
-                    dueType="danger"
+                    dueType='danger'
                     isSubset={props.isSubset}
                     entriesWithCourse={dangerElements}
                     onCheck={props.onCheck}
@@ -164,7 +165,7 @@ export function EntryTab(props: {
             )}
             {warningElements.length === 0 ? null : (
                 <MiniSakaiEntryList
-                    dueType="warning"
+                    dueType='warning'
                     isSubset={props.isSubset}
                     entriesWithCourse={warningElements}
                     onCheck={props.onCheck}
@@ -173,7 +174,7 @@ export function EntryTab(props: {
             )}
             {successElements.length === 0 ? null : (
                 <MiniSakaiEntryList
-                    dueType="success"
+                    dueType='success'
                     isSubset={props.isSubset}
                     entriesWithCourse={successElements}
                     onCheck={props.onCheck}
@@ -182,7 +183,7 @@ export function EntryTab(props: {
             )}
             {otherElements.length === 0 ? null : (
                 <MiniSakaiEntryList
-                    dueType="other"
+                    dueType='other'
                     isSubset={props.isSubset}
                     entriesWithCourse={otherElements}
                     onCheck={props.onCheck}
@@ -220,12 +221,12 @@ function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo
     }
 
     return (
-        <div className="cs-memo-box addMemoBox">
-            <div className="cs-memo-item">
+        <div className='cs-memo-box addMemoBox'>
+            <div className='cs-memo-item'>
                 <p>{courseName}</p>
                 <label>
                     <select
-                        className="todoLecName"
+                        className='todoLecName'
                         value={selectedCourseID}
                         onChange={(ev) => setSelectedCourseID(ev.target.value)}
                     >
@@ -233,32 +234,32 @@ function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo
                     </select>
                 </label>
             </div>
-            <div className="cs-memo-item">
+            <div className='cs-memo-item'>
                 <p>{memoLabel}</p>
                 <label>
                     <input
-                        type="text"
-                        className="todoContent"
+                        type='text'
+                        className='todoContent'
                         value={todoContent}
                         onChange={(ev) => setTodoContent(ev.target.value)}
                     />
                 </label>
             </div>
-            <div className="cs-memo-item">
+            <div className='cs-memo-item'>
                 <p>{dueDate}</p>
                 <label>
                     <input
-                        type="datetime-local"
-                        className="todoDue"
+                        type='datetime-local'
+                        className='todoDue'
                         value={todoDue}
                         onChange={(ev) => setTodoDue(ev.target.value)}
                     />
                 </label>
             </div>
-            <div className="cs-memo-item">
+            <div className='cs-memo-item'>
                 <button
-                    type="submit"
-                    id="todo-add"
+                    type='submit'
+                    id='todo-add'
                     onClick={() => {
                         if (selectedCourseID === "" || todoDue === "") return;
 

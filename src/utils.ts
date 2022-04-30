@@ -7,7 +7,6 @@ import { getAssignments } from "./features/entity/assignment/getAssignment";
 import { getQuizzes } from "./features/entity/quiz/getQuiz";
 import { getMemos } from "./features/entity/memo/getMemo";
 import { fromStorage } from "./features/storage";
-import { getSakaiCourses } from "./features/course/getCourse";
 import { AssignmentFetchTimeStorage, CurrentTime, MaxTimestamp, QuizFetchTimeStorage } from "./constant";
 import { saveAssignments } from "./features/entity/assignment/saveAssignment";
 import { EntryProtocol } from "./features/entity/type";
@@ -57,10 +56,6 @@ export async function getFetchTime(hostname: string): Promise<FetchTime> {
     };
 }
 
-export function getCourses(): Array<Course> {
-    return getSakaiCourses();
-}
-
 /**
  * Calculate category of assignment due date
  * @param {number} dt1 standard time
@@ -103,27 +98,17 @@ function formatTimestamp(timestamp: number | undefined): string {
 }
 
 export const getClosestTime = (settings: Settings, entries: Array<EntryProtocol>): number => {
+    const option = settings.miniSakaiOption;
+    const appInfo = settings.appInfo;
     return entries
         .filter((e) => {
-            if (settings.miniSakaiOption.showCompletedEntry) {
-                return (
-                    settings.appInfo.currentTime <=
-                    e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry)
-                );
-            } else {
+            if (!option.showCompletedEntry) {
                 if (e.hasFinished) return false;
-                return (
-                    settings.appInfo.currentTime <=
-                    e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry)
-                );
             }
+            return settings.appInfo.currentTime <= e.getTimestamp(appInfo.currentTime, option.showLateAcceptedEntry);
         })
         .reduce(
-            (prev, e) =>
-                Math.min(
-                    e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry),
-                    prev
-                ),
+            (prev, e) => Math.min(e.getTimestamp(appInfo.currentTime, option.showLateAcceptedEntry), prev),
             MaxTimestamp
         );
 };
@@ -139,7 +124,7 @@ function isLoggedIn(): boolean {
     const scripts = getLoggedInInfoFromScript();
     let loggedIn = false;
     for (const script of scripts) {
-        if (script.text.match('"loggedIn": true')) loggedIn = true;
+        if (script.text.match("\"loggedIn\": true")) loggedIn = true;
     }
     return loggedIn;
 }
@@ -179,30 +164,6 @@ function miniSakaiReady(): void {
     loadingIcon.append(hamburgerIcon);
 }
 
-/**
- * Get the current Sakai theme.
- * @returns 'light' or 'dark'. Returns null on failure.
- */
-function getSakaiTheme(): "light" | "dark" | null {
-    // Get the 'background-color' property of #topnav_container
-    const topnavContainer = document.querySelector("#topnav_container");
-    if (topnavContainer === null) {
-        return null;
-    }
-
-    const color = window.getComputedStyle(topnavContainer).backgroundColor;
-    if (!(color as any).startsWith("rgb")) {
-        // backgroundColor is not defined properly
-        return null;
-    }
-
-    if (color === "rgb(255, 255, 255)") {
-        return "light";
-    } else {
-        return "dark";
-    }
-}
-
 export function getRemainTimeString(dueInSeconds: number): string {
     if (dueInSeconds === MaxTimestamp) return chrome.i18n.getMessage("due_not_set");
     const seconds = dueInSeconds - CurrentTime;
@@ -219,4 +180,4 @@ export function createDateString(seconds: number | null | undefined): string {
     return date.toLocaleDateString() + " " + date.getHours() + ":" + ("00" + date.getMinutes()).slice(-2);
 }
 
-export { getDaysUntil, formatTimestamp, isLoggedIn, miniSakaiReady, getSakaiTheme };
+export { getDaysUntil, formatTimestamp, isLoggedIn, miniSakaiReady };

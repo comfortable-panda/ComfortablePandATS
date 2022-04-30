@@ -13,12 +13,11 @@ export const fromStorage = <T>(hostname: string, key: string, decoder: (data: an
 };
 
 export const loadHostName = (): Promise<string | undefined> => {
-    const key = "CS_Hostname";
     return new Promise(function (resolve) {
         chrome.storage.local.get(HostnameStorage, function(items: any) {
-            if (typeof items[key] === "undefined") {
+            if (typeof items[HostnameStorage] === "undefined") {
                 resolve(undefined);
-            } else resolve(items[key]);
+            } else resolve(items[HostnameStorage]);
         });
     });
 };
