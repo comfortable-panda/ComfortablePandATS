@@ -67,3 +67,4 @@ describe("getFetchTime(showCompleted)", () => {
         expect(output).toBe(MaxTimestamp);
     });
 });
+
