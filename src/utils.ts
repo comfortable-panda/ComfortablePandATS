@@ -103,27 +103,17 @@ function formatTimestamp(timestamp: number | undefined): string {
 }
 
 export const getClosestTime = (settings: Settings, entries: Array<EntryProtocol>): number => {
+    const option = settings.miniSakaiOption;
+    const appInfo = settings.appInfo;
     return entries
         .filter((e) => {
-            if (settings.miniSakaiOption.showCompletedEntry) {
-                return (
-                    settings.appInfo.currentTime <=
-                    e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry)
-                );
-            } else {
+            if (!option.showCompletedEntry) {
                 if (e.hasFinished) return false;
-                return (
-                    settings.appInfo.currentTime <=
-                    e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry)
-                );
             }
+            return settings.appInfo.currentTime <= e.getTimestamp(appInfo.currentTime, option.showLateAcceptedEntry);
         })
         .reduce(
-            (prev, e) =>
-                Math.min(
-                    e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry),
-                    prev
-                ),
+            (prev, e) => Math.min(e.getTimestamp(appInfo.currentTime, option.showLateAcceptedEntry), prev),
             MaxTimestamp
         );
 };
