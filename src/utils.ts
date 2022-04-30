@@ -98,14 +98,13 @@ export const getClosestTime = (settings: Settings, entries: Array<EntryProtocol>
     return entries
         .filter((e) => {
             if (settings.miniSakaiOption.showCompletedEntry) {
-                if (!settings.miniSakaiOption.showLateAcceptedEntry) return settings.appInfo.currentTime <= e.dueTime;
-                else return settings.appInfo.currentTime <= e.getCloseDate();
+                return settings.appInfo.currentTime <= e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry);
             } else {
                 if (e.hasFinished) return false;
             }
             return true;
         })
-        .reduce((prev, e) => Math.min(e.dueTime, prev), MaxTimestamp);
+        .reduce((prev, e) => Math.min(e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry), prev), MaxTimestamp);
 };
 
 export const getLoggedInInfoFromScript = (): Array<HTMLScriptElement> => {
