@@ -14,13 +14,21 @@ import { EntryProtocol } from "./features/entity/type";
 
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
 
-export async function getEntities(settings: Settings, courses: Array<Course>) {
+export async function getEntities(settings: Settings, courses: Array<Course>, cacheOnly = false) {
     // TODO: 並列化する
     const hostname = settings.appInfo.hostname;
     const currentTime = settings.appInfo.currentTime;
     const fetchTime = await getFetchTime(hostname);
-    const assignment: Array<Assignment> = await getAssignments(hostname, courses, shouldUseCache(fetchTime.assignment, currentTime, settings.cacheInterval.assignment));
-    const quiz: Array<Quiz> = await getQuizzes(hostname, courses, shouldUseCache(fetchTime.quiz, currentTime, settings.cacheInterval.quiz));
+    const assignment: Array<Assignment> = await getAssignments(
+        hostname,
+        courses,
+        cacheOnly || shouldUseCache(fetchTime.assignment, currentTime, settings.cacheInterval.assignment)
+    );
+    const quiz: Array<Quiz> = await getQuizzes(
+        hostname,
+        courses,
+        cacheOnly || shouldUseCache(fetchTime.quiz, currentTime, settings.cacheInterval.quiz)
+    );
     const memo: Array<Memo> = await getMemos(hostname);
     return {
         assignment: assignment,
@@ -36,8 +44,8 @@ const decodeTimestamp = (data: any): number | undefined => {
 
 export const shouldUseCache = (fetchTime: number | undefined, currentTime: number, cacheInterval: number): boolean => {
     if (fetchTime === undefined) return false;
-    console.log(currentTime,fetchTime)
-    return (currentTime - fetchTime)<= cacheInterval;
+    console.log(currentTime, fetchTime);
+    return currentTime - fetchTime <= cacheInterval;
 };
 
 export async function getFetchTime(hostname: string): Promise<FetchTime> {
@@ -98,13 +106,26 @@ export const getClosestTime = (settings: Settings, entries: Array<EntryProtocol>
     return entries
         .filter((e) => {
             if (settings.miniSakaiOption.showCompletedEntry) {
-                return settings.appInfo.currentTime <= e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry);
+                return (
+                    settings.appInfo.currentTime <=
+                    e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry)
+                );
             } else {
                 if (e.hasFinished) return false;
-                return settings.appInfo.currentTime <= e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry);
+                return (
+                    settings.appInfo.currentTime <=
+                    e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry)
+                );
             }
         })
-        .reduce((prev, e) => Math.min(e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry), prev), MaxTimestamp);
+        .reduce(
+            (prev, e) =>
+                Math.min(
+                    e.getTimestamp(settings.appInfo.currentTime, settings.miniSakaiOption.showLateAcceptedEntry),
+                    prev
+                ),
+            MaxTimestamp
+        );
 };
 
 export const getLoggedInInfoFromScript = (): Array<HTMLScriptElement> => {
@@ -118,7 +139,7 @@ function isLoggedIn(): boolean {
     const scripts = getLoggedInInfoFromScript();
     let loggedIn = false;
     for (const script of scripts) {
-        if (script.text.match("\"loggedIn\": true")) loggedIn = true;
+        if (script.text.match('"loggedIn": true')) loggedIn = true;
     }
     return loggedIn;
 }
@@ -182,10 +203,4 @@ function getSakaiTheme(): "light" | "dark" | null {
     }
 }
 
-export {
-    getDaysUntil,
-    formatTimestamp,
-    isLoggedIn,
-    miniSakaiReady,
-    getSakaiTheme
-};
+export { getDaysUntil, formatTimestamp, isLoggedIn, miniSakaiReady, getSakaiTheme };

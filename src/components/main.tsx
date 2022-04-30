@@ -54,7 +54,8 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
     }
 
     reloadEntities() {
-        getEntities(this.state.settings, getCourses()).then((entities) => {
+        const cacheOnly = this.props.subset;
+        getEntities(this.state.settings, getCourses(), cacheOnly).then((entities) => {
             const allEntities = [...entities.assignment, ...entities.quiz, ...entities.memo];
             this.setState({
                 entities: allEntities
