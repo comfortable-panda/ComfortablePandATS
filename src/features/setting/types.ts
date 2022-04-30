@@ -33,6 +33,10 @@ type CSColor = {
     miniOther: string;
 };
 
+type AppearanceOption = {
+    darkTheme: boolean;
+};
+
 const CSTheme = {
     light: { textColor: "#464646", bgColor: "#cacaca", dateColor: "#b01011" },
     dark: { textColor: "#d4d4d4", bgColor: "#555555", dateColor: "#ff7475" }
@@ -65,7 +69,10 @@ export class Settings {
         miniDanger: "#e85555",
         miniWarning: "#d7aa57",
         miniSuccess: "#62b665",
-        miniOther: "#777777",
+        miniOther: "#777777"
+    };
+    appearance: AppearanceOption = {
+        darkTheme: false
     };
 
     setFetchtime(fetchTime: FetchTime) {
