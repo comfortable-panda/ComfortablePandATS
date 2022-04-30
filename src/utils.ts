@@ -1,4 +1,4 @@
-import { FetchTime, Settings as NewSettings } from "./features/setting/types";
+import { FetchTime, Settings } from "./features/setting/types";
 import { Course } from "./features/course/types";
 import { Assignment } from "./features/entity/assignment/types";
 import { Quiz } from "./features/entity/quiz/types";
@@ -15,7 +15,7 @@ import { EntryProtocol } from "./features/entity/type";
 export const nowTime = new Date().getTime();
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
 
-export async function getEntities(settings: NewSettings, courses: Array<Course>) {
+export async function getEntities(settings: Settings, courses: Array<Course>) {
     // TODO: 並列化する
     const hostname = settings.appInfo.hostname;
     const currentTime = settings.appInfo.currentTime;
@@ -94,7 +94,7 @@ function formatTimestamp(timestamp: number | undefined): string {
     );
 }
 
-export const getClosestTime = (settings: NewSettings, entries: Array<EntryProtocol>): number => {
+export const getClosestTime = (settings: Settings, entries: Array<EntryProtocol>): number => {
     return entries
         .filter((e) => {
             if (settings.miniSakaiOption.showCompletedEntry) {
