@@ -21,6 +21,8 @@ export interface EntryProtocol {
     // TODO: Deprecated: Use `getTimestamp()` instead.
     getDueDate(): number;
 
+    getCloseDate(): number;
+
     getID(): string;
 
     save(hostname: string): Promise<void>;

@@ -15,6 +15,10 @@ export class MemoEntry implements EntryProtocol {
         return this.dueTime;
     }
 
+    getCloseDate(): number {
+        return this.dueTime;
+    }
+
     getTimestamp(): number {
         return this.getDueDateTimestamp;
     }

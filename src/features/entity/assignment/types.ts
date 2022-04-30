@@ -33,6 +33,10 @@ export class AssignmentEntry implements EntryProtocol {
         return this.dueTime;
     }
 
+    getCloseDate(): number {
+        return this.closeTime;
+    }
+
     save(hostname: string): Promise<void> {
         return saveAssignmentEntry(hostname, this);
     }
