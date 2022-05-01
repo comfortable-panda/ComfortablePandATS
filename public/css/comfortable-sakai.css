@@ -292,10 +292,18 @@
     margin-bottom: 20px;
 }
 
+.cs-assignment-danger:last-child {
+    margin-bottom: 5px;
+}
+
 .cs-assignment-warning {
     border: solid 2px var(--miniWarning);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
+}
+
+.cs-assignment-warning:last-child {
+    margin-bottom: 5px;
 }
 
 .cs-assignment-success {
@@ -304,16 +312,28 @@
     margin-bottom: 20px;
 }
 
+.cs-assignment-success:last-child {
+    margin-bottom: 5px;
+}
+
 .cs-assignment-other {
     border: solid 2px var(--miniOther);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
 }
 
+.cs-assignment-other:last-child {
+    margin-bottom: 5px;
+}
+
 .cs-assignment-late {
     border: solid 2px var(--miniLate);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
+}
+
+.cs-assignment-late:last-child {
+    margin-bottom: 5px;
 }
 
 .cs-assignment-date {
