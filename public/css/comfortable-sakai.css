@@ -292,10 +292,18 @@
     margin-bottom: 20px;
 }
 
+.cs-assignment-danger:last-child {
+    margin-bottom: 5px;
+}
+
 .cs-assignment-warning {
     border: solid 2px var(--miniWarning);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
+}
+
+.cs-assignment-warning:last-child {
+    margin-bottom: 5px;
 }
 
 .cs-assignment-success {
@@ -304,16 +312,28 @@
     margin-bottom: 20px;
 }
 
+.cs-assignment-success:last-child {
+    margin-bottom: 5px;
+}
+
 .cs-assignment-other {
     border: solid 2px var(--miniOther);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
 }
 
+.cs-assignment-other:last-child {
+    margin-bottom: 5px;
+}
+
 .cs-assignment-late {
     border: solid 2px var(--miniLate);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
+}
+
+.cs-assignment-late:last-child {
+    margin-bottom: 5px;
 }
 
 .cs-assignment-date {
@@ -388,6 +408,7 @@
     height: 15px;
     background: white;
     border-radius: 10px;
+    margin-top: 3px;
     margin-left: 5px;
     margin-right: 2px;
 }
@@ -418,6 +439,7 @@
     box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
+    margin-top: 3px;
     margin-left: 5px;
 }
 
