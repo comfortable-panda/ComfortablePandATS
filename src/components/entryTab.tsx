@@ -330,7 +330,7 @@ function MiniSakaiEntryList(props: {
                 coursePage={courseID} // TODO: change to coursePage
                 isSubset={props.isSubset}
                 dueType={props.dueType}
-                entries={entries}
+                entries={entries.sort(sortEntries)}
                 onCheck={(entry, checked) => props.onCheck(entry, checked)}
                 onDelete={(entry) => props.onDelete(entry)}
             />
@@ -339,3 +339,11 @@ function MiniSakaiEntryList(props: {
 
     return <div className={className}>{courses}</div>;
 }
+
+const sortEntries = (a: EntryUnion, b: EntryUnion): number => {
+    if (a.dueTime === b.dueTime) {
+        if (a.title > b.title) return 1;
+        else return -1;
+    }
+    return a.dueTime - b.dueTime;
+};
