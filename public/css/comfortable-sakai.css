@@ -92,11 +92,17 @@
 }
 
 .cs-minisakai .closebtn {
+    background: none;
+    border: 0;
     position: absolute;
-    top: 0;
-    right: 15px;
+    top: 5px;
+    right: 5px;
     font-size: 36px;
-    margin-left: 50px;
+    margin-left: 50px
+}
+
+.closebtn > img {
+    width: 30px;
 }
 
 .cs-minisakai-danger {
@@ -508,16 +514,11 @@
 }
 
 .cs-del-memo-btn {
-    color: #c61212;
     position: relative;
+    width: 12px;
     float: right;
     right: 10px;
-    display: inline-block;
-    margin-left: 0.5em;
-    font-size: 16px;
-    font-weight: 600;
-    vertical-align: middle;
-    border-radius: 1rem;
+    filter: invert(16%) sepia(61%) saturate(3874%) hue-rotate(350deg) brightness(103%) contrast(104%);
     cursor: pointer;
 }
 
