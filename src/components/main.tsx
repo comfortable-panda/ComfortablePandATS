@@ -205,7 +205,7 @@ function MiniSakaiVersion() {
 function MiniSakaiClose(props: { onClose: () => void }) {
     return (
         <button type="button" className="closebtn q" onClick={props.onClose}>
-            <img src={chrome.runtime.getURL("img/closeBtn.png")} alt="close" />
+            <img src={chrome.runtime.getURL("img/closeBtn.svg")} alt="close" />
         </button>
     );
 }
