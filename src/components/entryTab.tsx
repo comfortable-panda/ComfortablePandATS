@@ -8,7 +8,7 @@ import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";
 import MemoEntryView from "./memo";
 import QuizEntryView from "./quiz";
-import { CurrentTime } from "../constant";
+import { CurrentTime, MaxTimestamp } from "../constant";
 import { getSakaiCourses } from "../features/course/getCourse";
 
 // Every type in EntityUnion must implement IEntity
@@ -303,7 +303,7 @@ function MiniSakaiEntryList(props: {
     }, [props.dueType]);
 
     // group entries by course
-    const courseIdMap = new Map<string, EntryUnion[]>(); // map courseID -> EntryUnions
+    let courseIdMap = new Map<string, EntryUnion[]>(); // map courseID -> EntryUnions
     const courseNameMap = new Map<string, string>(); // map courseID -> courseName
     for (const ewc of props.entriesWithCourse) {
         let entries: EntryUnion[];
@@ -318,6 +318,8 @@ function MiniSakaiEntryList(props: {
         entries.push(ewc.entry);
         courseNameMap.set(courseID, ewc.course.name ?? "unknown course");
     }
+
+    courseIdMap = new Map([...courseIdMap.entries()].sort(sortCourseIdMap));
 
     const courses: JSX.Element[] = [];
     for (const [courseID, entries] of courseIdMap.entries()) {
@@ -339,6 +341,12 @@ function MiniSakaiEntryList(props: {
 
     return <div className={className}>{courses}</div>;
 }
+
+const sortCourseIdMap = (a: [string, EntryUnion[]], b: [string, EntryUnion[]]): number => {
+    const aMin = a[1].reduce((prev, e) => Math.min(e.getDueDate(), prev), MaxTimestamp);
+    const bMin = b[1].reduce((prev, e) => Math.min(e.getDueDate(), prev), MaxTimestamp);
+    return aMin - bMin;
+};
 
 const sortEntries = (a: EntryUnion, b: EntryUnion): number => {
     if (a.dueTime === b.dueTime) {
