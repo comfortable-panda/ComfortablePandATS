@@ -91,10 +91,7 @@ async function editFavoritesMessage(): Promise<void> {
     await new Promise((r) => setTimeout(r, 200));
     try {
         const message = document.getElementsByClassName("favorites-max-marker")[0];
-        // TODO: i18n
-        message.innerHTML = `<i class='fa fa-bell warning-icon'></i>${
-            chrome.runtime.getManifest().name
-        }によってお気に入り登録した<br>サイトが全てバーに追加されました。`;
+        message.innerHTML = `<i class='fa fa-bell warning-icon'></i><b>${chrome.i18n.getMessage("favorites", chrome.runtime.getManifest().name)}</b>`;
         const lectureTabs = document.getElementsByClassName("fav-sites-entry");
         const lectureTabsCount = lectureTabs.length;
         for (let i = 0; i < lectureTabsCount; i++) {

@@ -47,5 +47,13 @@
       "minutes": { "content": "$3" }
     }
   },
-  "due_not_set": {"message": "Due date not set."}
+  "due_not_set": {
+    "message": "Due date not set."
+  },
+  "favorites": {
+    "message": "All favorite Sites are added to top bar by $name$",
+    "placeholders": {
+      "name": { "content": "$1" }
+    }
+  }
 }

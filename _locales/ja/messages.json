@@ -47,5 +47,11 @@
       "minutes": { "content": "$3" }
     }
   },
-  "due_not_set": {"message": "締め切り日未設定"}
+  "due_not_set": {"message": "締め切り日未設定"},
+  "favorites": {
+    "message": "$name$によってお気に入り登録の講義が全てバーに追加されました",
+    "placeholders": {
+      "name": { "content": "$1" }
+    }
+  }
 }
