@@ -9,8 +9,9 @@ export default function AssignmentEntryView(props: {
     isSubset: boolean;
     onCheck: (checked: boolean) => void;
 }) {
-    const dueDateString = createDateString(props.assignment.dueTime);
-    const remainTimeString = getRemainTimeString(props.assignment.dueTime);
+    const dueTime = props.assignment.isDuePassed(CurrentTime) ? props.assignment.closeTime : props.assignment.dueTime;
+    const dueDateString = createDateString(dueTime);
+    const remainTimeString = getRemainTimeString(dueTime);
 
     const lateBadge = useTranslation("late");
 
