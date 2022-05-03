@@ -179,6 +179,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                         showMemoBox={this.state.memoBoxShown}
                         isSubset={this.props.subset}
                         entities={this.state.entities}
+                        settings={this.state.settings}
                         onCheck={this.onCheck}
                         onMemoAdd={this.onMemoAdd}
                         onDelete={this.onMemoDelete}
@@ -204,9 +205,9 @@ function MiniSakaiVersion() {
 
 function MiniSakaiClose(props: { onClose: () => void }) {
     return (
-        <a className='closebtn q' href='#' onClick={props.onClose}>
-            x
-        </a>
+        <button type="button" className="closebtn q" onClick={props.onClose}>
+            <img src={chrome.runtime.getURL("img/closeBtn.svg")} alt="close" />
+        </button>
     );
 }
 

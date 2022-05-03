@@ -1,14 +1,19 @@
 import { AssignmentEntry } from "../features/entity/assignment/types";
 import React, { useId } from "react";
 import { createDateString, getRemainTimeString } from "../utils";
+import { CurrentTime } from "../constant";
+import { useTranslation } from "./helper";
 
 export default function AssignmentEntryView(props: {
     assignment: AssignmentEntry;
     isSubset: boolean;
     onCheck: (checked: boolean) => void;
 }) {
-    const dueDateString = createDateString(props.assignment.dueTime);
-    const remainTimeString = getRemainTimeString(props.assignment.dueTime);
+    const dueTime = props.assignment.isDuePassed(CurrentTime) ? props.assignment.closeTime : props.assignment.dueTime;
+    const dueDateString = createDateString(dueTime);
+    const remainTimeString = getRemainTimeString(dueTime);
+
+    const lateBadge = useTranslation("late");
 
     const labelId = useId();
 
@@ -31,7 +36,12 @@ export default function AssignmentEntryView(props: {
             )}
             <span className="cs-assignment-time-remain">{remainTimeString}</span>
 
-            <p className="cs-assignment-title">{props.assignment.title}</p>
+            <p className="cs-assignment-title">
+                {props.assignment.isDuePassed(CurrentTime) && (
+                    <span className="cs-badge cs-badge-late">{lateBadge}</span>
+                )}
+                {props.assignment.title}
+            </p>
         </>
     );
 }

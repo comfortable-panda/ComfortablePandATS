@@ -37,9 +37,9 @@ export default function MemoEntryView(props: {
 
             <p className="cs-assignment-title">
                 <span className="cs-badge cs-badge-memo">{memoBadge}</span>
-                <span className="cs-del-memo-btn" onClick={() => props.onDelete()}>
-                    x
-                </span>{" "}
+                <a onClick={() => props.onDelete()}>
+                    <img src={chrome.runtime.getURL("img/closeBtn.svg")} alt="delete memo" className="cs-del-memo-btn" />
+                </a>
                 {props.memo.title}
             </p>
         </>

@@ -18,7 +18,7 @@ export interface EntryProtocol {
 
     getTimestamp(currentTime: number, showLateAcceptedEntry: boolean): number;
 
-    getDueDate(): number;
+    getDueDate(showLate: boolean): number;
 
     getCloseDate(): number;
 

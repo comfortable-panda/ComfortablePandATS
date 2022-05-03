@@ -92,11 +92,17 @@
 }
 
 .cs-minisakai .closebtn {
+    background: none;
+    border: 0;
     position: absolute;
-    top: 0;
-    right: 15px;
+    top: 5px;
+    right: 5px;
     font-size: 36px;
-    margin-left: 50px;
+    margin-left: 50px
+}
+
+.closebtn > img {
+    width: 30px;
 }
 
 .cs-minisakai-danger {
@@ -286,10 +292,18 @@
     margin-bottom: 20px;
 }
 
+.cs-assignment-danger:last-child {
+    margin-bottom: 5px;
+}
+
 .cs-assignment-warning {
     border: solid 2px var(--miniWarning);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
+}
+
+.cs-assignment-warning:last-child {
+    margin-bottom: 5px;
 }
 
 .cs-assignment-success {
@@ -298,16 +312,28 @@
     margin-bottom: 20px;
 }
 
+.cs-assignment-success:last-child {
+    margin-bottom: 5px;
+}
+
 .cs-assignment-other {
     border: solid 2px var(--miniOther);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
 }
 
+.cs-assignment-other:last-child {
+    margin-bottom: 5px;
+}
+
 .cs-assignment-late {
     border: solid 2px var(--miniLate);
     border-radius: 10px 10px 10px 10px;
     margin-bottom: 20px;
+}
+
+.cs-assignment-late:last-child {
+    margin-bottom: 5px;
 }
 
 .cs-assignment-date {
@@ -382,6 +408,7 @@
     height: 15px;
     background: white;
     border-radius: 10px;
+    margin-top: 3px;
     margin-left: 5px;
     margin-right: 2px;
 }
@@ -412,6 +439,7 @@
     box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
+    margin-top: 3px;
     margin-left: 5px;
 }
 
@@ -507,17 +535,17 @@
     background-color: #ef2410;
 }
 
+.cs-badge-late {
+    color: #fff;
+    background-color: #2d2d2d;
+}
+
 .cs-del-memo-btn {
-    color: #c61212;
     position: relative;
+    width: 12px;
     float: right;
     right: 10px;
-    display: inline-block;
-    margin-left: 0.5em;
-    font-size: 16px;
-    font-weight: 600;
-    vertical-align: middle;
-    border-radius: 1rem;
+    filter: invert(16%) sepia(61%) saturate(3874%) hue-rotate(350deg) brightness(103%) contrast(104%);
     cursor: pointer;
 }
 

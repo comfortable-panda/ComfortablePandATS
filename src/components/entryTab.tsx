@@ -8,8 +8,10 @@ import AssignmentEntryView from "./assignment";
 import { useTranslation } from "./helper";
 import MemoEntryView from "./memo";
 import QuizEntryView from "./quiz";
-import { CurrentTime } from "../constant";
+import { CurrentTime, MaxTimestamp } from "../constant";
 import { getSakaiCourses } from "../features/course/getCourse";
+import { entries } from "lodash";
+import { Settings } from "../features/setting/types";
 
 // Every type in EntityUnion must implement IEntity
 export type EntityUnion = Assignment | Quiz | Memo;
@@ -90,6 +92,7 @@ export function EntryTab(props: {
     isSubset: boolean;
     showMemoBox: boolean;
     entities: EntityUnion[];
+    settings: Settings;
     onCheck: (entry: EntryUnion, checked: boolean) => void;
     onDelete: (entry: EntryUnion) => void;
     onMemoAdd: (memo: MemoAddInfo) => void;
@@ -103,12 +106,11 @@ export function EntryTab(props: {
     const warningElements: EntryWithCourse[] = [];
     const successElements: EntryWithCourse[] = [];
     const otherElements: EntryWithCourse[] = [];
-    const lateElements: EntryWithCourse[] = [];
 
     for (const entity of props.entities) {
         const course = entity.getCourse();
         for (const entry of entity.entries) {
-            const daysUntilDue = getDaysUntil(CurrentTime, entry.getDueDate());
+            const daysUntilDue = getDaysUntil(CurrentTime, entry.getDueDate(props.settings.miniSakaiOption.showLateAcceptedEntry));
 
             switch (daysUntilDue) {
                 case "due24h":
@@ -135,12 +137,6 @@ export function EntryTab(props: {
                         course: course
                     });
                     break;
-                case "duePassed":
-                    lateElements.push({
-                        entry: entry,
-                        course: course
-                    });
-                    break;
             }
         }
     }
@@ -158,6 +154,7 @@ export function EntryTab(props: {
                 <MiniSakaiEntryList
                     dueType='danger'
                     isSubset={props.isSubset}
+                    settings={props.settings}
                     entriesWithCourse={dangerElements}
                     onCheck={props.onCheck}
                     onDelete={props.onDelete}
@@ -167,6 +164,7 @@ export function EntryTab(props: {
                 <MiniSakaiEntryList
                     dueType='warning'
                     isSubset={props.isSubset}
+                    settings={props.settings}
                     entriesWithCourse={warningElements}
                     onCheck={props.onCheck}
                     onDelete={props.onDelete}
@@ -176,6 +174,7 @@ export function EntryTab(props: {
                 <MiniSakaiEntryList
                     dueType='success'
                     isSubset={props.isSubset}
+                    settings={props.settings}
                     entriesWithCourse={successElements}
                     onCheck={props.onCheck}
                     onDelete={props.onDelete}
@@ -185,12 +184,12 @@ export function EntryTab(props: {
                 <MiniSakaiEntryList
                     dueType='other'
                     isSubset={props.isSubset}
+                    settings={props.settings}
                     entriesWithCourse={otherElements}
                     onCheck={props.onCheck}
                     onDelete={props.onDelete}
                 />
             )}
-            {/* TODO: handle late submits */}
         </>
     );
 }
@@ -292,6 +291,7 @@ function MiniSakaiEntryList(props: {
         entry: EntryUnion;
         course: Course;
     }[];
+    settings: Settings;
     isSubset: boolean;
     onCheck: (entry: EntryUnion, checked: boolean) => void;
     onDelete: (entry: EntryUnion) => void;
@@ -302,8 +302,10 @@ function MiniSakaiEntryList(props: {
         return `${baseClass} ${clazz}`;
     }, [props.dueType]);
 
+    console.log("course", props.entriesWithCourse)
+
     // group entries by course
-    const courseIdMap = new Map<string, EntryUnion[]>(); // map courseID -> EntryUnions
+    let courseIdMap = new Map<string, EntryUnion[]>(); // map courseID -> EntryUnions
     const courseNameMap = new Map<string, string>(); // map courseID -> courseName
     for (const ewc of props.entriesWithCourse) {
         let entries: EntryUnion[];
@@ -319,6 +321,8 @@ function MiniSakaiEntryList(props: {
         courseNameMap.set(courseID, ewc.course.name ?? "unknown course");
     }
 
+    courseIdMap = new Map([...courseIdMap.entries()].sort(sortCourseIdMap(props.settings)));
+
     const courses: JSX.Element[] = [];
     for (const [courseID, entries] of courseIdMap.entries()) {
         const courseName = courseNameMap.get(courseID) ?? "<unknown>";
@@ -330,7 +334,7 @@ function MiniSakaiEntryList(props: {
                 coursePage={courseID} // TODO: change to coursePage
                 isSubset={props.isSubset}
                 dueType={props.dueType}
-                entries={entries}
+                entries={entries.sort(sortEntries)}
                 onCheck={(entry, checked) => props.onCheck(entry, checked)}
                 onDelete={(entry) => props.onDelete(entry)}
             />
@@ -339,3 +343,20 @@ function MiniSakaiEntryList(props: {
 
     return <div className={className}>{courses}</div>;
 }
+
+const sortCourseIdMap = (settings: Settings) => {
+    return function (a: [string, EntryUnion[]], b: [string, EntryUnion[]]): number {
+        const showLate = settings.miniSakaiOption.showLateAcceptedEntry;
+        const aMin = a[1].reduce((prev, e) => Math.min(e.getDueDate(showLate), prev), MaxTimestamp);
+        const bMin = b[1].reduce((prev, e) => Math.min(e.getDueDate(showLate), prev), MaxTimestamp);
+        return aMin - bMin;
+    };
+};
+
+const sortEntries = (a: EntryUnion, b: EntryUnion): number => {
+    if (a.dueTime === b.dueTime) {
+        if (a.title > b.title) return 1;
+        else return -1;
+    }
+    return a.dueTime - b.dueTime;
+};
