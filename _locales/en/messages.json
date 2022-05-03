@@ -8,6 +8,7 @@
   "todo_box_add": {"message": "Add Memo"},
   "quiz": {"message": "Quiz"},
   "memo": {"message": "Memo"},
+  "late": {"message": "Late Subm."},
   "settings_enable_dark_theme": {"message": "Enable Dark theme"},
   "settings_assignment_cache": {"message": "Assignment Cache [sec]"},
   "settings_quizzes_cache": {"message": "Test&Quizzes Cache [sec]"},

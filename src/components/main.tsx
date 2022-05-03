@@ -179,6 +179,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                         showMemoBox={this.state.memoBoxShown}
                         isSubset={this.props.subset}
                         entities={this.state.entities}
+                        settings={this.state.settings}
                         onCheck={this.onCheck}
                         onMemoAdd={this.onMemoAdd}
                         onDelete={this.onMemoDelete}
