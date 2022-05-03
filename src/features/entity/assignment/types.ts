@@ -36,12 +36,16 @@ export class AssignmentEntry implements EntryProtocol {
         return this.id;
     }
 
-    getDueDate(): number {
-        return this.dueTime;
+    getDueDate(showLate: boolean): number {
+        return showLate ? this.closeTime : this.dueTime;
     }
 
     getCloseDate(): number {
         return this.closeTime;
+    }
+
+    isDuePassed(currentTime: number): boolean {
+        return currentTime > this.dueTime;
     }
 
     save(hostname: string): Promise<void> {
