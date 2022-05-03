@@ -106,7 +106,6 @@ export function EntryTab(props: {
     const warningElements: EntryWithCourse[] = [];
     const successElements: EntryWithCourse[] = [];
     const otherElements: EntryWithCourse[] = [];
-    const lateElements: EntryWithCourse[] = [];
 
     for (const entity of props.entities) {
         const course = entity.getCourse();
@@ -134,12 +133,6 @@ export function EntryTab(props: {
                     break;
                 case "dueOver14d":
                     otherElements.push({
-                        entry: entry,
-                        course: course
-                    });
-                    break;
-                case "duePassed":
-                    lateElements.push({
                         entry: entry,
                         course: course
                     });
@@ -197,7 +190,6 @@ export function EntryTab(props: {
                     onDelete={props.onDelete}
                 />
             )}
-            {/* TODO: handle late submits */}
         </>
     );
 }
