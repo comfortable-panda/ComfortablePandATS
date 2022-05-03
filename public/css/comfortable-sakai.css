@@ -535,6 +535,11 @@
     background-color: #ef2410;
 }
 
+.cs-badge-late {
+    color: #fff;
+    background-color: #2d2d2d;
+}
+
 .cs-del-memo-btn {
     position: relative;
     width: 12px;
