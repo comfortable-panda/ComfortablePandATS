@@ -549,20 +549,23 @@
     cursor: pointer;
 }
 
-.cs-add-memo-btn {
+#cs-add-memo-btn {
     margin-left: 15px;
     margin-bottom: 2px;
-    border: none;
     display: inline-block;
-    padding: 6px 8px;
     vertical-align: middle;
-    overflow: hidden;
-    text-decoration: none;
-    color: #fff !important;
-    background-color: #009688 !important;
     text-align: center;
     cursor: pointer;
+    color: rgb(255, 255, 255) !important;
+    background-color: rgb(0, 150, 136) !important;
     font-size: 24px !important;
+    border-width: initial;
+    border-style: none;
+    border-color: initial;
+    border-image: initial;
+    padding: 6px 8px;
+    overflow: hidden;
+    text-decoration: none;
     border-radius: 50%;
 }
 

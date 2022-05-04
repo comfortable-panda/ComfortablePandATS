@@ -157,7 +157,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                         {this.state.shownTab === "assignment" ? (
                             <>
                                 <button
-                                    className='cs-add-memo-btn'
+                                    id='cs-add-memo-btn'
                                     onClick={() => {
                                         this.setState((state) => {
                                             return {
