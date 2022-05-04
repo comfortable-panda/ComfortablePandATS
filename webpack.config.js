@@ -2,6 +2,7 @@ const path = require("path");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const MODE = process.env.NODE_ENV || "development"
 
@@ -36,7 +37,8 @@ module.exports = {
         { from: "./public", to: "./" },
         { from: "./_locales", to: "./_locales" }
       ]
-    })
+    }),
+    new BundleAnalyzerPlugin()
   ]
 };
 
