@@ -1,9 +1,12 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+
+const MODE = process.env.NODE_ENV || "development"
 
 module.exports = {
-  mode: process.env.NODE_ENV || "development",
+  mode: MODE,
   devtool: "inline-source-map",
   entry: {
     background: `${__dirname}/src/background.ts`,
@@ -36,3 +39,10 @@ module.exports = {
     })
   ]
 };
+
+if (MODE === 'production') {
+  module.exports.optimization = {
+    minimize: true,
+    minimizer: [new TerserPlugin()]
+  };
+}
