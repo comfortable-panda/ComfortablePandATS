@@ -43,7 +43,7 @@ const decodeTimestamp = (data: any): number | undefined => {
 
 export const shouldUseCache = (fetchTime: number | undefined, currentTime: number, cacheInterval: number): boolean => {
     if (fetchTime === undefined) return false;
-    console.log(currentTime, fetchTime);
+    // console.log(currentTime, fetchTime);
     return currentTime - fetchTime <= cacheInterval;
 };
 

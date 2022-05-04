@@ -308,7 +308,7 @@ function MiniSakaiEntryList(props: {
         return `${baseClass} ${clazz}`;
     }, [props.dueType]);
 
-    console.log("course", props.entriesWithCourse)
+    // console.log("course", props.entriesWithCourse)
 
     // group entries by course
     let courseIdMap = new Map<string, EntryUnion[]>(); // map courseID -> EntryUnions

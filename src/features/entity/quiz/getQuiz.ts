@@ -26,7 +26,7 @@ export const getStoredQuizzes = (hostname: string): Promise<Array<Quiz>> => {
 
 export const getQuizzes = async (hostname: string, courses: Array<Course>, useCache: boolean): Promise<Array<Quiz>> => {
     const storedQuizzes = await getStoredQuizzes(hostname);
-    console.log("getQuiz, useCache:", useCache);
+    // console.log("getQuiz, useCache:", useCache);
     if (useCache) return storedQuizzes;
     const sakaiQuizzes = await getSakaiQuizzes(hostname, courses);
     const merged = mergeEntities<Quiz>(storedQuizzes, sakaiQuizzes);
