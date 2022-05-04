@@ -1,7 +1,7 @@
 {
   "name": "Comfortable PandA",
   "description": "__MSG_EXTENSION_DESCRIPTION__",
-  "version": "4.1.0",
+  "version": "----",
   "manifest_version": 3,
   "default_locale": "ja",
   "icons": {
