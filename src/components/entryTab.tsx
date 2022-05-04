@@ -195,6 +195,12 @@ export function EntryTab(props: {
 }
 
 function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo: MemoAddInfo) => void }) {
+    const defaultDueDate = (): string => {
+        const d = new Date();
+        d.setDate(d.getDate() + 1);
+        return d.toISOString().substr(0, 16);
+    };
+
     const courseName = useTranslation("todo_box_course_name");
     const memoLabel = useTranslation("todo_box_memo");
     const dueDate = useTranslation("todo_box_due_date");
@@ -202,7 +208,7 @@ function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo
 
     const [selectedCourseID, setSelectedCourseID] = useState(props.courses[0].id ?? "");
     const [todoContent, setTodoContent] = useState("");
-    const [todoDue, setTodoDue] = useState("");
+    const [todoDue, setTodoDue] = useState(defaultDueDate);
 
     const options = useMemo(() => {
         return props.courses.map((course) => {
