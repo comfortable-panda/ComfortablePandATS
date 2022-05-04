@@ -702,6 +702,10 @@
     color: rgb(70, 70, 70);
 }
 
+.cs-memo-item > p {
+    color: var(--textColor);
+}
+
 .cs-toggle-btn {
     position: relative;
     display: inline-flex;
