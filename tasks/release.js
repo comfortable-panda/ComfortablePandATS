@@ -20,12 +20,12 @@ fs.mkdir('./dist/release', {recursive: true}, (err) => {
 
 archive.pipe(output);
 
-if (browser === "chrome") {
-    archive.directory(`./dist/source/${browser}`, `comfortable-sakai-v${version}`);
-}
-
-if (browser === "firefox") {
-    archive.directory(`./dist/source/${browser}`, ``);
+switch (browser) {
+    case "chrome":
+        archive.directory(`./dist/source/${browser}`, `comfortable-sakai-v${version}`);
+        break;
+    case "firefox":
+        archive.directory(`./dist/source/${browser}`, ``);
 }
 
 archive.finalize();
