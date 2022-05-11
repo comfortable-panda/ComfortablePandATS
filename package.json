@@ -7,7 +7,8 @@
     "test": "jest",
     "build:chrome": "webpack --config tasks/webpack.config.chrome.js && node tasks/release chrome",
     "build:firefox": "webpack --config tasks/webpack.config.firefox.js && node tasks/release firefox",
-    "build:safari": "webpack --config tasks/webpack.config.safari.js && node tasks/release safari && xcrun safari-web-extension-converter dist/source/safari --project-location dist/source/safari-proj --app-name \"Comfortable-PandA\" --bundle-identifier \"com.das08.ComfortablePandA.Safari\" --force\n",
+    "build:safari": "webpack --config tasks/webpack.config.safari.js && node tasks/release safari",
+    "convert:safari": "npm run build:safari && xcrun safari-web-extension-converter dist/source/safari --project-location dist/source/safari-proj --app-name \"Comfortable-PandA\" --bundle-identifier \"com.das08.ComfortablePandA.Safari\" --force\n",
     "build:all": "npm run build:chrome && npm run build:firefox && npm run build:safari"
   },
   "author": "das08, tinaxd, tetete, arakistic",
