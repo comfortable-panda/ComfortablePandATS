@@ -21,10 +21,17 @@ module.exports = class MergeManifestWebpackPlugin {
             const manifestV2Json = await fs.readFile(manifestV2Path, 'utf8');
             const ffManifestJson = await fs.readFile(firefoxManifestPath, 'utf8');
             let mergeManifestJson;
-            if (browser === "firefox") {
-                mergeManifestJson = { ...JSON.parse(manifestV2Json), ...JSON.parse(ffManifestJson) };
-            } else {
-                mergeManifestJson = { ...JSON.parse(manifestJson) };
+            switch (browser) {
+                case "chrome":
+                    mergeManifestJson = { ...JSON.parse(manifestJson) };
+                    break;
+                case "firefox":
+                    mergeManifestJson = { ...JSON.parse(manifestV2Json), ...JSON.parse(ffManifestJson) };
+                    break;
+                case "safari":
+                    mergeManifestJson = { ...JSON.parse(manifestV2Json) };
+                    mergeManifestJson.content_scripts[0].matches[0] = "https://*/*";
+                    break;
             }
             mergeManifestJson.version = JSON.parse(packageJson).version;
             await fs.writeFile(savePath, JSON.stringify(mergeManifestJson, null, 1));
