@@ -337,7 +337,7 @@ function MiniSakaiEntryList(props: {
                 key={courseID}
                 courseID={courseID}
                 courseName={courseName}
-                coursePage={courseID} // TODO: change to coursePage
+                coursePage={"https://" + props.settings.appInfo.hostname + "/portal/site/" + courseID}
                 isSubset={props.isSubset}
                 dueType={props.dueType}
                 entries={entries.sort(sortEntries)}
