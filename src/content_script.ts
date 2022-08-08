@@ -1,6 +1,7 @@
 import { saveHostName } from "./features/storage";
 import { createMiniSakai, createMiniSakaiBtn } from "./minisakai";
 import { isLoggedIn, miniSakaiReady } from "./utils";
+import submitDetect from "./submit_Detect";
 
 async function main() {
     if (isLoggedIn()) {
@@ -10,6 +11,7 @@ async function main() {
 
         miniSakaiReady();
         await saveHostName(hostname);
+        submitDetect();
     }
 }
 
