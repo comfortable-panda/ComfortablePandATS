@@ -117,7 +117,7 @@ export function EntryTab(props: {
                     entry: entry,
                     course: course
                 });
-                break;
+                continue;
             }
             const daysUntilDue = getDaysUntil(CurrentTime, entry.getDueDate(props.settings.miniSakaiOption.showLateAcceptedEntry));
 
