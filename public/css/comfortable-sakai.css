@@ -105,6 +105,15 @@
     width: 30px;
 }
 
+.cs-minisakai-entry-header {
+    padding: 8px 8px 8px 8px;
+    text-decoration: none;
+    font-weight: 600;
+    color: #252121;
+    display: block;
+    transition: 0.3s;
+}
+
 .cs-minisakai-danger {
     position: relative;
     padding: 0.1em 0.5em;
