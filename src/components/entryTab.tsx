@@ -112,7 +112,7 @@ export function EntryTab(props: {
         const course = entity.getCourse();
         for (const entry of entity.entries) {
             const hasfinished = entry.hasFinished;
-            if (hasfinished == true){
+            if (hasfinished){
                 checkedElements.push({
                     entry: entry,
                     course: course
