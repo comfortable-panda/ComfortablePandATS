@@ -1,5 +1,6 @@
 import { Course } from "./types";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const decodeCourseFromArray = (data: Array<any>): Array<Course> => {
     const courses: Array<Course> = [];
     if (typeof data === "undefined") return courses;

@@ -1,5 +1,6 @@
 import { Settings } from "./types";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const decodeSettings = (data: any): Settings => {
     const settings = new Settings();
     if (typeof data === "undefined") return settings;

@@ -36,6 +36,7 @@ export async function getEntities(settings: Settings, courses: Array<Course>, ca
     };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const decodeTimestamp = (data: any): number | undefined => {
     if (data === undefined) return undefined;
     return data as number;

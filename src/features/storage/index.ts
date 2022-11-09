@@ -1,7 +1,9 @@
 import { HostnameStorage } from "../../constant";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fromStorage = <T>(hostname: string, key: string, decoder: (data: any) => T): Promise<T> => {
     return new Promise(function (resolve) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         chrome.storage.local.get(hostname, function (items: any) {
             if (hostname in items && key in items[hostname]) {
                 resolve(decoder(items[hostname][key]));
@@ -14,6 +16,7 @@ export const fromStorage = <T>(hostname: string, key: string, decoder: (data: an
 
 export const loadHostName = (): Promise<string | undefined> => {
     return new Promise(function (resolve) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         chrome.storage.local.get(HostnameStorage, function (items: any) {
             if (typeof items[HostnameStorage] === "undefined") {
                 resolve(undefined);
@@ -22,10 +25,11 @@ export const loadHostName = (): Promise<string | undefined> => {
     });
 };
 
-export const toStorage = (hostname: string, key: string, value: any): Promise<string> => {
-    const entity: { [key: string]: [value: any] } = {};
+export const toStorage = <T>(hostname: string, key: string, value: T): Promise<string> => {
+    const entity: { [key: string]: T } = {};
     entity[key] = value;
     return new Promise(function (resolve) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         chrome.storage.local.get(hostname, function (items: any) {
             if (typeof items[hostname] === "undefined") {
                 items[hostname] = {};

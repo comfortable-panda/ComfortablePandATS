@@ -2,6 +2,7 @@ import { Memo, MemoEntry } from "./types";
 import { Course } from "../../course/types";
 import { CurrentTime } from "../../../constant";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const decodeMemoFromArray = (data: Array<any>): Array<Memo> => {
     const memos: Array<Memo> = [];
     if (typeof data === "undefined") return memos;

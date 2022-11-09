@@ -25,7 +25,8 @@ export class MemoEntry implements EntryProtocol {
         return this.dueTime;
     }
 
-    render(): [React.Component<{}, {}, any>, number][] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    render(): [React.Component<Record<string, never>, Record<string, never>, any>, number][] {
         throw "aa";
     }
 
@@ -47,7 +48,7 @@ export class Memo implements EntityProtocol {
         return this.course;
     }
 
-    render(): [React.Component<{}, {}, any>, number][] {
+    render() {
         return this.entries.map((e) => e.render()).reduce((acc, val) => acc.concat(val), []);
     }
 

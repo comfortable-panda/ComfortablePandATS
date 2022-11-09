@@ -10,7 +10,6 @@ import MemoEntryView from "./memo";
 import QuizEntryView from "./quiz";
 import { CurrentTime, MaxTimestamp } from "../constant";
 import { getSakaiCourses } from "../features/course/getCourse";
-import { entries } from "lodash";
 import { Settings } from "../features/setting/types";
 
 // Every type in EntityUnion must implement IEntity

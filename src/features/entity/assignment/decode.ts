@@ -3,21 +3,27 @@ import { Course } from "../../course/types";
 import { CurrentTime } from "../../../constant";
 
 /* Sakai APIから取得した課題をAssignmentEntryに変換する */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const decodeAssignmentFromAPI = (data: Record<string, any>): Array<AssignmentEntry> => {
-    return data.assignment_collection
-        .filter((json: any) => json.closeTime.epochSecond >= CurrentTime)
-        .map((json: any) => {
-            const entry = new AssignmentEntry(
-                json.id,
-                json.title,
-                json.dueTime.epochSecond ? json.dueTime.epochSecond : null,
-                json.closeTime.epochSecond ? json.closeTime.epochSecond : null,
-                false
-            );
-            return entry;
-        });
+    return (
+        data.assignment_collection
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .filter((json: any) => json.closeTime.epochSecond >= CurrentTime)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .map((json: any) => {
+                const entry = new AssignmentEntry(
+                    json.id,
+                    json.title,
+                    json.dueTime.epochSecond ? json.dueTime.epochSecond : null,
+                    json.closeTime.epochSecond ? json.closeTime.epochSecond : null,
+                    false
+                );
+                return entry;
+            })
+    );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const decodeAssignmentFromArray = (data: Array<any>): Array<Assignment> => {
     const assignments: Array<Assignment> = [];
     if (typeof data === "undefined") return assignments;

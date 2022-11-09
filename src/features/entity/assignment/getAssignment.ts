@@ -12,7 +12,7 @@ export const getSakaiAssignments = async (hostname: string, courses: Array<Cours
     for (const course of courses) {
         pending.push(fetchAssignment(course));
     }
-    const result = await (Promise as any).allSettled(pending);
+    const result = await (Promise as any).allSettled(pending); // eslint-disable-line @typescript-eslint/no-explicit-any
     for (const assignment of result) {
         if (assignment.status === "fulfilled") assignments.push(assignment.value);
     }

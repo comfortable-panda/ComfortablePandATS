@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 
-import { Assignment, AssignmentEntry } from "../features/entity/assignment/types";
+import { Assignment } from "../features/entity/assignment/types";
 import { Course } from "../features/course/types";
 import { mockAssignmentEntry } from "./mock/generator";
-import { mergeEntities, mergeEntries } from "../features/merge";
+import { mergeEntities } from "../features/merge";
 import _ from "lodash";
 
 const mockVersion = jest.fn();

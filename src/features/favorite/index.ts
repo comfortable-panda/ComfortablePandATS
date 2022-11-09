@@ -47,7 +47,7 @@ export const addFavoritedCourseSites = (baseURL: string): Promise<void> => {
 
     document.querySelector(".organizeFavorites")?.addEventListener("click", editFavoritesMessage);
     return new Promise((resolve, reject) => {
-        request.addEventListener("load", (e) => {
+        request.addEventListener("load", () => {
             const res = request.response;
             if (res == null) {
                 console.log("failed to fetch favorites list");

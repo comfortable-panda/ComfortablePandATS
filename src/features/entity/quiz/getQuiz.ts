@@ -12,6 +12,7 @@ export const getSakaiQuizzes = async (hostname: string, courses: Array<Course>):
     for (const course of courses) {
         pending.push(fetchQuiz(course));
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = await (Promise as any).allSettled(pending);
     for (const quiz of result) {
         if (quiz.status === "fulfilled") quizzes.push(quiz.value);

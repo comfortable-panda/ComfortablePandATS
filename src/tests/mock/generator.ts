@@ -1,4 +1,4 @@
-import { Assignment, AssignmentEntry } from "../../features/entity/assignment/types";
+import { AssignmentEntry } from "../../features/entity/assignment/types";
 import { Course } from "../../features/course/types";
 
 export const mockCourse = (id: string): Course => {
