@@ -3,8 +3,7 @@ import { EntityProtocol, EntryProtocol } from "../type";
 import { saveMemoEntry } from "./saveMemo";
 
 export class MemoEntry implements EntryProtocol {
-    constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean) {
-    }
+    constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean) {}
 
     getID(): string {
         return this.id;
@@ -33,14 +32,12 @@ export class MemoEntry implements EntryProtocol {
     save(hostname: string): Promise<void> {
         return saveMemoEntry(hostname, this);
     }
-};
-
+}
 
 export class Memo implements EntityProtocol {
     readonly isRead = true;
 
-    constructor(public course: Course, public entries: Array<MemoEntry>) {
-    }
+    constructor(public course: Course, public entries: Array<MemoEntry>) {}
 
     getEntries(): MemoEntry[] {
         return this.entries;
@@ -51,7 +48,7 @@ export class Memo implements EntityProtocol {
     }
 
     render(): [React.Component<{}, {}, any>, number][] {
-        return this.entries.map(e => e.render()).reduce((acc, val) => acc.concat(val), []);
+        return this.entries.map((e) => e.render()).reduce((acc, val) => acc.concat(val), []);
     }
 
     getEntriesMap(): Map<string, MemoEntry> {
@@ -59,4 +56,4 @@ export class Memo implements EntityProtocol {
             return map.set(entry.id, entry);
         }, new Map<string, MemoEntry>());
     }
-};
+}

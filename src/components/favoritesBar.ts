@@ -86,4 +86,4 @@ export const resetFavoritesBar = (): void => {
             _.style = "";
         }
     }
-}
+};

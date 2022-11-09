@@ -14,7 +14,7 @@ export const fromStorage = <T>(hostname: string, key: string, decoder: (data: an
 
 export const loadHostName = (): Promise<string | undefined> => {
     return new Promise(function (resolve) {
-        chrome.storage.local.get(HostnameStorage, function(items: any) {
+        chrome.storage.local.get(HostnameStorage, function (items: any) {
             if (typeof items[HostnameStorage] === "undefined") {
                 resolve(undefined);
             } else resolve(items[HostnameStorage]);
@@ -25,7 +25,7 @@ export const loadHostName = (): Promise<string | undefined> => {
 export const toStorage = (hostname: string, key: string, value: any): Promise<string> => {
     const entity: { [key: string]: [value: any] } = {};
     entity[key] = value;
-    return new Promise(function(resolve) {
+    return new Promise(function (resolve) {
         chrome.storage.local.get(hostname, function (items: any) {
             if (typeof items[hostname] === "undefined") {
                 items[hostname] = {};

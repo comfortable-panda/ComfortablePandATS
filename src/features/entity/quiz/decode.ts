@@ -5,7 +5,10 @@ import { CurrentTime, MaxTimestamp } from "../../../constant";
 /* Sakai APIから取得した課題をQuizEntryに変換する */
 export const decodeQuizFromAPI = (data: Record<string, any>): Array<QuizEntry> => {
     return data.sam_pub_collection
-        .filter((json: any) => json.startDate < CurrentTime * 1000 && (json.dueDate >= CurrentTime * 1000 || json.dueDate == null))
+        .filter(
+            (json: any) =>
+                json.startDate < CurrentTime * 1000 && (json.dueDate >= CurrentTime * 1000 || json.dueDate == null)
+        )
         .map((json: any) => {
             const entry = new QuizEntry(
                 json.publishedAssessmentId,

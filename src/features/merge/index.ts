@@ -6,7 +6,10 @@ const getEntitiesMap = <Entity extends EntityProtocol>(entities: Array<Entity>):
     }, new Map<string, Entity>());
 };
 
-export const mergeEntities = <Entity extends EntityProtocol>(oldEntities: Array<Entity>, newEntities: Array<Entity>): Array<Entity> => {
+export const mergeEntities = <Entity extends EntityProtocol>(
+    oldEntities: Array<Entity>,
+    newEntities: Array<Entity>
+): Array<Entity> => {
     const entities: Array<Entity> = [];
     const oldEntityMap = getEntitiesMap(oldEntities);
     const newEntityMap = getEntitiesMap(newEntities);
@@ -21,7 +24,10 @@ export const mergeEntities = <Entity extends EntityProtocol>(oldEntities: Array<
     return entities;
 };
 
-export const mergeEntries = <Entry extends EntryProtocol>(oldEntryMap: Map<string, Entry>, newEntryMap: Map<string, Entry>): Array<Entry> => {
+export const mergeEntries = <Entry extends EntryProtocol>(
+    oldEntryMap: Map<string, Entry>,
+    newEntryMap: Map<string, Entry>
+): Array<Entry> => {
     const entries: Array<Entry> = [];
     newEntryMap.forEach((entry, id) => {
         const oldEntry = oldEntryMap.get(id);

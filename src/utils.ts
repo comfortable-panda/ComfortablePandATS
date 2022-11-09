@@ -124,7 +124,7 @@ function isLoggedIn(): boolean {
     const scripts = getLoggedInInfoFromScript();
     let loggedIn = false;
     for (const script of scripts) {
-        if (script.text.match("\"loggedIn\": true")) loggedIn = true;
+        if (script.text.match('"loggedIn": true')) loggedIn = true;
     }
     return loggedIn;
 }

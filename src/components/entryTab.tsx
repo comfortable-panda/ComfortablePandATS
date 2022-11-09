@@ -110,7 +110,10 @@ export function EntryTab(props: {
     for (const entity of props.entities) {
         const course = entity.getCourse();
         for (const entry of entity.entries) {
-            const daysUntilDue = getDaysUntil(CurrentTime, entry.getDueDate(props.settings.miniSakaiOption.showLateAcceptedEntry));
+            const daysUntilDue = getDaysUntil(
+                CurrentTime,
+                entry.getDueDate(props.settings.miniSakaiOption.showLateAcceptedEntry)
+            );
 
             switch (daysUntilDue) {
                 case "due24h":
@@ -152,7 +155,7 @@ export function EntryTab(props: {
             )}
             {dangerElements.length === 0 ? null : (
                 <MiniSakaiEntryList
-                    dueType='danger'
+                    dueType="danger"
                     isSubset={props.isSubset}
                     settings={props.settings}
                     entriesWithCourse={dangerElements}
@@ -162,7 +165,7 @@ export function EntryTab(props: {
             )}
             {warningElements.length === 0 ? null : (
                 <MiniSakaiEntryList
-                    dueType='warning'
+                    dueType="warning"
                     isSubset={props.isSubset}
                     settings={props.settings}
                     entriesWithCourse={warningElements}
@@ -172,7 +175,7 @@ export function EntryTab(props: {
             )}
             {successElements.length === 0 ? null : (
                 <MiniSakaiEntryList
-                    dueType='success'
+                    dueType="success"
                     isSubset={props.isSubset}
                     settings={props.settings}
                     entriesWithCourse={successElements}
@@ -182,7 +185,7 @@ export function EntryTab(props: {
             )}
             {otherElements.length === 0 ? null : (
                 <MiniSakaiEntryList
-                    dueType='other'
+                    dueType="other"
                     isSubset={props.isSubset}
                     settings={props.settings}
                     entriesWithCourse={otherElements}
@@ -225,12 +228,12 @@ function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo
     }
 
     return (
-        <div className='cs-memo-box addMemoBox'>
-            <div className='cs-memo-item'>
+        <div className="cs-memo-box addMemoBox">
+            <div className="cs-memo-item">
                 <p>{courseName}</p>
                 <label>
                     <select
-                        className='todoLecName'
+                        className="todoLecName"
                         value={selectedCourseID}
                         onChange={(ev) => setSelectedCourseID(ev.target.value)}
                     >
@@ -238,32 +241,32 @@ function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo
                     </select>
                 </label>
             </div>
-            <div className='cs-memo-item'>
+            <div className="cs-memo-item">
                 <p>{memoLabel}</p>
                 <label>
                     <input
-                        type='text'
-                        className='todoContent'
+                        type="text"
+                        className="todoContent"
                         value={todoContent}
                         onChange={(ev) => setTodoContent(ev.target.value)}
                     />
                 </label>
             </div>
-            <div className='cs-memo-item'>
+            <div className="cs-memo-item">
                 <p>{dueDate}</p>
                 <label>
                     <input
-                        type='datetime-local'
-                        className='todoDue'
+                        type="datetime-local"
+                        className="todoDue"
                         value={todoDue}
                         onChange={(ev) => setTodoDue(ev.target.value)}
                     />
                 </label>
             </div>
-            <div className='cs-memo-item'>
+            <div className="cs-memo-item">
                 <button
-                    type='submit'
-                    id='todo-add'
+                    type="submit"
+                    id="todo-add"
                     onClick={() => {
                         if (selectedCourseID === "" || todoDue === "") return;
 

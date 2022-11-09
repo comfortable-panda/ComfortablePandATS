@@ -6,7 +6,7 @@ import { getCourseSiteID } from "../../utils";
  */
 const MAX_FAVORITES = 20;
 
-const getSiteIdAndHrefSiteNameMap = (): Map<string, { href: string, title: string }> => {
+const getSiteIdAndHrefSiteNameMap = (): Map<string, { href: string; title: string }> => {
     const sites = document.querySelectorAll(".fav-sites-entry");
     const map = new Map<string, { href: string; title: string }>();
     sites.forEach((site) => {
@@ -91,7 +91,10 @@ async function editFavoritesMessage(): Promise<void> {
     await new Promise((r) => setTimeout(r, 200));
     try {
         const message = document.getElementsByClassName("favorites-max-marker")[0];
-        message.innerHTML = `<i class='fa fa-bell warning-icon'></i><b>${chrome.i18n.getMessage("favorites", chrome.runtime.getManifest().name)}</b>`;
+        message.innerHTML = `<i class='fa fa-bell warning-icon'></i><b>${chrome.i18n.getMessage(
+            "favorites",
+            chrome.runtime.getManifest().name
+        )}</b>`;
         const lectureTabs = document.getElementsByClassName("fav-sites-entry");
         const lectureTabsCount = lectureTabs.length;
         for (let i = 0; i < lectureTabsCount; i++) {
