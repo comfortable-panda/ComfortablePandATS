@@ -1,5 +1,6 @@
 import {getStoredAssignments} from "./features/entity/assignment/getAssignment";
 import {saveAssignmentEntry} from "./features/entity/assignment/saveAssignment";
+import { AssignmentEntry } from "./features/entity/assignment/types";
 
 const submitDetect = (hostname: string) => {
   const postButton = document.querySelector("[name='post']");
@@ -21,11 +22,15 @@ const submitDetect = (hostname: string) => {
     const assignment_id = get_assignment.split("/").slice(-1)[0];
     const course_id = location.href.split("/")[5];
 
-    const assignmentIndex = storedAssignments.findIndex(x => x.course.id === course_id);
-    const entryIndex = storedAssignments[assignmentIndex].entries.findIndex(x => x.id === assignment_id);
-   
-    storedAssignments[assignmentIndex].entries[entryIndex].hasFinished = true;
-    const assignmentEntry = storedAssignments[assignmentIndex].entries[entryIndex]
+    const courseIndex = storedAssignments.findIndex(x => x.course.id === course_id);
+    const assignmentEntry = storedAssignments[courseIndex].entries.find(x => x.id === assignment_id);
+    
+    if (assignmentEntry == null) {
+      console.warn("Can't find assignment in storedAssignments")
+      return
+    }
+    assignmentEntry.hasFinished = true;
+    
     await saveAssignmentEntry(hostname, assignmentEntry);
   });
   
