@@ -11,7 +11,7 @@ async function main() {
 
         miniSakaiReady();
         await saveHostName(hostname);
-        submitDetect();
+        submitDetect(hostname);
     }
 }
 
