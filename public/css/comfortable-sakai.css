@@ -141,6 +141,15 @@
     border-radius: 5px;
 }
 
+.cs-minisakai-checked {
+    position: relative;
+    padding: 0.1em 0.5em;
+    border-left: solid 6px var(--miniChecked);
+    border-bottom: solid 2px var(--miniChecked);
+    background: #f1cdcd;
+    border-radius: 5px;
+}
+
 .cs-minisakai-late {
     position: relative;
     padding: 0.1em 0.5em;
@@ -254,6 +263,28 @@
     border-radius: 20px 20px 20px 20px;
 }
 
+.cs-minisakai-list .cs-course-checked {
+    font-size: 12px;
+    font-weight: 400 !important;
+    color: #f7f7f7;
+    width: max-content;
+    padding: 3px 10px;
+    margin: -12px 0 0 -5px;
+    background: var(--miniChecked);
+    border-radius: 20px 20px 20px 20px;
+}
+
+.cs-minisakai-list .cs-course-checked:hover {
+    font-size: 12px;
+    font-weight: 400 !important;
+    color: #f7f7f7;
+    width: max-content;
+    padding: 3px 10px;
+    margin: -12px 0 0 -5px;
+    background: var(--miniChecked);
+    border-radius: 20px 20px 20px 20px;
+}
+
 .cs-minisakai-list .cs-course-late {
     font-size: 12px;
     font-weight: 400 !important;
@@ -323,6 +354,16 @@
 }
 
 .cs-assignment-other:last-child {
+    margin-bottom: 5px;
+}
+
+.cs-assignment-checked {
+    border: solid 2px var(--miniChecked);
+    border-radius: 10px 10px 10px 10px;
+    margin-bottom: 20px;
+}
+
+.cs-assignment-checked:last-child {
     margin-bottom: 5px;
 }
 

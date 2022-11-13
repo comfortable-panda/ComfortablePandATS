@@ -27,6 +27,7 @@ type CSColor = {
     topWarning: string;
     topSuccess: string;
     topOther: string;
+    miniChecked: string;
     miniDanger: string;
     miniWarning: string;
     miniSuccess: string;
@@ -62,6 +63,7 @@ export class Settings {
         topWarning: "#fdd783",
         topSuccess: "#8bd48d",
         topOther: "#adadad",
+        miniChecked: "#6582ff",
         miniDanger: "#e85555",
         miniWarning: "#d7aa57",
         miniSuccess: "#62b665",

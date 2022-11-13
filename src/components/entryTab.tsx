@@ -18,7 +18,7 @@ export type EntityUnion = Assignment | Quiz | Memo;
 // Every type in EntryUnion must implement IEntry
 export type EntryUnion = AssignmentEntry | QuizEntry | MemoEntry; // TODO: add Quiz, Memo, ...
 
-export type DueType = "danger" | "warning" | "success" | "other";
+export type DueType = "checked" | "danger" | "warning" | "success" | "other";
 
 function MiniSakaiCourse(props: {
     courseID: string;
@@ -102,6 +102,7 @@ export function EntryTab(props: {
         course: Course;
     };
 
+    const checkedElements: EntryWithCourse[] = [];
     const dangerElements: EntryWithCourse[] = [];
     const warningElements: EntryWithCourse[] = [];
     const successElements: EntryWithCourse[] = [];
@@ -110,6 +111,14 @@ export function EntryTab(props: {
     for (const entity of props.entities) {
         const course = entity.getCourse();
         for (const entry of entity.entries) {
+            const hasfinished = entry.hasFinished;
+            if (hasfinished){
+                checkedElements.push({
+                    entry: entry,
+                    course: course
+                });
+                continue;
+            }
             const daysUntilDue = getDaysUntil(CurrentTime, entry.getDueDate(props.settings.miniSakaiOption.showLateAcceptedEntry));
 
             switch (daysUntilDue) {
@@ -150,6 +159,7 @@ export function EntryTab(props: {
                     onMemoAdd={props.onMemoAdd}
                 />
             )}
+
             {dangerElements.length === 0 ? null : (
                 <MiniSakaiEntryList
                     dueType='danger'
@@ -186,6 +196,16 @@ export function EntryTab(props: {
                     isSubset={props.isSubset}
                     settings={props.settings}
                     entriesWithCourse={otherElements}
+                    onCheck={props.onCheck}
+                    onDelete={props.onDelete}
+                />
+            )}
+            {checkedElements.length === 0 ? null : (
+                <MiniSakaiEntryList
+                    dueType='checked'
+                    isSubset={props.isSubset}
+                    settings={props.settings}
+                    entriesWithCourse={checkedElements}
                     onCheck={props.onCheck}
                     onDelete={props.onDelete}
                 />
