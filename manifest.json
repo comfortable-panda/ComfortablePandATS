@@ -21,7 +21,7 @@
       "css": [
         "css/comfortable-sakai.css"
       ],
-      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*"]
+      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*", "https://qa21-mysql.nightly.sakaiproject.org/*"]
     }
   ],
   "background": {
@@ -39,7 +39,7 @@
         "img/miniSakaiBtn.png",
         "img/closeBtn.svg"
       ],
-      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*"]
+      "matches": ["https://panda.ecs.kyoto-u.ac.jp/*", "https://qa21-mysql.nightly.sakaiproject.org/*"]
     }
   ]
 }

@@ -212,14 +212,17 @@ export function EntryTab(props: {
                 </>
             )}
             {checkedElements.length === 0 ? null : (
-                <MiniSakaiEntryList
-                    dueType='checked'
-                    isSubset={props.isSubset}
-                    settings={props.settings}
-                    entriesWithCourse={checkedElements}
-                    onCheck={props.onCheck}
-                    onDelete={props.onDelete}
-                />
+                <>
+                    <MiniSakaiEntryHeader dueType="checked" />
+                    <MiniSakaiEntryList
+                        dueType="checked"
+                        isSubset={props.isSubset}
+                        settings={props.settings}
+                        entriesWithCourse={checkedElements}
+                        onCheck={props.onCheck}
+                        onDelete={props.onDelete}
+                    />
+                </>
             )}
         </>
     );
@@ -325,6 +328,7 @@ function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo
 function MiniSakaiEntryHeader(props: { dueType: DueType }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const dueTypeTitleMap: { [key in DueType]: string } = {
+        checked: useTranslation("checked"),
         danger: useTranslation("due24h"),
         warning: useTranslation("due5d"),
         success: useTranslation("due14d"),

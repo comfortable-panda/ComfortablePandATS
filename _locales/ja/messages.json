@@ -40,6 +40,7 @@
   "due14d": {"message": "締め切り１４日以内"},
   "duePassed": {"message": "遅延提出可能"},
   "dueOver14d": {"message": "その他"},
+  "checked": {"message": "提出済み"},
   "no_available_assignments": {"message": "表示できる課題はないよ"},
   "remain_time": { "message": "あと$days$日$hours$時間$minutes$分",
     "placeholders": {

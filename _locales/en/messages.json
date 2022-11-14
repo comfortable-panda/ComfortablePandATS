@@ -40,6 +40,7 @@
   "due14d": {"message": "Due within 14days"},
   "duePassed": {"message": "Late submission possible"},
   "dueOver14d": {"message": "Others"},
+  "checked": {"message": "Submitted"},
   "no_available_assignments": {"message": "There are no available assignments :)"},
   "remain_time": { "message": "$days$d, $hours$hr, $minutes$min left.",
     "placeholders": {
