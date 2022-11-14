@@ -10,7 +10,6 @@ import MemoEntryView from "./memo";
 import QuizEntryView from "./quiz";
 import { CurrentTime, MaxTimestamp } from "../constant";
 import { getSakaiCourses } from "../features/course/getCourse";
-import { entries } from "lodash";
 import { Settings } from "../features/setting/types";
 
 // Every type in EntityUnion must implement IEntity
@@ -161,44 +160,56 @@ export function EntryTab(props: {
             )}
 
             {dangerElements.length === 0 ? null : (
-                <MiniSakaiEntryList
-                    dueType='danger'
-                    isSubset={props.isSubset}
-                    settings={props.settings}
-                    entriesWithCourse={dangerElements}
-                    onCheck={props.onCheck}
-                    onDelete={props.onDelete}
-                />
+                <>
+                    <MiniSakaiEntryHeader dueType="danger" />
+                    <MiniSakaiEntryList
+                        dueType="danger"
+                        isSubset={props.isSubset}
+                        settings={props.settings}
+                        entriesWithCourse={dangerElements}
+                        onCheck={props.onCheck}
+                        onDelete={props.onDelete}
+                    />
+                </>
             )}
             {warningElements.length === 0 ? null : (
-                <MiniSakaiEntryList
-                    dueType='warning'
-                    isSubset={props.isSubset}
-                    settings={props.settings}
-                    entriesWithCourse={warningElements}
-                    onCheck={props.onCheck}
-                    onDelete={props.onDelete}
-                />
+                <>
+                    <MiniSakaiEntryHeader dueType="warning" />
+                    <MiniSakaiEntryList
+                        dueType="warning"
+                        isSubset={props.isSubset}
+                        settings={props.settings}
+                        entriesWithCourse={warningElements}
+                        onCheck={props.onCheck}
+                        onDelete={props.onDelete}
+                    />
+                </>
             )}
             {successElements.length === 0 ? null : (
-                <MiniSakaiEntryList
-                    dueType='success'
-                    isSubset={props.isSubset}
-                    settings={props.settings}
-                    entriesWithCourse={successElements}
-                    onCheck={props.onCheck}
-                    onDelete={props.onDelete}
-                />
+                <>
+                    <MiniSakaiEntryHeader dueType="success" />
+                    <MiniSakaiEntryList
+                        dueType="success"
+                        isSubset={props.isSubset}
+                        settings={props.settings}
+                        entriesWithCourse={successElements}
+                        onCheck={props.onCheck}
+                        onDelete={props.onDelete}
+                    />
+                </>
             )}
             {otherElements.length === 0 ? null : (
-                <MiniSakaiEntryList
-                    dueType='other'
-                    isSubset={props.isSubset}
-                    settings={props.settings}
-                    entriesWithCourse={otherElements}
-                    onCheck={props.onCheck}
-                    onDelete={props.onDelete}
-                />
+                <>
+                    <MiniSakaiEntryHeader dueType="other" />
+                    <MiniSakaiEntryList
+                        dueType="other"
+                        isSubset={props.isSubset}
+                        settings={props.settings}
+                        entriesWithCourse={otherElements}
+                        onCheck={props.onCheck}
+                        onDelete={props.onDelete}
+                    />
+                </>
             )}
             {checkedElements.length === 0 ? null : (
                 <MiniSakaiEntryList
@@ -307,6 +318,28 @@ function AddMemoBox(props: { shown: boolean; courses: Course[]; onMemoAdd: (memo
                     {addBtnLabel}
                 </button>
             </div>
+        </div>
+    );
+}
+
+function MiniSakaiEntryHeader(props: { dueType: DueType }) {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const dueTypeTitleMap: { [key in DueType]: string } = {
+        danger: useTranslation("due24h"),
+        warning: useTranslation("due5d"),
+        success: useTranslation("due14d"),
+        other: useTranslation("dueOver14d")
+    };
+    const className = useMemo(() => {
+        return `cs-minisakai-${props.dueType}`;
+    }, [props.dueType]);
+    const headerTitle = useMemo(() => {
+        return dueTypeTitleMap[props.dueType];
+    }, [dueTypeTitleMap, props.dueType]);
+
+    return (
+        <div className={className}>
+            <span className="cs-minisakai-entry-header">{headerTitle}</span>
         </div>
     );
 }
