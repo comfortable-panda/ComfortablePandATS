@@ -138,6 +138,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
             >
                 <MiniSakaiLogo />
                 <MiniSakaiVersion />
+                <SurveyLink />
                 {this.props.subset ? null : (
                     <>
                         <MiniSakaiClose onClose={() => toggleMiniSakai()} />
@@ -157,7 +158,7 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                         {this.state.shownTab === "assignment" ? (
                             <>
                                 <button
-                                    id='cs-add-memo-btn'
+                                    id="cs-add-memo-btn"
                                     onClick={() => {
                                         this.setState((state) => {
                                             return {
@@ -195,12 +196,28 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
 
 function MiniSakaiLogo() {
     const src = chrome.runtime.getURL("img/logo.png");
-    return <img className='cs-minisakai-logo' alt='logo' src={src} />;
+    return <img className="cs-minisakai-logo" alt="logo" src={src} />;
 }
 
 function MiniSakaiVersion() {
     const ctx = useContext(MiniSakaiContext);
-    return <p className='cs-version'>Version {ctx.settings.appInfo.version}</p>;
+    return <p className="cs-version">Version {ctx.settings.appInfo.version}</p>;
+}
+
+function SurveyLink() {
+    const surveyLink = useTranslation("survey_link");
+    return (
+        <div className="cs-survey">
+            <p>Comfortable PandA利用者アンケートにご協力お願いします！(2,3分程度)</p>
+            <p>
+                アンケートは
+                <a href="https://forms.gle/ULRKrCPHsb5V1RxP8" target="_blank" rel="noopener noreferrer">
+                    こちら
+                </a>
+                から！
+            </p>
+        </div>
+    );
 }
 
 function MiniSakaiClose(props: { onClose: () => void }) {
@@ -223,21 +240,21 @@ function MiniSakaiTabs(props: {
     return (
         <>
             <input
-                id='assignmentTab'
-                type='radio'
-                name='cs-tab'
+                id="assignmentTab"
+                type="radio"
+                name="cs-tab"
                 onClick={props.onAssignment}
                 defaultChecked={assignmentChecked}
             />
-            <label htmlFor='assignmentTab'> {assignmentTab} </label>
+            <label htmlFor="assignmentTab"> {assignmentTab} </label>
             <input
-                id='settingsTab'
-                type='radio'
-                name='cs-tab'
+                id="settingsTab"
+                type="radio"
+                name="cs-tab"
                 onClick={props.onSettings}
                 defaultChecked={settingsChecked}
             />
-            <label htmlFor='settingsTab'> {settingsTab} </label>
+            <label htmlFor="settingsTab"> {settingsTab} </label>
         </>
     );
 }
@@ -245,8 +262,8 @@ function MiniSakaiTabs(props: {
 function MiniSakaiTimeBox(props: { clazz: string; title: string; time: string }) {
     return (
         <div className={props.clazz}>
-            <p className='cs-assignment-time-text'>{props.title}</p>
-            <p className='cs-assignment-time-text'>{props.time}</p>
+            <p className="cs-assignment-time-text">{props.title}</p>
+            <p className="cs-assignment-time-text">{props.time}</p>
         </div>
     );
 }
@@ -255,12 +272,12 @@ function MiniSakaiAssignmentTime() {
     const ctx = useContext(MiniSakaiContext);
     const title = useTranslation("assignment_acquisition_date");
     const time = formatTimestamp(ctx.settings.fetchTime.assignment);
-    return <MiniSakaiTimeBox clazz='cs-assignment-time' title={title} time={time} />;
+    return <MiniSakaiTimeBox clazz="cs-assignment-time" title={title} time={time} />;
 }
 
 function MiniSakaiQuizTime() {
     const ctx = useContext(MiniSakaiContext);
     const title = useTranslation("testquiz_acquisition_date");
     const time = formatTimestamp(ctx.settings.fetchTime.quiz);
-    return <MiniSakaiTimeBox clazz='cs-quiz-time' title={title} time={time} />;
+    return <MiniSakaiTimeBox clazz="cs-quiz-time" title={title} time={time} />;
 }

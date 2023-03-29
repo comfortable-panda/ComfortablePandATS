@@ -802,3 +802,19 @@ input:checked + .cs-toggle-slider:after {
     transform: translateX(-100%);
 }
 
+.cs-survey {
+    margin: 1em 1em;
+    color: rgb(0 0 0);
+    box-shadow: rgb(0 0 0 / 32%) 0 3px 4px;
+    padding: 0.5em 1em;
+    background: rgb(252 204 204);
+    border-top: 6px solid rgb(255 17 17);
+}
+.cs-survey p {
+    margin: 0;
+    padding: 0;
+}
+
+.cs-survey a {
+    font-weight: bold;
+}
