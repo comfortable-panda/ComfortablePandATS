@@ -24,6 +24,7 @@ export const loadHostName = (): Promise<string | undefined> => {
 };
 
 export const toStorage = (hostname: string, key: string, value: any): Promise<string> => {
+    // items[hostname][key]だと1 Objectあたり8192Bの制限に引っかかるのでhostname-keyの形で分散させる
     key = hostname+"-"+key
     const entity: { [key: string]: [value: any] } = {};
     entity[key] = value;
