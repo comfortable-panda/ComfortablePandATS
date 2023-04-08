@@ -39,18 +39,38 @@ export const loadHostName = (): Promise<string | undefined> => {
     });
 };
 
-export const toStorage = (hostname: string, key: string, value: any, allowSync: boolean=true): Promise<string> => {
+export const toStorage = async (hostname: string, key: string, value: any, allowSync: boolean=true): Promise<string> => {
     // items[hostname][key]だと1 Objectあたり8192Bの制限に引っかかるのでhostname-keyの形で分散させる
     const storageKey = hostname+"-"+key
     const entity: { [storageKey: string]: [value: any] } = {};
     entity[storageKey] = value;
+
+    if(allowSync){
+        const syncSupport = await fromStorage<boolean>(hostname, SyncSettingsStorage, decodesyncSupport, false);
+        if(syncSupport){
+            return new Promise(function(resolve) {
+                chrome.storage.sync.get(storageKey, function (items: any) {
+                    if (typeof items[storageKey] === "undefined") {
+                        items[storageKey] = {};
+                    }
+                    items[storageKey] = value;
+                    chrome.storage.sync.set({ [storageKey]: items[storageKey] }, () => {
+                        resolve("saved");
+                    });
+                });
+            });
+        }
+
+    }
+
+
     return new Promise(function(resolve) {
-        chrome.storage.sync.get(storageKey, function (items: any) {
+        chrome.storage.local.get(storageKey, function (items: any) {
             if (typeof items[storageKey] === "undefined") {
                 items[storageKey] = {};
             }
             items[storageKey] = value;
-            chrome.storage.sync.set({ [storageKey]: items[storageKey] }, () => {
+            chrome.storage.local.set({ [storageKey]: items[storageKey] }, () => {
                 resolve("saved");
             });
         });
