@@ -1,9 +1,25 @@
-import { HostnameStorage } from "../../constant";
+import { HostnameStorage, SyncSettingsStorage } from "../../constant";
+import { decodesyncSupport } from "../setting/decode"
 
-export const fromStorage = <T>(hostname: string, key: string, decoder: (data: any) => T): Promise<T> => {
+export const fromStorage = async <T>(hostname: string, key: string, decoder: (data: any) => T, allowSync: boolean=true): Promise<T> => {
     const storageKey = hostname+"-"+key
+    if (allowSync){
+        const syncSupport = await fromStorage<boolean>(hostname, SyncSettingsStorage, decodesyncSupport, false);
+        if(syncSupport){
+            return new Promise(function (resolve) {
+                chrome.storage.sync.get(storageKey, function (items: any) {
+                    if (storageKey in items) {
+                        resolve(decoder(items[storageKey]));
+                    } else {
+                        resolve(decoder(undefined));
+                    }
+                });
+            });
+        }
+    }
+
     return new Promise(function (resolve) {
-        chrome.storage.sync.get(storageKey, function (items: any) {
+        chrome.storage.local.get(storageKey, function (items: any) {
             if (storageKey in items) {
                 resolve(decoder(items[storageKey]));
             } else {
@@ -15,7 +31,7 @@ export const fromStorage = <T>(hostname: string, key: string, decoder: (data: an
 
 export const loadHostName = (): Promise<string | undefined> => {
     return new Promise(function (resolve) {
-        chrome.storage.sync.get(HostnameStorage, function(items: any) {
+        chrome.storage.local.get(HostnameStorage, function(items: any) {
             if (typeof items[HostnameStorage] === "undefined") {
                 resolve(undefined);
             } else resolve(items[HostnameStorage]);
@@ -23,7 +39,7 @@ export const loadHostName = (): Promise<string | undefined> => {
     });
 };
 
-export const toStorage = (hostname: string, key: string, value: any): Promise<string> => {
+export const toStorage = (hostname: string, key: string, value: any, allowSync: boolean=true): Promise<string> => {
     // items[hostname][key]だと1 Objectあたり8192Bの制限に引っかかるのでhostname-keyの形で分散させる
     const storageKey = hostname+"-"+key
     const entity: { [storageKey: string]: [value: any] } = {};
@@ -43,7 +59,7 @@ export const toStorage = (hostname: string, key: string, value: any): Promise<st
 
 export const saveHostName = (hostname: string): Promise<string> => {
     return new Promise(function (resolve) {
-        chrome.storage.sync.set({ [HostnameStorage]: hostname }, () => {
+        chrome.storage.local.set({ [HostnameStorage]: hostname }, () => {
             resolve("saved");
         });
     });

@@ -1,7 +1,7 @@
 import { Settings } from "./types";
-import { decodeSettings } from "./decode";
+import { decodeSettings,decodesyncSupport } from "./decode";
 import { fromStorage } from "../storage";
-import { CurrentTime, SettingsStorage, VERSION } from "../../constant";
+import { CurrentTime, SettingsStorage,SyncSettingsStorage, VERSION } from "../../constant";
 import { getFetchTime } from "../../utils";
 
 export const getStoredSettings = async (hostname: string): Promise<Settings> => {

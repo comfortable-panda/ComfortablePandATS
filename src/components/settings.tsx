@@ -191,6 +191,21 @@ export function SettingsTab(props: { onSettingsChange: (change: SettingsChange) 
                     })
                 }
             />
+
+            <details>
+                <summary>{useTranslationDeps("settings_open_dev_setting",["settings_open_dev_setting"])}</summary>
+                <TranslatedBooleanItem
+                    descriptionTag="settings_enable_syncsupport"
+                    value={settings.syncSupport}
+                    onChange={(v) =>
+                        props.onSettingsChange({
+                            type: "boolean",
+                            id: "syncSupport",
+                            newValue: v
+                        })
+                    }
+                />
+            </details>
         </div>
     );
 }

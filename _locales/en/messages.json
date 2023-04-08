@@ -33,6 +33,8 @@
       "time": { "content": "$2" }
     }
   },
+  "settings_open_dev_setting": {"message": "Developer Settings"},
+  "settings_enable_syncsupport": {"message": "Enable Data Sync"},
   "assignment_acquisition_date": {"message": "Assignment Acquisition Date: "},
   "testquiz_acquisition_date": {"message": "Test&Quiz Acquisition Date: "},
   "due24h": {"message": "Due within 24hrs"},
