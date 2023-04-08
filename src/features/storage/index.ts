@@ -63,7 +63,6 @@ export const toStorage = async (hostname: string, key: string, value: any, allow
 
     }
 
-
     return new Promise(function(resolve) {
         chrome.storage.local.get(storageKey, function (items: any) {
             if (typeof items[storageKey] === "undefined") {
