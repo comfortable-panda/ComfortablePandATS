@@ -18,8 +18,8 @@ export const decodeSettings = (data: any): Settings => {
 };
 
 export const decodesyncSupport = (data: any): boolean => {
-    let syncsyncSupport = false
-    if (typeof data === "undefined") return syncsyncSupport;
-    syncsyncSupport = data.syncSupport;
-    return syncsyncSupport;
+    let syncSupport = false
+    if (typeof data === "undefined") return syncSupport;
+    syncSupport = data.syncSupport;
+    return syncSupport;
 };

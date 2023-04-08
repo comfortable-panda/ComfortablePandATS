@@ -1,10 +1,11 @@
-import { HostnameStorage, SyncSettingsStorage } from "../../constant";
+import { HostnameStorage, SyncSupportStorage } from "../../constant";
 import { decodesyncSupport } from "../setting/decode"
 
 export const fromStorage = async <T>(hostname: string, key: string, decoder: (data: any) => T, allowSync: boolean=true): Promise<T> => {
     const storageKey = hostname+"-"+key
     if (allowSync){
-        const syncSupport = await fromStorage<boolean>(hostname, SyncSettingsStorage, decodesyncSupport, false);
+        const syncSupport = await fromStorage<boolean>(hostname, SyncSupportStorage, decodesyncSupport, false);
+        console.warn(syncSupport);
         if(syncSupport){
             return new Promise(function (resolve) {
                 chrome.storage.sync.get(storageKey, function (items: any) {
@@ -46,7 +47,7 @@ export const toStorage = async (hostname: string, key: string, value: any, allow
     entity[storageKey] = value;
 
     if(allowSync){
-        const syncSupport = await fromStorage<boolean>(hostname, SyncSettingsStorage, decodesyncSupport, false);
+        const syncSupport = await fromStorage<boolean>(hostname, SyncSupportStorage, decodesyncSupport, false);
         if(syncSupport){
             return new Promise(function(resolve) {
                 chrome.storage.sync.get(storageKey, function (items: any) {
@@ -60,7 +61,6 @@ export const toStorage = async (hostname: string, key: string, value: any, allow
                 });
             });
         }
-
     }
 
     return new Promise(function(resolve) {
