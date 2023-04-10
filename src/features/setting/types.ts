@@ -44,9 +44,9 @@ export class Settings {
         version: VERSION,
         hostname: window.location.hostname,
         currentTime: CurrentTime,
-        useDarkTheme: false,
+        useDarkTheme: false
     };
-    syncSupport: boolean = false;
+    syncSupport = false;
     fetchTime: FetchTime = {
         assignment: undefined,
         quiz: undefined
