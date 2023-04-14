@@ -72,8 +72,8 @@ export const toStorage = async (hostname: string, key: string, value: any, allow
             if (typeof items[hostname] === "undefined") {
                 items[hostname] = {};
             }
-            items[storageKey] = value;
-            chrome.storage.local.set({ [storageKey]: items[storageKey] }, () => {
+            items[hostname][key] = value;
+            chrome.storage.local.set({ [hostname]: items[hostname] }, () => {
                 resolve("saved");
             });
         });
