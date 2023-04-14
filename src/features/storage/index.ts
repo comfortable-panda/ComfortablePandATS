@@ -24,9 +24,9 @@ export const fromStorage = async <T>(
     }
 
     return new Promise(function (resolve) {
-        chrome.storage.local.get(storageKey, function (items: any) {
-            if (storageKey in items) {
-                resolve(decoder(items[storageKey]));
+        chrome.storage.local.get(hostname, function (items: any) {
+            if (hostname in items && key in items[hostname]) {
+                resolve(decoder(items[hostname][key]));
             } else {
                 resolve(decoder(undefined));
             }
