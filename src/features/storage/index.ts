@@ -1,5 +1,6 @@
 import { HostnameStorage, SyncSupportStorage } from "../../constant";
-import { decodesyncSupport } from "../setting/decode"
+import { decodesyncSupport } from "../setting/decode";
+import LZString from "lz-string";
 
 export const fromStorage = async <T>(
     hostname: string,
@@ -14,7 +15,7 @@ export const fromStorage = async <T>(
             return new Promise(function (resolve) {
                 chrome.storage.sync.get(storageKey, function (items: any) {
                     if (storageKey in items) {
-                        resolve(decoder(items[storageKey]));
+                        resolve(decoder(JSON.parse(LZString.decompressFromUTF16(items[storageKey]))));
                     } else {
                         resolve(decoder(undefined));
                     }
@@ -47,8 +48,6 @@ export const loadHostName = (): Promise<string | undefined> => {
 export const toStorage = async (hostname: string, key: string, value: any, allowSync = true): Promise<string> => {
     // items[hostname][key]だと1 Objectあたり8192Bの制限に引っかかるのでhostname-keyの形で分散させる
     const storageKey = hostname + "-" + key;
-    const entity: { [storageKey: string]: [value: any] } = {};
-    entity[storageKey] = value;
 
     if (allowSync) {
         const syncSupport = await fromStorage<boolean>(hostname, SyncSupportStorage, decodesyncSupport, false);
@@ -58,7 +57,7 @@ export const toStorage = async (hostname: string, key: string, value: any, allow
                     if (typeof items[storageKey] === "undefined") {
                         items[storageKey] = {};
                     }
-                    items[storageKey] = value;
+                    items[storageKey] = LZString.compressToUTF16(JSON.stringify(value));
                     chrome.storage.sync.set({ [storageKey]: items[storageKey] }, () => {
                         resolve("saved");
                     });
