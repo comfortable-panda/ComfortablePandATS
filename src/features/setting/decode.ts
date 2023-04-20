@@ -16,3 +16,11 @@ export const decodeSettings = (data: any): Settings => {
     }
     return settings;
 };
+
+export const decodesyncSupport = (data: any): boolean => {
+    let syncSupport = false;
+    if (typeof data === "undefined") return syncSupport;
+    syncSupport = data;
+    //console.log(syncSupport);
+    return syncSupport;
+};

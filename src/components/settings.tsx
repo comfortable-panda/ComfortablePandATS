@@ -20,6 +20,11 @@ export type SettingsChange =
       }
     | {
           type: "reset-color";
+      }
+    | {
+          type: "sync-setting";
+          id: string;
+          newValue: boolean;
       };
 
 export function SettingsTab(props: { onSettingsChange: (change: SettingsChange) => void; settings: Settings }) {
@@ -191,6 +196,21 @@ export function SettingsTab(props: { onSettingsChange: (change: SettingsChange) 
                     })
                 }
             />
+
+            <details>
+                <summary>{useTranslationDeps("settings_open_dev_setting", ["settings_open_dev_setting"])}</summary>
+                <TranslatedBooleanItem
+                    descriptionTag="settings_enable_syncsupport"
+                    value={settings.syncSupport}
+                    onChange={(v) =>
+                        props.onSettingsChange({
+                            type: "sync-setting",
+                            id: "syncSupport",
+                            newValue: v
+                        })
+                    }
+                />
+            </details>
         </div>
     );
 }

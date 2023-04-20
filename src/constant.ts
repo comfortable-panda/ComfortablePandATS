@@ -5,6 +5,7 @@ export const QuizzesStorage = "Quizzes";
 export const MemosStorage = "Memos";
 export const CoursesStorage = "Courses";
 export const SettingsStorage = "Settings";
+export const SyncSupportStorage = "SyncSupport";
 export const AssignmentFetchTimeStorage = "AssignmentFetchTime";
 export const QuizFetchTimeStorage = "QuizFetchTime";
 export const HostnameStorage = "Hostname";

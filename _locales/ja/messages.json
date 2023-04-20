@@ -33,6 +33,8 @@
       "time": { "content": "$2" }
     }
   },
+  "settings_open_dev_setting": {"message": "開発者設定項目"},
+  "settings_enable_syncsupport": {"message": "デバイス間同期を有効化する"},
   "assignment_acquisition_date": {"message": "課題取得日時: "},
   "testquiz_acquisition_date": {"message": "クイズ取得日時: "},
   "due24h": {"message": "締め切り２４時間以内"},

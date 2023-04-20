@@ -46,6 +46,7 @@ export class Settings {
         currentTime: CurrentTime,
         useDarkTheme: false
     };
+    syncSupport = false;
     fetchTime: FetchTime = {
         assignment: undefined,
         quiz: undefined

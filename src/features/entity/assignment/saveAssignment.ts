@@ -21,7 +21,7 @@ export const saveAssignmentEntry = async (hostname: string, changedEntry: Assign
         }
     // console.log('before save: ', assignments);
     await saveAssignments(hostname, assignments);
-    chrome.storage.local.get(null, (e) => {
+    chrome.storage.sync.get(null, (e) => {
         // console.log(e);
     });
 };
