@@ -10,6 +10,8 @@ import { fromStorage } from "./features/storage";
 import { AssignmentFetchTimeStorage, CurrentTime, MaxTimestamp, QuizFetchTimeStorage } from "./constant";
 import { saveAssignments } from "./features/entity/assignment/saveAssignment";
 import { EntryProtocol } from "./features/entity/type";
+import { saveQuizzes } from "./features/entity/quiz/saveQuiz";
+import { saveMemos } from "./features/entity/memo/saveMemo";
 
 export type DueCategory = "due24h" | "due5d" | "due14d" | "dueOver14d" | "duePassed";
 
@@ -34,6 +36,19 @@ export async function getEntities(settings: Settings, courses: Array<Course>, ca
         quiz: quiz,
         memo: memo
     };
+}
+
+export async function saveEntities(
+    settings: Settings,
+    assignment: Array<Assignment>,
+    quiz: Array<Quiz>,
+    memo: Array<Memo>
+) {
+    const hostname = settings.appInfo.hostname;
+    saveAssignments(hostname, assignment);
+    saveQuizzes(hostname, quiz);
+    saveMemos(hostname, memo);
+    return;
 }
 
 const decodeTimestamp = (data: any): number | undefined => {

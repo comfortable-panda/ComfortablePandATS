@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useTranslation } from "./helper";
-import { formatTimestamp, getEntities, updateIsReadFlag } from "../utils";
+import { formatTimestamp, getEntities, saveEntities, updateIsReadFlag } from "../utils";
 import { EntityUnion, EntryTab, EntryUnion, MemoAddInfo } from "./entryTab";
 import { SettingsChange, SettingsTab } from "./settings";
 import _ from "lodash";
@@ -95,6 +95,18 @@ export class MiniSakaiRoot extends React.Component<MiniSakaiRootProps, MiniSakai
                 this.setState({
                     settings: newSettings
                 });
+            });
+            return;
+        } else if (change.type === "sync-setting") {
+            const cacheOnly = this.props.subset;
+            getEntities(this.state.settings, getSakaiCourses(), cacheOnly).then((entities) => {
+                _.set(newSettings, change.id, change.newValue);
+                saveSettings(this.state.settings.appInfo.hostname, newSettings).then(() => {
+                    this.setState({
+                        settings: newSettings
+                    });
+                });
+                saveEntities(newSettings, entities.assignment, entities.quiz, entities.memo);
             });
             return;
         }
