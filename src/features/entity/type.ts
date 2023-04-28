@@ -15,6 +15,7 @@ export interface EntryProtocol {
     title: string;
     dueTime: number;
     hasFinished: boolean;
+    hidden?: boolean;
 
     getTimestamp(currentTime: number, showLateAcceptedEntry: boolean): number;
 
@@ -23,6 +24,8 @@ export interface EntryProtocol {
     getCloseDate(): number;
 
     getID(): string;
+
+    isHidden(): boolean;
 
     save(hostname: string): Promise<void>;
 }

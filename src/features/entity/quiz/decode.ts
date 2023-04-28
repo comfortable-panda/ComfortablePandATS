@@ -11,7 +11,8 @@ export const decodeQuizFromAPI = (data: Record<string, any>): Array<QuizEntry> =
                 json.publishedAssessmentId,
                 json.title,
                 json.dueDate ? json.dueDate / 1000 : MaxTimestamp,
-                false
+                false, // hasFinished
+                false  // hidden
             );
             return entry;
         });
@@ -25,7 +26,7 @@ export const decodeQuizFromArray = (data: Array<any>): Array<Quiz> => {
         const isRead: boolean = quiz.isRead;
         const entries: Array<QuizEntry> = [];
         for (const e of quiz.entries) {
-            const entry = new QuizEntry(e.id, e.title, e.dueTime, e.hasFinished);
+            const entry = new QuizEntry(e.id, e.title, e.dueTime, e.hasFinished, e.hidden);
             if (entry.getDueDateTimestamp > CurrentTime) entries.push(entry);
         }
         quizzes.push(new Quiz(course, entries, isRead));

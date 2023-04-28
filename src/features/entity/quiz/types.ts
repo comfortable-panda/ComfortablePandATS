@@ -3,7 +3,7 @@ import { EntityProtocol, EntryProtocol } from "../type";
 import { saveQuizEntry } from "./saveQuiz";
 
 export class QuizEntry implements EntryProtocol {
-    constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean) {}
+    constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean, public hidden: boolean|undefined=false) {}
 
     getID(): string {
         return this.id;
@@ -19,6 +19,10 @@ export class QuizEntry implements EntryProtocol {
 
     getTimestamp(): number {
         return this.getDueDateTimestamp;
+    }
+
+    isHidden(): boolean {
+        return this.hidden || false;
     }
 
     get getDueDateTimestamp(): number {
