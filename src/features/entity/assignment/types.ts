@@ -8,8 +8,9 @@ export class AssignmentEntry implements EntryProtocol {
         public title: string,
         public dueTime: number,
         public closeTime: number,
-        public hasFinished: boolean
-    ) {}
+        public hasFinished: boolean,
+        public hidden: boolean | undefined = false
+    ) { }
 
     getTimestamp(currentTime: number, showLateAcceptedEntry: boolean): number {
         if (showLateAcceptedEntry) {
@@ -46,6 +47,10 @@ export class AssignmentEntry implements EntryProtocol {
 
     isDuePassed(currentTime: number): boolean {
         return currentTime > this.dueTime;
+    }
+
+    isHidden(): boolean {
+        return this.hidden || false;
     }
 
     save(hostname: string): Promise<void> {

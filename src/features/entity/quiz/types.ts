@@ -3,7 +3,7 @@ import { EntityProtocol, EntryProtocol } from "../type";
 import { saveQuizEntry } from "./saveQuiz";
 
 export class QuizEntry implements EntryProtocol {
-    constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean, public hidden: boolean|undefined=false) {}
+    constructor(public id: string, public title: string, public dueTime: number, public hasFinished: boolean, public hidden: boolean | undefined = false) { }
 
     getID(): string {
         return this.id;
@@ -39,7 +39,7 @@ export class QuizEntry implements EntryProtocol {
 }
 
 export class Quiz implements EntityProtocol {
-    constructor(public course: Course, public entries: Array<QuizEntry>, public isRead: boolean) {}
+    constructor(public course: Course, public entries: Array<QuizEntry>, public isRead: boolean) { }
 
     getEntries(): QuizEntry[] {
         return this.entries;

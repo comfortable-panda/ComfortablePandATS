@@ -12,7 +12,8 @@ export const decodeAssignmentFromAPI = (data: Record<string, any>): Array<Assign
                 json.title,
                 json.dueTime.epochSecond ? json.dueTime.epochSecond : null,
                 json.closeTime.epochSecond ? json.closeTime.epochSecond : null,
-                false
+                false, // hasFinished
+                false  // hidden
             );
             return entry;
         });
@@ -26,7 +27,7 @@ export const decodeAssignmentFromArray = (data: Array<any>): Array<Assignment> =
         const isRead: boolean = assignment.isRead;
         const entries: Array<AssignmentEntry> = [];
         for (const e of assignment.entries) {
-            const entry = new AssignmentEntry(e.id, e.title, e.dueTime, e.closeTime, e.hasFinished);
+            const entry = new AssignmentEntry(e.id, e.title, e.dueTime, e.closeTime, e.hasFinished, e.hidden);
             if (entry.getCloseDateTimestamp > CurrentTime) entries.push(entry);
         }
         assignments.push(new Assignment(course, entries, isRead));
