@@ -19,22 +19,27 @@ export default function AssignmentEntryView(props: {
 
     return (
         <>
-            {!props.isSubset ? (
-                <>
-                    <input
-                        id={labelId}
-                        className="cs-checkbox"
-                        type="checkbox"
-                        checked={props.assignment.hasFinished}
-                        onChange={(ev) => props.onCheck(ev.target.checked)}
-                    ></input>
-                    <label htmlFor={labelId}></label>
-                    <p className="cs-assignment-date">{dueDateString}</p>
-                </>
-            ) : (
-                <span className="cs-assignment-date cs-assignmate-date-padding">{dueDateString}</span>
-            )}
-            <span className="cs-assignment-time-remain">{remainTimeString}</span>
+            <div className="cs-minisakai-dateline">
+                {!props.isSubset ? (
+                    <>
+                        <input
+                            id={labelId}
+                            className="cs-checkbox"
+                            type="checkbox"
+                            checked={props.assignment.hasFinished}
+                            onChange={(ev) => props.onCheck(ev.target.checked)}
+                        ></input>
+                        <label htmlFor={labelId}></label>
+                        <p className="cs-assignment-date">{dueDateString}</p>
+                    </>
+                ) : (
+                    <span className="cs-assignment-date cs-assignmate-date-padding">{dueDateString}</span>
+                )}
+                <span className="cs-assignment-time-remain">{remainTimeString}</span>
+                {
+                    !props.isSubset && <button className="cs-hide-button">X</button>
+                }
+            </div>
 
             <p className="cs-assignment-title">
                 {props.assignment.isDuePassed(CurrentTime) && (

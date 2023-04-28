@@ -10,6 +10,11 @@ span {
     font-family: "Open Sans", sans-serif;
 }
 
+.cs-minisakai-dateline {
+    display: flex;
+    align-items: center;
+}
+
 .cs-assignment-title {
     font-family: "Open Sans", sans-serif;
     font-size: 12px !important;

@@ -793,6 +793,22 @@
     transition: 0.3s;
 }
 
+.cs-hide-button {
+    color: red !important;
+    font-weight: bold !important;
+    font-size: 12px !important;
+    background-color: transparent !important;
+    padding: 3px !important;
+    height: 2em;
+    width: 2em;
+    border: 0 !important;
+}
+
+.cs-minisakai-dateline {
+    display: flex;
+    align-items: center;
+}
+
 input:checked + .cs-toggle-slider {
     background-color: #2196F3;
 }
