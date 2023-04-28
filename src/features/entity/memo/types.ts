@@ -22,6 +22,11 @@ export class MemoEntry implements EntryProtocol {
         return this.getDueDateTimestamp;
     }
 
+    isHidden(): boolean {
+        // Memos can never be hidden
+        return false;
+    }
+
     get getDueDateTimestamp(): number {
         return this.dueTime;
     }
