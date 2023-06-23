@@ -10,8 +10,6 @@ export const decodeSettings = (data: any): Settings => {
     settings.miniSakaiOption = data.miniSakaiOption ?? settings.miniSakaiOption;
     settings.timeUntilDeadline = data.timeUntilDeadline ?? settings.timeUntilDeadline;
 
-    console.log("data", data);
-    console.log("settings", settings);
     // For backward compatibility
     for (const colorName of Object.getOwnPropertyNames(settings.color)) {
         if (typeof data.color[colorName] !== "undefined") {
